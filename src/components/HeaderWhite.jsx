@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 
-const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+const HeaderWhite = () => {
   const navLinkClass = ({ isActive }) =>
-    `relative pb-1 font-light  transition-colors duration-200 ${
+    `relative pb-1 font-light transition-colors duration-200 ${
       isActive
         ? 'text-blue-500 font-semibold after:absolute after:bottom-0 after:left-4 after:w-1/3 after:h-1 after:rounded-full after:bg-blue-500'
         : 'text-gray-900 hover:text-blue-500'
     }`;
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 px-5 ${
-        scrolled ? 'bg-white shadow-md border-b border-gray-200' : 'bg-transparent'
-      }`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-200 px-5">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -73,9 +59,4 @@ const Header = () => {
   );
 };
 
-
-
-
-
-
-export default Header;
+export default HeaderWhite;

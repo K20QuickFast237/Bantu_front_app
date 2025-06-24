@@ -3,16 +3,22 @@ import Hero from "../components/Herosection";
 import PageWrapper from '../components/PageWrapper';
 import StatsSection from '../components/StatsSection';
 import FeatureSection from '../components/FeatureSection';
+import TestimonialsSection from '../components/TestimonialsSection';
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 
 function Home() {
   return (
     <>
       <PageWrapper>
-      <Hero />
-      <StatsSection />
-      <FeatureSection />
-      <div className="text-center mt-10 text-xl font-medium">Ma page d'accueil</div>
-
+        <Header />
+          <Hero />
+          <StatsSection />
+          <FeatureSection />
+          <TestimonialsSection />
+          <FAQ />
+          <Footer />
       </PageWrapper>
     </>
   );
