@@ -6,7 +6,7 @@ const Footer = () => {
     <>
       {/* Section Rejoignez l’écosystème (au-dessus du footer) */}
       <div className="relative z-20 -mb-15">
-        <div className="bg-gradient-to-r mx-20 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
+        <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
           <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
               <h2 className="text-white text-lg lg:text-xl font-semibold">
