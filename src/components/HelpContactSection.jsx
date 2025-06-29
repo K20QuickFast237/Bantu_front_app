@@ -8,12 +8,7 @@ const InfoBlock = ({ icon: Icon, iconBgColor, iconColor, title, description }) =
     
     <div className="flex flex-col items-center text-center px-4">
       {/* Conteneur de l'icône */}
-      <motion.section
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
+      
       <div 
         className="w-16 h-16 rounded-full flex items-center justify-center mb-4 relative"
         style={{ backgroundColor: iconBgColor }} // Couleur de fond du cercle de l'icône
@@ -29,7 +24,6 @@ const InfoBlock = ({ icon: Icon, iconBgColor, iconColor, title, description }) =
       <p className="text-gray-600 text-sm">
         {description}
       </p>
-      </motion.section>
     </div>
   );
 };
