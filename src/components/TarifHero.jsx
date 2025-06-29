@@ -4,12 +4,7 @@ import { motion } from 'framer-motion';
 const TarifHero = () => {
   return (
     <section className="flex justify-center items-center pt-30  sm:px-6 ">
-      <motion.section
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-                  transition={{ duration: 0.8, ease: 'easeOut' }}
-                >
+      
       <div className="relative bg-[#36D18C] rounded-3xl w-full max-w-6xl h-[620px] sm:h-[650px] flex flex-col justify-between items-center text-white overflow-hidden shadow-xl">
         {/* Main content - Centered text and button */}
         <div className="flex flex-col items-center justify-center flex-grow text-center  mb-16 px-4 sm:px-8 max-w-4xl">
@@ -49,7 +44,7 @@ const TarifHero = () => {
           </div>
         </div>
       </div>
-      </motion.section>
+     
     </section>
   );
 };

@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 
 const AideHero = () => {
   return (
-    <section className="flex justify-center items-center pt-20 px-4 sm:px-6 lg:px-8">
+    <section className="flex justify-center items-center pt-20 ">
       {/* Conteneur principal avec image de fond et superposition de couleur */}
       <motion.section
         initial={{ opacity: 0, y: 50 }}
@@ -15,7 +15,7 @@ const AideHero = () => {
       >
       <div
         className="relative rounded-3xl w-full max-w-6xl h-[550px] sm:h-[600px] 
-        flex flex-col items-center justify-center text-center overflow-hidden shadow-xl px-8"
+        flex flex-col items-center justify-center text-center overflow-hidden shadow-xl px-48"
         style={{
           backgroundImage: `url(${AideBg})`,
           backgroundSize: 'cover',
