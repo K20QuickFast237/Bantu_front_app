@@ -23,6 +23,12 @@ const HeroSection = () => {
       className="relative min-h-screen pt-24 pb-0 overflow-hidden px-7
                  bg-gradient-to-br from-[#eeeffa] via-[#fff] to-[#f5f5f5]"
     >
+      <motion.section
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
       {/* Conteneur principal du contenu, centré et divisé en 2 colonnes sur grand écran */}
       <div
         className="relative z-10 max-w-10xl mx-auto px-6 grid lg:grid-cols-[60%_40%] gap-12 lg:gap-0 h-full"
@@ -149,6 +155,7 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };

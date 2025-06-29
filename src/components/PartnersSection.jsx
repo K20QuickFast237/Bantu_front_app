@@ -1,9 +1,16 @@
 import React from 'react';
-import tnkImage from '../assets/tnk.png'; // Assurez-vous que le chemin est correct
+import tnkImage from '../assets/tnk.png';
+import { motion } from 'framer-motion';
 
 const PartnersSection = () => {
   return (
     <section className="bg-[#252B42] rounded-3xl text-white py-10"> {/* Couleur de fond fidèle à l'image */}
+      <motion.section
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section TNK SYNERGIES LTD */}
@@ -49,6 +56,7 @@ const PartnersSection = () => {
         </div>
 
       </div>
+      </motion.section>
     </section>
   );
 };

@@ -1,9 +1,16 @@
 import React from 'react';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Footer = () => {
   return (
     <>
+    <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+          >
       {/* Section Rejoignez l’écosystème (au-dessus du footer) */}
       <div className="relative z-20 -mb-15">
         <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
@@ -81,6 +88,7 @@ const Footer = () => {
           </div>
         </div>
       </footer>
+      </motion.section>
     </>
   );
 };
@@ -97,6 +105,7 @@ const FooterColumn = ({ title, items }) => (
       ))}
     </ul>
   </div>
+  
 );
 
 export default Footer;

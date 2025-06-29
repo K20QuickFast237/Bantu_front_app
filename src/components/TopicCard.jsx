@@ -1,5 +1,6 @@
 import React from 'react';
 import { ChevronRight } from 'lucide-react'; // Icône pour la flèche droite
+import { motion } from 'framer-motion';
 
 // Sous-composant pour chaque carte de sujet d'aide
 const TopicCard = ({ title, category, categoryColor, views }) => {
@@ -71,6 +72,12 @@ const PopularHelpTopics = () => {
   ];
 
   return (
+    <motion.section
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
     <section className="bg-white py-16 sm:py-5 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
@@ -94,6 +101,7 @@ const PopularHelpTopics = () => {
         </div>
       </div>
     </section>
+   </motion.section>  
   );
 };
 

@@ -1,11 +1,18 @@
 import React from 'react';
 // Importez l'image de fond. Ajustez le chemin si nécessaire.
 import AideBg from '../assets/aide1.png'; 
+import { motion } from 'framer-motion';
 
 const AideHero = () => {
   return (
     <section className="flex justify-center items-center pt-20 px-4 sm:px-6 lg:px-8">
       {/* Conteneur principal avec image de fond et superposition de couleur */}
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       <div
         className="relative rounded-3xl w-full max-w-6xl h-[550px] sm:h-[600px] 
         flex flex-col items-center justify-center text-center overflow-hidden shadow-xl px-8"
@@ -61,6 +68,7 @@ const AideHero = () => {
           </div>
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };

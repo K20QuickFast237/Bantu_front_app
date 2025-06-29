@@ -1,10 +1,17 @@
 import React from 'react';
-import { Check } from 'lucide-react'; // Importez l'icône Check de Lucide React
+import { Check } from 'lucide-react'; 
+import { motion } from 'framer-motion';
 
 const PlansTarifs = () => {
   return (
     <section className="bg-white  sm:pt-18 sm:pb-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
       {/* Titre et sous-titre */}
+      <motion.section
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                        transition={{ duration: 0.8, ease: 'easeOut' }}
+                      >
       <div className="text-center mb-16 max-w-3xl">
         <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 leading-tight mb-4">
           Plans Flexibles Pour Chaque Utilisateur
@@ -113,6 +120,7 @@ const PlansTarifs = () => {
         </div>
 
       </div>
+      </motion.section>
     </section>
   );
 };

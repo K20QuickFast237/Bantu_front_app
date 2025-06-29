@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 // Icône pour les étoiles (SVG en ligne pour une flexibilité maximale et sans dépendance externe)
 const StarIcon = ({ className }) => (
@@ -77,6 +78,12 @@ const TestimonialsSection = () => {
   ];
 
   return (
+    <motion.section
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                      transition={{ duration: 0.8, ease: 'easeOut' }}
+                    >
     <section 
       className="py-16 sm:py-16 px-4 sm:px-6 lg:px-8"
       // Dégradé ultra-subtil du fond : léger bleu -> léger gris -> léger rouge/orange
@@ -107,6 +114,7 @@ const TestimonialsSection = () => {
         </div>
       </div>
     </section>
+    </motion.section>
   );
 };
 

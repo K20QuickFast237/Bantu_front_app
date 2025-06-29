@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react'; 
 import FaqImage from '../assets/faq2.png'; 
+import { motion } from 'framer-motion';
 
 const faqs = [
   {
@@ -32,6 +33,12 @@ const FaqTarif = () => {
 
   return (
     <section className="bg-white py-16   px-4 sm:px-6 lg:px-8">
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">
           Foires Aux Questions
@@ -81,6 +88,7 @@ const FaqTarif = () => {
           ))}
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import { User, ShoppingCart, Briefcase, Clock } from 'lucide-react'; // Icônes de Lucide React
+import { motion } from 'framer-motion';
 
 // Sous-composant pour chaque carte de catégorie afin de simplifier le code
 const CategoryCard = ({ icon: Icon, bgColor, iconColor, title, description }) => {
@@ -79,6 +80,12 @@ const BrowseByCategory = () => {
 
   return (
     <section className="bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
           Parcourir Par Catégorie
@@ -101,6 +108,7 @@ const BrowseByCategory = () => {
           ))}
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };

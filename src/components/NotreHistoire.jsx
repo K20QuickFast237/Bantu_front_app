@@ -1,8 +1,15 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 const NotreHistoire = () => {
   return (
     <section className="py-9 bg-gray-100 mt-[-60px]">
+      <motion.section
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                  transition={{ duration: 0.8, ease: 'easeOut' }}
+                >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-16">
           Notre Histoire
@@ -50,6 +57,7 @@ const NotreHistoire = () => {
           </div>
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };

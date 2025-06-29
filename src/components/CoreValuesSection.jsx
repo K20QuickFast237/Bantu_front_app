@@ -4,6 +4,7 @@ import v2Image from '../assets/v2.png';
 import v3Image from '../assets/v3.png'; 
 import v4Image from '../assets/v4.png'; // Icône Sécurité 2
 import demicercleImage from '../assets/demicercle.png'; // Image du demi-cercle
+import { motion } from 'framer-motion';
 
 const CoreValuesSection = () => {
   // Ajustement des couleurs pour qu'elles correspondent précisément à la maquette
@@ -50,6 +51,12 @@ const CoreValuesSection = () => {
     <section className="relative py-20 bg-gray-50 overflow-hidden"> {/* Léger fond gris pour correspondre au visuel */}
       
       {/* Demi-cercle décoratif en haut à droite avec l'image */}
+      <motion.section
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
       <div 
         className="absolute top-0 right-0 w-80 h-80 opacity-60" // Ajustement de la taille et de l'opacité
         style={{ 
@@ -117,6 +124,7 @@ const CoreValuesSection = () => {
           ))}
         </div>
       </div>
+      </motion.section>
     </section>
   );
 };
