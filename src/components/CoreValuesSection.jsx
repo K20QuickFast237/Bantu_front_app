@@ -82,47 +82,119 @@ const CoreValuesSection = () => {
         </div>
 
         {/* Grille des cartes de valeurs */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"> {/* Ajustement du gap pour l'espacement des cartes */}
-          {valeurs.map((valeur) => (
-            <div 
-              key={valeur.id}
-              className="bg-white rounded-xl shadow-lg p-8 flex flex-col items-start text-left transform hover:scale-105 transition-transform duration-300" // p-8 pour plus de padding, rounded-xl pour plus d'arrondi, shadow-lg pour une ombre plus prononcée
-            >
-              {/* Icône hexagonale avec les couleurs de fond spécifiques */}
-              <div className="flex justify-center mb-6 w-full"> {/* w-full pour centrer l'hexagone */}
-                <div 
-                  className={`${valeur.bgColor} w-24 h-24 flex items-center justify-center`} // Taille ajustée pour l'hexagone extérieur
-                  style={{
-                    clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-                  }}
-                >
-                  <div 
-                    className={`${valeur.iconBg} w-16 h-16 flex items-center justify-center`} // Taille ajustée pour l'hexagone intérieur
-                    style={{
-                      clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
-                    }}
-                  >
-                    <img 
-                      src={valeur.image} // Utilisation de l'import direct
-                      alt={valeur.title}
-                      className="w-10 h-10 object-contain" // Taille de l'icône à l'intérieur de l'hexagone
-                    />
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 bg-gray-900 p-6 rounded-2xl">
+  {valeurs.map((valeur, index) => (
+    <div 
+      key={valeur.id} 
+      className="group relative overflow-hidden"
+      style={{ 
+        animationDelay: `${index * 0.2}s`,
+        animation: 'glitchIn 0.8s ease-out forwards'
+      }}
+    >
+      {/* Carte cyberpunk */}
+      <div className="relative bg-blue-800/40 backdrop-blur-sm border border-blue-500/30 rounded-xl p-6 h-full transform transition-all duration-400 hover:scale-[1.01] hover:border-blue-400/60 hover:shadow-xl hover:shadow-blue-500/20">
+        
+        {/* Grille de fond futuriste */}
+        <div className="absolute inset-0 opacity-10 group-hover:opacity-15 transition-opacity duration-400"
+             style={{
+               backgroundImage: `linear-gradient(rgba(0,191,255,0.1) 1px, transparent 1px),
+                                 linear-gradient(90deg, rgba(0,191,255,0.1) 1px, transparent 1px)`,
+               backgroundSize: '16px 16px'
+             }}>
+        </div>
+        
+        {/* Effets lumineux */}
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
+        <div className="absolute bottom-0 right-0 w-0.5 h-full bg-gradient-to-t from-transparent via-red-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-600"></div>
+        
+        {/* Contenu de la carte */}
+        <div className="relative z-10 flex flex-col h-full">
+          
+          {/* Icône futuriste */}
+          <div className="flex justify-center mb-6">
+            <div className="relative">
+              {/* Hexagone principal */}
+              <div className={`${valeur.bgColor} w-24 h-24 flex items-center justify-center transform group-hover:rotate-180 transition-all duration-600`}
+                   style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                <div className={`${valeur.iconBg} w-16 h-16 flex items-center justify-center transform group-hover:-rotate-180 transition-all duration-600`}
+                     style={{ clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)' }}>
+                  <img 
+                    src={valeur.image}
+                    alt={valeur.title}
+                    className="w-10 h-10 object-contain filter brightness-110 contrast-110 saturate-150 group-hover:drop-shadow-[0_0_6px_rgba(0,191,255,0.5)] transition-all duration-200"
+                  />
                 </div>
               </div>
-
-              {/* Contenu de la carte */}
-              <div className="text-center w-full"> {/* w-full pour centrer le contenu textuel */}
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                  {valeur.title}
-                </h3>
-                <p className="text-gray-600 text-base leading-relaxed">
-                  {valeur.description}
-                </p>
-              </div>
+              
+              {/* Anneaux lumineux */}
+              <div className="absolute inset-0 border-1.5 border-green-400/30 rounded-full animate-pulse group-hover:border-green-300/60 transition-colors duration-200"></div>
+              <div className="absolute inset-0 border border-yellow-400/20 rounded-full scale-110 animate-pulse group-hover:border-yellow-300/40 transition-colors duration-400"></div>
             </div>
-          ))}
+          </div>
+          
+          {/* Contenu textuel cyberpunk */}
+          <div className="text-center flex-grow flex flex-col justify-between">
+            <div>
+              <h3 className="text-xl font-bold text-white mb-4 group-hover:text-blue-300 transition-colors duration-200 drop-shadow-[0_0_8px_rgba(0,191,255,0.2)]">
+                {valeur.title}
+              </h3>
+              
+              {/* Ligne énergétique */}
+              <div className="w-12 h-0.5 bg-gradient-to-r from-blue-400 to-red-400 mx-auto mb-4 rounded-full group-hover:w-20 group-hover:h-0.75 group-hover:shadow-[0_0_8px_rgba(0,191,255,0.4)] transition-all duration-400"></div>
+            </div>
+            
+            <p className="text-gray-400 text-sm leading-relaxed font-medium group-hover:text-gray-300 transition-colors duration-200">
+              {valeur.description}
+            </p>
+          </div>
+          
+          {/* Indicateur holographique */}
+          <div className="mt-6 flex justify-center">
+            <div className="flex space-x-1">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse group-hover:bg-red-400 transition-colors duration-200"
+                     style={{ animationDelay: `${i * 0.15}s` }}></div>
+              ))}
+            </div>
+          </div>
         </div>
+        
+        {/* Scanlines effet */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-15 transition-opacity duration-400 pointer-events-none"
+             style={{
+               background: `repeating-linear-gradient(
+                 0deg,
+                 transparent,
+                 transparent 1.5px,
+                 rgba(0,191,255,0.02) 1.5px,
+                 rgba(0,191,255,0.02) 3px
+               )`
+             }}>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style jsx>{`
+  @keyframes glitchIn {
+    0% {
+      opacity: 0;
+      transform: translateX(40px) rotateY(-70deg);
+    }
+    50% {
+      opacity: 0.4;
+      transform: translateX(-8px) rotateY(8deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+    }
+  }
+`}</style>
+
+
       </div>
       </motion.section>
     </section>

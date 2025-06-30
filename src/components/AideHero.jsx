@@ -5,17 +5,13 @@ import { motion } from 'framer-motion';
 
 const AideHero = () => {
   return (
+    
     <section className="flex justify-center items-center pt-20 ">
       {/* Conteneur principal avec image de fond et superposition de couleur */}
-      <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      >
+      
       <div
         className="relative rounded-3xl w-full max-w-6xl h-[550px] sm:h-[600px] 
-        flex flex-col items-center justify-center text-center overflow-hidden shadow-xl px-48"
+        flex flex-col items-center justify-center text-center overflow-hidden shadow-xl mx-9"
         style={{
           backgroundImage: `url(${AideBg})`,
           backgroundSize: 'cover',
@@ -68,8 +64,9 @@ const AideHero = () => {
           </div>
         </div>
       </div>
-      </motion.section>
+     
     </section>
+   
   );
 };
 
