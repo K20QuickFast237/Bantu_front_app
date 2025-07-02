@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Importation des images selon les noms et chemins spécifiés
+import Header from '../components/Header';
 import GroupeImage from '../../assets/groupe.png';
 import Icon1 from '../../assets/icon1.png'; // Postuler
 import Icon2 from '../../assets/icon2.png'; // Recruter
@@ -42,11 +42,10 @@ const WhatDoYouWantToDo = () => {
     ];
 
     return (
-        // Conteneur principal avec le dégradé d'arrière-plan
-        // Le dégradé est simulé avec des classes Tailwind 'from-' et 'to-'
-        // Les couleurs exactes peuvent nécessiter un ajustement fin si ce ne sont pas les couleurs par défaut de Tailwind
-        // Ici, j'utilise 'blue-50' pour le bleu clair et 'yellow-50' pour le jaune pâle
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
+       
+       <>
+       <Header />
+        <div className="min-h-screen flex items-center mt-10 justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
             <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-start justify-between p-8">
                 {/* Section Gauche : Titre et Image */}
                 <div className="flex flex-col items-center lg:items-start lg:w-1/2 mb-10 lg:mb-0">
@@ -87,6 +86,8 @@ const WhatDoYouWantToDo = () => {
                 </div>
             </div>
         </div>
+       
+       </>
     );
 };
 

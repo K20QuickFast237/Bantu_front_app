@@ -12,15 +12,18 @@ import Login from "./pages/Login";
 
 import EmailVerification from "./Application/pages/EmailVerification";
 import WhatDoYouWantToDo from "./Application/pages/WhatDoYouWantToDo";
-import Postuler from "./Application/pages/Postuler";
-import Recruter from "./Application/pages/Recruter";
-import Acheter from "./Application/pages/Acheter";
-import Vendre from "./Application/pages/Vendre";
+import Profil from "./Application/pages/Profil";
+import InscriptionEntreprise from "./Application/pages/InscriptionEntreprise";
+import DashboardEntreprise from "./Application/pages/DashboardEntreprise";
+import Recherche_offre from "./Application/pages/Recherche_offre";
+import Create_job from "./Application/pages/create_job";
+import DashboardRecruteurprofil from "./Application/pages/Dashboard_Recruteurprofil";
 
 const App = () => {
   return (
     <>
-      <ScrollToTop />
+    
+    <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
@@ -34,13 +37,16 @@ const App = () => {
 
         <Route path="/emailVerification" element={<EmailVerification/>}/>
         <Route path="/WhatDoYouWantToDo" element={<WhatDoYouWantToDo/>}/>
-        <Route path="/postuler" element={<Postuler/>}/>
-        <Route path="/recruter" element={<Recruter/>}/>
-        <Route path="/acheter" element={<Acheter/>}/>
-        <Route path="/vendre" element={<Vendre/>}/>
+        <Route path="/profil" element={<Profil />} />
+        <Route path="/inscriptionEntreprise" element={<InscriptionEntreprise/>}/>
+        <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
+        <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
+        <Route path="/createJob" element={<Create_job/>}/>
+        <Route path="/dashboardrecruteurprofil" element={<DashboardRecruteurprofil />}/>
+        
       </Routes>
     </>
-  );
+      );
 };
 
 export default App;
