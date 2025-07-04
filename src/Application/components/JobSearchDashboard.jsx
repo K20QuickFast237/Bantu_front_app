@@ -1,11 +1,19 @@
 import React from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const JobSearchDashboard = () => {
   return (
-    <div className="bg-[#FFF3EB] py-12 px-4 md:px-10 font-sans">
+    <>
+    <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
+    <div className="bg-[#FFF3EB] pb-12 pt-20 px-4 md:px-10 font-sans">
       {/* Title */}
-      <h2 className="text-xl md:text-2xl font-bold text-center mb-6">
+      <h2 className="text-xl md:text-3xl font-bold text-center mb-6">
         Trouvez une offre d'emploi
       </h2>
 
@@ -34,7 +42,7 @@ const JobSearchDashboard = () => {
 
       {/* Second Row - Filters */}
       <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-b-md overflow-hidden border-t border-gray-200">
-        <div className="flex items-center justify-between flex-1 min-w-[250px] bg-white px-4 py-3 border-r border-gray-200 cursor-pointer">
+        <div className="flex items-center justify-between flex-1 max-w-[40.8%] bg-white px-4 py-3 border-r border-gray-200 cursor-pointer">
           <span className="text-sm">Type de contrat</span>
           <ChevronDown className="text-gray-500 w-4 h-4" />
         </div>
@@ -44,6 +52,8 @@ const JobSearchDashboard = () => {
         </div>
       </div>
     </div>
+    </motion.section>
+    </>
   );
 };
 

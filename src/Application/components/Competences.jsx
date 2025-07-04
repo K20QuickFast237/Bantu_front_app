@@ -1,11 +1,9 @@
-// Competences.jsx
+
 import React from 'react';
-// Pas d'icônes spécifiques dans le header de cette section, mais la laisser pour cohérence
 import { Edit } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Competences = () => {
-  // Exemple de données pour les compétences
-  // En réalité, ces données viendraient d'un état ou de props
   const competencesData = [
     "Adobe Premiere Pro", "Laravel", "React Js",
     "Adobe Premiere Pro", "Laravel", "React Js",
@@ -24,23 +22,24 @@ const Competences = () => {
     "Adobe Premiere Pro", "Laravel", "React Js",
   ];
 
-  // Regroupement des compétences en 3 colonnes pour le rendu
   const columns = [[], [], []];
   competencesData.forEach((competence, index) => {
     columns[index % 3].push(competence);
   });
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
+
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       {/* Header Section - Identique aux précédents, mais sans bouton "Modifier" ici */}
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Compétences</h2>
-        {/* Le bouton "Modifier" est absent dans l'image pour cette section, donc on le retire */}
-        {/* Vous pouvez le rajouter si vous le souhaitez */}
-        {/* <button className="flex items-center px-3 py-1.5 rounded-md text-blue-600 border border-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 text-sm">
-          <Edit size={16} className="mr-1" />
-          Modifier
-        </button> */}
+      <div className="flex justify-between items-center mb-4 pb-4">
+        <h2 className="text-xl font-semibold text-blue-800">Compétences</h2>
+        
       </div>
 
       {/* Content Section - Displaying competencies in 3 columns */}
@@ -56,6 +55,7 @@ const Competences = () => {
           </ul>
         ))}
       </div>
+      </motion.section>
     </div>
   );
 };

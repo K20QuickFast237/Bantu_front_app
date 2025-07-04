@@ -6,18 +6,21 @@ import Experiences from "../components/Experiences";
 import Header from "../components/Header"
 import Infopersonelles from "../components/infopersonelles"
 import PostesRecherches from "../components/PostesRecherches";
+import PageWrapper from "../../components/PageWrapper";
 
 function Profil (){
     return(
         <>
-        <Header />
-        <Infopersonelles />
-        <PostesRecherches />
-        <Experiences />
-        <Competences />
-        <DiplomesFormations />
-        <AutresRessources />
-        <Footer />
+        <PageWrapper>   
+            <Header />
+            <Infopersonelles />
+            <PostesRecherches />
+            <Experiences />
+            <Competences />
+            <DiplomesFormations />
+            <AutresRessources />
+            <Footer />
+        </PageWrapper>
         </>
     )
 };
