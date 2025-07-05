@@ -1,9 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 // Importation des icônes de Lucide React
 import { User as UserIcon, Mail, Lock } from 'lucide-react'; 
 // Importation de Formik
 import { useFormik } from 'formik';
-import validationSchema from '../schemas';
+import { validationRegisterSchema } from '../schemas';
 
 // Importation des images depuis le dossier assets
 // Assurez-vous que ces fichiers existent dans le répertoire '../assets/' par rapport à ce composant
@@ -15,12 +16,14 @@ import PageWrapper from '../components/PageWrapper';
 import { registerUser } from '../auth';
 
 const Register = () => {
+  const navigate = useNavigate();
 
   const onSubmit = async (values, actions) => {
     try {
       await registerUser(values);
       console.log(values);
       actions.resetForm();
+      navigate('/login');
     } catch (err) {
       console.log(err.response?.data?.message || 'Erreur inconnue');
     } 
@@ -33,7 +36,7 @@ const Register = () => {
       password: "",
       password_confirmation: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: validationRegisterSchema,
     onSubmit,
   });
   return (
@@ -80,7 +83,7 @@ const Register = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit} noValidate autoComplete='off'>
               {/* Champs Nom et Prénom : Utilisent une grille pour un affichage côte à côte sur les écrans plus grands. */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> */}
                 <div>
                   <label htmlFor="nom" className="block text-sm font-medium text-gray-300"> {/* Label en gris clair. */}
                     Nom
@@ -136,7 +139,7 @@ const Register = () => {
                   {errors.prenom && touched.prenom && (
                     <div className="text-red-500">{errors.prenom}</div>)}
                 </div> */}
-              </div>
+              {/* </div> */}
 
               {/* Champ Email */}
               <div>

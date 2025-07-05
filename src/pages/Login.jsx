@@ -1,6 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 // Importation des icônes de Lucide React
 import { Mail, Lock } from 'lucide-react'; // Pas besoin de UserIcon pour la page de connexion
+// Importation de Formik
+import { useFormik } from 'formik';
+import { validationLoginSchema } from '../schemas';
 
 // Importation des images depuis le dossier assets
 // Assurez-vous que ces fichiers existent dans le répertoire '../assets/' par rapport à ce composant
@@ -9,8 +13,31 @@ import googleLogo from '../assets/google.png';       // Logo Google
 import appleLogo from '../assets/apple.png';        // Logo Apple
 import facebookLogo from '../assets/facebook.png';      // Logo Facebook
 import PageWrapper from '../components/PageWrapper';
+import { loginUser } from '../auth';
 
 const Login = () => {
+
+  const navigate = useNavigate();
+
+  const onSubmit = async (values, actions) => {
+    try {
+      await loginUser(values);
+      console.log(values);
+      actions.resetForm();
+      navigate('/WhatDoYouWantToDo');
+    } catch (err) {
+      console.log(err.response?.data?.message || 'Erreur inconnue');
+    } 
+  };
+
+  const {values, handleBlur, errors, isSubmitting, touched, handleChange, handleSubmit} = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: validationLoginSchema,
+    onSubmit,
+  });
   return (
     <PageWrapper>
 
@@ -49,7 +76,7 @@ const Login = () => {
               Se connecter
             </h2>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit} noValidate autoComplete='off'>
               {/* Champ Email */}
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-300">
@@ -65,13 +92,19 @@ const Login = () => {
                   <input
                     id="email"
                     name="email"
+                    value={values.email}
+                    onChange={handleChange}
                     type="email"
                     autoComplete="email"
                     required
-                    className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                    className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.email && touched.email ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} 
                     placeholder="Entrez votre adresse email"
+                    onBlur={handleBlur}
                   />
                 </div>
+                {errors.email && touched.email && (
+                  <div className="text-red-500">{errors.email}</div>
+                )}
               </div>
 
               {/* Champ Mot de passe */}
@@ -89,13 +122,19 @@ const Login = () => {
                   <input
                     id="password"
                     name="password"
+                    value={values.password}
+                    onChange={handleChange}
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                    className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} 
                     placeholder="Entrez votre mot de passe"
+                    onBlur={handleBlur}
                   />
                 </div>
+                {errors.password && touched.password && (
+                  <div className="text-red-500">{errors.password}</div>
+                )}
               </div>
 
               {/* Section "Se souvenir de moi" et "Mot de passe oublié ?" */}
@@ -122,6 +161,7 @@ const Login = () => {
               {/* Bouton Se connecter : Grand bouton orange vif, texte blanc. */}
               <div>
                 <button
+                  disabled={isSubmitting}
                   type="submit"
                   className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200" 
                 >
