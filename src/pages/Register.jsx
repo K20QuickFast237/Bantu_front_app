@@ -1,6 +1,9 @@
 import React from 'react';
 // Importation des icônes de Lucide React
 import { User as UserIcon, Mail, Lock } from 'lucide-react'; 
+// Importation de Formik
+import { useFormik } from 'formik';
+import validationSchema from '../schemas';
 
 // Importation des images depuis le dossier assets
 // Assurez-vous que ces fichiers existent dans le répertoire '../assets/' par rapport à ce composant
@@ -9,8 +12,30 @@ import googleLogo from '../assets/google.png';       // Logo Google
 import appleLogo from '../assets/apple.png';        // Logo Apple
 import facebookLogo from '../assets/facebook.png';      // Logo Facebook
 import PageWrapper from '../components/PageWrapper';
+import { registerUser } from '../auth';
 
 const Register = () => {
+
+  const onSubmit = async (values, actions) => {
+    try {
+      await registerUser(values);
+      console.log(values);
+      actions.resetForm();
+    } catch (err) {
+      console.log(err.response?.data?.message || 'Erreur inconnue');
+    } 
+  };
+
+  const {values, handleBlur, errors, isSubmitting, touched, handleChange, handleSubmit} = useFormik({
+    initialValues: {
+      nom: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit,
+  });
   return (
     // Conteneur principal de la page. Prend toute la hauteur de l'écran.
     // Utilise flexbox pour diviser en deux colonnes.
@@ -53,7 +78,7 @@ const Register = () => {
               Créer mon compte
             </h2>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit} noValidate autoComplete='off'>
               {/* Champs Nom et Prénom : Utilisent une grille pour un affichage côte à côte sur les écrans plus grands. */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -70,21 +95,27 @@ const Register = () => {
                     <input
                       id="nom"
                       name="nom"
+                      value={values.nom}
+                      onChange={handleChange}
                       type="text"
                       autoComplete="family-name"
                       required
-                      className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" // Fond blanc, bordure très fine et claire. pl-12 pour laisser de la place au carré orange
+                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.nom && touched.nom ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} // Fond blanc, bordure très fine et claire. pl-12 pour laisser de la place au carré orange
                       placeholder="Entrez votre nom"
+                      onBlur={handleBlur}
                     />
                   </div>
+                  {errors.nom && touched.nom && (
+                    <div className="text-red-500">{errors.nom}</div>
+                  )}
                 </div>
-                <div>
+                {/* <div>
                   <label htmlFor="prenom" className="block text-sm font-medium text-gray-300">
                     Prénom
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="mt-1 relative rounded-md shadow-sm"> */}
                     {/* Icône de l'utilisateur : Maintenant DANS un carré orange, icône blanche. */}
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
+                    {/* <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
                        <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
                           <UserIcon className="h-4 w-4 text-white" aria-hidden="true" />
                        </div>
@@ -92,14 +123,19 @@ const Register = () => {
                     <input
                       id="prenom"
                       name="prenom"
+                      value={values.prenom}
+                      onChange={handleChange}
                       type="text"
                       autoComplete="given-name"
                       required
-                      className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.prenom && touched.prenom ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} 
                       placeholder="Entrez votre prénom"
+                      onBlur={handleBlur}
                     />
                   </div>
-                </div>
+                  {errors.prenom && touched.prenom && (
+                    <div className="text-red-500">{errors.prenom}</div>)}
+                </div> */}
               </div>
 
               {/* Champ Email */}
@@ -117,13 +153,19 @@ const Register = () => {
                   <input
                     id="email"
                     name="email"
+                    value={values.email}
+                    onChange={handleChange}
                     type="email"
                     autoComplete="email"
                     required
-                    className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                    className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.email && touched.email ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} 
                     placeholder="Entrez votre adresse email"
+                    onBlur={handleBlur}
                   />
                 </div>
+                {errors.email && touched.email && (
+                  <div className="text-red-500">{errors.email}</div>
+                )}
               </div>
 
               {/* Champ Mot de passe */}
@@ -141,13 +183,18 @@ const Register = () => {
                   <input
                     id="password"
                     name="password"
+                    value={values.password}
+                    onChange={handleChange}
                     type="password"
                     autoComplete="new-password"
                     required
-                    className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                    className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')} 
                     placeholder="Entrez votre mot de passe"
+                    onBlur={handleBlur}
                   />
                 </div>
+                {errors.password && touched.password && (
+                  <div className="text-red-500">{errors.password}</div>)}
               </div>
 
               {/* Champ Confirmer le mot de passe */}
@@ -163,20 +210,27 @@ const Register = () => {
                      </div>
                   </div>
                   <input
-                    id="confirm-password"
-                    name="confirm-password"
+                    id="password_confirmation"
+                    name="password_confirmation"
+                    value={values.password_confirmation}
+                    onChange={handleChange}
                     type="password"
                     autoComplete="new-password"
                     required
-                    className="block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" 
+                    className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password_confirmation && touched.password_confirmation ? ' border-red-500 focus:ring-red-500 focus:border-red-500 ' : '')} 
                     placeholder="Confirmez votre mot de passe"
+                    onBlur={handleBlur}
                   />
                 </div>
+                {errors.password_confirmation && touched.password_confirmation && (
+                  <div className="text-red-500">{errors.password_confirmation}</div>
+                )}
               </div>
 
               {/* Bouton S'inscrire : Grand bouton orange vif, texte blanc. */}
               <div>
                 <button
+                  disabled={isSubmitting}
                   type="submit"
                   className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200" 
                 >
