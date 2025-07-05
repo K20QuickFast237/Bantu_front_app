@@ -333,7 +333,7 @@ const MainDashRecru = ({ animateCards }) => {
               {jobPosts.map((job, index) => (
                 <div 
                   key={index} 
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer transform hover:scale-[1.02] transition-transform"
+                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100  cursor-pointer transform hover:scale-[1.02] transition-transform"
                 >
                   <div className="flex items-center space-x-4">
                     <div className={`w-3 h-3 rounded-full ${job.statusColor}`}></div>
