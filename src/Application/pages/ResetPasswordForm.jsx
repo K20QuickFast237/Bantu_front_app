@@ -1,23 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../../components/Footer';
 import PageWrapper from '../../components/PageWrapper';
+import { resetPassword } from '../../auth';
+import { validationResetPasswordSchema } from '../../schemas';
 
 const ResetPasswordForm = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    token: '',
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Les mots de passe ne correspondent pas.");
-      return;
+  useEffect(() => {
+    setForm((prev) => ({
+      ...prev,
+      token: searchParams.get('token') || '',
+      email: searchParams.get('email') || '',
+    }));
+  }, [searchParams]);
+
+  const onSubmit = async () => {
+    try {
+      await resetPassword(form);
+      console.log(form);
+      navigate('/login');
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Erreur lors de la réinitialisation.');
     }
-
-    // Envoi de la nouvelle valeur au backend ici
-    console.log('Nouveau mot de passe :', password);
   };
+
+  const {values, handleBlur, errors, isSubmitting, touched, handleChange, handleSubmit} = useFormik({
+    enableReinitialize: true,
+    initialValues: form,
+    validationSchema: validationResetPasswordSchema,
+    onSubmit,
+  });
 
   return (
     <>
@@ -39,7 +62,7 @@ const ResetPasswordForm = () => {
 
               {/* Texte d'information */}
               <p className="text-center text-gray-800 text-sm">
-                Merci de saisir votre nouveau mot de passe, puis de le confirmer.
+                Merci de saisir votre nouveau mot de passe.
               </p>
 
               <hr className="border-t border-gray-300" />
@@ -48,38 +71,30 @@ const ResetPasswordForm = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
 
                 {/* Nouveau mot de passe */}
-                <div className="bg-gray-200 p-2 flex items-center gap-2">
-                  <label htmlFor="password" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                    Nouveau mot de passe :
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="flex-1 bg-white rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                </div>
-
-                {/* Confirmation */}
-                <div className="bg-gray-200 p-2 flex items-center gap-2">
-                  <label htmlFor="confirmPassword" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                    Confirmer le mot de passe :
-                  </label>
-                  <input
-                    id="confirmPassword"
-                    type="password"
-                    required
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="flex-1 bg-white rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
+                <div className="bg-gray-200 p-2 space-y-2 rounded-md">
+                  <div className='flex flex-col gap-2'>
+                    <label htmlFor="password" className="text-sm text-gray-800 whitespace-nowrap pl-2">
+                      Nouveau mot de passe :
+                    </label>
+                    <input
+                      id="password"
+                      type="password"
+                      value={values.password}
+                      onChange={handleChange}
+                      required
+                      className={"flex-1 bg-white rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"+ (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      onBlur={handleBlur}
+                    />
+                  </div>
+                  {errors.password && touched.password && (
+                    <div className="text-red-500">{errors.password}</div>
+                  )}
                 </div>
 
                 {/* Bouton */}
                 <div className="flex justify-center">
                   <button
+                    disabled={isSubmitting}
                     type="submit"
                     className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300"
                   >

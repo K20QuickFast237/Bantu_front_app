@@ -7,7 +7,7 @@ export const validationRegisterSchema = Yup.object({
     email: Yup.string().email('Email invalide').required('Email obligatoire'),
     password: Yup
     .string()
-    .min(9, 'Minimum 9 caractères')
+    .min(9, 'Minimum 6 caractères')
     .matches(passwordRules, {message: "Entrer un mot de passe contenant une letres majuscule, et un chiffre"})
     .required('Mot de passe requis'),
     password_confirmation: Yup
@@ -20,5 +20,13 @@ export const validationLoginSchema = Yup.object({
   email: Yup.string().email('Email invalide').required('Email obligatoire'),
   password: Yup
     .string()
+    .required('Mot de passe requis'),
+});
+
+export const validationResetPasswordSchema = Yup.object({
+    password: Yup
+    .string()
+    .min(8, 'Minimum 8 caractères')
+    .matches(passwordRules, {message: "Entrer un mot de passe contenant une letres majuscule, et un chiffre"})
     .required('Mot de passe requis'),
 });

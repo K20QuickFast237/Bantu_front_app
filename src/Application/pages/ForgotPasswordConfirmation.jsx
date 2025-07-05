@@ -1,11 +1,14 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../../components/Footer';
 import PageWrapper from '../../components/PageWrapper';
 
 const ForgotPasswordConfirmation = () => {
-  const userEmail = "tadzongmbipeabraham@gmail.com"; 
+  const location = useLocation();
+  const userEmail = location.state?.email;
+   
   return (
     <>
       <PageWrapper>
