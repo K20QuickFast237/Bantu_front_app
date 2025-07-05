@@ -18,6 +18,7 @@ import DashboardEntreprise from "./Application/pages/DashboardEntreprise";
 import Recherche_offre from "./Application/pages/Recherche_offre";
 import Create_job from "./Application/pages/create_job";
 import DashboardRecruteurprofil from "./Application/pages/Dashboard_Recruteurprofil";
+import ForgotPasswordForm from "./Application/pages/ForgotPasswordForm";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
         <Route path="/createJob" element={<Create_job/>}/>
         <Route path="/dashboardrecruteurprofil" element={<DashboardRecruteurprofil />}/>
+        <Route path="/forgotpassword1" element={<ForgotPasswordForm/>}/>
         
       </Routes>
     </>
