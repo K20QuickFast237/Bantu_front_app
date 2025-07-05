@@ -1,5 +1,6 @@
 import React from 'react';
 import { MapPin, Clock, Calendar } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const JobCard = () => {
   const jobData = [
@@ -79,15 +80,20 @@ const JobCard = () => {
 
   const JobCardItem = ({ title, company, location, publicationDate, contractType, workType }) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
+      
       {/* Header with logo and company */}
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-            <span className="text-xs font-semibold text-gray-600">ATOM TECH</span>
+      <div className="mb-4">
+        <div className="flex flex-col gap-3">
+          <div className='flex '>
+            <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
+            <span className="text-xs font-semibold text-gray-600">Bantulink</span>
           </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-lg leading-tight">{title}</h3>
+          <div className='mt-7 ml-3 font-semibold text-xl'> ATOM TECH</div>
           </div>
+          
+          <h3 className="font-semibold underline text-gray-900 text-lg leading-tight">
+            {title}
+          </h3>
         </div>
       </div>
 
@@ -118,19 +124,23 @@ const JobCard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+    <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
+    
+     <div className="min-h-screen ">
       {/* Header */}
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-6">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-blue-900">ATOM TECH</h1>
+              <h1 className="text-2xl font-semibold text-emerald-400">Vos resultats de recherche</h1>
             </div>
-            <div className="hidden md:block">
-              <p className="text-sm text-gray-600">
-                Nous avons les talents dont vous avez besoin : ils sont ici !
-              </p>
-            </div>
+           
           </div>
         </div>
       </div>
@@ -160,6 +170,9 @@ const JobCard = () => {
         </div>
       </div>
     </div>
+
+    </motion.section>
+    </>
   );
 };
 

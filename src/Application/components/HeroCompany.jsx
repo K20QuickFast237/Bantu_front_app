@@ -5,6 +5,13 @@ import BantulinkLogo from '../../assets/assets_application/BantulinkLogo.png';
 const HeroCompany = () => {
   return (
     <div className="relative w-full">
+
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       {/* Main Hero Section */}
       <div className="relative w-full overflow-hidden">
         {/* Background Image */}
@@ -45,6 +52,7 @@ const HeroCompany = () => {
           </div>
         </div>
       </div>
+      </motion.section>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 // AutresRessources.jsx
 import React from 'react';
-import { Download, Link, Linkedin, Globe, Github } from 'lucide-react'; // Importez les icônes nécessaires
+import { Download, Link, Linkedin, Globe, Github } from 'lucide-react'; 
+import { motion } from 'framer-motion';
 
 const AutresRessources = () => {
   // Données d'exemple pour les ressources
@@ -13,10 +14,16 @@ const AutresRessources = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
-        <h2 className="text-xl font-semibold text-gray-800" style={{ color: '#007bff' }}>Autres Ressources</h2> {/* Couleur bleue pour le titre */}
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
+      <div className="flex justify-between items-center mb-6  pb-4">
+        <h2 className="text-xl font-semibold text-blue-800" >Autres Ressources</h2> {/* Couleur bleue pour le titre */}
         {/* Pas de bouton "Modifier" ici selon l'image */}
       </div>
 
@@ -65,6 +72,7 @@ const AutresRessources = () => {
           </a>
         </div>
       </div>
+      </motion.section>
     </div>
   );
 };

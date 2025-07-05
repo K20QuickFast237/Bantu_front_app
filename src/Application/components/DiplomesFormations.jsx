@@ -1,6 +1,7 @@
 // DiplomesFormations.jsx
 import React from 'react';
-import { Edit, Trash2, PlusCircle } from 'lucide-react'; // Importez les icônes nécessaires
+import { Edit, Trash2, PlusCircle } from 'lucide-react'; 
+import { motion } from 'framer-motion';
 
 const DiplomesFormations = () => {
   // Données d'exemple pour les diplômes et formations
@@ -49,13 +50,21 @@ const DiplomesFormations = () => {
   ];
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-4xl mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
+
+      <motion.section
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.1 }} 
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+      >
       {/* Header Section */}
-      <div className="flex justify-between items-center mb-6 border-b pb-4">
+      <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
         <div>
-          <h2 className="text-xl font-semibold text-gray-800">Diplômes & Formations</h2>
+          <h2 className="text-xl font-semibold text-blue-800">Diplômes & Formations</h2>
         </div>
-        <button className="flex items-center px-3 py-1.5 rounded-md text-blue-600 border border-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-200 text-sm">
+        <button className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600
+           hover:text-white hover:bg-blue-600 animate-pulse font-medium text-sm">
           <PlusCircle size={16} className="mr-1" />
           Ajouter
         </button>
@@ -64,7 +73,7 @@ const DiplomesFormations = () => {
       {/* Diplomas & Formations List */}
       <div className="space-y-6"> {/* Espacement entre chaque bloc d'expérience */}
         {diplomesFormationsData.map((item) => (
-          <div key={item.id} className="flex justify-between items-start pb-4 border-b last:border-b-0 last:pb-0">
+          <div key={item.id} className="flex justify-between items-start pb-4  last:border-b-0 last:pb-0">
             {/* Left side: Title and Details */}
             <div className="flex items-start flex-grow">
               {/* Green dot */}
@@ -72,7 +81,7 @@ const DiplomesFormations = () => {
               <div>
                 {/* Le nom du diplôme/formation n'est pas le plus grand dans l'image, c'est "Nom" */}
                 {/* On reproduit les libellés et valeurs comme dans l'image */}
-                <div className="grid grid-cols-2 gap-y-1 gap-x-4 text-sm text-gray-700">
+                <div className="grid grid-cols-2 border-l-1 border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
                   <p><span className="font-medium text-gray-600">Nom</span></p>
                   <p>{item.nom}</p> {/* La valeur "Nom" ou le vrai nom du diplôme */}
                   <p><span className="font-medium text-gray-600">École Ou Organisme</span></p>
@@ -102,6 +111,7 @@ const DiplomesFormations = () => {
           </div>
         ))}
       </div>
+      </motion.section>
     </div>
   );
 };
