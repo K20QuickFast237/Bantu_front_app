@@ -25,10 +25,10 @@ const ResetPasswordForm = () => {
     }));
   }, [searchParams]);
 
-  const onSubmit = async () => {
+  const onSubmit = async (values) => {
     try {
-      await resetPassword(form);
-      console.log(form);
+      await resetPassword(values);
+      console.log(values);
       navigate('/login');
     } catch (err) {
       setMessage(err.response?.data?.message || 'Erreur lors de la réinitialisation.');

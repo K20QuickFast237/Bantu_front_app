@@ -23,6 +23,13 @@ export const validationLoginSchema = Yup.object({
     .required('Mot de passe requis'),
 });
 
+export const validationForgotPasswordSchema = Yup.object({
+  email: Yup
+    .string()
+    .email("Veuillez saisir une adresse email valide")
+    .required("L'adresse email est requise"),
+});
+
 export const validationResetPasswordSchema = Yup.object({
     password: Yup
     .string()
