@@ -1,15 +1,31 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../../components/Footer';
 import PageWrapper from '../../components/PageWrapper';
+import { sendPasswordResetLink } from '../../auth';
+
 
 const ForgotPasswordForm = () => {
   const [email, setEmail] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log('Adresse email envoyée :', email);
+  // };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Adresse email envoyée :', email);
+    try {
+      await sendPasswordResetLink(email);
+      console.log(email);
+      navigate('/forgotpasswordconfirmation');
+    } catch (err) {
+      console.log(err.response?.data?.message || 'Erreur inconnue');
+    } 
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 // Importation des icônes de Lucide React
 import { Mail, Lock } from 'lucide-react'; // Pas besoin de UserIcon pour la page de connexion
 // Importation de Formik
@@ -152,9 +152,11 @@ const Login = () => {
                 </div>
 
                 <div className="text-sm">
-                  <a href="#" className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors duration-200">
-                    Mot de passe oublié ?
-                  </a>
+                  <Link to="/forgotpassword1">
+                    <span className="font-medium text-indigo-400 hover:text-indigo-300 transition-colors duration-200 cursor-pointer">
+                      Mot de passe oublié ?
+                    </span>
+                  </Link>
                 </div>
               </div>
 
