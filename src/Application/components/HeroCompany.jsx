@@ -14,7 +14,7 @@ const HeroCompany = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
       {/* Main Hero Section */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full pt-20 pb-10 overflow-hidden">
         {/* Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -39,16 +39,16 @@ const HeroCompany = () => {
       </div>
 
       {/* Bottom Section - Positioned to overlap */}
-      <div className="relative -mt-10 z-20 px-6 sm:px-8 md:px-10">
+      <div className="relative -mt-14 z-20 px-6 sm:px-8 md:px-10">
         <div className="flex items-center">
           {/* Logo - Half inside, half outside */}
-          <div className="bg-gray-200 p-2 rounded-lg mr-4">
+          <div className="bg-gray-200 p-6 mr-4">
             <img src={BantulinkLogo} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
           </div>
 
           {/* Company Info */}
-          <div>
-            <p className="text-green-400 text-xl sm:text-2xl font-bold">ATOM TECH</p>
+          <div className='mt-15'>
+            <p className="text-[#10B981] text-xl sm:text-2xl font-bold">ATOM TECH</p>
             <p className="text-gray-700 text-base sm:text-lg">contact@atomtechpro.com</p>
           </div>
         </div>

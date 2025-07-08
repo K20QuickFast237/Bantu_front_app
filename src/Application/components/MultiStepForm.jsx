@@ -60,11 +60,11 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
   };
 
   const renderStepIndicator = () => (
-    <div className="flex items-center justify-between mb-8 max-w-2xl mx-auto">
+    <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto px-4">
       {steps.map((step, index) => (
         <React.Fragment key={step.number}>
           <div 
-            className="flex flex-col items-center cursor-pointer"
+            className="flex flex-col text-orange-600 items-center cursor-pointer"
             onClick={() => handleStepClick(step.number)}
           >
             <div 
@@ -75,7 +75,7 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
               {step.number}
             </div>
             <span className={`text-xs mt-1 font-medium ${
-              currentStep === step.number ? 'text-gray-900' : 'text-gray-500'
+              currentStep === step.number ? 'text-orange-600' : 'text-gray-500'
             }`}>
               {step.label}
             </span>
@@ -87,11 +87,11 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
       ))}
     </div>
   );
-
+   <p className="bg-emerald-200 text-center w-80% font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
   const renderEmployeurStep = () => (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-8xl mx-auto space-y-6">
       <div className="text-center mb-6">
-        <p className="text-green-600 font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
+        <p className="bg-emerald-200  font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
       </div>
       
       <div className="grid grid-cols-2 gap-4">
@@ -218,7 +218,7 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
   );
 
   const renderOffreStep = () => (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Type de l'offre</label>
@@ -321,7 +321,7 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
   );
 
   const renderCandidatureStep = () => (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature *</label>
@@ -405,7 +405,7 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
   );
 
   const renderPublierStep = () => (
-    <div className="max-w-2xl mx-auto text-center space-y-6">
+    <div className="max-w-8xl mx-auto text-center space-y-6">
       <div className="mb-8">
         <div className="w-64 h-48 mx-auto bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
           <div className="text-orange-500 text-6xl">✓</div>
@@ -474,10 +474,10 @@ Ou déposez-la en personne dans nos locaux à Akwa, Douala.`,
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen mt-5 py-8">
       <div className="container mx-auto px-4">
         {renderStepIndicator()}
-        <div className="bg-white rounded-lg shadow-sm p-8">
+        <div className="bg-white  p-8 max-w-6xl mx-auto">
           {renderCurrentStep()}
         </div>
       </div>
