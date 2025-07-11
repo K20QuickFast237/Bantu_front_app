@@ -21,6 +21,8 @@ import DashboardRecruteurprofil from "./Application/pages/Dashboard_Recruteurpro
 import ForgotPasswordForm from "./Application/pages/ForgotPasswordForm";
 import ForgotPasswordConfirmation from "./Application/pages/ForgotPasswordConfirmation";
 import ResetPasswordForm from "./Application/pages/ResetPasswordForm";
+import OffreRecruteur from "./Application/pages/OffreRecruteur";
+import CandidateProfile from "./Application/pages/OffreRecruteur"
 
 const App = () => {
   return (
@@ -45,10 +47,12 @@ const App = () => {
         <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
         <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
         <Route path="/createJob" element={<Create_job/>}/>
+        <Route path="offreRecruteur" element={<OffreRecruteur/>}/>
         <Route path="/dashboardrecruteurprofil" element={<DashboardRecruteurprofil />}/>
         <Route path="/forgotpassword1" element={<ForgotPasswordForm/>}/>
         <Route path="/forgotpasswordconfirmation" element={<ForgotPasswordConfirmation />}/>
         <Route path="/reset-password" element={<ResetPasswordForm/>}/>
+        <Route path="profilCandidat" element={<CandidateProfile/>}/>
         
       </Routes>
     </>
