@@ -25,6 +25,8 @@ import OffreRecruteur from "./Application/pages/OffreRecruteur";
 import CandidateProfile from "./Application/pages/OffreRecruteur"
 import RecruiterProfile from "./Application/pages/RecruiterProfile";
 import JobOffersPage from "./Application/pages/JobOffersPage";
+import JobApplicationForm from "./Application/pages/JobApplicationForm";
+import JobApplicationPage2 from "./Application/pages/JobApplicationPage2";
 
 const App = () => {
   return (
@@ -57,6 +59,8 @@ const App = () => {
         <Route path="/profilCandidat" element={<CandidateProfile/>}/>
         <Route path="/recruteurprofile" element={<RecruiterProfile/>}/>
         <Route path="/jobOffers" element={<JobOffersPage/>}/>
+        <Route path="/jobApplicationform" element={<JobApplicationForm/>}/>
+        <Route path="/jobApplicationPage2" element={<JobApplicationPage2/>}/>
         
       </Routes>
     </>
