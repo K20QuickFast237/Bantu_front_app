@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  Briefcase, 
-  FileText, 
-  MessageSquare, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Briefcase,
+  FileText,
+  MessageSquare,
+  BarChart3,
   Settings,
   Eye,
   Users,
@@ -13,26 +13,27 @@ import {
   Plus,
   User,
   Search,
-  Bell
+  Bell,
+  ArrowLeftRight, // Import for 'Switch Mode' icon
 } from 'lucide-react';
 import Footer from '../../components/Footer';
 
 // Composants UI réutilisables
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
-  
+
   const variants = {
     default: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
     outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
     ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
   };
-  
+
   const sizes = {
     default: 'h-10 py-2 px-4',
     sm: 'h-8 px-3 text-sm',
     lg: 'h-12 px-8'
   };
-  
+
   return (
     <button
       className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
@@ -91,7 +92,7 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
   const sidebarItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'job-posts', label: 'My Job Posts', icon: Briefcase },
-    { id: 'applications', label: 'Applications', icon: FileText },
+    { id: 'applications', label: 'Applications', icon: FileText, badge: 3 }, // Changed badge to 3 based on image_7a6be0.png
     { id: 'messages', label: 'Messages', icon: MessageSquare },
     { id: 'analytics', label: 'Analytics', icon: BarChart3 },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -102,33 +103,53 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
       {/* Logo */}
       <div className="p-6 border-b border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">B</span>
+          <span className="px-4 py-1 bg-[#1E3A8A] text-white text-sm font-semibold rounded-md">BantuLink</span> {/* Adjusted styling for "BantuLink" for better fidelity with image_7a81c8.png and image_7a850e.png */}
+        </div>
+      </div>
+
+      {/* Profile Info for Sidebar - Moved to top as per image_7a6be0.png */}
+      <div className="p-4 border-b border-gray-200"> {/* Added border-b as per image_7a6be0.png */}
+        <div className="flex items-center space-x-3">
+          <Avatar className="w-10 h-10">
+            <AvatarFallback className="bg-[#1E3A8A] text-white text-base">JM</AvatarFallback> {/* Adjusted background color and font size as per image_7a6be0.png */}
+          </Avatar>
+          <div>
+            <p className="font-semibold text-gray-900 text-base">Jean Mba</p> {/* Adjusted font size as per image_7a6be0.png */}
+            <p className="text-sm text-gray-600">Recruiter</p>
           </div>
-          <span className="font-semibold text-gray-900">BantuLink</span>
+        </div>
+        <div className="mt-4 flex justify-between items-center text-sm"> {/* Changed to flex row for side-by-side as per image_7a6be0.png */}
+            <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1"> {/* Added styling for "Job Posts" box as per image_7a6be0.png */}
+              <p className="font-bold text-gray-900 text-lg">8</p> {/* Bolded and increased font size as per image_7a6be0.png */}
+              <span className="text-gray-600 text-xs">Job Posts</span> {/* Adjusted font size as per image_7a6be0.png */}
+            </div>
+            <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1"> {/* Added styling for "Applicants" box as per image_7a6be0.png */}
+              <p className="font-bold text-green-600 text-lg">47</p> {/* Bolded, green color, and increased font size as per image_7a6be0.png */}
+              <span className="text-gray-600 text-xs">Applicants</span> {/* Adjusted font size as per image_7a6be0.png */}
+            </div>
         </div>
       </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1">
-        {sidebarItems.map((item, index) => {
+        {sidebarItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
           return (
             <button
               key={item.id}
               onClick={() => setActiveSection(item.id)}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105 ${
-                isActive 
-                  ? 'bg-blue-600 text-white shadow-lg' 
-                  : 'text-gray-700 hover:bg-gray-100'
+              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 transform ${
+                isActive
+                  ? 'bg-[#1E3A8A] text-white shadow-lg' // Active state for dashboard button as per image_7a6be0.png
+                  : 'text-gray-700 hover:bg-gray-100 hover:scale-105' // Inactive state as per image_7a6be0.png
               }`}
             >
               <Icon className="w-5 h-5" />
               <span>{item.label}</span>
-              {item.id === 'applications' && (
-                <Badge className="ml-auto bg-red-500 text-white text-xs px-1.5 py-0.5">
-                  2
+              {item.badge && (
+                <Badge className="ml-auto bg-red-500 text-white text-xs px-1.5 py-0.5 min-w-[20px] justify-center items-center"> {/* Adjusted padding and alignment for badge */}
+                  {item.badge}
                 </Badge>
               )}
             </button>
@@ -142,21 +163,23 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
 // Composant Header
 const HeaderDashRecru = () => {
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back, Jean!</h1>
-          <p className="text-gray-600 text-sm">Last login: Today at 9:30 AM</p>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" className="hover:scale-105 transition-transform">
-            <Bell className="w-4 h-4 mr-2" />
-            Notifications
+    <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+      {/* This section will be empty as per the image for the main header */}
+      <div className="flex items-center space-x-2"> {/* Added BantuLink to header for completeness, though not explicitly asked to move */}
+        
+      </div>
+      <div className="flex items-center space-x-4">
+        <div className="relative">
+          <Button variant="ghost" size="sm" className="relative hover:scale-105 transition-transform">
+            <Bell className="w-5 h-5 text-gray-600" />
+            <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 py-0.5 rounded-full z-10">
+              !
+            </Badge>
           </Button>
-          <Avatar className="hover:scale-110 transition-transform cursor-pointer">
-            <AvatarFallback className="bg-blue-600 text-white">JM</AvatarFallback>
-          </Avatar>
         </div>
+        <Avatar className="hover:scale-110 transition-transform cursor-pointer">
+          <AvatarFallback className="text-white" style={{ backgroundColor: '#1E3A8A' }}>JM</AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );
@@ -165,36 +188,36 @@ const HeaderDashRecru = () => {
 // Composant Main Dashboard
 const MainDashRecru = ({ animateCards }) => {
   const stats = [
-    { 
-      title: '234', 
-      subtitle: 'Job Applications', 
-      description: '8% more than last week',
+    {
+      title: '234',
+      subtitle: 'Total Job Views',
+      description: '', // Removed "8% more than last week" as per image
       color: 'bg-blue-50 border-blue-200',
-      icon: FileText,
+      icon: Eye, // Changed icon to Eye as per image
       iconColor: 'text-blue-600'
     },
-    { 
-      title: '28', 
-      subtitle: 'Job Posts', 
-      description: 'You have active 11% jobs',
+    {
+      title: '28',
+      subtitle: 'Applications This Week', // Changed to "Applications This Week" as per image
+      description: '', // Removed "You have active 11% jobs" as per image
       color: 'bg-green-50 border-green-200',
-      icon: Briefcase,
+      icon: FileText, // Changed icon to FileText as per image
       iconColor: 'text-green-600'
     },
-    { 
-      title: '5', 
-      subtitle: 'Interviews', 
-      description: 'Interviews Scheduled',
+    {
+      title: '5',
+      subtitle: 'Interviews Scheduled',
+      description: '',
       color: 'bg-yellow-50 border-yellow-200',
       icon: Calendar,
       iconColor: 'text-yellow-600'
     },
-    { 
-      title: '12', 
-      subtitle: 'Profile Views', 
-      description: 'Profile Views',
+    {
+      title: '12',
+      subtitle: 'Active Candidates', // Changed to "Active Candidates" as per image
+      description: '',
       color: 'bg-pink-50 border-pink-200',
-      icon: Eye,
+      icon: Users, // Changed icon to Users as per image
       iconColor: 'text-pink-600'
     },
   ];
@@ -260,47 +283,54 @@ const MainDashRecru = ({ animateCards }) => {
   const quickActions = [
     {
       title: 'Create Job Post',
-      subtitle: 'Post a new job opening',
+      subtitle: 'Post a new position',
       icon: Plus,
-      color: 'bg-blue-600 hover:bg-blue-700',
-      textColor: 'text-white'
+      bgColor: 'bg-[#1E3A8A]', // Specific background color from image
+      textColor: 'text-white',
+      iconColor: 'text-white' // Icon color for this card
     },
     {
       title: 'Edit Profile',
       subtitle: 'Update your info',
       icon: User,
-      color: 'bg-gray-100 hover:bg-gray-200',
-      textColor: 'text-gray-900'
+      bgColor: 'bg-white', // Default white background
+      textColor: 'text-gray-800', // Default text color
+      iconColor: 'text-gray-800' // Icon color for this card
     },
     {
-      title: 'Search Mode',
-      subtitle: 'Find candidates',
-      icon: Search,
-      color: 'bg-gray-100 hover:bg-gray-200',
-      textColor: 'text-gray-900'
+      title: 'Switch Mode', // Changed to 'Switch Mode'
+      subtitle: 'View as candidate', // Changed subtitle
+      icon: ArrowLeftRight, // Changed icon
+      bgColor: 'bg-white', // Default white background
+      textColor: 'text-green-600', // Green text from image
+      iconColor: 'text-green-600' // Green icon from image
     },
     {
-      title: 'Job Analytics',
-      subtitle: 'View job performance',
-      icon: TrendingUp,
-      color: 'bg-gray-100 hover:bg-gray-200',
-      textColor: 'text-gray-900'
+      title: 'View Analytics', // Changed to 'View Analytics'
+      subtitle: 'Performance insights', // Changed subtitle
+      icon: BarChart3, // Changed icon
+      bgColor: 'bg-white', // Default white background
+      textColor: 'text-orange-500', // Orange text from image
+      iconColor: 'text-orange-500' // Orange icon from image
     }
   ];
 
   return (
     <main className="flex-1 p-6 overflow-auto">
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back, Jean!</h1>
+      <p className="text-gray-600 text-sm mb-6">Last login: Today at 9:30 AM</p>
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card 
-              key={index} 
+            <Card
+              key={index}
               className={`${stat.color} border-2 hover:shadow-lg transition-all duration-300 transform hover:scale-105 ${
                 animateCards ? 'opacity-100' : 'opacity-0'
               }`}
-              style={{ 
+              style={{
                 animationDelay: `${index * 100}ms`,
                 animation: animateCards ? 'fadeInUp 0.5s ease-out forwards' : 'none'
               }}
@@ -312,7 +342,7 @@ const MainDashRecru = ({ animateCards }) => {
                 <div className="space-y-1">
                   <h3 className="text-3xl font-bold text-gray-900">{stat.title}</h3>
                   <p className="text-gray-700 font-medium">{stat.subtitle}</p>
-                  <p className="text-sm text-gray-600">{stat.description}</p>
+                  {stat.description && <p className="text-sm text-gray-600">{stat.description}</p>}
                 </div>
               </CardContent>
             </Card>
@@ -326,14 +356,14 @@ const MainDashRecru = ({ animateCards }) => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Active Job Posts</CardTitle>
-              <Button className="bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition-all">
+              <Button className="transform hover:scale-105 transition-all" style={{ backgroundColor: '#1E3A8A' }}>
                 Create New Job
               </Button>
             </CardHeader>
             <CardContent className="space-y-4">
               {jobPosts.map((job, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100  cursor-pointer transform hover:scale-[1.02] transition-transform"
                 >
                   <div className="flex items-center space-x-4">
@@ -365,8 +395,8 @@ const MainDashRecru = ({ animateCards }) => {
             </CardHeader>
             <CardContent className="space-y-4">
               {recentApplications.map((application, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transform hover:scale-105 transition-all"
                 >
                   <Avatar className="w-10 h-10">
@@ -394,18 +424,20 @@ const MainDashRecru = ({ animateCards }) => {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"> {/* Adjusted grid for 2x2 layout */}
           {quickActions.map((action, index) => {
             const Icon = action.icon;
             return (
-              <Card 
-                key={index} 
-                className={`cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg ${action.color}`}
+              <Card
+                key={index}
+                className={`cursor-pointer transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg ${action.bgColor}`}
               >
-                <CardContent className="p-6 text-center">
-                  <Icon className={`w-8 h-8 mx-auto mb-3 ${action.textColor}`} />
-                  <h3 className={`font-semibold mb-1 ${action.textColor}`}>{action.title}</h3>
-                  <p className={`text-sm opacity-80 ${action.textColor}`}>{action.subtitle}</p>
+                <CardContent className="p-4 flex items-center space-x-4"> {/* Adjusted padding and added flexbox */}
+                  <Icon className={`w-7 h-7 flex-shrink-0 ${action.iconColor}`} /> {/* Adjusted icon size and ensured it doesn't shrink */}
+                  <div>
+                    <h3 className={`font-semibold mb-0.5 ${action.textColor}`}>{action.title}</h3> {/* Adjusted margin */}
+                    <p className={`text-sm opacity-90 ${action.textColor}`}>{action.subtitle}</p> {/* Adjusted opacity */}
+                  </div>
                 </CardContent>
               </Card>
             );
@@ -428,33 +460,33 @@ const DashboardRecruteurprofil = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50 flex">
-      <SlidebarDashRecru 
-        activeSection={activeSection} 
-        setActiveSection={setActiveSection} 
-      />
-      
-      <div className="flex-1 flex flex-col">
-        <HeaderDashRecru />
-        <MainDashRecru animateCards={animateCards} />
+      <div className=" bg-gray-50 flex">
+        <SlidebarDashRecru
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+        />
+
+        <div className="flex-1 flex flex-col">
+          <HeaderDashRecru />
+          <MainDashRecru animateCards={animateCards} />
+        </div>
+
+        <style jsx>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}</style>
       </div>
 
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-    </div>
+      <Footer />
 
-    <Footer />
-    
     </>
   );
 };

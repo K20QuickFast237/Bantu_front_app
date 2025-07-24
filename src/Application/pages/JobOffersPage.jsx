@@ -1,8 +1,11 @@
 import React from 'react';
+import Header from "../components/Header"
 
 const JobOfferPage = () => {
   return (
-    <div className="min-h-screen bg-gray-100 font-sans relative">
+    <>
+    <Header/>
+    <div className="min-h-screen mt-20 bg-gray-100 font-sans relative">
       {/* Fixed Footer for mobile/scroll */}
       <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
         <div className="flex justify-center gap-4">
@@ -43,10 +46,15 @@ const JobOfferPage = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-lg my-8 p-6 lg:p-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-6 border-b pb-4">
-          <div className="flex items-center">
+      <div className="max-w-6xl mx-auto bg-white  rounded-lg my-8 p-6 lg:p-8">
+
+        {/* Main Content Area */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Column: Job Details & Description */}
+          <div className="lg:w-2/3 ">
+           {/* Header */} 
+           <div className="flex justify-between items-center mb-6  pb-4">
+          <div className="flex items-center ">
             <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center mr-3 text-sm font-semibold text-gray-800 rounded">
               Logo
             </div>
@@ -70,11 +78,6 @@ const JobOfferPage = () => {
             </svg>
           </button>
         </div>
-
-        {/* Main Content Area */}
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column: Job Details & Description */}
-          <div className="lg:w-2/3">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Graphic designer</h2>
 
             {/* Publication Dates */}
@@ -282,6 +285,7 @@ const JobOfferPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
