@@ -225,7 +225,7 @@ const Login = () => {
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
-                  width={'1/3'} // Pour que le bouton prenne toute la largeur de la colonne de la grille
+                  width="100%" // Pour que le bouton prenne toute la largeur de la colonne de la grille
                 />
               </div>
               {/* Apple Button */}
