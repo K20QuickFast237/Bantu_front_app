@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import PublicRoutes from "./routes/PublicRoutes";
+
 import Home from "./pages/public/Home";
 import About from "./pages/public/About";
 import Fonctionnalites from "./pages/public/Fonctionnalites";
@@ -67,6 +68,7 @@ const App = () => {
           <Route path="/jobApplicationPage2" element={<JobApplicationPage2/>}/>
         </Route>
       </Routes>
+      
     </>
   );
 };

@@ -137,7 +137,7 @@ const MyJobPostsRecruiterContent = () => {
     <main className="flex-1 p-6 overflow-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-gray-900">My Job Posts</h1>
-        <button className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 transform hover:scale-105 transition-all">
+        <button className="inline-flex items-center justify-center rounded-md font-medium  focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 transform hover:scale-105 transition-all">
           <Plus className="w-4 h-4 mr-2" />
           Create New Job
         </button>
@@ -152,7 +152,7 @@ const MyJobPostsRecruiterContent = () => {
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
-        <button className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 py-2 px-4 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 flex items-center space-x-2">
+        <button className="justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-10 py-2 px-4 border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 flex items-center space-x-2">
           <span>All Status</span>
           <ChevronDown className="w-4 h-4" />
         </button>
@@ -174,7 +174,7 @@ const MyJobPostsRecruiterContent = () => {
                   <span className="text-sm text-gray-700">{job.applicants} applicants</span>
                 </div>
               </div>
-              <button className="inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-8 px-3 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 hover:scale-105 transition-transform">
+              <button className="inline-flex items-center justify-center rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-8 px-3 text-sm border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500 hover:scale-105 transition-transform">
                 <Eye className="w-4 h-4 mr-2" />
                 View Applications
               </button>
