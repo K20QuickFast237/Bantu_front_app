@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, PlusCircle, X } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 
-// Schéma de validation pour les expériences
 const experienceSchema = Yup.object().shape({
   titre_poste: Yup.string().required('Le titre du poste est requis'),
   nom_entreprise: Yup.string().required('Le nom de l\'entreprise est requis'),
@@ -22,29 +21,24 @@ const experienceSchema = Yup.object().shape({
 const Experiences = () => {
   const { token } = useAuth();
   const [experiences, setExperiences] = useState([]);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingExperience, setEditingExperience] = useState(null);
 
-  // Charger les expériences à chaque montage ou changement de token
   useEffect(() => {
     const fetchExperiences = async () => {
-      if (!token) {
-        return;
-      }
+      if (!token) return;
       try {
         const response = await api.get('/experiences');
         setExperiences(response.data);
       } catch (error) {
         toast.error('Erreur lors du chargement des expériences');
         console.error('Erreur API:', error);
-        setExperiences([]); // Réinitialiser en cas d'erreur
+        setExperiences([]);
       }
     };
     fetchExperiences();
-  }, [token]); // Déclenche à chaque changement de token (connexion/déconnexion)
+  }, [token]);
 
-  // Formulaire Formik
   const formik = useFormik({
     initialValues: {
       titre_poste: '',
@@ -66,7 +60,6 @@ const Experiences = () => {
           setExperiences(experiences.map(e => (e.id === editingExperience.id ? { ...e, ...values, id: editingExperience.id } : e)));
         } else {
           response = await api.post('/experiences', values);
-          console.log('Réponse API POST:', response.data);
           setExperiences([...experiences, { ...values, id: response.data.id || Date.now() }]);
           toast.success('Expérience ajoutée avec succès');
         }
@@ -80,7 +73,6 @@ const Experiences = () => {
     },
   });
 
-  // Ouvrir le modal pour modifier
   const openEditModal = (experience) => {
     setEditingExperience(experience);
     formik.setValues({
@@ -96,7 +88,6 @@ const Experiences = () => {
     setIsModalOpen(true);
   };
 
-  // Supprimer une expérience
   const deleteExperience = async (id) => {
     if (window.confirm('Voulez-vous vraiment supprimer cette expérience ?')) {
       try {
@@ -122,7 +113,6 @@ const Experiences = () => {
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        {/* Header Section */}
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
           <div>
             <h2 className="text-xl font-semibold text-blue-800">Expériences</h2>
@@ -141,7 +131,6 @@ const Experiences = () => {
           </button>
         </div>
 
-        {/* Experiences List */}
         <div className="space-y-6">
           {experiences.length === 0 ? (
             <p className="text-gray-600">Aucune expérience enregistrée.</p>
@@ -187,156 +176,166 @@ const Experiences = () => {
         </div>
       </motion.section>
 
-      {/* Modal pour ajout/modification */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md border border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-blue-800">
-                {editingExperience ? 'Modifier une expérience' : 'Ajouter une expérience'}
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="text-gray-600 hover:text-gray-800">
-                <X size={20} />
-              </button>
-            </div>
-            <form onSubmit={formik.handleSubmit}>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Titre du poste</label>
-                  <input
-                    type="text"
-                    name="titre_poste"
-                    value={formik.values.titre_poste}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.titre_poste && formik.errors.titre_poste && (
-                    <p className="text-red-500 text-xs">{formik.errors.titre_poste}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Nom de l'entreprise</label>
-                  <input
-                    type="text"
-                    name="nom_entreprise"
-                    value={formik.values.nom_entreprise}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.nom_entreprise && formik.errors.nom_entreprise && (
-                    <p className="text-red-500 text-xs">{formik.errors.nom_entreprise}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Adresse</label>
-                  <input
-                    type="text"
-                    name="adresse"
-                    value={formik.values.adresse}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.adresse && formik.errors.adresse && (
-                    <p className="text-red-500 text-xs">{formik.errors.adresse}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Ville</label>
-                  <input
-                    type="text"
-                    name="ville"
-                    value={formik.values.ville}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.ville && formik.errors.ville && (
-                    <p className="text-red-500 text-xs">{formik.errors.ville}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Pays</label>
-                  <input
-                    type="text"
-                    name="pays"
-                    value={formik.values.pays}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.pays && formik.errors.pays && (
-                    <p className="text-red-500 text-xs">{formik.errors.pays}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Date de début</label>
-                  <input
-                    type="date"
-                    name="date_debut"
-                    value={formik.values.date_debut}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.date_debut && formik.errors.date_debut && (
-                    <p className="text-red-500 text-xs">{formik.errors.date_debut}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Date de fin</label>
-                  <input
-                    type="date"
-                    name="date_fin"
-                    value={formik.values.date_fin}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.date_fin && formik.errors.date_fin && (
-                    <p className="text-red-500 text-xs">{formik.errors.date_fin}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Description des tâches</label>
-                  <textarea
-                    name="description_taches"
-                    value={formik.values.description_taches}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    rows="4"
-                  />
-                  {formik.touched.description_taches && formik.errors.description_taches && (
-                    <p className="text-red-500 text-xs">{formik.errors.description_taches}</p>
-                  )}
-                </div>
-              </div>
-              <div className="mt-6 flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalOpen(false);
-                    setEditingExperience(null);
-                    formik.resetForm();
-                  }}
-                  className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm overflow-y-auto py-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className="bg-white p-6 rounded-lg shadow-md w-full max-w-md border border-gray-200 my-8 mx-4 max-h-[90vh] overflow-y-auto"
+            >
+              <div className="flex justify-between items-center mb-4 sticky top-0 bg-white pt-2 pb-4">
+                <h3 className="text-lg font-semibold text-blue-800">
+                  {editingExperience ? 'Modifier une expérience' : 'Ajouter une expérience'}
+                </h3>
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  className="text-gray-600 hover:text-gray-800"
                 >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm"
-                >
-                  {editingExperience ? 'Mettre à jour' : 'Ajouter'}
+                  <X size={20} />
                 </button>
               </div>
-            </form>
+              <form onSubmit={formik.handleSubmit}>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Titre du poste</label>
+                    <input
+                      type="text"
+                      name="titre_poste"
+                      value={formik.values.titre_poste}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.titre_poste && formik.errors.titre_poste && (
+                      <p className="text-red-500 text-xs">{formik.errors.titre_poste}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Nom de l'entreprise</label>
+                    <input
+                      type="text"
+                      name="nom_entreprise"
+                      value={formik.values.nom_entreprise}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.nom_entreprise && formik.errors.nom_entreprise && (
+                      <p className="text-red-500 text-xs">{formik.errors.nom_entreprise}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Adresse</label>
+                    <input
+                      type="text"
+                      name="adresse"
+                      value={formik.values.adresse}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.adresse && formik.errors.adresse && (
+                      <p className="text-red-500 text-xs">{formik.errors.adresse}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Ville</label>
+                    <input
+                      type="text"
+                      name="ville"
+                      value={formik.values.ville}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.ville && formik.errors.ville && (
+                      <p className="text-red-500 text-xs">{formik.errors.ville}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Pays</label>
+                    <input
+                      type="text"
+                      name="pays"
+                      value={formik.values.pays}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.pays && formik.errors.pays && (
+                      <p className="text-red-500 text-xs">{formik.errors.pays}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Date de début</label>
+                    <input
+                      type="date"
+                      name="date_debut"
+                      value={formik.values.date_debut}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.date_debut && formik.errors.date_debut && (
+                      <p className="text-red-500 text-xs">{formik.errors.date_debut}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Date de fin</label>
+                    <input
+                      type="date"
+                      name="date_fin"
+                      value={formik.values.date_fin}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                    />
+                    {formik.touched.date_fin && formik.errors.date_fin && (
+                      <p className="text-red-500 text-xs">{formik.errors.date_fin}</p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Description des tâches</label>
+                    <textarea
+                      name="description_taches"
+                      value={formik.values.description_taches}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      rows="4"
+                    />
+                    {formik.touched.description_taches && formik.errors.description_taches && (
+                      <p className="text-red-500 text-xs">{formik.errors.description_taches}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-6 flex justify-end space-x-2 sticky bottom-0 bg-white pt-4 pb-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsModalOpen(false);
+                      setEditingExperience(null);
+                      formik.resetForm();
+                    }}
+                    className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm"
+                  >
+                    {editingExperience ? 'Mettre à jour' : 'Ajouter'}
+                  </button>
+                </div>
+              </form>
+            </motion.div>
           </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 };
