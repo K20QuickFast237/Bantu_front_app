@@ -17,7 +17,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import DynamicFontAwesomeIcon from '../ui/DynamicFontAwesomeIcon';
+import DynamicFontAwesomeIcon from './DynamicFontAwesomeIcon';
 
 const competenceSchema = Yup.object().shape({
   nom: Yup.string().required('Le nom de la compétence est requis'),
