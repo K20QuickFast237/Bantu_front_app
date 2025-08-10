@@ -1,3 +1,5 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Footer from "../../components/public/Footer";
 import AutresRessources from "../../components/app/AutresRessources";
 import Competences from "../../components/app/Competences";
@@ -11,6 +13,7 @@ import PageWrapper from "../../components/public/PageWrapper";
 function Profil (){
     return(
         <>
+        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         <PageWrapper>   
             <Header />
             <Infopersonelles />

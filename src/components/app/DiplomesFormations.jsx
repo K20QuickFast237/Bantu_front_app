@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { Edit, Trash2, PlusCircle, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { Edit, Trash2, PlusCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
+import { validationFormationSchema } from '../../schemas';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
 
-const formationSchema = Yup.object().shape({
-  domaine_etude: Yup.string().required('Le domaine d\'étude est requis'),
-  date_debut: Yup.date().required('La date de début est requise').nullable(),
-  date_fin: Yup.date().min(Yup.ref('date_debut'), 'La date de fin doit être postérieure à la date de début').nullable(),
-  etablissement: Yup.string().required('L\'établissement est requis'),
-  diplome: Yup.string().required('Le diplôme est requis'),
-});
 
 const DiplomesFormations = () => {
   const { token } = useAuth();
   const [formations, setFormations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFormation, setEditingFormation] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [formationToDelete, setFormationToDelete] = useState(null);
 
   useEffect(() => {
     const fetchFormations = async () => {
@@ -44,18 +49,18 @@ const DiplomesFormations = () => {
       etablissement: '',
       diplome: '',
     },
-    validationSchema: formationSchema,
+    validationSchema: validationFormationSchema,
     onSubmit: async (values, { resetForm }) => {
       try {
         let response;
         if (editingFormation) {
           response = await api.put(`/formations/${editingFormation.id}`, values);
-          toast.success('Formation mise à jour avec succès');
-          setFormations(formations.map(f => (f.id === editingFormation.id ? { ...f, ...values, id: editingFormation.id } : f)));
+          toast.success(response.data.message || 'Formation mise à jour avec succès');
+          setFormations(formations.map(form => (form.id === editingFormation.id ? response.data.data : form)));
         } else {
           response = await api.post('/formations', values);
-          setFormations([...formations, { ...values, id: response.data.id || Date.now() }]);
-          toast.success('Formation ajoutée avec succès');
+          toast.success(response.data.message || 'Formation ajoutée avec succès');
+          setFormations([...formations, response.data.data]);
         }
         resetForm();
         setIsModalOpen(false);
@@ -79,18 +84,25 @@ const DiplomesFormations = () => {
     setIsModalOpen(true);
   };
 
-  const deleteFormation = async (id) => {
-    if (window.confirm('Voulez-vous vraiment supprimer cette formation ?')) {
-      try {
-        await api.delete(`/formations/${id}`);
-        setFormations(formations.filter(f => f.id !== id));
-        toast.success('Formation supprimée avec succès');
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Erreur lors de la suppression');
-        console.error('Erreur suppression:', error);
-      }
+  const handleConfirmDelete = async () => {
+    if (!formationToDelete) return;
+    try {
+      await api.delete(`/formations/${formationToDelete}`);
+      setFormations(formations.filter(f => f.id !== formationToDelete));
+      toast.success('Formation supprimée avec succès');
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Erreur lors de la suppression');
+      console.error('Erreur suppression:', error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setFormationToDelete(null);
     }
   };
+
+  const openDeleteModal = (id) => {
+    setFormationToDelete(id);
+    setIsDeleteModalOpen(true);
+  }
 
   if (!token) {
     return <p className="text-red-500 text-center">Veuillez vous connecter pour gérer vos formations.</p>;
@@ -108,17 +120,107 @@ const DiplomesFormations = () => {
           <div>
             <h2 className="text-xl font-semibold text-blue-800">Diplômes & Formations</h2>
           </div>
-          <button
-            onClick={() => {
-              setEditingFormation(null);
-              formik.resetForm();
-              setIsModalOpen(true);
-            }}
-            className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 animate-pulse font-medium text-sm"
-          >
-            <PlusCircle size={16} className="mr-1" />
-            Ajouter
-          </button>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogTrigger asChild>
+              <button
+                onClick={() => {
+                  setEditingFormation(null);
+                  formik.resetForm();
+                }}
+                className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 animate-pulse font-medium text-sm"
+              >
+                <PlusCircle size={16} className="mr-1" />
+                Ajouter
+              </button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{editingFormation ? 'Modifier une formation' : 'Ajouter une formation'}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={formik.handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Diplôme</label>
+                  <input
+                    type="text"
+                    name="diplome"
+                    value={formik.values.diplome}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {formik.touched.diplome && formik.errors.diplome && (
+                    <p className="text-red-500 text-xs">{formik.errors.diplome}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Domaine d'étude</label>
+                  <input
+                    type="text"
+                    name="domaine_etude"
+                    value={formik.values.domaine_etude}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {formik.touched.domaine_etude && formik.errors.domaine_etude && (
+                    <p className="text-red-500 text-xs">{formik.errors.domaine_etude}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Établissement</label>
+                  <input
+                    type="text"
+                    name="etablissement"
+                    value={formik.values.etablissement}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {formik.touched.etablissement && formik.errors.etablissement && (
+                    <p className="text-red-500 text-xs">{formik.errors.etablissement}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Date de début</label>
+                  <input
+                    type="date"
+                    name="date_debut"
+                    value={formik.values.date_debut}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {formik.touched.date_debut && formik.errors.date_debut && (
+                    <p className="text-red-500 text-xs">{formik.errors.date_debut}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Date de fin</label>
+                  <input
+                    type="date"
+                    name="date_fin"
+                    value={formik.values.date_fin}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  />
+                  {formik.touched.date_fin && formik.errors.date_fin && (
+                    <p className="text-red-500 text-xs">{formik.errors.date_fin}</p>
+                  )}
+                </div>
+                <DialogFooter className="mt-6 flex justify-end space-x-2 pt-4 pb-2">
+                  <DialogClose asChild>
+                    <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">
+                      Annuler
+                    </button>
+                  </DialogClose>
+                  <button type="submit" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm">
+                    {editingFormation ? 'Mettre à jour' : 'Ajouter'}
+                  </button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="space-y-6">
@@ -151,7 +253,7 @@ const DiplomesFormations = () => {
                     Modifier
                   </button>
                   <button
-                    onClick={() => deleteFormation(item.id)}
+                    onClick={() => openDeleteModal(item.id)}
                     className="flex items-center px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs"
                   >
                     <Trash2 size={14} />
@@ -163,124 +265,24 @@ const DiplomesFormations = () => {
         </div>
       </motion.section>
 
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-30 backdrop-blur-sm overflow-y-auto py-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="bg-white p-6 rounded-lg shadow-md w-full max-w-md border border-gray-200 my-8 mx-4 max-h-[90vh] overflow-y-auto"
-            >
-              <div className="flex justify-between items-center mb-4 sticky top-0 bg-white pt-2 pb-4">
-                <h3 className="text-lg font-semibold text-blue-800">
-                  {editingFormation ? 'Modifier une formation' : 'Ajouter une formation'}
-                </h3>
-                <button 
-                  onClick={() => setIsModalOpen(false)} 
-                  className="text-gray-600 hover:text-gray-800"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-              <form onSubmit={formik.handleSubmit}>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">Diplôme</label>
-                    <input
-                      type="text"
-                      name="diplome"
-                      value={formik.values.diplome}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                    {formik.touched.diplome && formik.errors.diplome && (
-                      <p className="text-red-500 text-xs">{formik.errors.diplome}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">Domaine d'étude</label>
-                    <input
-                      type="text"
-                      name="domaine_etude"
-                      value={formik.values.domaine_etude}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                    {formik.touched.domaine_etude && formik.errors.domaine_etude && (
-                      <p className="text-red-500 text-xs">{formik.errors.domaine_etude}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">Établissement</label>
-                    <input
-                      type="text"
-                      name="etablissement"
-                      value={formik.values.etablissement}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                    {formik.touched.etablissement && formik.errors.etablissement && (
-                      <p className="text-red-500 text-xs">{formik.errors.etablissement}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">Date de début</label>
-                    <input
-                      type="date"
-                      name="date_debut"
-                      value={formik.values.date_debut}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                    {formik.touched.date_debut && formik.errors.date_debut && (
-                      <p className="text-red-500 text-xs">{formik.errors.date_debut}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-600">Date de fin</label>
-                    <input
-                      type="date"
-                      name="date_fin"
-                      value={formik.values.date_fin}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                    />
-                    {formik.touched.date_fin && formik.errors.date_fin && (
-                      <p className="text-red-500 text-xs">{formik.errors.date_fin}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="mt-6 flex justify-end space-x-2 sticky bottom-0 bg-white pt-4 pb-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsModalOpen(false);
-                      setEditingFormation(null);
-                      formik.resetForm();
-                    }}
-                    className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm"
-                  >
-                    {editingFormation ? 'Mettre à jour' : 'Ajouter'}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
+            <DialogDescription>
+              Cette action est irréversible. La formation sera définitivement supprimée.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+            </DialogClose>
+            <button onClick={handleConfirmDelete} className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm">
+              Supprimer
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
