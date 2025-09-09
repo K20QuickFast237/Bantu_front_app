@@ -24,6 +24,7 @@ import ForgotPasswordForm from "./pages/app/ForgotPasswordForm";
 import ForgotPasswordConfirmation from "./pages/app/ForgotPasswordConfirmation";
 import ResetPasswordForm from "./pages/app/ResetPasswordForm";
 import JobOffersPage from "./pages/app/JobOffersPage";
+import BantuLinkHome from "./pages/app/BantuLinkHome";
 
 const App = () => {
   return (
@@ -56,6 +57,7 @@ const App = () => {
           <Route path="/forgotpasswordconfirmation" element={<ForgotPasswordConfirmation />}/>
           <Route path="/reset-password" element={<ResetPasswordForm/>}/>
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
+          <Route path="/homepage" element={<BantuLinkHome />} />
         </Route>
       </Routes>
       

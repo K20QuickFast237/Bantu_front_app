@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import Logo from '../../assets/assets_application/BantulinkLogo.png'; // Make sure this path is correct for your logo
+import Logo from '../../assets/assets_application/BantuLinkLogo.png'; // Make sure this path is correct for your logo
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

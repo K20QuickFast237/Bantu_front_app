@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 // Imports des images
 import CompanyBg from '../../assets/assets_application/Recherche_entreprise.png';
-import BantulinkLogo from '../../assets/assets_application/BantulinkLogo.png';
+import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 
 const JobCarousel = () => {
   const [activeTab, setActiveTab] = useState('graphiste');

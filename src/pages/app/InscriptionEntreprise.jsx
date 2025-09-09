@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import Welcome1 from '../../assets/assets_application/Welcome1.png';
+import Welcome1 from '../../assets/assets_application/welcome1.png';
 import Header from '../../components/app/Header';
 import Footer from '../../components/public/Footer';
 

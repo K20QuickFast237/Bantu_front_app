@@ -1,6 +1,6 @@
 import React from 'react';
 import CompanyBg from '../../assets/assets_application/Recherche_entreprise.png';
-import BantulinkLogo from '../../assets/assets_application/BantulinkLogo.png';
+import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 import { motion } from 'framer-motion';
 
 const HeroCompany = () => {
