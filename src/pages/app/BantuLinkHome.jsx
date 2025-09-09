@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import { Briefcase, ShoppingCart, Users, TrendingUp, Shield, Globe, Star, ArrowRight, Menu, X, Zap, Heart, User, Settings, LogOut, FileText, UserPlus, Store, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-// Pour utiliser les animations Lottie, décommentez la ligne suivante
 import Lottie from 'lottie-react';
 
 import postulerAnimation from '../../assets/lotties_json/postuler.json'; 
@@ -163,10 +163,21 @@ const AccessModal = ({ isOpen, onClose, service }) => {
 
           <div className="space-y-4">
               <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className={`w-full bg-gradient-to-r ${bgColor} text-white py-4 rounded-xl font-semibold hover:shadow-lg transition-shadow duration-300 cursor-pointer group`}>
-              <span className="flex items-center justify-center">
-                Continuer
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-              </span>
+                {isHire ? 
+                  <Link to="/hirehome">
+                    <span className="flex items-center justify-center">
+                      Continuer
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                    </span>
+                  </Link>
+                : 
+                  <Link to="/markethome">
+                    <span className="flex items-center justify-center">
+                      Continuer
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                    </span>
+                  </Link>
+                }
               </motion.button>
             
               <motion.button
