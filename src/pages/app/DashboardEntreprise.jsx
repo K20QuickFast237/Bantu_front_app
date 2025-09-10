@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { Search, MapPin, ArrowRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import Header from '../../components/app/Header';
-import Footer from '../../components/public/Footer';
 
 const DashboardEntreprise = () => {
   const controls = useAnimation();
@@ -42,7 +40,7 @@ const DashboardEntreprise = () => {
 
   return (
     <>
-      <Header />
+      
       <div className="font-sans relative overflow-hidden">
         {/* Hero Section */}
         <div className="bg-[#FFF3EB] px-4 sm:px-8 pb-32 pt-20 relative">
@@ -161,7 +159,7 @@ const DashboardEntreprise = () => {
         </div>
       </div>
 
-      <Footer />
+      
     </>
   );
 };
