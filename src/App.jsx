@@ -26,6 +26,7 @@ import ResetPasswordForm from "./pages/app/ResetPasswordForm";
 import JobOffersPage from "./pages/app/JobOffersPage";
 import BantuLinkHome from "./pages/app/BantuLinkHome";
 import BantuHireHome from "./pages/app/BantuHireHome";
+import Dashboard from "./pages/app/DashboardCandidate";
 
 const App = () => {
   return (
@@ -60,6 +61,8 @@ const App = () => {
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
           <Route path="/homepage" element={<BantuLinkHome />} />
           <Route path="/hirehome" element={<BantuHireHome />} />
+          <Route path="/markethome" element={<BantuHireHome />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
       
