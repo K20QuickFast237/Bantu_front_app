@@ -3,10 +3,13 @@ import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { Briefcase, MapPin, Search, ChevronDown, User, LogIn, Building, Users, FileText, PlusCircle, Menu, X, ChevronRight, Flame, Star, Code, Megaphone, PenTool, DollarSign, HeartHandshake, Award, ArrowRight } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import Footer from "@/components/app/footer";
+import InscriptionEntreprise from "./InscriptionEntreprise";
 
 export default function BantuHireHome() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isInscriptionOpen, setIsInscriptionOpen] = useState(false);
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -44,7 +47,7 @@ export default function BantuHireHome() {
   }, []);
 
   // Dropdown for "Pour les Candidats" and "Pour les Employeurs"
-  const DropdownMenu = ({ title, items, scrolled }) => {
+  const DropdownMenu = ({ title, items, scrolled, isEmployer }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
@@ -57,15 +60,18 @@ export default function BantuHireHome() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute top-full pt-2 w-56 bg-white rounded-lg shadow-xl  overflow-hidden"
+            className="absolute top-full pt-2 w-56 bg-white rounded-lg shadow-xl overflow-hidden"
           >
             <ul className="p-2">
               {items.map((item, index) => (
                 <li key={index}>
-                  <a href={item.href} className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                  <button
+                    onClick={isEmployer ? () => setIsInscriptionOpen(true) : undefined}
+                    className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md w-full text-left"
+                  >
                     {item.icon}
                     {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -106,40 +112,40 @@ export default function BantuHireHome() {
     }, [ref]);
 
     return (
-        <div className="relative w-full" ref={ref}>
-            <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="w-full flex justify-between items-center bg-transparent text-gray-800 focus:outline-none cursor-pointer"
-            >
-            <span className={selected === "Catégorie" ? "text-gray-500" : "text-gray-800"}>{selected}</span>
-            <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {isOpen && (
-            <motion.ul
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-100 z-10 overflow-hidden"
-            >
-                {categories.map((category, index) => (
-                <li
-                    key={index}
-                    onClick={() => {
-                    setSelected(category);
-                    setIsOpen(false);
-                    }}
-                    className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
-                >
-                    {category}
-                </li>
-                ))}
-            </motion.ul>
-            )}
-        </div>
+      <div className="relative w-full" ref={ref}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full flex justify-between items-center bg-transparent text-gray-800 focus:outline-none cursor-pointer"
+        >
+          <span className={selected === "Catégorie" ? "text-gray-500" : "text-gray-800"}>{selected}</span>
+          <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        </button>
+        {isOpen && (
+          <motion.ul
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-full mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-100 z-10 overflow-hidden"
+          >
+            {categories.map((category, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  setSelected(category);
+                  setIsOpen(false);
+                }}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+              >
+                {category}
+              </li>
+            ))}
+          </motion.ul>
+        )}
+      </div>
     );
   };
 
   // Accordion for Mobile Menu
-  const MobileAccordionMenu = ({ title, items, scrolled }) => {
+  const MobileAccordionMenu = ({ title, items, scrolled, isEmployer }) => {
     const [isOpen, setIsOpen] = useState(false);
     return (
       <li>
@@ -160,13 +166,13 @@ export default function BantuHireHome() {
             >
               {items.map((item, index) => (
                 <li key={index} className="pt-2">
-                  <a
-                    href={item.href}
+                  <button
+                    onClick={isEmployer ? () => setIsInscriptionOpen(true) : undefined}
                     className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md ${scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-gray-300 hover:bg-white/10'}`}
                   >
                     {item.icon}
                     {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </motion.ul>
@@ -226,88 +232,87 @@ export default function BantuHireHome() {
   ];
 
   const RecentJobCard = ({ logo, title, company, location, type, posted, tags }) => (
-      <motion.div
-        whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.08)" }}
-        className="bg-white p-5 rounded-xl border border-gray-200/80 flex flex-col sm:flex-row items-start gap-5 transition-all duration-300 group"
-      >
-        <div className="w-14 h-14 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
-          <img src={logo} alt={`${company} logo`} className="w-10 h-10 object-contain" />
+    <motion.div
+      whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.08)" }}
+      className="bg-white p-5 rounded-xl border border-gray-200/80 flex flex-col sm:flex-row items-start gap-5 transition-all duration-300 group"
+    >
+      <div className="w-14 h-14 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+        <img src={logo} alt={`${company} logo`} className="w-10 h-10 object-contain" />
+      </div>
+      <div className="flex-grow">
+        <a href="#" className="text-lg font-bold text-gray-800 group-hover:text-[#009739] transition-colors">{title}</a>
+        <div className="text-sm text-gray-500 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span>{company}</span>
+          <span className="flex items-center gap-1.5"><MapPin size={14} /> {location}</span>
+          <span className="flex items-center gap-1.5"><Briefcase size={14} /> {type}</span>
         </div>
-        <div className="flex-grow">
-          <a href="#" className="text-lg font-bold text-gray-800 group-hover:text-[#009739] transition-colors">{title}</a>
-          <div className="text-sm text-gray-500 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span>{company}</span>
-            <span className="flex items-center gap-1.5"><MapPin size={14} /> {location}</span>
-            <span className="flex items-center gap-1.5"><Briefcase size={14} /> {type}</span>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {tags.map(tag => (
-              <span key={tag} className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full group-hover:bg-green-100 group-hover:text-green-800 transition-colors">{tag}</span>
-            ))}
-          </div>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <span key={tag} className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full group-hover:bg-green-100 group-hover:text-green-800 transition-colors">{tag}</span>
+          ))}
         </div>
-        <div className="flex flex-col items-start sm:items-end justify-between mt-4 sm:mt-0 flex-shrink-0 w-full sm:w-auto">
-          <span className="text-xs text-gray-400 mb-3">{posted}</span>
-          <button className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 px-5 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 hover:border-gray-400 transition-colors flex items-center justify-center gap-2">
-            Consulter <ChevronRight size={16} />
-          </button>
-        </div>
-      </motion.div>
+      </div>
+      <div className="flex flex-col items-start sm:items-end justify-between mt-4 sm:mt-0 flex-shrink-0 w-full sm:w-auto">
+        <span className="text-xs text-gray-400 mb-3">{posted}</span>
+        <button className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 px-5 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 hover:border-gray-400 transition-colors flex items-center justify-center gap-2">
+          Consulter <ChevronRight size={16} />
+        </button>
+      </div>
+    </motion.div>
   );
 
   const FeaturedJobCard = ({ logo, title, company, location, type, salary }) => (
-      <motion.div
-        whileHover={{ y: -5, borderColor: '#009739' }}
-        className="bg-white p-5 rounded-xl border-2 border-transparent shadow-lg relative overflow-hidden group transition-all duration-300"
-      >
-        <div className="absolute top-3 right-3 bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-          <Flame size={12} /> En Feu
+    <motion.div
+      whileHover={{ y: -5, borderColor: '#009739' }}
+      className="bg-white p-5 rounded-xl border-2 border-transparent shadow-lg relative overflow-hidden group transition-all duration-300"
+    >
+      <div className="absolute top-3 right-3 bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+        <Flame size={12} /> En Feu
+      </div>
+      <div className="flex items-start gap-4">
+        <div className="w-12 h-12 bg-white border border-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
+          <img src={logo} alt={`${company} logo`} className="w-8 h-8 object-contain" />
         </div>
-
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 bg-white border border-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
-            <img src={logo} alt={`${company} logo`} className="w-8 h-8 object-contain" />
-          </div>
-          <div className="flex-grow">
-            <a href="#" className="font-bold text-gray-800 group-hover:text-[#009739] transition-colors pr-16">{title}</a>
-            <p className="text-sm text-gray-500 mt-1">{company}</p>
-          </div>
+        <div className="flex-grow">
+          <a href="#" className="font-bold text-gray-800 group-hover:text-[#009739] transition-colors pr-16">{title}</a>
+          <p className="text-sm text-gray-500 mt-1">{company}</p>
         </div>
-        <div className="mt-4 text-sm text-gray-600 space-y-2">
-          <p className="flex items-center gap-2"><MapPin size={14} className="text-gray-400"/> {location}</p>
-          <p className="flex items-center gap-2"><Briefcase size={14} className="text-gray-400"/> {type}</p>
-          <p className="flex items-center gap-2"><DollarSign size={14} className="text-gray-400"/> <span className="font-semibold text-green-700">{salary}</span></p>
-        </div>
-        <button className="mt-4 w-full bg-[#009739] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#007a2f] transition-colors flex items-center justify-center gap-2">
-          Consulter l'offre
-        </button>
-      </motion.div>
+      </div>
+      <div className="mt-4 text-sm text-gray-600 space-y-2">
+        <p className="flex items-center gap-2"><MapPin size={14} className="text-gray-400"/> {location}</p>
+        <p className="flex items-center gap-2"><Briefcase size={14} className="text-gray-400"/> {type}</p>
+        <p className="flex items-center gap-2"><DollarSign size={14} className="text-gray-400"/> <span className="font-semibold text-green-700">{salary}</span></p>
+      </div>
+      <button className="mt-4 w-full bg-[#009739] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#007a2f] transition-colors flex items-center justify-center gap-2">
+        Consulter l'offre
+      </button>
+    </motion.div>
   );
 
   // Animated Counter for CategoryCard
   const AnimatedCounter = ({ end, duration = 1500, isInView }) => {
     const [count, setCount] = useState(0);
-  
+
     useEffect(() => {
       if (isInView) {
         let startTime;
         const startCount = 0;
-        
+
         const updateCount = (timestamp) => {
           if (!startTime) startTime = timestamp;
           const progress = Math.min((timestamp - startTime) / duration, 1);
           const currentCount = Math.floor(progress * (end - startCount) + startCount);
           setCount(currentCount);
-          
+
           if (progress < 1) {
             requestAnimationFrame(updateCount);
           }
         };
-        
+
         requestAnimationFrame(updateCount);
       }
     }, [end, duration, isInView]);
-  
+
     return <span className="font-mono">{count.toLocaleString('fr-FR')}</span>;
   };
 
@@ -446,7 +451,6 @@ export default function BantuHireHome() {
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">La Chronologie du Succès</h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">Découvrez comment BantuHire transforme les carrières et les entreprises, un succès à la fois.</p>
           </motion.div>
-
           <div className="relative">
             <motion.div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 hidden lg:block" style={{ transform: 'translateX(-50%)' }} />
             <motion.div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-green-600 hidden lg:block" style={{ scaleY, transformOrigin: 'top', transform: 'translateX(-50%)' }} />
@@ -473,7 +477,6 @@ export default function BantuHireHome() {
           >
             <div className="absolute -top-10 -left-10 w-32 h-32 bg-green-500/10 rounded-full filter blur-xl"></div>
             <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-green-500/10 rounded-full filter blur-2xl"></div>
-            
             <div className="relative z-10">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Prêt à faire le grand saut ?
@@ -524,15 +527,14 @@ export default function BantuHireHome() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-10">
             <div className="flex items-center gap-8 text-sm font-medium">
-                <div className={`text-2xl font-bold hover:scale-105 transition-transform duration-300 cursor-pointer ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
-                    BantuHire
-                </div>
-                <div className="hidden md:flex items-center gap-8">
-                <DropdownMenu title="Pour les Candidats" items={candidateItems} scrolled={isScrolled} />
-                <DropdownMenu title="Pour les Employeurs" items={employerItems} scrolled={isScrolled} />
-                </div>
+              <div className={`text-2xl font-bold hover:scale-105 transition-transform duration-300 cursor-pointer ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
+                BantuHire
+              </div>
+              <div className="hidden md:flex items-center gap-8">
+                <DropdownMenu title="Pour les Candidats" items={candidateItems} scrolled={isScrolled} isEmployer={false} />
+                <DropdownMenu title="Pour les Employeurs" items={employerItems} scrolled={isScrolled} isEmployer={true} />
+              </div>
             </div>
-          
             <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
               <a href="#" className={`flex items-center gap-2 transition-colors ${isScrolled ? 'text-gray-600 hover:text-gray-900' : 'text-gray-300 hover:text-white'}`}>
                 <User className="w-4 h-4" />
@@ -545,9 +547,8 @@ export default function BantuHireHome() {
                 Publier une offre
               </a>
             </nav>
-
             <div className="md:hidden flex items-center gap-4">
-               <a
+              <a
                 href="#"
                 className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors shadow-md hover:shadow-lg ${isScrolled ? 'bg-gray-800 hover:bg-gray-900 text-white' : 'bg-[#009739] hover:bg-[#007a2f] text-white'}`}
               >
@@ -569,8 +570,8 @@ export default function BantuHireHome() {
               >
                 <div className={`py-4 border-t ${isScrolled ? 'border-gray-200' : 'border-white/20'}`}>
                   <ul className="flex flex-col space-y-1">
-                    <MobileAccordionMenu title="Pour les Candidats" items={candidateItems} scrolled={isScrolled} />
-                    <MobileAccordionMenu title="Pour les Employeurs" items={employerItems} scrolled={isScrolled} />
+                    <MobileAccordionMenu title="Pour les Candidats" items={candidateItems} scrolled={isScrolled} isEmployer={false} />
+                    <MobileAccordionMenu title="Pour les Employeurs" items={employerItems} scrolled={isScrolled} isEmployer={true} />
                     <li className={`border-t my-2 mx-4 ${isScrolled ? 'border-gray-200' : 'border-white/10'}`}></li>
                     <li><a href="#" className={`flex items-center px-4 py-2 rounded-md ${isScrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-white hover:bg-white/10'}`}><User className="w-4 h-4 mr-2" /> Se connecter</a></li>
                   </ul>
@@ -582,22 +583,18 @@ export default function BantuHireHome() {
       </header>
 
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:pt-20 text-white">
-
         <motion.div
           className="text-left max-w-7xl mx-auto"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {/* Main text */}
           <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
             Trouvez Votre Prochaine Opportunité
           </motion.h1>
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-300 mb-10 max-w-7xl mx-auto">
             Explorez des milliers d'offres d'emploi et connectez-vous avec les meilleures entreprises.
           </motion.p>
-
-          {/* Search hints */}
           <motion.div variants={itemVariants} className="flex flex-wrap gap-2 mb-4">
             <button className="bg-white/10 backdrop-blur-sm text-white text-xs font-semibold py-1 px-3 rounded-full border border-white/20 hover:bg-white/20 transition-colors cursor-default">
               Quel poste ?
@@ -609,8 +606,6 @@ export default function BantuHireHome() {
               Quel categorie ?
             </button>
           </motion.div>
-
-          {/* Search form */}
           <motion.div variants={itemVariants} className="bg-white/90 backdrop-blur-sm rounded-xl shadow-2xl flex flex-col lg:flex-row items-center p-2 gap-2 max-w-7xl mx-auto">
             <div className="flex-1 w-full flex items-center border-b lg:border-b-0 lg:border-r border-gray-200 p-2">
               <Briefcase className="w-5 h-5 text-gray-400 mx-3" />
@@ -633,8 +628,8 @@ export default function BantuHireHome() {
                 <CustomSelect />
               </div>
             </div>
-            <motion.button 
-              whileHover={{ scale: 1.05 }} 
+            <motion.button
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-[#009739] hover:bg-[#007a2f] text-white px-8 py-4 rounded-lg font-semibold w-full lg:w-auto flex items-center justify-center gap-2 transition-colors shadow-lg"
             >
@@ -642,8 +637,6 @@ export default function BantuHireHome() {
               Rechercher
             </motion.button>
           </motion.div>
-
-          {/* Links */}
           <motion.div variants={itemVariants} className="mt-8 text-sm space-y-2">
             <p>
               <a href="#" className="text-green-400 hover:underline font-semibold">
@@ -659,7 +652,7 @@ export default function BantuHireHome() {
             </p>
             <p>
               <a href="#" className="text-green-400 hover:underline font-semibold">
-                Employeurs : lancez-vous 
+                Employeurs : lancez-vous
               </a>
               <span className="text-gray-400"> – Publiez une offre d’emploi et recevez des candidatures.</span>
             </p>
@@ -670,7 +663,6 @@ export default function BantuHireHome() {
       <section className="bg-gray-50 py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-12">
-            {/* Main column for recent offers */}
             <div className="lg:w-2/3">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Offres récentes</h2>
               <div className="space-y-4">
@@ -684,8 +676,6 @@ export default function BantuHireHome() {
                 </button>
               </div>
             </div>
-
-            {/* Sidebar for featured offers */}
             <div className="lg:w-1/3">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">Offres en Feu <Flame className="text-orange-500" /></h2>
               <div className="space-y-4">
@@ -698,10 +688,9 @@ export default function BantuHireHome() {
         </div>
       </section>
 
-      {/* Popular Categories Section */}
       <section className="bg-gray-100 py-16 md:py-24" ref={categoriesRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -719,15 +708,10 @@ export default function BantuHireHome() {
         </div>
       </section>
 
-      {/* Testimonial Timeline Section */}
       <TestimonialTimeline />
-
-      {/* CTA Section */}
       <CtaSection />
-
-      {/* Footer */}
-      <Footer/>
-      
+      <Footer />
+      <InscriptionEntreprise isOpen={isInscriptionOpen} onClose={() => setIsInscriptionOpen(false)} />
     </div>
   );
 }
