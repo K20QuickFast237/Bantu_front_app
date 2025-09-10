@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
-import { Briefcase, MapPin, Search, ChevronDown, User, LogIn, Building, Users, FileText, PlusCircle, Menu, X, ChevronRight, Flame, Star, Code, Megaphone, PenTool, DollarSign, HeartHandshake, Award, ArrowRight } from 'lucide-react';
+import { Briefcase, MapPin, Search, ChevronDown, User, Building, Users, FileText, PlusCircle, Menu, X, ChevronRight, Flame, Star, Code, Megaphone, PenTool, DollarSign, HeartHandshake, Award, ArrowRight } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import Footer from "@/components/app/footer";
-import InscriptionEntreprise from "./InscriptionEntreprise";
+import CompletionProfessionnel from "./InscriptionEntreprise";
 
 export default function BantuHireHome() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -711,7 +711,7 @@ export default function BantuHireHome() {
       <TestimonialTimeline />
       <CtaSection />
       <Footer />
-      <InscriptionEntreprise isOpen={isInscriptionOpen} onClose={() => setIsInscriptionOpen(false)} />
+      <CompletionProfessionnel isOpen={isInscriptionOpen} onClose={() => setIsInscriptionOpen(false)} />
     </div>
   );
 }

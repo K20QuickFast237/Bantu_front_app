@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Edit, Trash2, PlusCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useFormik } from 'formik';
-import { toast } from 'react-toastify';
+import toast from 'react-hot-toast';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { validationFormationSchema } from '../../schemas';

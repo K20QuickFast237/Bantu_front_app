@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import PublicRoutes from "./routes/PublicRoutes";
 
@@ -15,7 +16,6 @@ import Login from "./pages/public/Login";
 
 import WhatDoYouWantToDo from "./pages/app/WhatDoYouWantToDo";
 import Profil from "./pages/app/Profil";
-import InscriptionEntreprise from "./pages/app/InscriptionEntreprise";
 import DashboardEntreprise from "./pages/app/DashboardEntreprise";
 import Recherche_offre from "./pages/app/Recherche_offre";
 import Create_job from "./pages/app/Create_job";
@@ -26,11 +26,20 @@ import ResetPasswordForm from "./pages/app/ResetPasswordForm";
 import JobOffersPage from "./pages/app/JobOffersPage";
 import BantuLinkHome from "./pages/app/BantuLinkHome";
 import BantuHireHome from "./pages/app/BantuHireHome";
-import Dashboard from "./pages/app/DashboardCandidate";
+import DashboardCandidate from "./pages/app/DashboardCandidate";
+import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
+import CandidateFeed from "./pages/app/CandidateFeed";
+import CandidateApplications from "./pages/app/CandidateApplications";
+import CandidateCvs from "./pages/app/CandidateCvs";
+import CandidateJobs from "./pages/app/CandidateJobs";
+import CandidateSettings from "./pages/app/CandidateSettings";
+import MyProfil from "./pages/app/MyProfil";
+
 
 const App = () => {
   return (
     <>
+    <Toaster position="top-center" reverseOrder={false} />
     <ScrollToTop />
       <Routes>
         {/* Routes publiques */}
@@ -50,7 +59,6 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/WhatDoYouWantToDo" element={<WhatDoYouWantToDo/>}/>
           <Route path="/profil" element={<Profil />} />
-          <Route path="/inscriptionEntreprise" element={<InscriptionEntreprise/>}/>
           <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
           <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
           <Route path="/createJob" element={<Create_job/>}/>
@@ -62,10 +70,21 @@ const App = () => {
           <Route path="/homepage" element={<BantuLinkHome />} />
           <Route path="/hirehome" element={<BantuHireHome />} />
           <Route path="/markethome" element={<BantuHireHome />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/inscriptionentreprise" element={<CompletionProfessionnel />} />
+          
+          {/* Route Layout pour le Dashboard Candidat */}
+          <Route path="/dashboard/candidate" element={<DashboardCandidate />}>
+            <Route index element={<CandidateFeed />} />
+            <Route path="applications" element={<CandidateApplications />} />
+            <Route path="cvs" element={<CandidateCvs />} />
+            <Route path="jobs" element={<CandidateJobs />} />
+            <Route path="settings" element={<CandidateSettings />} />
+            <Route path="profil" element={<MyProfil />} />
+          </Route>
+          <Route path="profil/edit" element={<MyProfil />} />
+          
         </Route>
       </Routes>
-      
     </>
   );
 };
