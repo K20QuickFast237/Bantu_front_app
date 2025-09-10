@@ -10,12 +10,14 @@ import recruterAnimation from '../../assets/lotties_json/recruter.json';
 import vendreAnimation from '../../assets/lotties_json/vendre.json';
 import acheterAnimation from '../../assets/lotties_json/acheter.json';
 import Footer from '@/components/app/footer';
+import { useAuth } from '../../hooks/useAuth';
 
 // Navigation Component
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = React.useRef(null);
+  const { user, logout } = useAuth();
 
   // Effet pour gérer les clics en dehors du menu de profil
   useEffect(() => {
@@ -34,6 +36,11 @@ const Navigation = () => {
     // Nettoyage : on retire l'écouteur quand le composant est démonté ou que le menu se ferme
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isProfileOpen]); // Cet effet se redéclenche chaque fois que isProfileOpen change
+
+  const handleLogout = () => {
+    logout();
+    // La redirection sera gérée par le AuthProvider ou un composant de route protégée
+  };
 
   return (
     <nav className="bg-[#0A2342] shadow-sm border-b border-white/10 sticky top-0 z-50 backdrop-blur-md">
@@ -55,7 +62,7 @@ const Navigation = () => {
                   <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                     <User className="w-6 h-6 text-white" />
                   </div>
-                  <span className="text-white font-medium">Duclair</span>
+                  <span className="text-white font-medium">{user?.prenom || 'Utilisateur'}</span>
                 </button>
 
                 <AnimatePresence>
@@ -68,14 +75,11 @@ const Navigation = () => {
                       className="absolute top-full right-0 mt-2 w-64 bg-[#102a4c] rounded-xl shadow-2xl border border-white/10 z-50 overflow-hidden"
                     >
                       <div className="p-4 border-b border-white/10">
-                        <p className="font-semibold text-white">Duclair</p>
-                        <p className="text-sm text-gray-400">duclair.d@example.com</p>
+                        <p className="font-semibold text-white">{user?.prenom} {user?.nom}</p>
+                        <p className="text-sm text-gray-400">{user?.email}</p>
                       </div>
                       <ul className="p-2">
-                          <li><a href="#" className="flex items-center px-3 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white rounded-md transition-colors"><User className="w-5 h-5 mr-3 text-gray-400" /> Mon Profil</a></li>
-                          <li><a href="#" className="flex items-center px-3 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white rounded-md transition-colors"><Settings className="w-5 h-5 mr-3 text-gray-400" /> Paramètres</a></li>
-                          <li className="border-t border-white/10 my-2"></li>
-                          <li><a href="#" className="flex items-center px-3 py-2.5 text-sm text-[#FF7F00] hover:bg-[#FF7F00]/10 rounded-md transition-colors"><LogOut className="w-5 h-5 mr-3" /> Déconnexion</a></li>
+                        <li><button onClick={handleLogout} className="w-full text-left flex items-center px-3 py-2.5 text-sm text-[#FF7F00] hover:bg-[#FF7F00]/10 rounded-md transition-colors"><LogOut className="w-5 h-5 mr-3" /> Déconnexion</button></li>
                       </ul>
                     </motion.div>
                 )}
@@ -104,10 +108,10 @@ const Navigation = () => {
                   className="md:hidden overflow-hidden"
                   >
                   <div className="py-4 border-t border-white/20">
-                      <ul className="flex flex-col space-y-2">
-                      <li><a href="#" className="flex items-center px-4 py-2 text-white hover:bg-white/10 rounded-md"><User className="w-4 h-4 mr-2" /> Mon Profil</a></li>
-                      <li><a href="#" className="flex items-center px-4 py-2 text-white hover:bg-white/10 rounded-md"><Settings className="w-4 h-4 mr-2" /> Paramètres</a></li>
-                      <li><a href="#" className="flex items-center px-4 py-2 text-[#E30613] hover:bg-[#E30613]/20 rounded-md"><LogOut className="w-4 h-4 mr-2" /> Déconnexion</a></li>
+                      <ul className="flex flex-col space-y-2" onClick={() => setIsMenuOpen(false)}>
+                      <li><Link to="/my-profile" className="flex items-center px-4 py-2 text-white hover:bg-white/10 rounded-md"><User className="w-4 h-4 mr-2" /> Mon Profil</Link></li>
+                      <li><Link to="/my-profile" className="flex items-center px-4 py-2 text-white hover:bg-white/10 rounded-md"><Settings className="w-4 h-4 mr-2" /> Paramètres</Link></li>
+                      <li><button onClick={handleLogout} className="w-full text-left flex items-center px-4 py-2 text-[#E30613] hover:bg-[#E30613]/20 rounded-md"><LogOut className="w-4 h-4 mr-2" /> Déconnexion</button></li>
                       </ul>
                   </div>
                   </motion.div>
