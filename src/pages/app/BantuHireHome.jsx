@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Briefcase, MapPin, Search, ChevronDown, User, LogIn, ArrowRight, Building, Users, FileText, PlusCircle, Menu, X, ChevronRight, Flame, Star } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { Briefcase, MapPin, Search, ChevronDown, User, LogIn, Building, Users, FileText, PlusCircle, Menu, X, ChevronRight, Flame, Star, Code, Megaphone, PenTool, DollarSign, HeartHandshake, Award, ArrowRight } from 'lucide-react';
+import { useInView } from 'react-intersection-observer';
+import Footer from "@/components/app/footer";
 
 export default function BantuHireHome() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -28,6 +29,11 @@ export default function BantuHireHome() {
       },
     },
   };
+
+  const { ref: categoriesRef, inView: categoriesInView } = useInView({
+    triggerOnce: true,
+    threshold: 0.3,
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -220,59 +226,286 @@ export default function BantuHireHome() {
   ];
 
   const RecentJobCard = ({ logo, title, company, location, type, posted, tags }) => (
-    <motion.div
-      whileHover={{ scale: 1.02, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.08)" }}
-      className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col sm:flex-row gap-6 transition-shadow cursor-pointer"
-    >
-      <img src={logo} alt={`${company} logo`} className="w-12 h-12 rounded-md object-contain self-start" />
-      <div className="flex-grow">
-        <a href="#" className="text-lg font-bold text-gray-900 hover:text-[#009739] transition-colors">{title}</a>
-        <div className="text-sm text-gray-600 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
-          <span>{company}</span>
-          <span className="flex items-center gap-1"><MapPin size={14} /> {location}</span>
-          <span>{type}</span>
+      <motion.div
+        whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0, 0, 0, 0.08)" }}
+        className="bg-white p-5 rounded-xl border border-gray-200/80 flex flex-col sm:flex-row items-start gap-5 transition-all duration-300 group"
+      >
+        <div className="w-14 h-14 bg-white border border-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
+          <img src={logo} alt={`${company} logo`} className="w-10 h-10 object-contain" />
         </div>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {tags.map(tag => (
-            <span key={tag} className="bg-gray-100 text-gray-700 text-xs font-medium px-2.5 py-0.5 rounded-full">{tag}</span>
-          ))}
+        <div className="flex-grow">
+          <a href="#" className="text-lg font-bold text-gray-800 group-hover:text-[#009739] transition-colors">{title}</a>
+          <div className="text-sm text-gray-500 mt-1 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>{company}</span>
+            <span className="flex items-center gap-1.5"><MapPin size={14} /> {location}</span>
+            <span className="flex items-center gap-1.5"><Briefcase size={14} /> {type}</span>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {tags.map(tag => (
+              <span key={tag} className="bg-gray-100 text-gray-600 text-xs font-semibold px-3 py-1 rounded-full group-hover:bg-green-100 group-hover:text-green-800 transition-colors">{tag}</span>
+            ))}
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col items-start sm:items-end justify-between mt-4 sm:mt-0 flex-shrink-0">
-        <span className="text-xs text-gray-500 mb-4">{posted}</span>
-        <button className="bg-gray-800 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-gray-900 transition-colors">
-          Postuler
-        </button>
-      </div>
-    </motion.div>
+        <div className="flex flex-col items-start sm:items-end justify-between mt-4 sm:mt-0 flex-shrink-0 w-full sm:w-auto">
+          <span className="text-xs text-gray-400 mb-3">{posted}</span>
+          <button className="w-full sm:w-auto bg-white border border-gray-300 text-gray-700 px-5 py-2 rounded-lg font-semibold text-sm hover:bg-gray-50 hover:border-gray-400 transition-colors flex items-center justify-center gap-2">
+            Consulter <ChevronRight size={16} />
+          </button>
+        </div>
+      </motion.div>
   );
 
   const FeaturedJobCard = ({ logo, title, company, location, type, salary }) => (
-    <motion.div
-      whileHover={{ y: -5 }}
-      className="bg-gray-100 p-5 rounded-xl border border-emerald-300 shadow-lg relative overflow-hidden cursor-pointer"
-    >
-      {/* Premium Badge */}
-      <div className="absolute top-0 right-0 h-16 w-16">
-        <div className="absolute transform rotate-45 bg-gradient-to-r from-[#0A2342] to-[#0A2342]/70 text-center text-white font-semibold py-1 right-[-34px] top-[18px] w-[120px] shadow-md">
-          <Star size={12} className="inline-block mb-0.5 mr-1" />
-          Premium
+      <motion.div
+        whileHover={{ y: -5, borderColor: '#009739' }}
+        className="bg-white p-5 rounded-xl border-2 border-transparent shadow-lg relative overflow-hidden group transition-all duration-300"
+      >
+        <div className="absolute top-3 right-3 bg-orange-100 text-orange-600 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+          <Flame size={12} /> En Feu
         </div>
-      </div>
 
-      <div className="flex items-center gap-4">
-        <img src={logo} alt={`${company} logo`} className="w-10 h-10 rounded-md object-contain" />
-        <div className="flex-grow">
-          <a href="#" className="font-bold text-gray-900 hover:text-[#009739] transition-colors">{title}</a>
-          <p className="text-sm text-gray-600">{company}</p>
+        <div className="flex items-start gap-4">
+          <div className="w-12 h-12 bg-white border border-gray-200 rounded-md flex items-center justify-center flex-shrink-0">
+            <img src={logo} alt={`${company} logo`} className="w-8 h-8 object-contain" />
+          </div>
+          <div className="flex-grow">
+            <a href="#" className="font-bold text-gray-800 group-hover:text-[#009739] transition-colors pr-16">{title}</a>
+            <p className="text-sm text-gray-500 mt-1">{company}</p>
+          </div>
         </div>
-      </div>
-      <div className="mt-3 text-sm text-gray-700 space-y-1 pl-14">
-        <p className="flex items-center gap-2"><MapPin size={14} className="text-gray-500"/> {location}</p>
-        <p className="flex items-center gap-2"><Briefcase size={14} className="text-gray-500"/> {type} - <span className="font-medium text-green-700">{salary}</span></p>
+        <div className="mt-4 text-sm text-gray-600 space-y-2">
+          <p className="flex items-center gap-2"><MapPin size={14} className="text-gray-400"/> {location}</p>
+          <p className="flex items-center gap-2"><Briefcase size={14} className="text-gray-400"/> {type}</p>
+          <p className="flex items-center gap-2"><DollarSign size={14} className="text-gray-400"/> <span className="font-semibold text-green-700">{salary}</span></p>
+        </div>
+        <button className="mt-4 w-full bg-[#009739] text-white px-5 py-2.5 rounded-lg font-semibold text-sm hover:bg-[#007a2f] transition-colors flex items-center justify-center gap-2">
+          Consulter l'offre
+        </button>
+      </motion.div>
+  );
+
+  // Animated Counter for CategoryCard
+  const AnimatedCounter = ({ end, duration = 1500, isInView }) => {
+    const [count, setCount] = useState(0);
+  
+    useEffect(() => {
+      if (isInView) {
+        let startTime;
+        const startCount = 0;
+        
+        const updateCount = (timestamp) => {
+          if (!startTime) startTime = timestamp;
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          const currentCount = Math.floor(progress * (end - startCount) + startCount);
+          setCount(currentCount);
+          
+          if (progress < 1) {
+            requestAnimationFrame(updateCount);
+          }
+        };
+        
+        requestAnimationFrame(updateCount);
+      }
+    }, [end, duration, isInView]);
+  
+    return <span className="font-mono">{count.toLocaleString('fr-FR')}</span>;
+  };
+
+  // Category Card Component
+  const CategoryCard = ({ icon, name, count, isInView }) => (
+    <motion.div
+      variants={itemVariants}
+      className="group relative bg-white/30 backdrop-blur-lg rounded-xl p-5 cursor-pointer border border-gray-200/20 shadow-lg hover:bg-blue-600 transition-all duration-300 overflow-hidden"
+    >
+      <div className="relative z-10 flex items-center justify-between h-full space-x-6">
+        <div className="max-w-1/2">
+          <div className="text-blue-600 group-hover:text-white transition-colors duration-300">
+            {icon}
+          </div>
+          <h3 className="text-lg font-light text-blue-900 group-hover:text-white transition-colors duration-300 text-left">
+            {name}
+          </h3>
+        </div>
+        <div className="text-3xl font-medium text-gray-400 group-hover:text-gray-200 transition-colors duration-300 flex-shrink-0 max-w-1/2">
+          <AnimatedCounter end={count} isInView={isInView} />
+        </div>
       </div>
     </motion.div>
   );
+
+  const popularCategories = [
+    { name: 'Développement', icon: <Code size={40} strokeWidth={1} />, count: 12450},
+    { name: 'Marketing & Vente', icon: <Megaphone size={40} strokeWidth={1} />, count: 8750 },
+    { name: 'Design & Création', icon: <PenTool size={40} strokeWidth={1} />, count: 6320 },
+    { name: 'Finance & Compta', icon: <DollarSign size={40} strokeWidth={1} />, count: 4100 },
+    { name: 'RH & Recrutement', icon: <HeartHandshake size={40} strokeWidth={1} />, count: 3200 },
+    { name: 'Design & Création', icon: <PenTool size={40} strokeWidth={1} />, count: 6320 },
+    { name: 'Finance & Compta', icon: <DollarSign size={40} strokeWidth={1} />, count: 4100 },
+    { name: 'RH & Recrutement', icon: <HeartHandshake size={40} strokeWidth={1} />, count: 3200 },
+  ];
+
+  const categorySectionVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  // Testimonial Timeline Section
+  const TestimonialTimeline = () => {
+    const ref = useRef(null);
+    const { scrollYProgress } = useScroll({
+      target: ref,
+      offset: ["start end", "end end"],
+    });
+    const scaleY = useSpring(scrollYProgress, {
+      stiffness: 100,
+      damping: 30,
+      restDelta: 0.001,
+    });
+
+    const testimonials = [
+      {
+        name: 'Amina Diallo',
+        role: 'Développeuse Full-Stack',
+        company: 'chez Innovatech',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256',
+        quote: "BantuHire a été un game-changer. J'ai trouvé un poste qui correspond parfaitement à mes compétences en moins de deux semaines. La plateforme est incroyablement intuitive.",
+        type: 'candidate',
+      },
+      {
+        name: 'Thomas Dubois',
+        role: 'Responsable RH',
+        company: 'chez NextGen Corp',
+        avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=256',
+        quote: "Nous avons recruté trois ingénieurs talentueux grâce à BantuHire. Les outils de filtrage et la qualité des profils nous ont fait gagner un temps précieux.",
+        type: 'employer',
+      },
+      {
+        name: 'Léa N\'diaye',
+        role: 'Marketing Digital Manager',
+        company: 'chez Creative Pulse',
+        avatar: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?q=80&w=256',
+        quote: "La visibilité des offres et les alertes personnalisées sont des atouts majeurs. C'est la meilleure plateforme pour faire évoluer sa carrière en Afrique.",
+        type: 'candidate',
+      },
+    ];
+
+    const TestimonialCard = ({ item, index }) => {
+      const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
+      const isEven = index % 2 === 0;
+
+      return (
+        <div ref={ref} className={`flex items-start gap-6 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}>
+          <motion.div
+            initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="w-full lg:w-5/12"
+          >
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200/80 h-full">
+              <p className="text-gray-600 italic mb-4">"{item.quote}"</p>
+              <div className="flex items-center">
+                <img src={item.avatar} alt={item.name} className="w-12 h-12 rounded-full object-cover mr-4 border-2 border-green-200" />
+                <div>
+                  <p className="font-bold text-gray-900">{item.name}</p>
+                  <p className="text-sm text-gray-500">{item.role} <span className="text-green-600">{item.company}</span></p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          <div className="hidden lg:flex w-2/12 items-center justify-center relative">
+            <div className="w-1 h-full bg-gray-200"></div>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={inView ? { scale: 1 } : {}}
+              transition={{ duration: 0.5, type: 'spring', stiffness: 200 }}
+              className="absolute w-10 h-10 bg-white rounded-full border-4 border-green-500 flex items-center justify-center shadow-md"
+            >
+              {item.type === 'candidate' ? <User className="w-5 h-5 text-green-600" /> : <Building className="w-5 h-5 text-green-600" />}
+            </motion.div>
+          </div>
+        </div>
+      );
+    };
+
+    return (
+      <section className="bg-gray-50 py-16 md:py-24" ref={ref}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">La Chronologie du Succès</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">Découvrez comment BantuHire transforme les carrières et les entreprises, un succès à la fois.</p>
+          </motion.div>
+
+          <div className="relative">
+            <motion.div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gray-200 hidden lg:block" style={{ transform: 'translateX(-50%)' }} />
+            <motion.div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-green-400 to-green-600 hidden lg:block" style={{ scaleY, transformOrigin: 'top', transform: 'translateX(-50%)' }} />
+            <div className="space-y-12 lg:space-y-24">
+              {testimonials.map((item, index) => <TestimonialCard key={index} item={item} index={index} />)}
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  // CTA Section
+  const CtaSection = () => {
+    return (
+      <section className="bg-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="bg-gradient-to-br from-[#0A2342] to-[#0a2e55] rounded-2xl p-8 md:p-12 text-center overflow-hidden relative shadow-2xl"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+          >
+            <div className="absolute -top-10 -left-10 w-32 h-32 bg-green-500/10 rounded-full filter blur-xl"></div>
+            <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-green-500/10 rounded-full filter blur-2xl"></div>
+            
+            <div className="relative z-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Prêt à faire le grand saut ?
+              </h2>
+              <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-10">
+                Que vous soyez un talent à la recherche de sa prochaine mission ou une entreprise en quête de la perle rare, votre avenir commence ici.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-[#009739] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#007a2f] transition-colors duration-300 shadow-lg hover:shadow-xl cursor-pointer group"
+                >
+                  <span className="flex items-center justify-center">
+                    Trouver un emploi
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer group"
+                >
+                  Publier une offre
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+    );
+  };
 
   return (
     <div className="bg-[#0A2342] font-sans">
@@ -289,7 +522,7 @@ export default function BantuHireHome() {
       {/* Content */}
       <header className={`sticky top-0 z-50 transition-all duration-300 border-b border-gray-200/10 ${isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-10">
             <div className="flex items-center gap-8 text-sm font-medium">
                 <div className={`text-2xl font-bold hover:scale-105 transition-transform duration-300 cursor-pointer ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
                     BantuHire
@@ -348,7 +581,7 @@ export default function BantuHireHome() {
         </div>
       </header>
 
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-24 pb-12 text-white">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:pt-20 text-white">
 
         <motion.div
           className="text-left max-w-7xl mx-auto"
@@ -357,7 +590,7 @@ export default function BantuHireHome() {
           animate="visible"
         >
           {/* Main text */}
-          <motion.h1 variants={itemVariants} className="text-4xl md:text-7xl font-bold mb-4 leading-tight">
+          <motion.h1 variants={itemVariants} className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
             Trouvez Votre Prochaine Opportunité
           </motion.h1>
           <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-300 mb-10 max-w-7xl mx-auto">
@@ -454,7 +687,7 @@ export default function BantuHireHome() {
 
             {/* Sidebar for featured offers */}
             <div className="lg:w-1/3">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">Offres en feux <Flame className="text-orange-500" /></h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">Offres en Feu <Flame className="text-orange-500" /></h2>
               <div className="space-y-4">
                 {featuredJobs.map((job, index) => (
                   <FeaturedJobCard key={index} {...job} />
@@ -464,6 +697,37 @@ export default function BantuHireHome() {
           </div>
         </div>
       </section>
+
+      {/* Popular Categories Section */}
+      <section className="bg-gray-100 py-16 md:py-24" ref={categoriesRef}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="text-center"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Catégories Populaires</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">Trouvez des opportunités dans les secteurs qui recrutent le plus.</p>
+          </motion.div>
+          <motion.div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" variants={categorySectionVariants} initial="hidden" animate={categoriesInView ? "visible" : "hidden"}>
+            {popularCategories.map((category, index) => (
+              <CategoryCard key={index} {...category} isInView={categoriesInView} />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonial Timeline Section */}
+      <TestimonialTimeline />
+
+      {/* CTA Section */}
+      <CtaSection />
+
+      {/* Footer */}
+      <Footer/>
+      
     </div>
   );
 }
