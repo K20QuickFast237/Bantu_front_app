@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
-import { Briefcase, ShoppingCart, Users, TrendingUp, Shield, Globe, Star, ArrowRight, Menu, X, Zap, Heart, User, Settings, LogOut, FileText, UserPlus, Store, ShoppingBag } from 'lucide-react';
+import { Link, useNavigate } from "react-router-dom";
+import { Briefcase, ShoppingCart, Users, TrendingUp, Shield, Globe, Star, ArrowRight, Menu, X, Zap, User, Settings, LogOut, FileText, UserPlus, Store, ShoppingBag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import Lottie from 'lottie-react';
@@ -10,6 +10,8 @@ import recruterAnimation from '../../assets/lotties_json/recruter.json';
 import vendreAnimation from '../../assets/lotties_json/vendre.json';
 import acheterAnimation from '../../assets/lotties_json/acheter.json';
 import Footer from '@/components/app/footer';
+import CompletionCandidatProfil from './CompletionCandidatProfil';
+import CompletionProfessionnel from './InscriptionEntreprise';
 import { useAuth } from '../../hooks/useAuth';
 
 // Navigation Component
@@ -79,7 +81,7 @@ const Navigation = () => {
                         <p className="text-sm text-gray-400">{user?.email}</p>
                       </div>
                       <ul className="p-2">
-                        <li><button onClick={handleLogout} className="w-full text-left flex items-center px-3 py-2.5 text-sm text-[#FF7F00] hover:bg-[#FF7F00]/10 rounded-md transition-colors"><LogOut className="w-5 h-5 mr-3" /> Déconnexion</button></li>
+                          <li><button onClick={handleLogout} className="w-full text-left flex items-center px-3 py-2.5 text-sm text-[#FF7F00] hover:bg-[#FF7F00]/10 rounded-md transition-colors"><LogOut className="w-5 h-5 mr-3" /> Déconnexion</button></li>
                       </ul>
                     </motion.div>
                 )}
@@ -405,6 +407,10 @@ const sectionVariants = {
 const BantuLinkHome = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [isCompletionCandidatOpen, setIsCompletionCandidatOpen] = useState(false);
+  const [isRecruiterCompletionOpen, setIsRecruiterCompletionOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const openModal = (service) => {
     setSelectedService(service);
@@ -417,6 +423,28 @@ const BantuLinkHome = () => {
   };
 
   const { ref: statsRef, inView: statsInView } = useInView({ threshold: 0.5 });
+
+  const handleCandidateAction = () => {
+    if (user && user.id) {
+      const profileData = localStorage.getItem(`user_${user.id}_profile`);
+      if (profileData && JSON.parse(profileData).isProfileComplete) {
+        navigate('/dashboard/candidate');
+      } else {
+        setIsCompletionCandidatOpen(true);
+      }
+    }
+  };
+
+  const handleRecruiterAction = () => {
+    if (user && user.id) {
+      const recruiterProfile = localStorage.getItem(`user_${user.id}_recruiter_profile`);
+      if (recruiterProfile && JSON.parse(recruiterProfile).isRecruiterProfileComplete) {
+        navigate('/dashboardEntreprise');
+      } else {
+        setIsRecruiterCompletionOpen(true);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white relative overflow-x-hidden">
@@ -469,10 +497,10 @@ const BantuLinkHome = () => {
             >
               <QuickActionCard 
                 icon={<FileText />} animationData={postulerAnimation} title="Postuler" description="Trouvez le job de vos rêves parmi des milliers d'offres." 
-                onClick={() => openModal('hire')} color={{bg: 'bg-green-100', text: 'text-[#009739]'}} />
+                onClick={handleCandidateAction} color={{bg: 'bg-green-100', text: 'text-[#009739]'}} />
               <QuickActionCard 
                 icon={<UserPlus />} animationData={recruterAnimation} title="Recruter" description="Dénichez les meilleurs talents pour votre entreprise." 
-                onClick={() => openModal('hire')} color={{bg: 'bg-green-100', text: 'text-[#009739]'}} />
+                onClick={handleRecruiterAction} color={{bg: 'bg-green-100', text: 'text-[#009739]'}} />
               <QuickActionCard 
                 icon={<Store />} animationData={vendreAnimation} title="Vendre" description="Créez votre boutique et touchez des milliers de clients." 
                 onClick={() => openModal('market')} color={{bg: 'bg-red-100', text: 'text-[#E30613]'}} />
@@ -674,6 +702,10 @@ const BantuLinkHome = () => {
 
       {/* Modal */}
       <AccessModal isOpen={modalOpen} onClose={closeModal} service={selectedService} />
+
+      {/* Profile Completion Modals */}
+      <CompletionCandidatProfil isOpen={isCompletionCandidatOpen} onClose={() => setIsCompletionCandidatOpen(false)} />
+      <CompletionProfessionnel isOpen={isRecruiterCompletionOpen} onClose={() => setIsRecruiterCompletionOpen(false)} />
     </div>
   );
 };

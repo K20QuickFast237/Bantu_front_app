@@ -4,11 +4,17 @@ import { Briefcase, MapPin, Search, ChevronDown, User, Building, Users, FileText
 import { useInView } from 'react-intersection-observer';
 import Footer from "@/components/app/footer";
 import CompletionProfessionnel from "./InscriptionEntreprise";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import CompletionCandidatProfil from "./CompletionCandidatProfil";
 
 export default function BantuHireHome() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isInscriptionOpen, setIsInscriptionOpen] = useState(false);
+  const [isCompletionCandidatOpen, setIsCompletionCandidatOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -46,6 +52,24 @@ export default function BantuHireHome() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleCandidateAction = () => {
+    const profileData = localStorage.getItem(`user_${user.id}_profile`);
+    if (profileData && JSON.parse(profileData).isProfileComplete) {
+      navigate('/dashboard/candidate');
+    } else {
+      setIsCompletionCandidatOpen(true);
+    }
+  };
+
+  const handleEmployerAction = () => {
+    const recruiterProfile = localStorage.getItem(`user_${user.id}_recruiter_profile`);
+    if (recruiterProfile && JSON.parse(recruiterProfile).isRecruiterProfileComplete) {
+      navigate('/dashboardEntreprise');
+    } else {
+      setIsInscriptionOpen(true);
+    }
+  } 
+
   // Dropdown for "Pour les Candidats" and "Pour les Employeurs"
   const DropdownMenu = ({ title, items, scrolled, isEmployer }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +90,7 @@ export default function BantuHireHome() {
               {items.map((item, index) => (
                 <li key={index}>
                   <button
-                    onClick={isEmployer ? () => setIsInscriptionOpen(true) : undefined}
+                    onClick={isEmployer ? handleEmployerAction : handleCandidateAction}
                     className="flex items-center gap-3 px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md w-full text-left"
                   >
                     {item.icon}
@@ -167,7 +191,7 @@ export default function BantuHireHome() {
               {items.map((item, index) => (
                 <li key={index} className="pt-2">
                   <button
-                    onClick={isEmployer ? () => setIsInscriptionOpen(true) : undefined}
+                    onClick={isEmployer ? handleEmployerAction : handleCandidateAction}
                     className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md ${scrolled ? 'text-gray-600 hover:bg-gray-100' : 'text-gray-300 hover:bg-white/10'}`}
                   >
                     {item.icon}
@@ -498,6 +522,7 @@ export default function BantuHireHome() {
                 <motion.button
                   whileHover={{ scale: 1.05, y: -5 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={handleEmployerAction}
                   className="bg-white/10 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-semibold border border-white/20 hover:bg-white/20 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer group"
                 >
                   Publier une offre
@@ -540,20 +565,20 @@ export default function BantuHireHome() {
                 <User className="w-4 h-4" />
                 Se connecter
               </a>
-              <a
-                href="#"
+              <button
+                onClick={handleEmployerAction}
                 className={`px-4 py-2 rounded-lg font-semibold transition-colors shadow-lg hover:shadow-xl ${isScrolled ? 'bg-gray-800 hover:bg-gray-900 text-white' : 'bg-[#009739] hover:bg-[#007a2f] text-white'}`}
               >
                 Publier une offre
-              </a>
+              </button>
             </nav>
             <div className="md:hidden flex items-center gap-4">
-              <a
-                href="#"
+              <button
+                onClick={handleEmployerAction}
                 className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-colors shadow-md hover:shadow-lg ${isScrolled ? 'bg-gray-800 hover:bg-gray-900 text-white' : 'bg-[#009739] hover:bg-[#007a2f] text-white'}`}
               >
                 Publier une offre
-              </a>
+              </button>
               <button onClick={() => setIsMenuOpen(!isMenuOpen)} className={`p-1 rounded-md cursor-pointer ${isScrolled ? 'text-gray-800 hover:bg-gray-100' : 'text-white hover:bg-white/10'}`}>
                 {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
@@ -639,9 +664,9 @@ export default function BantuHireHome() {
           </motion.div>
           <motion.div variants={itemVariants} className="mt-8 text-sm space-y-2">
             <p>
-              <a href="#" className="text-green-400 hover:underline font-semibold">
+              <Link to="/rechercheOffre" className="text-green-400 hover:underline font-semibold">
                 Recherche avancée
-              </a>
+              </Link>
               <span className="text-gray-400"> pour plus d'options.</span>
             </p>
             <p>
@@ -651,9 +676,9 @@ export default function BantuHireHome() {
               <span className="text-gray-400"> – C'est rapide et facile.</span>
             </p>
             <p>
-              <a href="#" className="text-green-400 hover:underline font-semibold">
+              <button onClick={handleEmployerAction} className="text-green-400 hover:underline font-semibold text-left">
                 Employeurs : lancez-vous
-              </a>
+              </button>
               <span className="text-gray-400"> – Publiez une offre d’emploi et recevez des candidatures.</span>
             </p>
           </motion.div>
@@ -711,6 +736,7 @@ export default function BantuHireHome() {
       <TestimonialTimeline />
       <CtaSection />
       <Footer />
+      <CompletionCandidatProfil isOpen={isCompletionCandidatOpen} onClose={() => setIsCompletionCandidatOpen(false)} />
       <CompletionProfessionnel isOpen={isInscriptionOpen} onClose={() => setIsInscriptionOpen(false)} />
     </div>
   );

@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Welcome1 from '../../assets/assets_application/welcome1.png';
+import { useAuth } from '../../hooks/useAuth';
 
 const itemVariants = { // This can be kept if you want to re-add animations later, but it's not used now.
   hidden: { y: 20, opacity: 0 },
@@ -197,6 +198,7 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   // Pre-filled user data
   const userData = {
@@ -221,10 +223,16 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
     },
     validationSchema: combinedValidationSchema,
     onSubmit: (values) => {
-      // La soumission n'est déclenchée que si la validation est réussie.
-      // Le `handleSubmit` de Formik gère cela automatiquement.
       if (formik.isValid) {
         console.log('Form data submitted:', values);
+        if (user && user.id) {
+          const recruiterData = {
+            ...values,
+            isRecruiterProfileComplete: true,
+          };
+          localStorage.setItem(`user_${user.id}_recruiter_profile`, JSON.stringify(recruiterData));
+        }
+        onClose();
         navigate('/dashboardEntreprise');
       }
     },

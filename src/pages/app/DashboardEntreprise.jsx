@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, MapPin, ArrowRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
@@ -132,29 +133,33 @@ const DashboardEntreprise = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-2 gap-8 my-16"
           >
-            <motion.div
-              whileHover={cardHover}
-              className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
-              <h2 className="text-2xl md:text-3xl font-bold relative z-10">Créez vos offres d'emploi</h2>
-              <p className="text-sm md:text-base text-[#F97316] mt-2 relative z-10">Créez vos offres d'emploi</p>
-              <div className="flex justify-end mt-6 relative z-10">
-                <ArrowRight className="text-[#F97316] w-6 h-6" />
-              </div>
-            </motion.div>
-
-            <motion.div
-              whileHover={cardHover}
-              className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
-              <h2 className="text-2xl md:text-3xl font-bold relative z-10">Dashboard</h2>
-              <p className="text-sm md:text-base text-[#F97316] mt-2 relative z-10">Accédez et gérez vos données</p>
-              <div className="flex justify-end mt-6 relative z-10">
-                <ArrowRight className="text-[#F97316] w-6 h-6" />
-              </div>
-            </motion.div>
+            <Link to="/createJob">
+              <motion.div
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
+                <h2 className="text-2xl md:text-3xl font-bold relative z-10">Créez vos offres d'emploi</h2>
+                <p className="text-sm md:text-base text-[#F97316] mt-2 relative z-10">Créez vos offres d'emploi</p>
+                <div className="flex justify-end mt-6 relative z-10">
+                  <ArrowRight className="text-[#F97316] w-6 h-6" />
+                </div>
+              </motion.div>
+            </Link>
+            <Link to="/dashboardrecruteurprofil">
+              <motion.div
+                whileHover={cardHover}
+                className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
+                <h2 className="text-2xl md:text-3xl font-bold relative z-10">Dashboard</h2>
+                <p className="text-sm md:text-base text-[#F97316] mt-2 relative z-10">Accédez et gérez vos données</p>
+                <div className="flex justify-end mt-6 relative z-10">
+                  <ArrowRight className="text-[#F97316] w-6 h-6" />
+                </div>
+              </motion.div>
+            </Link>
+            
           </motion.div>
         </div>
       </div>
