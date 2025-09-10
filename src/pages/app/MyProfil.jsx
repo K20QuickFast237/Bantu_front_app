@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { 
   Settings, User, Briefcase, GraduationCap, Award, 
   Bell, Save,
 } from 'lucide-react';
 
+import { useAuth } from '../../hooks/useAuth';
 import Experiences from '../../components/app/Experiences';
 import DiplomesFormations from '../../components/app/DiplomesFormations';
 
@@ -278,15 +279,37 @@ const ProfileView = () => {
 };
 
 const GeneralView = () => {
-  const [username, setUsername] = useState('nanfackjospinduclair');
-  const [phone, setPhone] = useState('671526369');
-  const [email, setEmail] = useState('nanfackjospinduclair@gmail.com');
-  const [birthday, setBirthday] = useState('2003-05-04');
-  const [gender, setGender] = useState('Homme');
-  const [country, setCountry] = useState('Cameroon');
-  const [region, setRegion] = useState('Littoral');
-  const [city, setCity] = useState('Douala');
-  const [address, setAddress] = useState('rue akwa');
+  const { user } = useAuth();
+  const [username, setUsername] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [birthday, setBirthday] = useState('');
+  const [gender, setGender] = useState('');
+  const [country, setCountry] = useState('');
+  const [region, setRegion] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
+
+  useEffect(() => {
+    if (user && user.id) {
+      // Pré-remplir avec les données de base de l'utilisateur
+      setUsername(user.nom || '');
+      setEmail(user.email || '');
+
+      // Charger les données complétées depuis le localStorage
+      const profileDataString = localStorage.getItem(`user_${user.id}_profile`);
+      if (profileDataString) {
+        const profileData = JSON.parse(profileDataString);
+        setPhone(profileData.telephone || '');
+        setBirthday(profileData.date_naissance || '');
+        setGender(profileData.sexe || '');
+        setCountry(profileData.pays || '');
+        setCity(profileData.ville || '');
+        setAddress(profileData.adresse || '');
+        // Le champ 'region' n'est pas dans le formulaire de complétion, il reste vide ou à gérer autrement.
+      }
+    }
+  }, [user]);
 
   return (
     <div className="p-6">

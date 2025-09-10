@@ -81,7 +81,6 @@ const App = () => {
             <Route path="settings" element={<CandidateSettings />} />
             <Route path="profil" element={<MyProfil />} />
           </Route>
-          <Route path="profil/edit" element={<MyProfil />} />
           
         </Route>
       </Routes>

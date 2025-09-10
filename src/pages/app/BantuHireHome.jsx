@@ -106,9 +106,9 @@ export default function BantuHireHome() {
   };
 
   const candidateItems = [
-    { href: '#', label: 'Parcourir les offres', icon: <Search className="w-4 h-4 text-gray-500" /> },
-    { href: '#', label: 'Déposer mon CV', icon: <FileText className="w-4 h-4 text-gray-500" /> },
-    { href: '#', label: 'Alertes emploi', icon: <Users className="w-4 h-4 text-gray-500" /> },
+    { to: '/dashboard/candidate/jobs', label: 'Parcourir les offres', icon: <Search className="w-4 h-4 text-gray-500" /> },
+    { to: 'dashboard/candidate/cvs', label: 'Déposer mon CV', icon: <FileText className="w-4 h-4 text-gray-500" /> },
+    { to: 'dashboard/candidate/', label: 'Alertes emploi', icon: <Users className="w-4 h-4 text-gray-500" /> },
   ];
 
   const employerItems = [
@@ -552,9 +552,12 @@ export default function BantuHireHome() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-10">
             <div className="flex items-center gap-8 text-sm font-medium">
-              <div className={`text-2xl font-bold hover:scale-105 transition-transform duration-300 cursor-pointer ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
-                BantuHire
-              </div>
+              <Link to='/hirehome'>
+                <div className={`text-2xl font-bold hover:scale-105 transition-transform duration-300 cursor-pointer ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
+                  BantuHire
+                </div>
+              </Link>
+              
               <div className="hidden md:flex items-center gap-8">
                 <DropdownMenu title="Pour les Candidats" items={candidateItems} scrolled={isScrolled} isEmployer={false} />
                 <DropdownMenu title="Pour les Employeurs" items={employerItems} scrolled={isScrolled} isEmployer={true} />

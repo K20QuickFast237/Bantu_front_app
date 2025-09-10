@@ -100,7 +100,9 @@ const DashboardCandidate = () => {
                                     <span className="font-semibold">Accueil</span>
                                 </Link>
                             ) : (
-                                <div className="text-2xl font-bold text-white">BantuHire</div>
+                                <Link to="/hirehome">
+                                    <div className="text-2xl font-bold text-white">BantuHire</div>
+                                </Link> 
                             )}
                         </div>
 
