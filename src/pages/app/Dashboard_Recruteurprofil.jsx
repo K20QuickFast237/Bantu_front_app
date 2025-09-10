@@ -23,7 +23,7 @@ const Button = ({ children, variant = 'default', size = 'default', className = '
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
 
   const variants = {
-    default: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
+    default: 'bg-[#009739] text-white hover:bg-[#007a2f] focus:ring-green-500',
     outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
     ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
   };
@@ -101,20 +101,20 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
   return (
     <div className="w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-6 border-b border-gray-200 h-16 flex items-center">
         <div className="flex items-center space-x-2">
-          <span className="px-4 py-1 bg-[#1E3A8A] text-white text-sm font-semibold rounded-md">BantuLink</span> {/* Adjusted styling for "BantuLink" for better fidelity with image_7a81c8.png and image_7a850e.png */}
+          <span className="text-2xl font-bold text-[#0A2342]">BantuHire</span>
         </div>
       </div>
 
       {/* Profile Info for Sidebar - Moved to top as per image_7a6be0.png */}
       <div className="p-4 border-b border-gray-200"> {/* Added border-b as per image_7a6be0.png */}
         <div className="flex items-center space-x-3">
-          <Avatar className="w-10 h-10">
-            <AvatarFallback className="bg-[#1E3A8A] text-white text-base">JM</AvatarFallback> {/* Adjusted background color and font size as per image_7a6be0.png */}
+          <Avatar className="w-12 h-12">
+            <AvatarFallback className="bg-[#0A2342] text-white text-lg">JM</AvatarFallback>
           </Avatar>
           <div>
-            <p className="font-semibold text-gray-900 text-base">Jean Mba</p> {/* Adjusted font size as per image_7a6be0.png */}
+            <p className="font-semibold text-gray-900 text-base">Jean Mba</p>
             <p className="text-sm text-gray-600">Recruiter</p>
           </div>
         </div>
@@ -141,7 +141,7 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
               onClick={() => setActiveSection(item.id)}
               className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 transform ${
                 isActive
-                  ? 'bg-[#1E3A8A] text-white shadow-lg' // Active state for dashboard button as per image_7a6be0.png
+                  ? 'bg-green-100 text-[#009739] font-semibold shadow-inner'
                   : 'text-gray-700 hover:bg-gray-100 hover:scale-105' // Inactive state as per image_7a6be0.png
               }`}
             >
@@ -163,23 +163,24 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
 // Composant Header
 const HeaderDashRecru = () => {
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-      {/* This section will be empty as per the image for the main header */}
-      <div className="flex items-center space-x-2"> {/* Added BantuLink to header for completeness, though not explicitly asked to move */}
-        
-      </div>
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <Button variant="ghost" size="sm" className="relative hover:scale-105 transition-transform">
-            <Bell className="w-5 h-5 text-gray-600" />
-            <Badge className="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 py-0.5 rounded-full z-10">
-              !
-            </Badge>
-          </Button>
+    <header className="bg-[#0A2342] shadow-md border-b border-white/10 sticky top-0 z-30">
+      <div className="max-w-full mx-auto px-6">
+        <div className="flex justify-end items-center h-16">
+          {/* Navigation Icons */}
+          <div className="flex items-center space-x-4">
+            <button className="p-2 text-gray-300 hover:text-white relative transition-colors">
+              <MessageSquare className="w-6 h-6" />
+              <span className="absolute top-0 right-0 w-4 h-4 bg-[#009739] text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white">5</span>
+            </button>
+            <button className="p-2 text-gray-300 hover:text-white relative transition-colors">
+              <Bell className="w-6 h-6" />
+              <span className="absolute top-0 right-0 w-4 h-4 bg-red-600 text-white text-[10px] rounded-full flex items-center justify-center border-2 border-white">2</span>
+            </button>
+            <Avatar className="hover:scale-110 transition-transform cursor-pointer border-2 border-transparent hover:border-green-400">
+              <AvatarFallback className="text-white bg-[#0A2342]">JM</AvatarFallback>
+            </Avatar>
+          </div>
         </div>
-        <Avatar className="hover:scale-110 transition-transform cursor-pointer">
-          <AvatarFallback className="text-white" style={{ backgroundColor: '#1E3A8A' }}>JM</AvatarFallback>
-        </Avatar>
       </div>
     </header>
   );
@@ -285,7 +286,7 @@ const MainDashRecru = ({ animateCards }) => {
       title: 'Create Job Post',
       subtitle: 'Post a new position',
       icon: Plus,
-      bgColor: 'bg-[#1E3A8A]', // Specific background color from image
+      bgColor: 'bg-[#0A2342]',
       textColor: 'text-white',
       iconColor: 'text-white' // Icon color for this card
     },
@@ -317,8 +318,20 @@ const MainDashRecru = ({ animateCards }) => {
 
   return (
     <main className="flex-1 p-6 overflow-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Welcome back, Jean!</h1>
-      <p className="text-gray-600 text-sm mb-6">Last login: Today at 9:30 AM</p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-1">Welcome back, Jean!</h1>
+          <p className="text-gray-600 text-sm">Here's your recruiting dashboard for today.</p>
+        </div>
+        <div className="relative w-full max-w-xs">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <input
+            type="text"
+            placeholder="Search candidates, jobs..."
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#009739] focus:border-transparent transition-all"
+          />
+        </div>
+      </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -356,7 +369,7 @@ const MainDashRecru = ({ animateCards }) => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Active Job Posts</CardTitle>
-              <Button className="transform hover:scale-105 transition-all" style={{ backgroundColor: '#1E3A8A' }}>
+              <Button className="transform hover:scale-105 transition-all">
                 Create New Job
               </Button>
             </CardHeader>
@@ -389,7 +402,7 @@ const MainDashRecru = ({ animateCards }) => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-lg font-semibold">Recent Applications</CardTitle>
-              <Button variant="outline" size="sm" className="text-blue-600 hover:scale-105 transition-transform">
+              <Button variant="outline" size="sm" className="text-[#009739] border-[#009739] hover:bg-green-50 hover:scale-105 transition-transform">
                 View All Applications
               </Button>
             </CardHeader>
@@ -460,13 +473,13 @@ const DashboardRecruteurprofil = () => {
 
   return (
     <>
-      <div className=" bg-gray-50 flex">
+      <div className="bg-gray-50 flex min-h-screen">
         <SlidebarDashRecru
           activeSection={activeSection}
           setActiveSection={setActiveSection}
         />
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col w-0">
           <HeaderDashRecru />
           <MainDashRecru animateCards={animateCards} />
         </div>
