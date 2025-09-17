@@ -28,11 +28,11 @@ import SettingsSection from './SettingsSection';
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
 
-  const variants = {
-    default: 'bg-[#009739] text-white hover:bg-[#007a2f] focus:ring-green-500',
-    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
-  };
+    const variants = {
+      default: 'bg-[#009739] text-white hover:bg-[#007a2f] focus:ring-green-500',
+      outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
+      ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
+    };
 
   const sizes = {
     default: 'h-9 px-3 text-sm', // Réduit la taille du bouton
