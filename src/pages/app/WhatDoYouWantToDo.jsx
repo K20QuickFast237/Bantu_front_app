@@ -18,10 +18,10 @@ const WhatDoYouWantToDo = () => {
         // Redirection vers les pages appropriées selon l'action
         switch (action) {
             case 'Postuler':
-                navigate('/postuler');
+                navigate('/CandidatProfil');
                 break;
             case 'Recruter':
-                navigate('/recruter');
+                navigate('/inscriptionEntreprise');
                 break;
             case 'Acheter':
                 navigate('/acheter');

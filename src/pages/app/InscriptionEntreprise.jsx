@@ -1,10 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+// Importer useNavigate
+import { useNavigate } from 'react-router-dom';
 import Welcome1 from '../../assets/assets_application/Welcome1.png';
 import Header from '../../components/app/Header';
 import Footer from '../../components/public/Footer';
 
 const InscriptionEntreprise = () => {
+  // Initialiser useNavigate
+  const navigate = useNavigate();
+
   // Animations
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -38,6 +43,13 @@ const InscriptionEntreprise = () => {
         ease: "easeOut"
       }
     }
+  };
+
+  // Fonction de gestion du clic
+  const handleCreateAccount = () => {
+    // Logique de validation ou de soumission du formulaire...
+    // Une fois la soumission réussie, rediriger l'utilisateur
+    navigate('/dashboardEntreprise');
   };
 
   return (
@@ -209,6 +221,7 @@ const InscriptionEntreprise = () => {
               className="px-6 py-3 text-xs rounded-md bg-orange-500 text-white font-semibold shadow-md hover:bg-orange-600 transition-colors duration-200"
               whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.1)" }}
               whileTap={{ scale: 0.95 }}
+              onClick={handleCreateAccount}
             >
               Créer votre compte recruteur
             </motion.button>

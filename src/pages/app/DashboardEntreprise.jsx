@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { Search, MapPin, ArrowRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
+import { useNavigate } from 'react-router-dom'; // Importez useNavigate
 import Header from '../../components/app/Header';
 import Footer from '../../components/public/Footer';
 
 const DashboardEntreprise = () => {
+  const navigate = useNavigate(); // Initialisez le hook de navigation
   const controls = useAnimation();
   const [ref, inView] = useInView({ threshold: 0.1 });
 
@@ -38,6 +40,15 @@ const DashboardEntreprise = () => {
   const cardHover = {
     scale: 1.02,
     transition: { type: 'spring', stiffness: 300 }
+  };
+
+  // Fonctions de navigation
+  const handleCreateJobClick = () => {
+    navigate('/createJob');
+  };
+
+  const handleDashboardClick = () => {
+    navigate('/dashboardrecruteurprofil');
   };
 
   return (
@@ -134,9 +145,11 @@ const DashboardEntreprise = () => {
             viewport={{ once: true }}
             className="grid grid-cols-1 md:grid-cols-2 gap-8 my-16"
           >
+            {/* Card Créer vos offres d'emploi */}
             <motion.div
               whileHover={cardHover}
               className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
+              onClick={handleCreateJobClick} // Ajout du gestionnaire de clic
             >
               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
               <h2 className="text-2xl md:text-3xl font-bold relative z-10">Créez vos offres d'emploi</h2>
@@ -146,9 +159,11 @@ const DashboardEntreprise = () => {
               </div>
             </motion.div>
 
+            {/* Card Dashboard */}
             <motion.div
               whileHover={cardHover}
               className="bg-gradient-to-br from-[#1E3A8A] to-[#1E3A8A]/90 text-white p-8 rounded-xl shadow-2xl cursor-pointer relative overflow-hidden"
+              onClick={handleDashboardClick} // Ajout du gestionnaire de clic
             >
               <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10" />
               <h2 className="text-2xl md:text-3xl font-bold relative z-10">Dashboard</h2>
@@ -160,7 +175,6 @@ const DashboardEntreprise = () => {
           </motion.div>
         </div>
       </div>
-
       <Footer />
     </>
   );

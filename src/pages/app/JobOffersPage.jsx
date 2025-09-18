@@ -1,12 +1,21 @@
 import React from 'react';
-import Header from "../../components/app/Header"
+import HeaderProfil from "../../components/app/HeaderProfil"
+import Footer from '@/components/public/Footer';
+import PageWrapper from '@/components/public/PageWrapper';
+import { Link } from 'react-router-dom';
 
 const JobOfferPage = () => {
   return (
     <>
-    <Header/>
-    <div className="min-h-screen mt-20 bg-gray-100 font-sans relative">
+    <PageWrapper>
+      <HeaderProfil/>
+    <div className="min-h-screen  bg-gray-100 font-sans relative">
       {/* Fixed Footer for mobile/scroll */}
+      <Link to={"/CandidatProfil"}>
+          <button className=' ml-5 border-2 px-4 mt-2 py-2 bg-gray-800 text-white rounded-2xl'>
+        retour
+      </button>
+      </Link>
       <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
         <div className="flex justify-center gap-4">
           <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
@@ -116,23 +125,25 @@ const JobOfferPage = () => {
 
             {/* Action Buttons for Desktop */}
             <div className="hidden lg:flex gap-4 mb-10">
-              <button className="flex items-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-5 h-5 mr-2"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M20.25 14.75V21H3.75V14.75A2.25 2.25 0 016 12.5h12a2.25 2.25 0 012.25 2.25zM12 9.5a3 3 0 100-6 3 3 0 000 6z"
-                  />
-                </svg>
-                Postuler
-              </button>
+              <Link to={"/jobApplicationform"}>
+                <button className="flex items-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={2}
+                    stroke="currentColor"
+                    className="w-5 h-5 mr-2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M20.25 14.75V21H3.75V14.75A2.25 2.25 0 016 12.5h12a2.25 2.25 0 012.25 2.25zM12 9.5a3 3 0 100-6 3 3 0 000 6z"
+                    />
+                  </svg>
+                  Postuler
+                </button>
+              </Link>
               <button className="flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -248,7 +259,8 @@ const JobOfferPage = () => {
         </div>
         {/* Additional Action Buttons at the very end */}
         <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
-          <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+          <Link to={"/jobApplicationform"}>
+             <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -265,6 +277,7 @@ const JobOfferPage = () => {
             </svg>
             Postuler
           </button>
+          </Link>
           <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -285,6 +298,8 @@ const JobOfferPage = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </PageWrapper>
     </>
   );
 };

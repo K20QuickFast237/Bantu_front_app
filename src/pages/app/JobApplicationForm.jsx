@@ -1,4 +1,6 @@
+import HeaderProfil from '@/components/app/HeaderProfil';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const JobApplicationForm = () => {
   const [applicationMethod, setApplicationMethod] = useState('bantuHire');
@@ -13,8 +15,15 @@ Bien cordialement.`
   const maxCharacters = 2000;
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-6 lg:p-8">
-      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-6 lg:p-8">
+    <>
+    <HeaderProfil/>
+    <div className=" bg-gray-100 font-sans p-4 sm:p-6 lg:p-8">
+      <Link to={"/CandidatProfil"}>
+          <button className=' ml-5 border-2 px-4 mt-2 py-2 bg-gray-800 text-white rounded-2xl'>
+        retour
+      </button>
+      </Link>
+      <div className="w-full mx-auto bg-white shadow-lg rounded-lg p-6 lg:p-8">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
           <div className="flex items-center">
@@ -79,7 +88,7 @@ Bien cordialement.`
           </div>
         </div>
 
-        {/* Sauvegarder Button (Single, as per image 22079b.png context) */}
+        {/* Sauvegarder Button */}
         <div className="flex justify-start mb-8">
           <button className="flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
             <svg
@@ -131,79 +140,177 @@ Bien cordialement.`
           </div>
         </div>
 
-        {/* Lettre de motivation Section */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-          <h3 className="text-white text-xl font-bold px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#10B981' }}>
-            Lettre de motivation
-          </h3>
-          <div className="border border-gray-300 rounded-b-lg p-4">
-            <textarea
-              className="w-full h-48 p-2 text-gray-800 border-none focus:ring-0 focus:outline-none resize-none"
-              placeholder="Bonjour,\n\nJe me permets de vous solliciter pour le poste de Business Developer CAM – Shopfloor, Belgique (f/x) – FR/NL F/H pour lequel je souhaite vous proposer ma candidature.\nVeuillez trouver en pièce jointe mon dossier.\nJe me tiens à votre disposition pour toutes questions relatives à mon profil.\nBien cordialement."
-              value={coverLetter}
-              onChange={(e) => setCoverLetter(e.target.value)}
-              maxLength={maxCharacters}
-              rows={10}
-            ></textarea>
-            <div className="text-right text-gray-500 text-sm mt-2">
-              {coverLetter.length}/{maxCharacters} caractères
+        {/* Conditional Rendering Based on Application Method */}
+        {applicationMethod === 'bantuHire' ? (
+          <>
+            {/* Lettre de motivation Section (from JobApplicationForm.jsx) */}
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-white text-xl font-bold px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#10B981' }}>
+                Lettre de motivation
+              </h3>
+              <div className="border border-gray-300 rounded-b-lg p-4">
+                <textarea
+                  className="w-full h-48 p-2 text-gray-800 border-none focus:ring-0 focus:outline-none resize-none"
+                  placeholder="Bonjour,\n\nJe me permets de vous solliciter pour le poste de Business Developer CAM – Shopfloor, Belgique (f/x) – FR/NL F/H pour lequel je souhaite vous proposer ma candidature.\nVeuillez trouver en pièce jointe mon dossier.\nJe me tiens à votre disposition pour toutes questions relatives à mon profil.\nBien cordialement."
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  maxLength={maxCharacters}
+                  rows={10}
+                ></textarea>
+                <div className="text-right text-gray-500 text-sm mt-2">
+                  {coverLetter.length}/{maxCharacters} caractères
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Profil recherché Section (from image_220f03.png) */}
-        <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-          <h3 className="text-orange-500 text-xl font-bold mb-4">Profil recherché</h3>
-          <ul className="list-disc list-inside text-gray-700 space-y-2">
-            <li>5 ans d'expérience minimum en design d'interfaces et d'expériences utilisateurs.</li>
-            <li>Maîtrise des outils de design (Figma, Adobe XD, Sketch...).</li>
-            <li>Maîtrise confirmée dans la conception de logiciels métiers complexes.</li>
-            <li>Capacité à simplifier des interfaces riches sans perdre en efficacité.</li>
-            <li>Sens du détail, créativité, autonomie et esprit d'équipe.</li>
-            <li>Aisance dans la présentation de vos idées et livrables.</li>
-            <li>Une sensibilité graphique pour les supports de communication est un plus.</li>
-          </ul>
-        </div>
+            {/* Profil recherché Section (from JobApplicationForm.jsx) */}
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-orange-500 text-xl font-bold mb-4">Profil recherché</h3>
+              <ul className="list-disc list-inside text-gray-700 space-y-2">
+                <li>5 ans d'expérience minimum en design d'interfaces et d'expériences utilisateurs.</li>
+                <li>Maîtrise des outils de design (Figma, Adobe XD, Sketch...).</li>
+                <li>Maîtrise confirmée dans la conception de logiciels métiers complexes.</li>
+                <li>Capacité à simplifier des interfaces riches sans perdre en efficacité.</li>
+                <li>Sens du détail, créativité, autonomie et esprit d'équipe.</li>
+                <li>Aisance dans la présentation de vos idées et livrables.</li>
+                <li>Une sensibilité graphique pour les supports de communication est un plus.</li>
+              </ul>
+            </div>
 
-        {/* Bottom Action Buttons (from image_220f03.png) */}
-        <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
-          <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-5 h-5 mr-2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M20.25 14.75V21H3.75V14.75A2.25 2.25 0 016 12.5h12a2.25 2.25 0 012.25 2.25zM12 9.5a3 3 0 100-6 3 3 0 000 6z"
-              />
-            </svg>
-            Postuler
-          </button>
-          <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="w-5 h-5 mr-2"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-              />
-            </svg>
-            Sauvegarder
-          </button>
-        </div>
+            {/* Bottom Action Buttons (from JobApplicationForm.jsx) */}
+            <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
+              <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5 mr-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M20.25 14.75V21H3.75V14.75A2.25 2.25 0 016 12.5h12a2.25 2.25 0 012.25 2.25zM12 9.5a3 3 0 100-6 3 3 0 000 6z"
+                  />
+                </svg>
+                Postuler
+              </button>
+              <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5 mr-2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                  />
+                </svg>
+                Sauvegarder
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* My Application CV Section (from JobApplicationPage2.jsx) */}
+            <div className="bg-white p-6 rounded-lg border  mb-8">
+              <div className="space-y-4">
+                <label className="flex items-start text-gray-700 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="applicationMethod"
+                    value="myCv"
+                    checked={applicationMethod === 'myCv'}
+                    onChange={(e) => setApplicationMethod(e.target.value)}
+                    className="form-radio h-4 w-4 text-orange-500 mt-1"
+                  />
+                  <div className="ml-2">
+                    <span>Je postule avec mon cv</span>
+                    <div className="flex items-center text-green-600 text-sm mt-1">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-1"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      <span>mon_cv.pdf</span>
+                    </div>
+                    <div className="mt-2 text-sm text-gray-500">
+                      <button className="text-blue-600 hover:underline">Importer un autre CV</button>
+                    </div>
+                    <div className="flex items-center space-x-2 mt-4">
+                      <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 mr-2 text-gray-500"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                          />
+                        </svg>
+                        Choisir Un Fichier
+                      </button>
+                      <button className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
 
-        {/* "Envoyer ma candidature" button */}
+            {/* Motivation Letter Section (from JobApplicationPage2.jsx) */}
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="bg-[#10B981] text-white p-2  rounded-tl-2xl rounded-tr-2xl text-xl font-bold mb-4">Lettre de motivation</h3>
+              <div className="bg-gray-50 border border-gray-200 rounded-md p-4 text-gray-700 text-sm relative">
+                <p>Bonjour,</p>
+                <p className="mt-2">
+                  Je me permets de vous solliciter pour le poste de Business Developer CAM - Shopfloor, Belgique (IX) - FR/NL F/H pour lequel je souhaite vous proposer ma candidature.
+                </p>
+                <p className="mt-2">Veuillez trouver en pièce jointe mon dossier.</p>
+                <p className="mt-2">Je me tiens à votre disposition pour toutes questions relatives à mon profil.</p>
+                <p className="mt-2">Bien cordialement.</p>
+                <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                  {coverLetter.length} / {maxCharacters} caractères
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Envoyer ma candidature Button */}
         <div className="flex justify-center mt-6">
           <button className="px-8 py-4 bg-orange-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-orange-600 transition-colors">
             Envoyer ma candidature
@@ -211,6 +318,7 @@ Bien cordialement.`
         </div>
       </div>
     </div>
+    </>
   );
 };
 

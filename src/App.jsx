@@ -28,7 +28,7 @@ import CandidateProfile from "./pages/app/OffreRecruteur"
 import RecruiterProfile from "./pages/app/RecruiterProfile";
 import JobOffersPage from "./pages/app/JobOffersPage";
 import JobApplicationForm from "./pages/app/JobApplicationForm";
-import JobApplicationPage2 from "./pages/app/JobApplicationPage2";
+import CandidatProfil from "./pages/app/CandidatProfil";
 
 const App = () => {
   return (
@@ -66,7 +66,7 @@ const App = () => {
           <Route path="/recruteurprofile" element={<RecruiterProfile/>}/>
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
           <Route path="/jobApplicationform" element={<JobApplicationForm/>}/>
-          <Route path="/jobApplicationPage2" element={<JobApplicationPage2/>}/>
+          <Route path="/candidatProfil" element={<CandidatProfil/>}/>
         </Route>
       </Routes>
       
