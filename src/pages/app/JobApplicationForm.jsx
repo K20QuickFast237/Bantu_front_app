@@ -318,6 +318,7 @@ Bien cordialement.`
         </div>
       </div>
     </div>
+    <Footer />
     </>
   );
 };
