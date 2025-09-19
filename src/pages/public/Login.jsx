@@ -20,23 +20,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth(); // Utilisation du contexte d'authentification
 
-  const handleLoginRedirect = (user) => {
-    if (!user) {
-      navigate('/homepage');
-      return;
-    }
-
-    const { role, profile_completed } = user;
-
-    if (role === 'candidat') {
-      navigate(profile_completed ? '/dashboard/candidate' : '/complete-profile/candidate');
-    } else if (role === 'recruteur') {
-      navigate(profile_completed ? '/dashboard/recruiter' : '/complete-profile/recruiter');
-    } else {
-      navigate('/homepage'); // Page pour choisir un rôle si non défini
-    }
-  };
-
   const onSubmit = async (values, actions) => {
     try {
       // Appel à l'API via l'instance centralisée api
@@ -45,10 +28,9 @@ const Login = () => {
 
       // Mise à jour de l'état global de l'application via le contexte
       login(user, token);
-        console.log(user);
 
       actions.resetForm();
-      handleLoginRedirect(user);
+      navigate('/WhatDoYouWantToDo');
     } catch (err) {
       console.error("Erreur de connexion:", err.response?.data || err.message);
       // TODO: Afficher une erreur à l'utilisateur (ex: avec un toast)
@@ -74,13 +56,12 @@ const Login = () => {
       });
 
       const { user, token } = response.data;
-        console.log(user);
 
       // Mettre à jour le contexte d'authentification
       login(user, token);
 
       // Rediriger l'utilisateur
-      handleLoginRedirect(user);
+      navigate('/WhatDoYouWantToDo');
     } catch (error) {
       console.error("Erreur lors de la connexion avec Google:", error.response?.data || error.message);
     }

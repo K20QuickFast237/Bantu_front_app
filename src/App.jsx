@@ -26,6 +26,7 @@ import ResetPasswordForm from "./pages/app/ResetPasswordForm";
 import JobOffersPage from "./pages/app/JobOffersPage";
 import JobApplicationForm from "./pages/app/JobApplicationForm";
 import CandidatProfil from "./pages/app/CandidatProfil";
+import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
 
 const App = () => {
   return (
@@ -50,6 +51,7 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/WhatDoYouWantToDo" element={<WhatDoYouWantToDo/>}/>
           <Route path="/profil" element={<Profil />} />
+          <Route path="/inscriptionEntreprise" element={<CompletionProfessionnel/>}/>
           <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
           <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
           <Route path="/createJob" element={<Create_job/>}/>
