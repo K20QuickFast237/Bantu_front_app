@@ -10,8 +10,9 @@ import {
   BarChart3,
   Search,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-// Composants UI réutilisables (copiés pour indépendance)
+// Composants UI réutilisables
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
 
@@ -75,31 +76,37 @@ const AvatarFallback = ({ children, className = '', ...props }) => (
 );
 
 const DashboardSection = ({ animateCards }) => {
+  const navigate = useNavigate();
+
+  const handleCreateJobClick = () => {
+    navigate('/createJob');
+  };
+
   const stats = [
     {
       title: '234',
-      subtitle: 'Total Job Views',
+      subtitle: 'Vues Totales',
       color: 'bg-blue-50 border-blue-200',
       icon: Eye,
       iconColor: 'text-blue-600'
     },
     {
       title: '28',
-      subtitle: 'Applications This Week',
+      subtitle: 'Candidatures cette semaine',
       color: 'bg-green-50 border-green-200',
       icon: FileText,
       iconColor: 'text-green-600'
     },
     {
       title: '5',
-      subtitle: 'Interviews Scheduled',
+      subtitle: 'Entretiens planifiés',
       color: 'bg-yellow-50 border-yellow-200',
       icon: Calendar,
       iconColor: 'text-yellow-600'
     },
     {
       title: '12',
-      subtitle: 'Active Candidates',
+      subtitle: 'Candidats actifs',
       color: 'bg-pink-50 border-pink-200',
       icon: Users,
       iconColor: 'text-pink-600'
@@ -108,27 +115,27 @@ const DashboardSection = ({ animateCards }) => {
 
   const jobPosts = [
     {
-      title: 'Frontend Developer',
+      title: 'Développeur Frontend',
       company: 'Tech Company',
       postedDays: 2,
       applicants: 15,
-      status: 'active',
+      status: 'actif',
       statusColor: 'bg-green-500'
     },
     {
-      title: 'UI/UX Designer',
+      title: 'Designer UI/UX',
       company: 'Design Studio',
       postedDays: 5,
       applicants: 8,
-      status: 'active',
+      status: 'actif',
       statusColor: 'bg-green-500'
     },
     {
-      title: 'Backend Developer',
+      title: 'Développeur Backend',
       company: 'StartupXYZ',
       postedDays: 1,
       applicants: 23,
-      status: 'closed',
+      status: 'fermé',
       statusColor: 'bg-red-500'
     }
   ];
@@ -136,29 +143,29 @@ const DashboardSection = ({ animateCards }) => {
   const recentApplications = [
     {
       name: 'Sarah Martinez',
-      position: 'Frontend Dev',
-      time: '2 hours ago',
+      position: 'Dev Frontend',
+      time: 'il y a 2 heures',
       avatar: 'SM',
       color: 'bg-blue-500'
     },
     {
       name: 'Paul Samuelle',
       position: 'Designer',
-      time: '1 day ago',
+      time: 'il y a 1 jour',
       avatar: 'PS',
       color: 'bg-green-500'
     },
     {
       name: 'Sarah Shaule',
-      position: 'Developer',
-      time: '3 days ago',
+      position: 'Développeur',
+      time: 'il y a 3 jours',
       avatar: 'SS',
       color: 'bg-red-500'
     },
     {
       name: 'David Stranges',
       position: 'Manager',
-      time: '1 week ago',
+      time: 'il y a 1 semaine',
       avatar: 'DS',
       color: 'bg-orange-500'
     }
@@ -166,32 +173,32 @@ const DashboardSection = ({ animateCards }) => {
 
   const quickActions = [
     {
-      title: 'Create Job Post',
-      subtitle: 'Post a new position',
+      title: 'Créer une offre',
+      subtitle: 'Publier un nouveau poste',
       icon: Plus,
       bgColor: 'bg-[#0A2342]',
       textColor: 'text-white',
       iconColor: 'text-white'
     },
     {
-      title: 'Edit Profile',
-      subtitle: 'Update your info',
+      title: 'Modifier le profil',
+      subtitle: 'Mettre à jour vos infos',
       icon: User,
       bgColor: 'bg-white',
       textColor: 'text-gray-800',
       iconColor: 'text-gray-800'
     },
     {
-      title: 'Switch Mode',
-      subtitle: 'View as candidate',
+      title: 'Changer de mode',
+      subtitle: 'Voir en tant que candidat',
       icon: ArrowLeftRight,
       bgColor: 'bg-white',
       textColor: 'text-green-600',
       iconColor: 'text-green-600'
     },
     {
-      title: 'View Analytics',
-      subtitle: 'Performance insights',
+      title: 'Voir les statistiques',
+      subtitle: 'Analyses de performance',
       icon: BarChart3,
       bgColor: 'bg-white',
       textColor: 'text-orange-500',
@@ -203,14 +210,14 @@ const DashboardSection = ({ animateCards }) => {
     <main className="flex-1 p-5 overflow-auto">
       <div className="flex justify-between items-center mb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900 mb-1">Welcome back, Jean!</h1>
-          <p className="text-sm text-gray-600">Here's your recruiting dashboard for today.</p>
+          <h1 className="text-xl font-bold text-gray-900 mb-1">Bienvenue, Jean !</h1>
+          <p className="text-sm text-gray-600">Voici votre tableau de bord de recrutement pour aujourd'hui.</p>
         </div>
         <div className="relative w-full max-w-xs">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <input
             type="text"
-            placeholder="Search candidates, jobs..."
+            placeholder="Rechercher des candidats, des emplois..."
             className="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-lg bg-white text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#009739] focus:border-transparent transition-all"
           />
         </div>
@@ -248,9 +255,9 @@ const DashboardSection = ({ animateCards }) => {
         <div className="lg:col-span-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-semibold">Active Job Posts</CardTitle>
-              <Button className="transform hover:scale-105 transition-all">
-                Create New Job
+              <CardTitle className="text-base font-semibold">Offres d'emploi actives</CardTitle>
+              <Button onClick={handleCreateJobClick} className="transform hover:scale-105 transition-all">
+                Créer une offre
               </Button>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -264,12 +271,12 @@ const DashboardSection = ({ animateCards }) => {
                     <div>
                       <h4 className="font-medium text-sm text-gray-900">{job.title}</h4>
                       <p className="text-xs text-gray-600">{job.company}</p>
-                      <p className="text-xs text-gray-500">Posted {job.postedDays} days ago • {job.applicants} applicants</p>
+                      <p className="text-xs text-gray-500">Publié il y a {job.postedDays} jours • {job.applicants} candidats</p>
                     </div>
                   </div>
                   <Button variant="outline" size="sm" className="hover:scale-105 transition-transform">
                     <Eye className="w-3.5 h-3.5 mr-1.5" />
-                    View Applications
+                    Voir les candidatures
                   </Button>
                 </div>
               ))}
@@ -280,9 +287,9 @@ const DashboardSection = ({ animateCards }) => {
         <div>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base font-semibold">Recent Applications</CardTitle>
+              <CardTitle className="text-base font-semibold">Candidatures récentes</CardTitle>
               <Button variant="outline" size="sm" className="text-[#009739] border-[#009739] hover:bg-green-50 hover:scale-105 transition-transform">
-                View All Applications
+                Voir toutes les candidatures
               </Button>
             </CardHeader>
             <CardContent className="space-y-3">
@@ -302,7 +309,7 @@ const DashboardSection = ({ animateCards }) => {
                     <p className="text-xs text-gray-500">{application.time}</p>
                   </div>
                   <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform">
-                    View
+                    Voir
                   </Button>
                 </div>
               ))}
@@ -313,7 +320,7 @@ const DashboardSection = ({ animateCards }) => {
 
       <div className="mt-7">
         <h2 className="text-base font-semibold text-gray-900 mb-3">
-          Quick Actions
+          Actions rapides
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {quickActions.map((action, index) => {

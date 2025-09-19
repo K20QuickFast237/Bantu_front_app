@@ -5,7 +5,7 @@ import AutresRessources from "../../components/app/AutresRessources";
 import Competences from "../../components/app/Competences";
 import DiplomesFormations from "../../components/app/DiplomesFormations";
 import Experiences from "../../components/app/Experiences";
-import Header from "../../components/app/Header"
+import HeaderProfil from "../../components/app/HeaderProfil"
 import Infopersonelles from "../../components/app/infopersonelles"
 import PostesRecherches from "../../components/app/PostesRecherches";
 import PageWrapper from "../../components/public/PageWrapper";
@@ -15,7 +15,7 @@ function Profil (){
         <>
         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
         <PageWrapper>   
-            <Header />
+            <HeaderProfil />
             <Infopersonelles />
             <PostesRecherches />
             <Experiences />

@@ -283,6 +283,13 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
     },
   };
 
+  // Fonction de gestion du clic
+  const handleCreateAccount = () => {
+    // Logique de validation ou de soumission du formulaire...
+    // Une fois la soumission réussie, rediriger l'utilisateur
+    navigate('/dashboardEntreprise');
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (

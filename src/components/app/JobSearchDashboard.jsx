@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const JobSearchDashboard = () => {
   return (
@@ -11,8 +12,15 @@ const JobSearchDashboard = () => {
         viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-    <div className="bg-[#FFF3EB] pb-12 pt-20 px-4 md:px-10 font-sans">
+         
+    <div className="bg-[#FFF3EB] pb-12 pt-3 px-4 md:px-10 font-sans">
       {/* Title */}
+      <Link to={"/CandidatProfil"}>
+          <button className=' ml-5 border-2 px-4 mt-2 py-2 bg-gray-800 text-white rounded-2xl'>
+        retour
+      </button>
+      </Link>
+     
       <h2 className="text-xl md:text-3xl font-bold text-center mb-6">
         Trouvez une offre d'emploi
       </h2>

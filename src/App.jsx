@@ -24,17 +24,8 @@ import ForgotPasswordForm from "./pages/app/ForgotPasswordForm";
 import ForgotPasswordConfirmation from "./pages/app/ForgotPasswordConfirmation";
 import ResetPasswordForm from "./pages/app/ResetPasswordForm";
 import JobOffersPage from "./pages/app/JobOffersPage";
-import BantuLinkHome from "./pages/app/BantuLinkHome";
-import BantuHireHome from "./pages/app/BantuHireHome";
-import DashboardCandidate from "./pages/app/DashboardCandidate";
-import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
-import CandidateFeed from "./pages/app/CandidateFeed";
-import CandidateApplications from "./pages/app/CandidateApplications";
-import CandidateCvs from "./pages/app/CandidateCvs";
-import CandidateJobs from "./pages/app/CandidateJobs";
-import CandidateSettings from "./pages/app/CandidateSettings";
-import MyProfil from "./pages/app/MyProfil";
-
+import JobApplicationForm from "./pages/app/JobApplicationForm";
+import CandidatProfil from "./pages/app/CandidatProfil";
 
 const App = () => {
   return (
@@ -67,21 +58,8 @@ const App = () => {
           <Route path="/forgotpasswordconfirmation" element={<ForgotPasswordConfirmation />}/>
           <Route path="/reset-password" element={<ResetPasswordForm/>}/>
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
-          <Route path="/homepage" element={<BantuLinkHome />} />
-          <Route path="/hirehome" element={<BantuHireHome />} />
-          <Route path="/markethome" element={<BantuHireHome />} />
-          <Route path="/inscriptionentreprise" element={<CompletionProfessionnel />} />
-          
-          {/* Route Layout pour le Dashboard Candidat */}
-          <Route path="/dashboard/candidate" element={<DashboardCandidate />}>
-            <Route index element={<CandidateFeed />} />
-            <Route path="applications" element={<CandidateApplications />} />
-            <Route path="cvs" element={<CandidateCvs />} />
-            <Route path="jobs" element={<CandidateJobs />} />
-            <Route path="settings" element={<CandidateSettings />} />
-            <Route path="profil" element={<MyProfil />} />
-          </Route>
-          
+          <Route path="/jobApplicationform" element={<JobApplicationForm/>}/>
+          <Route path="/candidatProfil" element={<CandidatProfil/>}/>
         </Route>
       </Routes>
     </>

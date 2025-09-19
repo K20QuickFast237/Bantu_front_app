@@ -14,8 +14,10 @@ import {
   User,
   Search,
   Bell,
+  ArrowLeft, // Importez l'icône de flèche gauche
   ArrowLeftRight,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Importez le hook de navigation
 import Footer from '../../components/public/Footer';
 import DashboardSection from './DashboardSection';
 import JobPostsSection from './JobPostsSection';
@@ -28,14 +30,14 @@ import SettingsSection from './SettingsSection';
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none';
 
-    const variants = {
-      default: 'bg-[#009739] text-white hover:bg-[#007a2f] focus:ring-green-500',
-      outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
-      ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
-    };
+  const variants = {
+    default: 'bg-[#009739] text-white hover:bg-[#007a2f] focus:ring-green-500',
+    outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-blue-500',
+    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-blue-500'
+  };
 
   const sizes = {
-    default: 'h-9 px-3 text-sm', // Réduit la taille du bouton
+    default: 'h-9 px-3 text-sm',
     sm: 'h-7 px-2 text-xs',
     lg: 'h-11 px-7'
   };
@@ -95,21 +97,32 @@ const AvatarFallback = ({ children, className = '', ...props }) => (
 
 // Composant Sidebar
 const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
+  const navigate = useNavigate(); // Initialisation du hook de navigation
+
+  const handleReturnClick = () => {
+    navigate('/dashboardEntreprise');
+  };
+
   const sidebarItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'job-posts', label: 'My Job Posts', icon: Briefcase },
-    { id: 'applications', label: 'Applications', icon: FileText, badge: 3 },
+    { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard },
+    { id: 'job-posts', label: 'Mes offres d\'emploi', icon: Briefcase },
+    { id: 'applications', label: 'Candidatures', icon: FileText, badge: 3 },
     { id: 'messages', label: 'Messages', icon: MessageSquare },
-    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: 'analytics', label: 'Statistiques', icon: BarChart3 },
+    { id: 'settings', label: 'Paramètres', icon: Settings },
   ];
 
   return (
     <div className="w-60 bg-white shadow-sm border-r border-gray-200 flex flex-col">
       <div className="p-5 border-b border-gray-200 h-14 flex items-center">
-        <div className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-[#0A2342]">BantuHire</span>
-        </div>
+        {/* Bouton de retour avec l'icône et le gestionnaire de clic */}
+        <button 
+          onClick={handleReturnClick} 
+          className="flex items-center space-x-2 text-gray-700 hover:text-[#0A2342] transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-bold">Retour</span>
+        </button>
       </div>
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center space-x-3">
@@ -118,17 +131,17 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
           </Avatar>
           <div>
             <p className="font-semibold text-gray-900 text-sm">Jean Mba</p>
-            <p className="text-xs text-gray-600">Recruiter</p>
+            <p className="text-xs text-gray-600">Recruteur</p>
           </div>
         </div>
         <div className="mt-3 flex justify-between items-center text-xs">
           <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1">
             <p className="font-bold text-gray-900 text-base">8</p>
-            <span className="text-gray-600 text-xs">Job Posts</span>
+            <span className="text-gray-600 text-xs">Offres d'emploi</span>
           </div>
           <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1">
             <p className="font-bold text-green-600 text-base">47</p>
-            <span className="text-gray-600 text-xs">Applicants</span>
+            <span className="text-gray-600 text-xs">Candidats</span>
           </div>
         </div>
       </div>

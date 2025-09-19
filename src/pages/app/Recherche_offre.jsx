@@ -1,13 +1,13 @@
 import JobCard from "../../components/app/JobCard"
 import JobSearchDashboard from "../../components/app/JobSearchDashboard"
 import JobCarousel from "../../components/app/JobCarousel"
-import Header from "../../components/app/Header"
+import HeaderProfil from "../../components/app/HeaderProfil"
 import Footer from "../../components/public/Footer"
 
 function Recherche_offre(){
     return (
         <>
-        <Header />
+        <HeaderProfil />
         <JobSearchDashboard />
         <JobCard />
         

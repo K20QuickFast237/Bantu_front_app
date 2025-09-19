@@ -1,11 +1,10 @@
 import HeaderProfil from '@/components/app/HeaderProfil';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Footer from '@/components/public/Footer';
 
 const JobApplicationForm = () => {
   const [applicationMethod, setApplicationMethod] = useState('bantuHire');
-  const [coverLetter, setCoverLetter]
+  const [coverLetter, setCoverLetter] = useState(
+    `Bonjour,
 
 Je me permets de vous solliciter pour le poste de Business Developer CAM – Shopfloor, Belgique (f/x) – FR/NL F/H pour lequel je souhaite vous proposer ma candidature.
 Veuillez trouver en pièce jointe mon dossier.
@@ -17,12 +16,7 @@ Bien cordialement.`
   return (
     <>
     <HeaderProfil/>
-    <div className=" bg-gray-100 font-sans p-4 sm:p-6 lg:p-8">
-      <Link to={"/CandidatProfil"}>
-          <button className=' ml-5 border-2 px-4 mt-2 py-2 bg-gray-800 text-white rounded-2xl'>
-        retour
-      </button>
-      </Link>
+       <div className="min-h-screen bg-gray-100 font-sans p-4 sm:p-6 lg:p-8">
       <div className="w-full mx-auto bg-white shadow-lg rounded-lg p-6 lg:p-8">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
@@ -218,7 +212,8 @@ Bien cordialement.`
         ) : (
           <>
             {/* My Application CV Section (from JobApplicationPage2.jsx) */}
-            <div className="bg-white p-6 rounded-lg border  mb-8">
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
               <div className="space-y-4">
                 <label className="flex items-start text-gray-700 cursor-pointer">
                   <input
@@ -293,7 +288,7 @@ Bien cordialement.`
 
             {/* Motivation Letter Section (from JobApplicationPage2.jsx) */}
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-              <h3 className="bg-[#10B981] text-white p-2  rounded-tl-2xl rounded-tr-2xl text-xl font-bold mb-4">Lettre de motivation</h3>
+              <h3 className="text-white bg-emerald-600 p-2 rounded-tr-2xl rounded-tl-2xl text-xl font-bold mb-4">Lettre de motivation</h3>
               <div className="bg-gray-50 border border-gray-200 rounded-md p-4 text-gray-700 text-sm relative">
                 <p>Bonjour,</p>
                 <p className="mt-2">
@@ -318,7 +313,6 @@ Bien cordialement.`
         </div>
       </div>
     </div>
-    <Footer />
     </>
   );
 };

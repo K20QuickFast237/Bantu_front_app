@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 const Infopersonelles = () => {
   return (
-    <div className="p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto mb-8 mt-20 border border-gray-200">
+    <div className="p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto mb-8 mt-5 border border-gray-200">
 
       <motion.section
         initial={{ opacity: 0, y: 50 }}
