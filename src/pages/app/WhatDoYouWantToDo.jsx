@@ -45,8 +45,8 @@ const WhatDoYouWantToDo = () => {
        
        <>
        <Header />
-        <div className="min-h-screen flex items-center mt-10 justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
-            <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center lg:items-start justify-between p-8">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
+            <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center  justify-between p-8">
                 {/* Section Gauche : Titre et Image */}
                 <div className="flex flex-col items-center lg:items-start lg:w-1/2 mb-10 lg:mb-0">
                     <h1 className="text-3xl lg:text-4xl font-bold text-blue-900 leading-tight mb-8 text-center lg:text-left">

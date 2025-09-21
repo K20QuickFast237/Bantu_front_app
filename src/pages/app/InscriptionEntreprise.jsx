@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { X } from 'lucide-react';
+import { X, User, Phone, Building, Briefcase, Globe, MapPin, Hash, Info, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Welcome1 from '../../assets/assets_application/welcome1.png';
 import { useAuth } from '../../hooks/useAuth';
+import Header from '../../components/app/Header';
 
 const itemVariants = { // This can be kept if you want to re-add animations later, but it's not used now.
   hidden: { y: 20, opacity: 0 },
@@ -41,6 +42,20 @@ const combinedValidationSchema = Yup.object().shape({
   ...validationSchemaStep2.fields,
 });
 
+const InputField = ({ id, label, formik, icon: Icon, required = true, type = "text", ...props }) => (
+  <div>
+    <label htmlFor={id} className="block text-sm font-medium text-blue-800 mb-1">
+      {label}{required && <span className="text-red-500">*</span>}
+    </label>
+    <div className="relative">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        {Icon && <Icon className="h-5 w-5 text-gray-400" />}
+      </div>
+      <input type={type} id={id} name={id} {...formik.getFieldProps(id)} {...props} className={`block w-full pl-10 pr-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${ formik.touched[id] && formik.errors[id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500' }`} />
+    </div>
+    {formik.touched[id] && formik.errors[id] ? <div className="text-red-500 text-xs mt-1">{formik.errors[id]}</div> : null}
+  </div>
+);
 
 const Step1 = ({ formik, userData }) => (
   <div className="h-full">
@@ -63,31 +78,12 @@ const Step1 = ({ formik, userData }) => (
 
         {/* Champs du formulaire */}
         {[
-          { id: "titre_professionnel", label: "Titre du Poste" },
-          { id: "telephone_pro", label: "Téléphone Professionnel" },
-          { id: "fonctionEntreprise", label: "Votre Fonction", colSpan: "md:col-span-2" }
+          { id: "titre_professionnel", label: "Titre du Poste", icon: Briefcase },
+          { id: "telephone_pro", label: "Téléphone Professionnel", icon: Phone },
+          { id: "fonctionEntreprise", label: "Votre Fonction", icon: User, colSpan: "md:col-span-2" }
         ].map((field) => (
-          <motion.div
-            key={field.id}
-            className={field.colSpan || ""}
-          >
-            <label htmlFor={field.id} className="block text-sm font-medium text-blue-800 mb-1">
-              {field.label}<span className="text-red-500">*</span>
-            </label> 
-            <input
-              type="text"
-              id={field.id}
-              name={field.id}
-              value={formik.values[field.id]}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${
-                formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-              }`}
-            />
-            {formik.touched[field.id] && formik.errors[field.id] ? (
-              <div className="text-red-500 text-xs mt-1">{formik.errors[field.id]}</div>
-            ) : null}
+          <motion.div key={field.id} className={field.colSpan || ""}>
+            <InputField id={field.id} label={field.label} formik={formik} icon={field.icon} />
           </motion.div>
         ))}
         <motion.div className="md:col-span-2" onBlur={formik.handleBlur}>
@@ -128,62 +124,35 @@ const Step2 = ({ formik }) => (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-6">
         {[
-          { id: "nom_entreprise", label: "Nom de l'entreprise", colSpan: "md:col-span-2" },
-          { id: "num_contribuable", label: "N° de Contribuable (NIU)", colSpan: "md:col-span-2" },
-          { id: "pays", label: "Pays", colSpan: "md:col-span-2", type: "select" },
-          { id: "ville", label: "Ville", colSpan: "md:col-span-2" },
-          { id: "adresse", label: "Adresse", colSpan: "md:col-span-2" },
-          { id: "site_web", label: "Site Web", colSpan: "md:col-span-2", required: false },
-          { id: "description_entreprise", label: "Description de l'entreprise", colSpan: "md:col-span-2", type: "textarea" },
+          { id: "nom_entreprise", label: "Nom de l'entreprise", icon: Building, colSpan: "md:col-span-2" },
+          { id: "num_contribuable", label: "N° de Contribuable (NIU)", icon: Hash, colSpan: "md:col-span-2" },
+          { id: "pays", label: "Pays", icon: Globe, colSpan: "md:col-span-2", type: "select" },
+          { id: "ville", label: "Ville", icon: MapPin, colSpan: "md:col-span-2" },
+          { id: "adresse", label: "Adresse", icon: MapPin, colSpan: "md:col-span-2" },
+          { id: "site_web", label: "Site Web", icon: Globe, colSpan: "md:col-span-2", required: false },
+          { id: "description_entreprise", label: "Description de l'entreprise", icon: Info, colSpan: "md:col-span-2", type: "textarea" },
         ].map((field) => (
-          <motion.div
-            key={field.id}
-            className={field.colSpan || ""}
-          >
+          <motion.div key={field.id} className={field.colSpan || ""}>
             <label htmlFor={field.id} className="block text-sm font-medium text-blue-800 mb-1">
               {field.label}{field.required !== false && <span className="text-red-500">*</span>}
             </label>
-            {field.type === "select" ? (
-              <motion.select
-                id={field.id}
-                name={field.id}
-                value={formik.values[field.id]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 transition-all duration-300 ${
-                  formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                }`}
-              >
-                <option value="">Choisir votre pays</option>
-                <option value="Cameroun">Cameroun</option>
-                <option value="Bénin">Bénin</option>
-                <option value="France">France</option>
-              </motion.select>
-            ) : field.type === "textarea" ? (
-              <motion.textarea
-                id={field.id}
-                name={field.id}
-                rows="4"
-                value={formik.values[field.id]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${
-                  formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                }`}
-              />
-            ) : (
-              <motion.input
-                type="text"
-                id={field.id}
-                name={field.id}
-                value={formik.values[field.id]}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                className={`block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${
-                  formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500'
-                }`}
-              />
-            )}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {field.icon && <field.icon className="h-5 w-5 text-gray-400" />}
+              </div>
+              {field.type === "select" ? (
+                <select id={field.id} name={field.id} {...formik.getFieldProps(field.id)} className={`block w-full pl-10 pr-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 transition-all duration-300 ${ formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500' }`}>
+                  <option value="">Choisir votre pays</option>
+                  <option value="Cameroun">Cameroun</option>
+                  <option value="Bénin">Bénin</option>
+                  <option value="France">France</option>
+                </select>
+              ) : field.type === "textarea" ? (
+                <textarea id={field.id} name={field.id} rows="4" {...formik.getFieldProps(field.id)} className={`block w-full pl-10 pr-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${ formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500' }`} />
+              ) : (
+                <input type="text" id={field.id} name={field.id} {...formik.getFieldProps(field.id)} className={`block w-full pl-10 pr-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-1 bg-gray-100 text-gray-900 placeholder-gray-500 transition-all duration-300 ${ formik.touched[field.id] && formik.errors[field.id] ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500' }`} />
+              )}
+            </div>
             {formik.touched[field.id] && formik.errors[field.id] ? (
               <div className="text-red-500 text-xs mt-1">{formik.errors[field.id]}</div>
             ) : null}
@@ -194,9 +163,9 @@ const Step2 = ({ formik }) => (
   </div>
 );
 
-const CompletionProfessionnel = ({ isOpen, onClose }) => {
-  const [isVisible, setIsVisible] = useState(false);
+const CompletionProfessionnel = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [globalError, setGlobalError] = useState('');
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -223,6 +192,7 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
     },
     validationSchema: combinedValidationSchema,
     onSubmit: (values) => {
+      setGlobalError('');
       if (formik.isValid) {
         console.log('Form data submitted:', values);
         if (user && user.id) {
@@ -230,43 +200,52 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
             ...values,
             isRecruiterProfileComplete: true,
           };
-          localStorage.setItem(`user_${user.id}_recruiter_profile`, JSON.stringify(recruiterData));
+          localStorage.setItem(`user_${user?.id}_recruiter_profile`, JSON.stringify(recruiterData));
         }
-        onClose();
         navigate('/dashboardEntreprise');
+      } else {
+        setGlobalError("Veuillez vérifier les informations saisies.");
       }
     },
   });
 
+  // Fait disparaître le message d'erreur global après 5 secondes
   useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      document.body.style.overflow = 'hidden';
-    } else {
-      setIsVisible(false);
-      document.body.style.overflow = 'auto';
+    if (globalError) {
+      const timer = setTimeout(() => {
+        setGlobalError('');
+      }, 5000);
+      return () => clearTimeout(timer);
     }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isOpen]);
+  }, [globalError]);
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      const errors = await formik.validateForm();
       const step1Fields = Object.keys(validationSchemaStep1.fields);
-      const step1Errors = Object.keys(errors).filter(field => step1Fields.includes(field));
-      
-      if (step1Errors.length === 0) {
+
+      try {
+        // Valider manuellement les valeurs UNIQUEMENT contre le schéma de l'étape 1
+        await validationSchemaStep1.validate(formik.values, { abortEarly: false });
+        setGlobalError('');
         setCurrentStep(2);
-      } else {
-        formik.setTouched(step1Errors.reduce((acc, key) => ({ ...acc, [key]: true }), {}));
+      } catch (validationErrors) {
+        // Si la validation échoue, Yup lève une erreur. On la transforme pour Formik.
+        const errors = {};
+        validationErrors.inner.forEach(error => {
+          errors[error.path] = error.message;
+        });
+        formik.setErrors(errors);
+        // On marque les champs comme "touchés" pour que les erreurs s'affichent
+        const touchedFields = step1Fields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
+        formik.setTouched(touchedFields);
+        setGlobalError("Veuillez corriger les erreurs avant de continuer.");
       }
     }
   };
 
   const handlePrev = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
+    setGlobalError('');
   };
 
   const popupVariants = {
@@ -290,92 +269,87 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
     navigate('/dashboardEntreprise');
   };
 
+  const handleClose = () => {
+    // Navigue vers la page précédente ou une page par défaut
+    navigate(-1);
+  };
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {/* Conteneur principal qui prend toute la hauteur et utilise flexbox */}
+      <div className="min-h-screen bg-gray-100 flex flex-col">
+        <Header />
+        {/* Conteneur pour les deux compartiments qui prend l'espace restant */}
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+          className="flex-grow flex flex-col lg:flex-row"
           variants={popupVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
         >
+          {/* Left Section */}
           <motion.div
-            className="bg-gradient-to-br from-[#0A2342] to-[#0a2e55] w-full max-w-5xl h-[85vh] overflow-y-hidden rounded-2xl relative shadow-2xl"
+            className="w-full lg:w-1/2 bg-gradient-to-b from-[#0A2342] to-green-900/50 flex flex-col items-center justify-center px-6 lg:px-12 py-12 text-white relative"
           >
-            {/* Close Button with Animation */}
+            <motion.div
+              className="absolute inset-0"
+              style={{
+                background: 'linear-gradient(45deg, rgba(0,150,55,0.2), rgba(37,99,235,0.2), rgba(239,68,68,0.2))',
+                backgroundSize: '200% 200%',
+              }}
+              animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
+              transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
+            />
+            <motion.h1
+              className="text-3xl md:text-4xl font-bold mb-8 text-center lg:text-left leading-tight tracking-tight"
+              whileHover={{ scale: 1.05, color: '#22c55e' }}
+            >
+              Complétez Votre Profil Entreprise
+            </motion.h1>
+            <motion.p
+              className="text-base text-center lg:text-left mb-12 opacity-90 max-w-lg"
+              style={{ textShadow: '0 0 10px rgba(255,255,255,0.2)' }}
+            >
+              Finalisez votre profil pour accéder à notre plateforme et recruter les meilleurs talents. Ajoutez les informations de votre entreprise pour commencer dès aujourd'hui.
+            </motion.p>
+            <motion.div
+              className="w-full flex justify-center relative"
+              animate={{ y: [-5, 5] }}
+              transition={{ y: { repeat: Infinity, repeatType: 'reverse', duration: 3, ease: 'easeInOut' } }}
+            >
+              <img
+                src={Welcome1}
+                alt="Welcome Illustration"
+                className="max-w-[80%] h-auto drop-shadow-2xl"
+              />
+              <motion.div
+                className="absolute -top-4 -right-4 w-12 h-12 bg-red-500/30 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
+              />
+            </motion.div>
+          </motion.div>
+
+          {/* Right Section - Form */}
+          <form onSubmit={formik.handleSubmit}
+            className="w-full lg:w-1/2 bg-white px-6 lg:px-12 py-8 relative flex flex-col"
+          >
             <motion.button
-              onClick={onClose}
-              className="absolute top-4 right-4 text-white hover:text-green-400 z-50 transition-transform hover:rotate-90"
-              whileHover={{ scale: 1.2, rotate: 90 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <X size={32} strokeWidth={2} />
-            </motion.button>
-
-            {/* Floating Decorative Elements */}
-            <motion.div
-              className="absolute top-10 left-10 w-20 h-20 bg-green-500/20 rounded-full filter blur-xl"
-              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
-              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <motion.div
-              className="absolute bottom-10 right-10 w-32 h-32 bg-red-500/20 rounded-full filter blur-2xl"
-              animate={{ scale: [1.1, 1.3, 1.1], opacity: [0.4, 0.7, 0.4] }}
-              transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-            />
-
-            {/* Main Content */}
-            <motion.div
-              className="flex flex-col lg:flex-row h-full"
-            >
-              {/* Left Section */}
-              <motion.div
-                className="w-full lg:w-1/2 bg-gradient-to-b from-[#0A2342] to-green-900/50 flex flex-col items-center px-6 lg:px-12 py-12 text-white relative"
+                onClick={handleClose}
+                className="absolute top-4 right-4 text-gray-500 hover:text-red-500 z-50 transition-transform hover:rotate-90"
+                whileHover={{ scale: 1.2, rotate: 90 }}
+                whileTap={{ scale: 0.9 }}
               >
-                <motion.div
-                  className="absolute inset-0"
-                  style={{
-                    background: 'linear-gradient(45deg, rgba(0,150,55,0.2), rgba(37,99,235,0.2), rgba(239,68,68,0.2))',
-                    backgroundSize: '200% 200%',
-                  }}
-                  animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
-                  transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
-                />
-                <motion.h1
-                  className="text-3xl md:text-4xl font-bold mb-8 text-center lg:text-left leading-tight tracking-tight"
-                  whileHover={{ scale: 1.05, color: '#22c55e' }}
-                >
-                  Complétez Votre Profil Entreprise
-                </motion.h1>
-                <motion.p
-                  className="text-base text-center lg:text-left mb-12 opacity-90 max-w-lg"
-                  style={{ textShadow: '0 0 10px rgba(255,255,255,0.2)' }}
-                >
-                  Finalisez votre profil pour accéder à notre plateforme et recruter les meilleurs talents. Ajoutez les informations de votre entreprise pour commencer dès aujourd'hui.
-                </motion.p>
-                <motion.div
-                  className="w-full flex justify-center relative"
-                  animate={{ y: [-5, 5] }}
-                  transition={{ y: { repeat: Infinity, repeatType: 'reverse', duration: 3, ease: 'easeInOut' } }}
-                >
-                  <img
-                    src={Welcome1}
-                    alt="Welcome Illustration"
-                    className="max-w-[80%] h-auto drop-shadow-2xl"
-                  />
-                  <motion.div
-                    className="absolute -top-4 -right-4 w-12 h-12 bg-red-500/30 rounded-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
-                  />
-                </motion.div>
-              </motion.div>
+                <X size={32} strokeWidth={2} />
+              </motion.button>
+              <AnimatePresence>
+                {globalError && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4 text-center text-sm">
+                    {globalError}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {/* Right Section - Form */}
-              <motion.div
-                className="w-full lg:w-1/2 bg-white px-6 lg:px-12 py-8 relative flex flex-col"
-              >
                 {/* Step Indicator */}
                 <div className="mb-6">
                   <div className="flex items-center justify-center gap-8">
@@ -434,11 +408,7 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Action Buttons */}
-                <motion.div
-                  as="form"
-                  onSubmit={formik.handleSubmit}
-                  className="flex justify-between items-center mt-6 pt-4 border-t border-gray-200"
-                >
+                <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-200">
                   {currentStep > 1 ? (
                     <motion.button
                       type="button"
@@ -452,7 +422,7 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
                     <motion.button
                       type="button"
                       className="px-6 py-2 rounded-lg bg-red-500/10 text-red-600 border-2 border-red-400 font-semibold hover:bg-red-500/20 transition-colors"
-                      onClick={onClose}
+                      onClick={handleClose}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                     >
                       Annuler
@@ -472,18 +442,16 @@ const CompletionProfessionnel = ({ isOpen, onClose }) => {
                     <motion.button
                       type="submit"
                       className="px-8 py-2 rounded-lg bg-blue-600 text-white font-semibold shadow-lg hover:bg-blue-700 transition-colors"
-                      onClick={() => formik.validateForm().then(() => formik.handleSubmit())}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                      disabled={formik.isSubmitting}
                     >
-                      Créer votre compte
+                      Terminer mon profil
                     </motion.button>
                   )}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+                </div>
+              </form>
         </motion.div>
-      )}
+      </div>
     </AnimatePresence>
   );
 };
