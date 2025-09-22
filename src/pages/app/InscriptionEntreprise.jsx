@@ -37,11 +37,6 @@ const validationSchemaStep2 = Yup.object({
   site_web: Yup.string().url('Veuillez entrer une URL valide').notRequired(),
 });
 
-const combinedValidationSchema = Yup.object().shape({
-  ...validationSchemaStep1.fields,
-  ...validationSchemaStep2.fields,
-});
-
 const InputField = ({ id, label, formik, icon: Icon, required = true, type = "text", ...props }) => (
   <div>
     <label htmlFor={id} className="block text-sm font-medium text-blue-800 mb-1">
@@ -190,22 +185,21 @@ const CompletionProfessionnel = () => {
       description_entreprise: '',
       site_web: '',
     },
-    validationSchema: combinedValidationSchema,
-    onSubmit: (values) => {
+    validationSchema: currentStep === 1 ? validationSchemaStep1 : validationSchemaStep2,
+    onSubmit: (values, actions) => {
       setGlobalError('');
-      if (formik.isValid) {
-        console.log('Form data submitted:', values);
-        if (user && user.id) {
-          const recruiterData = {
-            ...values,
-            isRecruiterProfileComplete: true,
-          };
-          localStorage.setItem(`user_${user?.id}_recruiter_profile`, JSON.stringify(recruiterData));
-        }
-        navigate('/dashboardEntreprise');
-      } else {
-        setGlobalError("Veuillez vérifier les informations saisies.");
+      // La validation pour l'étape 2 est gérée automatiquement par Formik avant d'appeler onSubmit.
+      console.log('Form data submitted:', values);
+      if (user && user.id) {
+        const recruiterData = {
+          ...values,
+          isRecruiterProfileComplete: true,
+        };
+        localStorage.setItem(`user_${user.id}_recruiter_profile`, JSON.stringify(recruiterData));
       }
+      navigate('/dashboardEntreprise');
+      // Si la validation échoue, Formik n'exécutera pas ce bloc et affichera les erreurs.
+      // Si des erreurs non liées aux champs apparaissent, vous pouvez les gérer ici.
     },
   });
 
@@ -221,12 +215,10 @@ const CompletionProfessionnel = () => {
 
   const handleNext = async () => {
     if (currentStep === 1) {
-      const step1Fields = Object.keys(validationSchemaStep1.fields);
-
       try {
         // Valider manuellement les valeurs UNIQUEMENT contre le schéma de l'étape 1
         await validationSchemaStep1.validate(formik.values, { abortEarly: false });
-        setGlobalError('');
+        formik.setTouched({});
         setCurrentStep(2);
       } catch (validationErrors) {
         // Si la validation échoue, Yup lève une erreur. On la transforme pour Formik.
@@ -236,7 +228,7 @@ const CompletionProfessionnel = () => {
         });
         formik.setErrors(errors);
         // On marque les champs comme "touchés" pour que les erreurs s'affichent
-        const touchedFields = step1Fields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
+        const touchedFields = Object.keys(validationSchemaStep1.fields).reduce((acc, field) => ({ ...acc, [field]: true }), {});
         formik.setTouched(touchedFields);
         setGlobalError("Veuillez corriger les erreurs avant de continuer.");
       }
