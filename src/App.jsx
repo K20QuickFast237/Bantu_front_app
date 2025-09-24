@@ -11,6 +11,7 @@ import Pricing from "./pages/public/Pricing";
 import Support from "./pages/public/support";
 import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
+import EmailVerification from "./pages/app/EmailVerification";
 
 
 
@@ -46,6 +47,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test/>}/>
+          <Route path="/EmailVerification" element={<EmailVerification/>}/>
         </Route>
 
 
