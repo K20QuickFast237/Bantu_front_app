@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import { Edit, Trash2, PlusCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Edit, Trash2, PlusCircle, Loader2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useFormik } from 'formik';
+import { FaTimes } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
-import { validationFormationSchema } from '../../schemas';
+import { validationExperienceSchema } from '../../schemas';
 import {
   Dialog,
   DialogContent,
@@ -16,91 +16,127 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-
+import FormError from './FormError';
 
 const DiplomesFormations = () => {
   const { token } = useAuth();
-  const [formations, setFormations] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingFormation, setEditingFormation] = useState(null);
+  const [editingExperience, setEditingExperience] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [formationToDelete, setFormationToDelete] = useState(null);
+  const [experienceToDelete, setExperienceToDelete] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [skills, setSkills] = useState(['Photoshop', 'Illustrator', 'Gestion de projet']);
+
+  // Données fictives pour remplacer l'API
+  const fakeExperiences = [
+    {
+      id: 1,
+      titre_poste: 'Développeur Frontend',
+      nom_entreprise: 'Tech Solutions',
+      date_debut: '2020-01-15',
+      date_fin: '2022-03-20',
+      description_taches: 'Développement d\'applications web responsives avec React et Vue.js',
+      adresse: '123 Rue de la Tech',
+      ville: 'Paris',
+      pays: 'France',
+      resultat_obtenu: 'Projets livrés avec succès'
+    },
+    {
+      id: 2,
+      titre_poste: 'Designer UI/UX',
+      nom_entreprise: 'Creative Agency',
+      date_debut: '2018-06-10',
+      date_fin: '2019-12-15',
+      description_taches: 'Conception d\'interfaces utilisateur et expériences utilisateur',
+      adresse: '456 Avenue Design',
+      ville: 'Lyon',
+      pays: 'France',
+      resultat_obtenu: 'Augmentation de la satisfaction utilisateur de 30%'
+    }
+  ];
 
   useEffect(() => {
-    const fetchFormations = async () => {
+    const fetchExperiences = async () => {
       if (!token) return;
+      setIsLoading(true);
       try {
-        const response = await api.get('/formations');
-        setFormations(response.data);
+        // Simulation de chargement avec données fictives
+        setTimeout(() => {
+          setExperiences(fakeExperiences);
+          setIsLoading(false);
+        }, 1000);
       } catch (error) {
-        toast.error('Erreur lors du chargement des formations');
-        console.error('Erreur API:', error);
-        setFormations([]);
+        toast.error('Erreur lors du chargement des expériences');
+        console.error('Erreur:', error);
+        setExperiences([]);
+        setIsLoading(false);
       }
     };
-    fetchFormations();
+    fetchExperiences();
   }, [token]);
 
-  const formik = useFormik({
-    initialValues: {
-      domaine_etude: '',
-      date_debut: '',
-      date_fin: '',
-      etablissement: '',
-      diplome: '',
-    },
-    validationSchema: validationFormationSchema,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        let response;
-        if (editingFormation) {
-          response = await api.put(`/formations/${editingFormation.id}`, values);
-          toast.success(response.data.message || 'Formation mise à jour avec succès');
-          setFormations(formations.map(form => (form.id === editingFormation.id ? response.data.data : form)));
-        } else {
-          response = await api.post('/formations', values);
-          toast.success(response.data.message || 'Formation ajoutée avec succès');
-          setFormations([...formations, response.data.data]);
-        }
-        resetForm();
-        setIsModalOpen(false);
-        setEditingFormation(null);
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Une erreur est survenue');
-        console.error('Erreur soumission:', error);
-      }
-    },
-  });
+  const handleRemoveSkill = (skillToRemove) => {
+    setSkills(skills.filter(skill => skill !== skillToRemove));
+  };
 
-  const openEditModal = (formation) => {
-    setEditingFormation(formation);
-    formik.setValues({
-      domaine_etude: formation.domaine_etude,
-      date_debut: formation.date_debut,
-      date_fin: formation.date_fin,
-      etablissement: formation.etablissement,
-      diplome: formation.diplome,
-    });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulation d'envoi de données
+    setTimeout(() => {
+      const newExperience = {
+        id: editingExperience ? editingExperience.id : Date.now(),
+        titre_poste: e.target.titre_poste.value,
+        nom_entreprise: e.target.nom_entreprise.value,
+        date_debut: e.target.date_debut.value,
+        date_fin: e.target.date_fin.value,
+        description_taches: e.target.description_taches.value,
+        adresse: e.target.adresse.value,
+        ville: e.target.ville.value,
+        pays: e.target.pays.value,
+        resultat_obtenu: e.target.resultat_obtenu.value
+      };
+
+      if (editingExperience) {
+        setExperiences(experiences.map(exp => 
+          exp.id === editingExperience.id ? newExperience : exp
+        ));
+        toast.success('Expérience mise à jour avec succès');
+      } else {
+        setExperiences([...experiences, newExperience]);
+        toast.success('Expérience ajoutée avec succès');
+      }
+
+      setIsModalOpen(false);
+      setEditingExperience(null);
+      setIsSubmitting(false);
+    }, 1000);
+  };
+
+  const openEditModal = (experience) => {
+    setEditingExperience(experience);
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (!formationToDelete) return;
-    try {
-      await api.delete(`/formations/${formationToDelete}`);
-      setFormations(formations.filter(f => f.id !== formationToDelete));
-      toast.success('Formation supprimée avec succès');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Erreur lors de la suppression');
-      console.error('Erreur suppression:', error);
-    } finally {
+    if (!experienceToDelete) return;
+    setIsSubmitting(true);
+    
+    // Simulation de suppression
+    setTimeout(() => {
+      setExperiences(experiences.filter(e => e.id !== experienceToDelete));
       setIsDeleteModalOpen(false);
-      setFormationToDelete(null);
-    }
+      setExperienceToDelete(null);
+      toast.success('Expérience supprimée avec succès');
+      setIsSubmitting(false);
+    }, 800);
   };
 
   const openDeleteModal = (id) => {
-    setFormationToDelete(id);
+    setExperienceToDelete(id);
     setIsDeleteModalOpen(true);
   }
 
@@ -118,142 +154,234 @@ const DiplomesFormations = () => {
       >
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
           <div>
-            <h2 className="text-xl font-semibold text-blue-800">Diplômes & Formations</h2>
+            <h2 className="text-xl font-semibold text-blue-800">Diplomes et Formations</h2>
           </div>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <button
                 onClick={() => {
-                  setEditingFormation(null);
-                  formik.resetForm();
+                  setEditingExperience(null);
                 }}
-                className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 animate-pulse font-medium text-sm"
+                className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
                 Ajouter
               </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>{editingFormation ? 'Modifier une formation' : 'Ajouter une formation'}</DialogTitle>
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
+              <DialogHeader className="pb-4 border-b border-gray-200 relative">
+                <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
+                  {editingExperience ? 'Modifier une formation' : 'Ajouter une formation'}
+                </DialogTitle>
+                
               </DialogHeader>
-              <form onSubmit={formik.handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Diplôme</label>
+              
+              <form onSubmit={handleSubmit} className="p-6">
+                {/* Titre du poste */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Titre du poste <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    name="diplome"
-                    value={formik.values.diplome}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    name="titre_poste"
+                    defaultValue={editingExperience?.titre_poste || ''}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex : Développeur Frontend"
+                    required
                   />
-                  {formik.touched.diplome && formik.errors.diplome && (
-                    <p className="text-red-500 text-xs">{formik.errors.diplome}</p>
-                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Domaine d'étude</label>
+                
+                {/* Nom de l'entreprise */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Nom de l'entreprise <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
-                    name="domaine_etude"
-                    value={formik.values.domaine_etude}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    name="nom_entreprise"
+                    defaultValue={editingExperience?.nom_entreprise || ''}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex : Tech Solutions"
+                    required
                   />
-                  {formik.touched.domaine_etude && formik.errors.domaine_etude && (
-                    <p className="text-red-500 text-xs">{formik.errors.domaine_etude}</p>
-                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Établissement</label>
+                
+                {/* Adresse */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Adresse
+                  </label>
                   <input
                     type="text"
-                    name="etablissement"
-                    value={formik.values.etablissement}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    name="adresse"
+                    defaultValue={editingExperience?.adresse || ''}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex : 123 Rue de la Tech"
                   />
-                  {formik.touched.etablissement && formik.errors.etablissement && (
-                    <p className="text-red-500 text-xs">{formik.errors.etablissement}</p>
-                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Date de début</label>
+                
+                {/* Ville et Pays */}
+                <div className="flex space-x-4 mb-4">
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Ville
+                    </label>
+                    <input
+                      type="text"
+                      name="ville"
+                      defaultValue={editingExperience?.ville || ''}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ex : Paris"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Pays
+                    </label>
+                    <input
+                      type="text"
+                      name="pays"
+                      defaultValue={editingExperience?.pays || ''}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Ex : France"
+                    />
+                  </div>
+                </div>
+                
+                {/* Dates de début et de fin */}
+                <div className="flex space-x-4 mb-4">
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Date de début <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      name="date_debut"
+                      defaultValue={editingExperience?.date_debut || ''}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="block text-gray-700 font-medium mb-2">
+                      Date de fin <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      name="date_fin"
+                      defaultValue={editingExperience?.date_fin || ''}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    />
+                  </div>
+                </div>
+                
+                {/* Résultat obtenu */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Résultat obtenu
+                  </label>
                   <input
-                    type="date"
-                    name="date_debut"
-                    value={formik.values.date_debut}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    type="text"
+                    name="resultat_obtenu"
+                    defaultValue={editingExperience?.resultat_obtenu || ''}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ex : Projets livrés avec succès"
                   />
-                  {formik.touched.date_debut && formik.errors.date_debut && (
-                    <p className="text-red-500 text-xs">{formik.errors.date_debut}</p>
-                  )}
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Date de fin</label>
-                  <input
-                    type="date"
-                    name="date_fin"
-                    value={formik.values.date_fin}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  />
-                  {formik.touched.date_fin && formik.errors.date_fin && (
-                    <p className="text-red-500 text-xs">{formik.errors.date_fin}</p>
-                  )}
+                
+                {/* Description des tâches */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Description des tâches
+                  </label>
+                  <textarea
+                    name="description_taches"
+                    defaultValue={editingExperience?.description_taches || ''}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Décrivez vos principales missions et responsabilités..."
+                  ></textarea>
                 </div>
-                <DialogFooter className="mt-6 flex justify-end space-x-2 pt-4 pb-2">
-                  <DialogClose asChild>
-                    <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">
-                      Annuler
-                    </button>
-                  </DialogClose>
-                  <button type="submit" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm">
-                    {editingFormation ? 'Mettre à jour' : 'Ajouter'}
+                
+                {/* Compétences */}
+                <div className="mb-6">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Compétences
+                  </label>
+                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg">
+                    {skills.map((skill, index) => (
+                      <span 
+                        key={index} 
+                        className="inline-flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm"
+                      >
+                        {skill}
+                        <FaTimes 
+                          className="ml-2 cursor-pointer text-red-500" 
+                          onClick={() => handleRemoveSkill(skill)} 
+                        />
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Boutons */}
+                <div className="flex justify-end pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
+                  >
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {editingExperience ? 'Mettre à jour' : 'Enregistrer'}
                   </button>
-                </DialogFooter>
+                </div>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
         <div className="space-y-6">
-          {formations.length === 0 ? (
-            <p className="text-gray-600">Aucune formation enregistrée.</p>
+          {isLoading ? (
+            <div className="flex justify-center items-center p-8">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            </div>
+          ) : experiences.length === 0 ? (
+            <p className="text-gray-600">Aucune expérience enregistrée.</p>
           ) : (
-            formations.map((item) => (
-              <div key={item.id} className="flex justify-between items-start pb-4 last:border-b-0 last:pb-0">
+            experiences.map((exp) => (
+              <div key={exp.id} className="flex justify-between items-start pb-4 last:border-b-0 last:pb-0">
                 <div className="flex items-start flex-grow">
-                  <div className="w-2 h-2 rounded-full mr-3 mt-2" style={{ backgroundColor: '#10B981' }}></div>
+                  <div className="w-2 h-2 rounded-full mr-3 mt-2 flex-shrink-0" style={{ backgroundColor: '#10B981' }}></div>
                   <div>
-                    <div className="grid grid-cols-2 border-l-1 border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
-                      <p><span className="font-medium text-gray-600">Nom</span></p>
-                      <p>{item.diplome || 'Non spécifié'}</p>
-                      <p><span className="font-medium text-gray-600">École Ou Organisme</span></p>
-                      <p>{item.etablissement || 'Non spécifié'}</p>
-                      <p><span className="font-medium text-gray-600">Niveau</span></p>
-                      <p>{item.domaine_etude || 'Non spécifié'}</p>
+                    <div className="grid grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
+                      <p><span className="font-medium text-gray-600">Poste</span></p>
+                      <p className="font-semibold text-gray-800">{exp.titre_poste || 'Non spécifié'}</p>
+                      <p><span className="font-medium text-gray-600">Entreprise</span></p>
+                      <p>{exp.nom_entreprise || 'Non spécifié'}</p>
+                      <p><span className="font-medium text-gray-600">Localisation</span></p>
+                      <p>{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || 'Non spécifié'}</p>
+                      <p><span className="font-medium text-gray-600">Type De Contrat</span></p>
+                      <p>Non spécifié</p>
                       <p><span className="font-medium text-gray-600">Date</span></p>
-                      <p>{`${item.date_debut || ''} - ${item.date_fin || ''}`}</p>
+                      <p>{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</p>
+                      <p><span className="font-medium text-gray-600">Résultat obtenu</span></p>
+                      <p>{exp.resultat_obtenu || 'Non spécifié'}</p>
+                      <p><span className="font-medium text-gray-600">Description, Missions</span></p>
+                      <p>{exp.description_taches || 'Non spécifié'}</p>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => openEditModal(item)}
+                    onClick={() => openEditModal(exp)}
                     className="flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs"
                   >
                     <Edit size={14} className="mr-1" />
                     Modifier
                   </button>
                   <button
-                    onClick={() => openDeleteModal(item.id)}
+                    onClick={() => openDeleteModal(exp.id)}
                     className="flex items-center px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs"
                   >
                     <Trash2 size={14} />
@@ -270,14 +398,15 @@ const DiplomesFormations = () => {
           <DialogHeader>
             <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. La formation sera définitivement supprimée.
+              Cette action est irréversible. L'expérience sera définitivement supprimée.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors">Annuler</button>
             </DialogClose>
-            <button onClick={handleConfirmDelete} className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm">
+            <button onClick={handleConfirmDelete} disabled={isSubmitting} className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300">
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Supprimer
             </button>
           </DialogFooter>

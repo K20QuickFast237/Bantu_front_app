@@ -11,6 +11,7 @@ import Pricing from "./pages/public/Pricing";
 import Support from "./pages/public/support";
 import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
+import EmailVerification from "./pages/app/EmailVerification";
 
 
 
@@ -27,6 +28,7 @@ import JobOffersPage from "./pages/app/JobOffersPage";
 import JobApplicationForm from "./pages/app/JobApplicationForm";
 import CandidatProfil from "./pages/app/CandidatProfil";
 import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
+import Test from "./components/app/Test"
 
 const App = () => {
   return (
@@ -44,6 +46,8 @@ const App = () => {
           <Route path="/support" element={<Support />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/test" element={<Test/>}/>
+          <Route path="/EmailVerification" element={<EmailVerification/>}/>
         </Route>
 
 
