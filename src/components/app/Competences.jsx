@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
-import { Edit, Trash2, PlusCircle } from 'lucide-react';
+import { Edit, Trash2, PlusCircle, Loader2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
@@ -19,16 +17,6 @@ import {
 } from "@/components/ui/dialog";
 import DynamicFontAwesomeIcon from './DynamicFontAwesomeIcon';
 
-const competenceSchema = Yup.object().shape({
-  nom: Yup.string().required('Le nom de la compétence est requis'),
-  description: Yup.string().nullable(),
-  icon: Yup.string().nullable(),
-  nbr_usage: Yup.number()
-    .integer('Doit être un nombre entier')
-    .min(0, 'Ne peut être négatif')
-    .required("Le nombre d'usage est requis"),
-});
-
 const Competences = () => {
   const { token } = useAuth();
   const [competences, setCompetences] = useState([]);
@@ -36,82 +24,99 @@ const Competences = () => {
   const [editingCompetence, setEditingCompetence] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [competenceToDelete, setCompetenceToDelete] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newSkill, setNewSkill] = useState('');
+
+  // Données fictives pour remplacer l'API
+  const fakeCompetences = [
+    { id: 1, nom: 'React', description: 'Développement frontend', nbr_usage: 15 },
+    { id: 2, nom: 'Node.js', description: 'Développement backend', nbr_usage: 12 },
+    { id: 3, nom: 'Photoshop', description: 'Design graphique', nbr_usage: 8 },
+    { id: 4, nom: 'Illustrator', description: 'Design vectoriel', nbr_usage: 6 },
+    { id: 5, nom: 'Gestion de projet', description: 'Management', nbr_usage: 10 }
+  ];
 
   useEffect(() => {
     const fetchCompetences = async () => {
       if (!token) return;
       try {
-        const response = await api.get('/skills');
-        setCompetences(response.data);
+        // Simulation de chargement avec données fictives
+        setTimeout(() => {
+          setCompetences(fakeCompetences);
+        }, 1000);
       } catch (error) {
         toast.error('Erreur lors du chargement des compétences');
-        console.error('Erreur API:', error);
+        console.error('Erreur:', error);
         setCompetences([]);
       }
     };
     fetchCompetences();
   }, [token]);
 
-  const formik = useFormik({
-    initialValues: {
-      nom: '',
-      description: '',
-      icon: '',
-      nbr_usage: 0,
-    },
-    validationSchema: competenceSchema,
-    onSubmit: async (values, { resetForm }) => {
-      try {
-        let response;
+  const handleRemoveSkill = (skillToRemove) => {
+    setCompetences(competences.filter(skill => skill.id !== skillToRemove));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulation d'envoi de données
+    setTimeout(() => {
+      if (newSkill.trim() !== '' && !competences.some(c => c.nom === newSkill.trim())) {
+        const newCompetence = {
+          id: editingCompetence ? editingCompetence.id : Date.now(),
+          nom: newSkill.trim(),
+          description: '',
+          nbr_usage: 0
+        };
+
         if (editingCompetence) {
-          response = await api.put(`/skills/${editingCompetence.id}`, values);
+          setCompetences(competences.map(c => 
+            c.id === editingCompetence.id ? { ...c, nom: newSkill.trim() } : c
+          ));
           toast.success('Compétence mise à jour avec succès');
-          setCompetences(competences.map(c => (c.id === editingCompetence.id ? response.data : c)));
         } else {
-          response = await api.post('/skills', values);
+          setCompetences([...competences, newCompetence]);
           toast.success('Compétence ajoutée avec succès');
-          setCompetences([...competences, response.data]);
         }
-        resetForm();
+
+        setNewSkill('');
         setIsModalOpen(false);
         setEditingCompetence(null);
-      } catch (error) {
-        toast.error(error.response?.data?.message || 'Une erreur est survenue');
-        console.error('Erreur soumission:', error);
       }
-    },
-  });
+      setIsSubmitting(false);
+    }, 1000);
+  };
 
   const openEditModal = (competence) => {
     setEditingCompetence(competence);
-    formik.setValues({
-      nom: competence.nom,
-      description: competence.description || '',
-      icon: competence.icon || '',
-      nbr_usage: competence.nbr_usage,
-    });
+    setNewSkill(competence.nom);
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!competenceToDelete) return;
-    try {
-      await api.delete(`/skills/${competenceToDelete}`);
+    setIsSubmitting(true);
+    
+    // Simulation de suppression
+    setTimeout(() => {
       setCompetences(competences.filter(c => c.id !== competenceToDelete));
-      toast.success('Compétence supprimée avec succès');
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Erreur lors de la suppression');
-      console.error('Erreur suppression:', error);
-    } finally {
       setIsDeleteModalOpen(false);
       setCompetenceToDelete(null);
-    }
+      toast.success('Compétence supprimée avec succès');
+      setIsSubmitting(false);
+    }, 800);
   };
 
   const openDeleteModal = (id) => {
     setCompetenceToDelete(id);
     setIsDeleteModalOpen(true);
   };
+
+  if (!token) {
+    return <p className="text-red-500 text-center">Veuillez vous connecter pour gérer vos compétences.</p>;
+  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
@@ -128,75 +133,117 @@ const Competences = () => {
               <button
                 onClick={() => {
                   setEditingCompetence(null);
-                  formik.resetForm();
+                  setNewSkill('');
                 }}
-                className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 animate-pulse font-medium text-sm"
+                className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
                 Ajouter
               </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>{editingCompetence ? 'Modifier une compétence' : 'Ajouter une compétence'}</DialogTitle>
+            <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
+              <DialogHeader className="pb-4 border-b border-gray-200 relative">
+                <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
+                  {editingCompetence ? 'Modifier une compétence' : 'Ajouter une compétence'}
+                </DialogTitle>
+                
               </DialogHeader>
-              <form onSubmit={formik.handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Nom</label>
-                  <input type="text" name="nom" value={formik.values.nom} onChange={formik.handleChange} onBlur={formik.handleBlur} className="w-full p-2 border border-gray-300 rounded-md" />
-                  {formik.touched.nom && formik.errors.nom && <p className="text-red-500 text-xs">{formik.errors.nom}</p>}
+              
+              <form onSubmit={handleSubmit} className="p-6">
+                {/* Compétence Input */}
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Compétence <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={newSkill}
+                    onChange={(e) => setNewSkill(e.target.value)}
+                    placeholder="Ex: React, Photoshop, Gestion de projet..."
+                    required
+                  />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Description</label>
-                  <input type="text" name="description" value={formik.values.description} onChange={formik.handleChange} onBlur={formik.handleBlur} className="w-full p-2 border border-gray-300 rounded-md" />
+                
+                {/* Liste des Compétences existantes */}
+                <div className="mb-6">
+                  <label className="block text-gray-700 font-medium mb-2">
+                    Compétences ajoutées
+                  </label>
+                  <div className="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg min-h-[60px]">
+                    {competences.map((competence) => (
+                      <span 
+                        key={competence.id} 
+                        className="inline-flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm"
+                      >
+                        {competence.nom}
+                        <FaTimes 
+                          className="ml-2 cursor-pointer text-red-500" 
+                          onClick={() => handleRemoveSkill(competence.id)} 
+                        />
+                      </span>
+                    ))}
+                    {competences.length === 0 && (
+                      <p className="text-gray-400 text-sm">Aucune compétence ajoutée</p>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Icône (ex: fa-springboot)</label>
-                  <input type="text" name="icon" value={formik.values.icon} onChange={formik.handleChange} onBlur={formik.handleBlur} className="w-full p-2 border border-gray-300 rounded-md" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-600">Nombre d'usage</label>
-                  <input type="number" name="nbr_usage" value={formik.values.nbr_usage} onChange={formik.handleChange} onBlur={formik.handleBlur} className="w-full p-2 border border-gray-300 rounded-md" />
-                  {formik.touched.nbr_usage && formik.errors.nbr_usage && <p className="text-red-500 text-xs">{formik.errors.nbr_usage}</p>}
-                </div>
-                <DialogFooter>
-                  <DialogClose asChild>
-                    <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
-                  </DialogClose>
-                  <button type="submit" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 text-sm">
-                    {editingCompetence ? 'Mettre à jour' : 'Ajouter'}
+                
+                {/* Bouton Enregistrer */}
+                <div className="flex justify-end pt-4">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || newSkill.trim() === ''}
+                    className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
+                  >
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {editingCompetence ? 'Mettre à jour' : 'Enregistrer'}
                   </button>
-                </DialogFooter>
+                </div>
               </form>
             </DialogContent>
           </Dialog>
         </div>
 
         <div className="space-y-4">
-          {competences && competences.length > 0 ? (
+          {competences.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">Aucune compétence enregistrée.</p>
+          ) : (
             competences.map((competence) => (
-              <div key={competence.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 transition-colors">
+              <div key={competence.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-4 flex-grow">
-                  <DynamicFontAwesomeIcon iconName={competence.icon} className="text-2xl text-orange-500 w-8 text-center" />
+                  <DynamicFontAwesomeIcon 
+                    iconName={competence.icon} 
+                    className="text-2xl text-orange-500 w-8 text-center" 
+                  />
                   <div className="flex-grow">
-                    <h3 className="font-semibold text-gray-800">{competence.nom}</h3>
+                    <h3 className="font-semibold text-gray-800 text-lg">{competence.nom}</h3>
                     <p className="text-sm text-gray-500">{competence.description || 'Pas de description'}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-6 flex-shrink-0 ml-4">
-                  <div className="text-center">
+                  <div className="text-center bg-blue-50 px-3 py-2 rounded-lg">
                     <p className="font-bold text-lg text-blue-600">{competence.nbr_usage}</p>
                     <p className="text-xs text-gray-500">utilisations</p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <button onClick={() => openEditModal(competence)} className="p-1 text-gray-500 hover:text-blue-600"><Edit size={16} /></button>
-                    <button onClick={() => openDeleteModal(competence.id)} className="p-1 text-gray-500 hover:text-red-600"><Trash2 size={16} /></button>
+                    <button 
+                      onClick={() => openEditModal(competence)} 
+                      className="flex items-center px-3 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs"
+                    >
+                      <Edit size={14} className="mr-1" />
+                      Modifier
+                    </button>
+                    <button 
+                      onClick={() => openDeleteModal(competence.id)} 
+                      className="flex items-center px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
                 </div>
               </div>
             ))
-          ) : (
-            <p className="text-gray-500">Aucune compétence enregistrée.</p>
           )}
         </div>
       </motion.section>
@@ -211,9 +258,10 @@ const Competences = () => {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors">Annuler</button>
             </DialogClose>
-            <button onClick={handleConfirmDelete} className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm">
+            <button onClick={handleConfirmDelete} disabled={isSubmitting} className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300">
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Supprimer
             </button>
           </DialogFooter>
