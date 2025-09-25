@@ -28,7 +28,6 @@ const ResetPasswordForm = () => {
   const onSubmit = async (values) => {
     try {
       await resetPassword(values);
-      console.log(values);
       navigate('/login');
     } catch (err) {
       setMessage(err.response?.data?.message || 'Erreur lors de la réinitialisation.');

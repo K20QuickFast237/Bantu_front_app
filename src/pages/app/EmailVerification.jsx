@@ -1,12 +1,18 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import api from '../../services/api';
 // Assurez-vous que le chemin est correct en fonction de votre structure de projet
 import EmailSecureIcon from '../../assets/emailsecure.png'; // Renommage pour être plus descriptif
 
 const EmailVerification = () => {
-    const [code, setCode] = useState(['', '', '', '', '', '']); // Array pour chaque chiffre du code
-    const inputRefs = useRef([]); // Références pour chaque input afin de gérer le focus
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    const emailAddress = "tadzongmbipeabraham@gmail.com"; // L'adresse email à afficher
+    const [code, setCode] = useState(['', '', '', '', '', '']); // Array pour chaque chiffre du code
+    const [isLoading, setIsLoading] = useState(false);
+    const inputRefs = useRef([]); // Références pour chaque input afin de gérer le focus
+    const emailAddress = location.state?.email; // Récupérer l'email depuis la navigation
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -34,24 +40,43 @@ const EmailVerification = () => {
         }
     };
 
-    const handleVerifyEmail = () => {
+    const handleVerifyEmail = async () => {
         const fullCode = code.join('');
-        console.log("Code de confirmation saisi :", fullCode);
-        // Ici, vous intégreriez votre logique d'API pour vérifier le code
-        alert(`Vérification du code: ${fullCode}`);
+        if (fullCode.length !== 6) {
+            toast.error("Veuillez saisir le code à 6 chiffres.");
+            return;
+        }
+        setIsLoading(true);
+        try {
+            await api.post('/verify-email', { code: fullCode });
+            toast.success("Votre email a été vérifié avec succès !");
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Code de vérification invalide ou expiré.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleResendCode = () => {
-        console.log("Renvoyer le code.");
-        // Ici, vous intégreriez votre logique d'API pour renvoyer le code
-        alert("Nouveau code envoyé !");
+    const handleResendCode = async () => {
+        setIsLoading(true);
+        try {
+            await api.post('/resend-verification-email', { email: emailAddress });
+            toast.success("Un nouveau code a été envoyé à votre adresse email.");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Erreur lors du renvoi du code.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleChangeEmail = () => {
-        console.log("Changer l'email.");
-        // Ici, vous intégreriez votre logique pour permettre à l'utilisateur de changer l'email
-        alert("Redirection pour changer l'email.");
+        // Redirige vers la page d'inscription pour changer l'email
+        navigate('/register');
     };
+
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
@@ -104,16 +129,19 @@ const EmailVerification = () => {
                 {/* Bouton de vérification */}
                 <button
                     onClick={handleVerifyEmail}
+                    disabled={isLoading}
                     className="w-full bg-[#10B981] hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg
                                shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105
-                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-4"
+                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-4
+                               disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                    Vérifier l'email
+                    {isLoading ? 'Vérification...' : "Vérifier l'email"}
                 </button>
 
                 {/* Lien "Renvoyer le code" */}
                 <button
                     onClick={handleResendCode}
+                    disabled={isLoading}
                     className="text-gray-500 text-sm hover:text-gray-700 transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                 >
