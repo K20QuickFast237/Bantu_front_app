@@ -12,6 +12,7 @@ import Support from "./pages/public/support";
 import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
 import EmailVerification from "./pages/app/EmailVerification";
+import LinkedInCallback from "./pages/app/LinkedInCallback";
 
 
 
@@ -48,6 +49,10 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test/>}/>
           <Route path="/EmailVerification" element={<EmailVerification/>}/>
+          <Route path="/auth/linkedin/callback" element={<LinkedInCallback />} />
+          <Route path="/forgotpassword1" element={<ForgotPasswordForm/>}/>
+          <Route path="/forgotpasswordconfirmation" element={<ForgotPasswordConfirmation />}/>
+          <Route path="/reset-password" element={<ResetPasswordForm/>}/>
         </Route>
 
 
@@ -60,9 +65,6 @@ const App = () => {
           <Route path="/rechercheOffre" element={<Recherche_offre/>}/>
           <Route path="/createJob" element={<Create_job/>}/>
           <Route path="/dashboardrecruteurprofil" element={<DashboardRecruteurprofil />}/>
-          <Route path="/forgotpassword1" element={<ForgotPasswordForm/>}/>
-          <Route path="/forgotpasswordconfirmation" element={<ForgotPasswordConfirmation />}/>
-          <Route path="/reset-password" element={<ResetPasswordForm/>}/>
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
           <Route path="/jobApplicationform" element={<JobApplicationForm/>}/>
           <Route path="/candidatProfil" element={<CandidatProfil/>}/>
