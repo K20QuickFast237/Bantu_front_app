@@ -1,6 +1,6 @@
 import { User, Download, Bookmark } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth'; // Import pour le contexte auth
+import { useAuth } from '@/hooks/useAuth';
 
 // Composant Button simplifié pour cet exemple
 const Button = ({ variant, size, className, children, ...props }) => {
@@ -41,19 +41,24 @@ const CardContent = ({ className, children }) => {
 };
 
 const App = () => {
-  const { user } = useAuth(); // Récupération du user du contexte (prenom, nom, etc.)
+  const { user } = useAuth();
 
-  // Fallback si user non chargé (rare en route privée)
-  // FIX : Guards || '' pour éviter toUpperCase() sur null/undefined
-  const displayName = user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : "Utilisateur";
-  const displayWelcome = user ? `${(user.prenom || '').toUpperCase()} ${(user.nom || '').toUpperCase()}`.trim() : "UTILISATEUR";
+  // FIX ULTIME : Logique display robuste - prénom + nom si OK, sinon nom seul, sinon fallback
+  let displayName = "Utilisateur";
+  let displayWelcome = "UTILISATEUR";
+  if (user) {
+    const prenomPart = user.prenom ? `${user.prenom} ` : '';
+    const nomPart = user.nom || '';
+    displayName = (prenomPart + nomPart).trim() || "Utilisateur";
+    displayWelcome = (prenomPart + nomPart).toUpperCase().trim() || "UTILISATEUR";
+  }
 
-  // Debug optionnel (retire en prod)
-  // console.log('User data:', user);
+  // Debug : Vérifie ce qui s'affiche (retire en prod)
+  console.log('Display name calculé:', displayName, 'Welcome:', displayWelcome, 'User data:', user);
 
   return (
     <div className="w-full mx-auto p-6 space-y-8 bg-background font-sans text-gray-800">
-      {/* Welcome Header - Nom dynamique avec fix */}
+      {/* Welcome Header - Nom dynamique avec fix ultime */}
       <div>
         <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {displayWelcome}</h1>
         <p className="text-sm font-semibold">Vos statistiques</p>
@@ -148,7 +153,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* Profile Section - Nom dynamique avec fix */}
+      {/* Profile Section - Nom dynamique avec fix ultime */}
       <section className='flex flex-col items-center justify-center space-y-4 border-2 border-solid p-4 rounded-2xl'>
       <div className="flex items-center space-x-4">
         <div className="w-20 h-20 rounded-full bg-yellow-400 overflow-hidden border-4 border-yellow-200">

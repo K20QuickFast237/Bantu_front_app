@@ -5,47 +5,53 @@ export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Initialement false
-  const [isLoading, setIsLoading] = useState(true); // Nouvel état de chargement
+  const [token, setToken] = useState(null); // FIX : État pour token exposé
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fonction de login qui recoit le token
-  const login = (userData, token) => {
-    sessionStorage.setItem('token', token);
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Fonction de login qui reçoit le token
+  const login = (userData, tokenParam) => { // Renommé pour clarté
+    sessionStorage.setItem('token', tokenParam);
+    sessionStorage.setItem('user', JSON.stringify(userData)); // Persiste user data localement
+    api.defaults.headers.common['Authorization'] = `Bearer ${tokenParam}`;
+    setToken(tokenParam); // FIX : Set token en état
     setUser(userData);
     setIsAuthenticated(true);
-    console.log('Login réussi:', userData); // Debug
+    console.log('Login réussi - Token set:', tokenParam ? 'Oui' : 'Non', 'User:', userData);
   }
 
-  // Fonction pour deconnecter l'utilisateur
+  // Fonction pour déconnecter l'utilisateur
   const logout = async () => {
     try {
       await api.post('/logout');
     } catch(error) {
       console.error("Erreur lors de la déconnexion API, mais déconnexion locale quand même.", error);
     } finally {
-      sessionStorage.removeItem('token'); // Supprimer le token
-      delete api.defaults.headers.common['Authorization']; // Supprimer l'en-tête Axios
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('user'); // Nettoie user data
+      delete api.defaults.headers.common['Authorization'];
+      setToken(null); // FIX : Reset token en état
       setUser(null);
       setIsAuthenticated(false);
-      console.log('Logout exécuté'); // Debug
+      console.log('Logout exécuté - Token reset');
     }
   }
 
-    // Effet pour vérifier l'authentification au chargement de l'app
-   useEffect(() => {
-    const verifyAuth = async () => {
-      const token = sessionStorage.getItem('token');
-      console.log('Token trouvé au chargement:', token ? token.substring(0, 20) + '...' : 'Aucun'); // Debug
-      if (token) {
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  // Effet pour vérifier l'authentification au chargement de l'app
+  useEffect(() => {
+    const verifyAuth = async (retryCount = 0) => {
+      const storedToken = sessionStorage.getItem('token');
+      console.log('Token trouvé au chargement:', storedToken ? storedToken.substring(0, 20) + '...' : 'Aucun');
+      if (storedToken) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+        setToken(storedToken); // FIX : Set token en état dès le début
         try {
-          // Utilisons la route /session/user qui renvoie une structure de données complète et cohérente.
+          // Fetch /user pour données fraîches
           const response = await api.get('/user');
-          const apiUser = response.data;
-          console.log('Réponse GET /user réussie:', apiUser); // Debug
+          // Unwrap la structure { data: { ... } } du backend
+          const apiUser = response.data.data || response.data;
+          console.log('Réponse GET /user réussie (unwrapped):', apiUser);
 
-          // Préparer les objets pour le contexte à partir de la réponse
           const userPayload = {
             nom: apiUser.nom,
             prenom: apiUser.prenom,
@@ -53,22 +59,36 @@ export const AuthProvider = ({ children }) => {
             role: apiUser.role
           };
 
-          // Mettre à jour l'état du contexte
+          sessionStorage.setItem('user', JSON.stringify(userPayload)); // Mise à jour locale
           setUser(userPayload);
           setIsAuthenticated(true);
         } catch (error) {
-          console.error("Échec de la vérification du token:", error.response?.status, error.response?.data?.message || error.message); // Debug détaillé
-          // FIX: Ne pas auto-logout sur toutes erreurs ; seulement si 401 (Unauthorized)
+          console.error("Échec de la vérification du token (tentative " + (retryCount + 1) + "):", error.response?.status, error.response?.data?.message || error.message);
+          
           if (error.response?.status === 401) {
-            logout(); // Token invalide → logout
+            // Token invalide → logout
+            logout();
+          } else if (retryCount < 1) {
+            // Retry 1x pour erreurs non-401 (ex. réseau temporaire)
+            console.log('Retry GET /user...');
+            setTimeout(() => verifyAuth(retryCount + 1), 1000);
+            return;
           } else {
-            // Autres erreurs (ex. 500) : Garde isAuthenticated=true mais log
-            console.warn('Erreur non critique sur /user, continuation sans user data');
-            setIsAuthenticated(true); // Permet d'afficher la page avec fallback
+            // Fallback sur user data locale si fetch échoue
+            const storedUser = sessionStorage.getItem('user');
+            if (storedUser) {
+              const userPayload = JSON.parse(storedUser);
+              console.log('Fallback sur user data locale:', userPayload);
+              setUser(userPayload);
+              setIsAuthenticated(true);
+            } else {
+              console.warn('Aucune user data locale, isAuthenticated=false');
+              setIsAuthenticated(false);
+            }
           }
         }
       } else {
-        console.log('Pas de token, isAuthenticated reste false'); // Debug
+        console.log('Pas de token, isAuthenticated reste false');
       }
       setIsLoading(false);
     };
@@ -78,8 +98,9 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
+    token, // FIX : Exposé pour les composants
     isAuthenticated,
-    isLoading, // Exposer l'état de chargement
+    isLoading,
     login, 
     logout
   };
