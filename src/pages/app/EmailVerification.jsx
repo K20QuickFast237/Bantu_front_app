@@ -48,7 +48,7 @@ const EmailVerification = () => {
         }
         setIsLoading(true);
         try {
-            await api.post('/verify-email', { code: fullCode });
+            await api.post('/email/verify/', { code: fullCode });
             toast.success("Votre email a été vérifié avec succès !");
             setTimeout(() => {
                 navigate('/login');
