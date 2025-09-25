@@ -1,8 +1,14 @@
 import React from 'react';
 import { Camera, Mail, Phone, Linkedin, User, Edit, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth'; // Import ajouté pour le contexte auth
 
 const Infopersonelles = () => {
+  const { user } = useAuth(); // Récupération du user du contexte (prenom, nom, etc.)
+
+  // Fallback si user non chargé
+  const displayName = user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : "Utilisateur";
+
   return (
     <div className="p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto mb-8 mt-5 border border-gray-200">
 
@@ -36,7 +42,7 @@ const Infopersonelles = () => {
 
           {/* Profile Details */}
           <div className="flex-grow  w-full">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">ABRAHAM TADZONG MBIPE</h3>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">{displayName}</h3>
             <p className="text-sm text-gray-600 mb-4">Concepteur Et Développeur D'application</p>
 
             {/* Completion Bar */}

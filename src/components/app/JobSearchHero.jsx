@@ -1,5 +1,6 @@
 import { User, Download, Bookmark } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth'; // Import pour le contexte auth
 
 // Composant Button simplifié pour cet exemple
 const Button = ({ variant, size, className, children, ...props }) => {
@@ -40,20 +41,30 @@ const CardContent = ({ className, children }) => {
 };
 
 const App = () => {
+  const { user } = useAuth(); // Récupération du user du contexte (prenom, nom, etc.)
+
+  // Fallback si user non chargé (rare en route privée)
+  // FIX : Guards || '' pour éviter toUpperCase() sur null/undefined
+  const displayName = user ? `${user.prenom || ''} ${user.nom || ''}`.trim() : "Utilisateur";
+  const displayWelcome = user ? `${(user.prenom || '').toUpperCase()} ${(user.nom || '').toUpperCase()}`.trim() : "UTILISATEUR";
+
+  // Debug optionnel (retire en prod)
+  // console.log('User data:', user);
+
   return (
     <div className="w-full mx-auto p-6 space-y-8 bg-background font-sans text-gray-800">
-      {/* Welcome Header */}
+      {/* Welcome Header - Nom dynamique avec fix */}
       <div>
-        <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue ABRAHAM</h1>
+        <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {displayWelcome}</h1>
         <p className="text-sm font-semibold">Vos statistiques</p>
       </div>
 
-      {/* Statistics Cards - MODIFIÉ */}
+      {/* Statistics Cards */}
       <div className="grid grid-cols-3 gap-4">
         <Card className="border border-gray-200 shadow-sm">
           <CardContent className="mt-8 ml-8">
             <div className='flex'>
-                <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center "> {/* Retiré mx-auto */}
+                <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center ">
               <User className="w-6 h-6 text-gray-900" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">15</div>
@@ -66,7 +77,7 @@ const App = () => {
         <Card className="border border-gray-200 shadow-sm">
           <CardContent className="mt-8 ml-8">
             <div className='flex'>
-                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center "> {/* Retiré mx-auto */}
+                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
               <Download className="w-6 h-6 text-gray-900" />
             </div>
             <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">01</div>
@@ -79,7 +90,7 @@ const App = () => {
         <Card className="border border-gray-200 shadow-sm">
           <CardContent className="mt-8 ml-8">
             <div className='flex'>
-                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center "> {/* Retiré mx-auto */}
+                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
               <Bookmark className="w-6 h-6 text-gray-900" />
             </div>
             <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">05</div>
@@ -137,7 +148,7 @@ const App = () => {
         </div>
       </div>
 
-      {/* Profile Section */}
+      {/* Profile Section - Nom dynamique avec fix */}
       <section className='flex flex-col items-center justify-center space-y-4 border-2 border-solid p-4 rounded-2xl'>
       <div className="flex items-center space-x-4">
         <div className="w-20 h-20 rounded-full bg-yellow-400 overflow-hidden border-4 border-yellow-200">
@@ -147,7 +158,7 @@ const App = () => {
         </div>
         
         <div className="flex-1">
-          <h3 className="font-bold text-xl ">Abraham TADZONG M.</h3>
+          <h3 className="font-bold text-xl ">{displayName}</h3>
           <p className="text-sm text-gray-900 mb-3">Concepteur Développeur d'Applications</p>
           
           <Link to={"/profil"}>
