@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'; // Assurez-vous d'avoir react-router-do
 
 const HeaderProfil = () => {
   return (
-    <header className="flex items-center justify-between p-4 bg-white shadow-md border-b border-gray-200">
+    <header className="flex items-center justify-between py-4 px-10 bg-white shadow-md border-b border-gray-200">
       <div className="flex items-center space-x-8">
         {/* Logo */}
         <Link to={"/candidatProfil"}>

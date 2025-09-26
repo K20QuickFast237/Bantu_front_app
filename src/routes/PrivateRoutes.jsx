@@ -9,6 +9,7 @@ const PrivateRoutes = () => {
     return <div>Chargement...</div>; 
   }
 
+  // FIX: Si isAuthenticated true, affiche <Outlet /> même si user null (fallback dans composants)
   return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

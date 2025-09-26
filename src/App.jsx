@@ -30,6 +30,8 @@ import JobApplicationForm from "./pages/app/JobApplicationForm";
 import CandidatProfil from "./pages/app/CandidatProfil";
 import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
 import Test from "./components/app/Test"
+import Dashboard_gestion_offres from "./pages/app/Dashboard_gestion_offres";
+import Dashboardcandidature from "./pages/app/Dashboardcandidature";
 
 const App = () => {
   return (
@@ -59,6 +61,7 @@ const App = () => {
         {/* Routes protégées */}
         <Route element={<PrivateRoutes />}>
           <Route path="/WhatDoYouWantToDo" element={<WhatDoYouWantToDo/>}/>
+          <Route path="/Dashboard_gestion_offres" element={<Dashboard_gestion_offres/>}/>
           <Route path="/profil" element={<Profil />} />
           <Route path="/inscriptionEntreprise" element={<CompletionProfessionnel/>}/>
           <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
@@ -68,6 +71,7 @@ const App = () => {
           <Route path="/jobOffers" element={<JobOffersPage/>}/>
           <Route path="/jobApplicationform" element={<JobApplicationForm/>}/>
           <Route path="/candidatProfil" element={<CandidatProfil/>}/>
+          <Route path="/Dashboardcandidature" element={<Dashboardcandidature/>}/>
         </Route>
       </Routes>
     </>
