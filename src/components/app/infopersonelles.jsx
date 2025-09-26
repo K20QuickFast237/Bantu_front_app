@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, Mail, Phone, User, Edit, Search } from 'lucide-react';
+import { Camera, Mail, Phone, User, Edit, Search, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { useFormik } from 'formik';
@@ -19,9 +19,8 @@ import {
 const Infopersonelles = () => {
   const { user, token } = useAuth();
   const [profileData, setProfileData] = useState(() => {
-    // Charger depuis sessionStorage au montage
-    const savedProfile = sessionStorage.getItem('profileData');
-    return savedProfile ? JSON.parse(savedProfile) : {
+    const savedProfile = localStorage.getItem('profileData');
+    const defaultProfile = {
       date_naissance: '',
       telephone: '',
       adresse: '',
@@ -35,12 +34,15 @@ const Infopersonelles = () => {
       is_visible: '0',
       image_url: '',
     };
+    return savedProfile ? JSON.parse(savedProfile) : defaultProfile;
   });
+  const [previewImage, setPreviewImage] = useState(() => localStorage.getItem('previewImage') || null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completionPercent, setCompletionPercent] = useState(25);
 
-  // Calcul du % de complétion
+  // Calcul du pourcentage de complétion
   const calculateCompletion = (data) => {
     const totalFields = 11;
     let filledFields = 0;
@@ -52,7 +54,7 @@ const Infopersonelles = () => {
     if (data.pays) filledFields++;
     if (data.titre_professionnel) filledFields++;
     if (data.resume_profil) filledFields++;
-    if (data.image_profil || data.image_url) filledFields++;
+    if (data.image_profil || data.image_url || previewImage) filledFields++;
     if (data.cv_link) filledFields++;
     if (data.lettre_motivation_link) filledFields++;
     if (data.is_visible === '1') filledFields++;
@@ -62,48 +64,50 @@ const Infopersonelles = () => {
     return Math.min(100, Math.round(basePercent + progressPercent));
   };
 
-  // Fetch profil au montage
+  // Merge avec user au démarrage
   useEffect(() => {
-    const fetchProfile = async () => {
-      if (!token) {
-        console.log('Pas de token, skip fetch profil');
-        return;
-      }
-      try {
-        const response = await api.get('/profile/particulier');
-        const apiProfile = response.data.data || response.data;
-        console.log('Profil fetché:', apiProfile);
-        setProfileData(prev => {
-          const updatedProfile = { ...prev, ...apiProfile };
-          // Sauvegarder dans sessionStorage
-          sessionStorage.setItem('profileData', JSON.stringify(updatedProfile));
-          return updatedProfile;
-        });
-        setCompletionPercent(calculateCompletion(apiProfile));
-      } catch (error) {
-        console.error('Erreur fetch profil:', error.response?.data || error.message);
-        // Charger depuis sessionStorage si fetch échoue
-        const savedProfile = sessionStorage.getItem('profileData');
-        if (savedProfile) {
-          const parsedProfile = JSON.parse(savedProfile);
-          setProfileData(parsedProfile);
-          setCompletionPercent(calculateCompletion(parsedProfile));
-        } else {
-          setCompletionPercent(25);
+    if (user && token) {
+      console.log('User chargé:', user);
+      setProfileData(prev => {
+        const updatedProfile = {
+          ...prev,
+          date_naissance: user.date_naissance || prev.date_naissance || '',
+          telephone: user.telephone || prev.telephone || '',
+          adresse: user.adresse || prev.adresse || '',
+          ville: user.ville || prev.ville || '',
+          pays: user.pays || prev.pays || '',
+          titre_professionnel: user.titre_professionnel || prev.titre_professionnel || '',
+          resume_profil: user.resume_profil || prev.resume_profil || '',
+          cv_link: user.cv_link || prev.cv_link || '',
+          lettre_motivation_link: user.lettre_motivation_link || prev.lettre_motivation_link || '',
+          image_url: user.image_url || prev.image_url || '',
+          is_visible: user.is_visible || prev.is_visible || '0',
+        };
+        localStorage.setItem('profileData', JSON.stringify(updatedProfile));
+        if (user.image_url && !previewImage) {
+          setPreviewImage(user.image_url);
+          localStorage.setItem('previewImage', user.image_url);
+        } else if (!user.image_url && !previewImage && prev.image_url) {
+          setPreviewImage(prev.image_url);
+          localStorage.setItem('previewImage', prev.image_url);
         }
-      }
-    };
-    fetchProfile();
-  }, [token]);
+        return updatedProfile;
+      });
+    }
+  }, [user, token]);
 
-  // Met à jour % quand profileData change
+  // Met à jour pourcentage et localStorage
   useEffect(() => {
     setCompletionPercent(calculateCompletion(profileData));
-    // Sauvegarder dans sessionStorage à chaque changement
-    sessionStorage.setItem('profileData', JSON.stringify(profileData));
-  }, [profileData]);
+    localStorage.setItem('profileData', JSON.stringify(profileData));
+    if (previewImage) {
+      localStorage.setItem('previewImage', previewImage);
+    } else {
+      localStorage.removeItem('previewImage');
+    }
+  }, [profileData, previewImage]);
 
-  // Validation Yup (champs obligatoires sauf image et is_visible)
+  // Validation Yup
   const validationSchema = Yup.object({
     date_naissance: Yup.date().required('Date de naissance requise'),
     telephone: Yup.string().required('Téléphone requis'),
@@ -154,9 +158,20 @@ const Infopersonelles = () => {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         const updatedProfile = response.data.data || response.data;
-        console.log('Réponse backend:', updatedProfile);
-        setProfileData(updatedProfile);
-        sessionStorage.setItem('profileData', JSON.stringify(updatedProfile));
+        console.log('Réponse POST /profile/particulier:', updatedProfile);
+        setProfileData(prev => {
+          const newProfile = {
+            ...prev,
+            ...updatedProfile,
+            image_url: updatedProfile.image_url || (prev.image_profil ? previewImage : prev.image_url),
+          };
+          localStorage.setItem('profileData', JSON.stringify(newProfile));
+          return newProfile;
+        });
+        setPreviewImage(updatedProfile.image_url || previewImage);
+        if (updatedProfile.image_url || previewImage) {
+          localStorage.setItem('previewImage', updatedProfile.image_url || previewImage);
+        }
         setIsModalOpen(false);
         toast.success('Profil mis à jour !');
       } catch (error) {
@@ -174,14 +189,37 @@ const Infopersonelles = () => {
     },
   });
 
-  // Gère l’upload d’image
+  // Gère l'upload d'image
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      console.log('Image sélectionnée:', file);
       setProfileData(prev => ({ ...prev, image_profil: file }));
+      const newPreview = URL.createObjectURL(file);
+      setPreviewImage(newPreview);
+      localStorage.setItem('previewImage', newPreview);
       formik.setFieldValue('image_profil', file);
     }
   };
+
+  // Gère la suppression de l'image
+  const handleImageDelete = () => {
+    setProfileData(prev => ({ ...prev, image_profil: null, image_url: '' }));
+    setPreviewImage(null);
+    formik.setFieldValue('image_profil', null);
+    localStorage.setItem('profileData', JSON.stringify({ ...profileData, image_profil: null, image_url: '' }));
+    localStorage.removeItem('previewImage');
+    toast.success('Image supprimée');
+  };
+
+  // Révoquer l'URL de prévisualisation
+  useEffect(() => {
+    return () => {
+      if (previewImage && !localStorage.getItem('previewImage')) {
+        URL.revokeObjectURL(previewImage);
+      }
+    };
+  }, [previewImage]);
 
   // Nom dynamique
   let displayName = "Utilisateur";
@@ -215,9 +253,14 @@ const Infopersonelles = () => {
         <div className="flex flex-col md:flex-row items-start mb-6 gap-6">
           {/* Photo */}
           <div className="flex justify-center md:justify-start">
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center mr-0 md:mr-6 overflow-hidden border border-gray-300">
+            <div
+              className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center mr-0 md:mr-6 overflow-hidden border border-gray-300 cursor-pointer"
+              onClick={() => (profileData.image_url || previewImage) && setIsImageModalOpen(true)}
+            >
               {profileData.image_url ? (
                 <img src={profileData.image_url} alt="Profil" className="w-full h-full object-cover rounded-full" />
+              ) : previewImage ? (
+                <img src={previewImage} alt="Prévisualisation" className="w-full h-full object-cover rounded-full" />
               ) : (
                 <User size={50} className="text-gray-500 sm:size-[60px]" />
               )}
@@ -318,6 +361,31 @@ const Infopersonelles = () => {
         </div>
       </motion.section>
 
+      {/* Pop-up pour voir l'image */}
+      <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Image de profil</DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center">
+            {profileData.image_url ? (
+              <img src={profileData.image_url} alt="Profil" className="max-w-full max-h-[60vh] object-contain" />
+            ) : previewImage ? (
+              <img src={previewImage} alt="Prévisualisation" className="max-w-full max-h-[60vh] object-contain" />
+            ) : (
+              <p>Aucune image disponible</p>
+            )}
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <button className="px-4 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100">
+                Fermer
+              </button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Formulaire Dialog */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -413,12 +481,24 @@ const Infopersonelles = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Image de profil</label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+              <div className="flex items-center space-x-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {(profileData.image_url || previewImage) && (
+                  <button
+                    type="button"
+                    onClick={handleImageDelete}
+                    className="flex items-center px-3 py-2 border border-red-300 rounded-md text-red-600 hover:bg-red-100"
+                  >
+                    <Trash2 size={16} className="mr-1" />
+                    Supprimer
+                  </button>
+                )}
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Lien CV (URL)</label>

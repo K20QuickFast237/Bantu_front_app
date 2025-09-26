@@ -4,7 +4,7 @@ import { Search, MapPin, ArrowRight } from 'lucide-react';
 import { motion, useAnimation } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { useNavigate } from 'react-router-dom'; // Importez useNavigate
-import Header from '../../components/app/Header';
+import HeaderProfil from '../../components/app/HeaderProfil';
 import Footer from '../../components/public/Footer';
 
 const DashboardEntreprise = () => {
@@ -45,7 +45,7 @@ const DashboardEntreprise = () => {
 
   // Fonctions de navigation
   const handleCreateJobClick = () => {
-    navigate('/createJob');
+    navigate('/Dashboard_gestion_offres');
   };
 
   const handleDashboardClick = () => {
@@ -54,7 +54,7 @@ const DashboardEntreprise = () => {
 
   return (
     <>
-      
+     <HeaderProfil/> 
       <div className="font-sans relative overflow-hidden">
         {/* Hero Section */}
         <div className="bg-[#FFF3EB] px-4 sm:px-8 pb-32 pt-20 relative">

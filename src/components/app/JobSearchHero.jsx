@@ -57,7 +57,7 @@ const App = () => {
   console.log('Display name calculé:', displayName, 'Welcome:', displayWelcome, 'User data:', user);
 
   return (
-    <div className="w-full mx-auto p-6 space-y-8 bg-background font-sans text-gray-800">
+    <div className="w-full mx-auto py-6 px-10 space-y-8 bg-background font-sans text-gray-800">
       {/* Welcome Header - Nom dynamique avec fix ultime */}
       <div>
         <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {displayWelcome}</h1>
