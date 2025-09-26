@@ -11,6 +11,7 @@ import googleLogo from '../../assets/google.png';       // Logo Google
 import appleLogo from '../../assets/apple.png';        // Logo Apple
 import facebookLogo from '../../assets/facebook.png';      // Logo Facebook
 import PageWrapper from '../../components/public/PageWrapper';
+import { ClipLoader } from "react-spinners";
 import { registerUser } from '../../services/auth';
 import toast from 'react-hot-toast';
 
