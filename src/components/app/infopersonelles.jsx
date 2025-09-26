@@ -41,8 +41,10 @@ const Infopersonelles = () => {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completionPercent, setCompletionPercent] = useState(25);
+  // Add a ref to trigger a hidden file input from the avatar circle/camera button
+  const avatarInputRef = React.useRef(null);
 
-  // Calcul du pourcentage de complétion
+  // Calcul du % de complétion
   const calculateCompletion = (data) => {
     const totalFields = 11;
     let filledFields = 0;
@@ -64,39 +66,52 @@ const Infopersonelles = () => {
     return Math.min(100, Math.round(basePercent + progressPercent));
   };
 
-  // Merge avec user au démarrage
+  // Merge avec user si disponible
   useEffect(() => {
     if (user && token) {
-      console.log('User chargé:', user);
-      setProfileData(prev => {
-        const updatedProfile = {
-          ...prev,
-          date_naissance: user.date_naissance || prev.date_naissance || '',
-          telephone: user.telephone || prev.telephone || '',
-          adresse: user.adresse || prev.adresse || '',
-          ville: user.ville || prev.ville || '',
-          pays: user.pays || prev.pays || '',
-          titre_professionnel: user.titre_professionnel || prev.titre_professionnel || '',
-          resume_profil: user.resume_profil || prev.resume_profil || '',
-          cv_link: user.cv_link || prev.cv_link || '',
-          lettre_motivation_link: user.lettre_motivation_link || prev.lettre_motivation_link || '',
-          image_url: user.image_url || prev.image_url || '',
-          is_visible: user.is_visible || prev.is_visible || '0',
-        };
-        localStorage.setItem('profileData', JSON.stringify(updatedProfile));
-        if (user.image_url && !previewImage) {
-          setPreviewImage(user.image_url);
-          localStorage.setItem('previewImage', user.image_url);
-        } else if (!user.image_url && !previewImage && prev.image_url) {
-          setPreviewImage(prev.image_url);
-          localStorage.setItem('previewImage', prev.image_url);
+      const fetchUser = async () => {
+        try {
+          const response = await api.get('/user', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const userProfile = response.data.data || response.data;
+          console.log('Réponse GET /user:', userProfile);
+          setProfileData(prev => {
+            const updatedProfile = {
+              ...prev,
+              date_naissance: userProfile.date_naissance || prev.date_naissance || '',
+              telephone: userProfile.telephone || prev.telephone || '',
+              adresse: userProfile.adresse || prev.adresse || '',
+              ville: userProfile.ville || prev.ville || '',
+              pays: userProfile.pays || prev.pays || '',
+              titre_professionnel: userProfile.titre_professionnel || prev.titre_professionnel || '',
+              resume_profil: userProfile.resume_profil || prev.resume_profil || '',
+              cv_link: userProfile.cv_link || prev.cv_link || '',
+              lettre_motivation_link: userProfile.lettre_motivation_link || prev.lettre_motivation_link || '',
+              image_url: userProfile.image_url || prev.image_url || '',
+              is_visible: userProfile.is_visible || prev.is_visible || '0',
+            };
+            localStorage.setItem('profileData', JSON.stringify(updatedProfile));
+            if (userProfile.image_url && !previewImage) {
+              setPreviewImage(userProfile.image_url);
+              localStorage.setItem('previewImage', userProfile.image_url);
+            }
+            return updatedProfile;
+          });
+        } catch (error) {
+          console.error('Erreur GET /user:', {
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message,
+          });
+          toast.error('Impossible de charger le profil depuis /user');
         }
-        return updatedProfile;
-      });
+      };
+      fetchUser();
     }
   }, [user, token]);
 
-  // Met à jour pourcentage et localStorage
+  // Met à jour % et localStorage
   useEffect(() => {
     setCompletionPercent(calculateCompletion(profileData));
     localStorage.setItem('profileData', JSON.stringify(profileData));
@@ -155,7 +170,7 @@ const Infopersonelles = () => {
 
       try {
         const response = await api.post('/profile/particulier', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
         });
         const updatedProfile = response.data.data || response.data;
         console.log('Réponse POST /profile/particulier:', updatedProfile);
@@ -191,14 +206,19 @@ const Infopersonelles = () => {
 
   // Gère l'upload d'image
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (file) {
       console.log('Image sélectionnée:', file);
       setProfileData(prev => ({ ...prev, image_profil: file }));
-      const newPreview = URL.createObjectURL(file);
-      setPreviewImage(newPreview);
-      localStorage.setItem('previewImage', newPreview);
-      formik.setFieldValue('image_profil', file);
+      // Use FileReader to persist a data URL (works after reload/logout)
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        setPreviewImage(dataUrl);
+        localStorage.setItem('previewImage', dataUrl);
+        formik.setFieldValue('image_profil', file);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -210,12 +230,14 @@ const Infopersonelles = () => {
     localStorage.setItem('profileData', JSON.stringify({ ...profileData, image_profil: null, image_url: '' }));
     localStorage.removeItem('previewImage');
     toast.success('Image supprimée');
+    // TODO: Appeler DELETE /profile/image si disponible
   };
 
   // Révoquer l'URL de prévisualisation
   useEffect(() => {
     return () => {
-      if (previewImage && !localStorage.getItem('previewImage')) {
+      // No revoke needed for data URLs; only revoke blob: URLs
+      if (previewImage && previewImage.startsWith('blob:') && !localStorage.getItem('previewImage')) {
         URL.revokeObjectURL(previewImage);
       }
     };
@@ -255,7 +277,13 @@ const Infopersonelles = () => {
           <div className="flex justify-center md:justify-start">
             <div
               className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center mr-0 md:mr-6 overflow-hidden border border-gray-300 cursor-pointer"
-              onClick={() => (profileData.image_url || previewImage) && setIsImageModalOpen(true)}
+              onClick={() => {
+                if (profileData.image_url || previewImage) {
+                  setIsImageModalOpen(true);
+                } else {
+                  avatarInputRef.current && avatarInputRef.current.click();
+                }
+              }}
             >
               {profileData.image_url ? (
                 <img src={profileData.image_url} alt="Profil" className="w-full h-full object-cover rounded-full" />
@@ -264,9 +292,22 @@ const Infopersonelles = () => {
               ) : (
                 <User size={50} className="text-gray-500 sm:size-[60px]" />
               )}
-              <div className="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow border border-gray-300">
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); avatarInputRef.current && avatarInputRef.current.click(); }}
+                className="absolute bottom-1 right-1 bg-white p-1 rounded-full shadow border border-gray-300"
+                aria-label="Changer la photo de profil"
+              >
                 <Camera size={14} className="text-gray-500 sm:size-[16px]" />
-              </div>
+              </button>
+              {/* Hidden input to pick a file from the avatar area */}
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+              />
             </div>
           </div>
 
