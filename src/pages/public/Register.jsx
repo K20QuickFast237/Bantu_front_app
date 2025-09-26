@@ -210,12 +210,12 @@ const Register = () => {
 
               {/* Bouton S'inscrire : Grand bouton orange vif, texte blanc. */}
               <div>
-                <button
+              <button
                   disabled={isSubmitting}
                   type="submit"
                   className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200" 
                 >
-                  S'inscrire
+                {isSubmitting ? <ClipLoader size={22} color="#fff" /> : "S'inscrire"}
                 </button>
               </div>
             </form>

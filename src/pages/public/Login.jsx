@@ -205,12 +205,11 @@ const Login = () => {
                                 {/* Bouton Se connecter */}
                                 <div>
                                     <button
-                                        disabled={loading}
+                                        disabled={isSubmitting}
                                         type="submit"
                                         className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200"
                                     >
-                                        {loading ? <ClipLoader size={22} color="blue" /> : "Se connecter"}
-
+                                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Se connecter"}
                                     </button>
                                 </div>
                             </form>
@@ -228,16 +227,15 @@ const Login = () => {
                             </div>
 
                             {/* Boutons de connexion sociale */}
-                            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                                <div className="w-full flex justify-center">
+                            <div className="mt-6 flex flex-col gap-3">
+                                {/* <div className="w-full flex justify-center"> */}
                                     <GoogleLogin
                                         onSuccess={handleGoogleSuccess}
                                         onError={handleGoogleError}
-                                        width={'30%'}
                                     />
-                                </div>
+                                {/* </div> */}
 
-                                <button className="w-full inline-flex justify-center items-center py-2 px-4 border border-blue-600 rounded-md shadow-sm bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200">
+                                <button onClick={handleLinkedInLogin} className="w-full inline-flex justify-center cursor-pointer items-center py-2 px-4 border border-blue-600 rounded-md shadow-sm bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200">
                                     <svg className="h-5 w-5 mr-3" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.761 0-.971.784-1.76 1.75-1.76s1.75.789 1.75 1.76c0 .971-.784 1.761-1.75 1.761zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.767 7 2.476v6.759z" />
                                     </svg>

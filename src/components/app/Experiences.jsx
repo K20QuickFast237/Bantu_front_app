@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, PlusCircle, Loader2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { FaTimes } from 'react-icons/fa';
-import toast from 'react-hot-toast';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import { validationExperienceSchema } from '../../schemas';
@@ -17,6 +15,8 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import FormError from './FormError';
+import { toast } from 'sonner';
+import { useFormik } from 'formik';
 
 const Experiences = () => {
   const { token } = useAuth();
@@ -26,50 +26,16 @@ const Experiences = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [experienceToDelete, setExperienceToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [skills, setSkills] = useState(['Photoshop', 'Illustrator', 'Gestion de projet']);
-
-  // Données fictives pour remplacer l'API
-  const fakeExperiences = [
-    {
-      id: 1,
-      titre_poste: 'Développeur Frontend',
-      nom_entreprise: 'Tech Solutions',
-      date_debut: '2020-01-15',
-      date_fin: '2022-03-20',
-      description_taches: 'Développement d\'applications web responsives avec React et Vue.js',
-      adresse: '123 Rue de la Tech',
-      ville: 'Paris',
-      pays: 'France',
-      resultat_obtenu: 'Projets livrés avec succès'
-    },
-    {
-      id: 2,
-      titre_poste: 'Designer UI/UX',
-      nom_entreprise: 'Creative Agency',
-      date_debut: '2018-06-10',
-      date_fin: '2019-12-15',
-      description_taches: 'Conception d\'interfaces utilisateur et expériences utilisateur',
-      adresse: '456 Avenue Design',
-      ville: 'Lyon',
-      pays: 'France',
-      resultat_obtenu: 'Augmentation de la satisfaction utilisateur de 30%'
-    }
-  ];
 
   useEffect(() => {
     const fetchExperiences = async () => {
-      if (!token) return;
       setIsLoading(true);
       try {
-        // Simulation de chargement avec données fictives
-        setTimeout(() => {
-          setExperiences(fakeExperiences);
-          setIsLoading(false);
-        }, 1000);
+        const response = await api.get('/experiences');
+        setExperiences(response.data);
+        setIsLoading(false);
       } catch (error) {
         toast.error('Erreur lors du chargement des expériences');
-        console.error('Erreur:', error);
         setExperiences([]);
         setIsLoading(false);
       }
@@ -77,62 +43,82 @@ const Experiences = () => {
     fetchExperiences();
   }, [token]);
 
-  const handleRemoveSkill = (skillToRemove) => {
-    setSkills(skills.filter(skill => skill !== skillToRemove));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulation d'envoi de données
-    setTimeout(() => {
-      const newExperience = {
-        id: editingExperience ? editingExperience.id : Date.now(),
-        titre_poste: e.target.titre_poste.value,
-        nom_entreprise: e.target.nom_entreprise.value,
-        date_debut: e.target.date_debut.value,
-        date_fin: e.target.date_fin.value,
-        description_taches: e.target.description_taches.value,
-        adresse: e.target.adresse.value,
-        ville: e.target.ville.value,
-        pays: e.target.pays.value,
-        resultat_obtenu: e.target.resultat_obtenu.value
-      };
-
+  const onSubmit = async (values, { setSubmitting }) => {
+    try {
       if (editingExperience) {
-        setExperiences(experiences.map(exp => 
-          exp.id === editingExperience.id ? newExperience : exp
-        ));
-        toast.success('Expérience mise à jour avec succès');
+        // Modification d'une formation existante
+        await api.put(`/experiences/${editingExperience.id}`, values);
+        setExperiences(
+          experiences.map((experience) =>
+            experience.id === editingExperience.id ? { ...experience, ...values } : experience
+          )
+        );
+        toast.success('Experience mise à jour avec succès');
       } else {
-        setExperiences([...experiences, newExperience]);
-        toast.success('Expérience ajoutée avec succès');
+        // Ajout d'une nouvelle formation
+        const response = await api.post('/experiences', values);
+        setExperiences([...experiences, response.data]);
+        toast.success('Experience ajoutée avec succès');
       }
-
+    } catch (error) {
+      toast.error('Erreur lors de la sauvegarde de la experience');
+      console.error('Erreur:', error);
+    } finally {
       setIsModalOpen(false);
-      setEditingExperience(null);
-      setIsSubmitting(false);
-    }, 1000);
+      setSubmitting(false);
+      setIsLoading(false);
+    }
+
   };
+
+
+  const { values, errors, touched, isSubmitting, handleChange, handleBlur, handleSubmit, setValues } = useFormik({
+    initialValues: {
+      titre_poste: '',
+      nom_entreprise: '',
+      date_debut: '',
+      date_fin: '',
+      description_taches: '',
+      adresse: '',
+      ville: '',
+      pays: '',
+    },
+    validationSchema: validationExperienceSchema,
+    onSubmit,
+    enableReinitialize: true,
+  });
 
   const openEditModal = (experience) => {
     setEditingExperience(experience);
+    setValues({
+      titre_poste: experience.titre_poste,
+      nom_entreprise: experience.nom_entreprise,
+      date_debut: experience.date_debut,
+      date_fin: experience.date_fin,
+      description_taches: experience.description_taches,
+      adresse: experience.adresse,
+      ville: experience.ville,
+      pays: experience.pays,
+    });
     setIsModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     if (!experienceToDelete) return;
-    setIsSubmitting(true);
     
-    // Simulation de suppression
-    setTimeout(() => {
-      setExperiences(experiences.filter(e => e.id !== experienceToDelete));
+    try {
+      await api.delete(`/experiences/${experienceToDelete}`);
+      setExperiences(experiences.filter((experience) => experience.id !== experienceToDelete));
       setIsDeleteModalOpen(false);
       setExperienceToDelete(null);
-      toast.success('Expérience supprimée avec succès');
-      setIsSubmitting(false);
-    }, 800);
+      toast.success('Formation supprimée avec succès');
+    } catch (error) {
+      toast.error('Erreur lors de la suppression de la formation');
+    } finally {
+      
+    }
+    setIsDeleteModalOpen(false);
+    setExperienceToDelete(null);
   };
 
   const openDeleteModal = (id) => {
@@ -140,9 +126,6 @@ const Experiences = () => {
     setIsDeleteModalOpen(true);
   }
 
-  if (!token) {
-    return <p className="text-red-500 text-center">Veuillez vous connecter pour gérer vos expériences.</p>;
-  }
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
@@ -176,7 +159,7 @@ const Experiences = () => {
                 
               </DialogHeader>
               
-              <form onSubmit={handleSubmit} className="p-6">
+              <form onSubmit={handleSubmit} className="p-6" noValidate>
                 {/* Titre du poste */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
@@ -185,11 +168,14 @@ const Experiences = () => {
                   <input
                     type="text"
                     name="titre_poste"
-                    defaultValue={editingExperience?.titre_poste || ''}
+                    value={values.titre_poste}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ex : Développeur Frontend"
                     required
                   />
+                  {errors.titre_poste && touched.titre_poste && (<p className="text-red-500 text-sm">{errors.titre_poste}</p>)}
                 </div>
                 
                 {/* Nom de l'entreprise */}
@@ -200,11 +186,14 @@ const Experiences = () => {
                   <input
                     type="text"
                     name="nom_entreprise"
-                    defaultValue={editingExperience?.nom_entreprise || ''}
+                    value={values.nom_entreprise}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ex : Tech Solutions"
                     required
                   />
+                  {errors.nom_entreprise && touched.nom_entreprise && (<p className="text-red-500 text-sm">{errors.nom_entreprise}</p>)}
                 </div>
                 
                 {/* Adresse */}
@@ -215,10 +204,13 @@ const Experiences = () => {
                   <input
                     type="text"
                     name="adresse"
-                    defaultValue={editingExperience?.adresse || ''}
+                    value={values.adresse}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Ex : 123 Rue de la Tech"
                   />
+                  {errors.adresse && touched.adresse && (<p className="text-red-500 text-sm">{errors.adresse}</p>)}
                 </div>
                 
                 {/* Ville et Pays */}
@@ -230,10 +222,13 @@ const Experiences = () => {
                     <input
                       type="text"
                       name="ville"
-                      defaultValue={editingExperience?.ville || ''}
+                      value={values.ville}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex : Paris"
                     />
+                    {errors.ville && touched.ville && (<p className="text-red-500 text-sm">{errors.ville}</p>)}
                   </div>
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
@@ -242,10 +237,13 @@ const Experiences = () => {
                     <input
                       type="text"
                       name="pays"
-                      defaultValue={editingExperience?.pays || ''}
+                      value={values.pays}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Ex : France"
                     />
+                    {errors.pays && touched.pays && (<p className="text-red-500 text-sm">{errors.pays}</p>)}
                   </div>
                 </div>
                 
@@ -258,10 +256,13 @@ const Experiences = () => {
                     <input
                       type="date"
                       name="date_debut"
-                      defaultValue={editingExperience?.date_debut || ''}
+                      value={values.date_debut}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     />
+                    {errors.date_debut && touched.date_debut && (<p className="text-red-500 text-sm">{errors.date_debut}</p>)}
                   </div>
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
@@ -270,25 +271,14 @@ const Experiences = () => {
                     <input
                       type="date"
                       name="date_fin"
-                      defaultValue={editingExperience?.date_fin || ''}
+                      value={values.date_fin}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
                     />
+                    {errors.date_fin && touched.date_fin && (<p className="text-red-500 text-sm">{errors.date_fin}</p>)}
                   </div>
-                </div>
-                
-                {/* Résultat obtenu */}
-                <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Résultat obtenu
-                  </label>
-                  <input
-                    type="text"
-                    name="resultat_obtenu"
-                    defaultValue={editingExperience?.resultat_obtenu || ''}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Projets livrés avec succès"
-                  />
                 </div>
                 
                 {/* Description des tâches */}
@@ -298,31 +288,13 @@ const Experiences = () => {
                   </label>
                   <textarea
                     name="description_taches"
-                    defaultValue={editingExperience?.description_taches || ''}
+                    value={values.description_taches}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Décrivez vos principales missions et responsabilités..."
                   ></textarea>
-                </div>
-                
-                {/* Compétences */}
-                <div className="mb-6">
-                  <label className="block text-gray-700 font-medium mb-2">
-                    Compétences
-                  </label>
-                  <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-lg">
-                    {skills.map((skill, index) => (
-                      <span 
-                        key={index} 
-                        className="inline-flex items-center px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-sm"
-                      >
-                        {skill}
-                        <FaTimes 
-                          className="ml-2 cursor-pointer text-red-500" 
-                          onClick={() => handleRemoveSkill(skill)} 
-                        />
-                      </span>
-                    ))}
-                  </div>
+                  {errors.description_taches && touched.description_taches && (<p className="text-red-500 text-sm">{errors.description_taches}</p>)}
                 </div>
                 
                 {/* Boutons */}
@@ -365,8 +337,6 @@ const Experiences = () => {
                       <p>Non spécifié</p>
                       <p><span className="font-medium text-gray-600">Date</span></p>
                       <p>{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</p>
-                      <p><span className="font-medium text-gray-600">Résultat obtenu</span></p>
-                      <p>{exp.resultat_obtenu || 'Non spécifié'}</p>
                       <p><span className="font-medium text-gray-600">Description, Missions</span></p>
                       <p>{exp.description_taches || 'Non spécifié'}</p>
                     </div>
@@ -415,5 +385,6 @@ const Experiences = () => {
     </div>
   );
 };
+
 
 export default Experiences;
