@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
+import {toast} from 'sonner';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -32,7 +32,7 @@ const LinkedInCallback = () => {
 
         try {
             // Envoyer le code au backend
-            const response = await api.get('/linkedin-login-callback', { params: { code } });
+            const response = await api.get(`/linkedin-login-callback?code=${code}`);
             const { user: apiUser, token } = response.data;
 
             const userPayload = {
@@ -48,7 +48,6 @@ const LinkedInCallback = () => {
         } catch (err) {
             const errorMessage = err.response?.data?.message || "Une erreur est survenue lors de la connexion avec LinkedIn.";
             setError(errorMessage);
-            console.error("Erreur de callback LinkedIn:", err);
             toast.error(errorMessage);
             setTimeout(() => navigate('/login', { replace: true }), 3000);
         }

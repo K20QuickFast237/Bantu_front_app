@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import PrivateRoutes from "./routes/PrivateRoutes";
 import PublicRoutes from "./routes/PublicRoutes";
 
@@ -34,7 +34,7 @@ import Test from "./components/app/Test"
 const App = () => {
   return (
     <>
-    <Toaster position="top-center" reverseOrder={false} />
+    <Toaster position="top-right" richColors />
     <ScrollToTop />
       <Routes>
         {/* Routes publiques */}
