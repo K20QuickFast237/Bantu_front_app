@@ -6,7 +6,9 @@ import Header from '../../components/app/Header';
 import Footer from '../../components/public/Footer';
 import PageWrapper from '../../components/public/PageWrapper';
 import { resetPassword } from '../../services/auth';
+import { ClipLoader } from "react-spinners";
 import { validationResetPasswordSchema } from '../../schemas';
+import { toast } from 'sonner';
 
 const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
@@ -28,13 +30,19 @@ const ResetPasswordForm = () => {
   const onSubmit = async (values) => {
     try {
       await resetPassword(values);
+      toast.success("Mot de passe reinitialise avec success !", {
+        duration: 3000,
+      });
       navigate('/login');
     } catch (err) {
-      setMessage(err.response?.data?.message || 'Erreur lors de la réinitialisation.');
+      toast.success("Connexion réussie !", {
+        description: `${err.response?.data?.message} || 'Erreur lors de la réinitialisation.'`,
+        duration: 3000,
+      });
     }
   };
 
-  const {values, handleBlur, errors, isSubmitting, touched, handleChange, handleSubmit} = useFormik({
+  const { values, handleBlur, errors, isSubmitting, touched, handleChange, handleSubmit } = useFormik({
     enableReinitialize: true,
     initialValues: form,
     validationSchema: validationResetPasswordSchema,
@@ -81,7 +89,7 @@ const ResetPasswordForm = () => {
                       value={values.password}
                       onChange={handleChange}
                       required
-                      className={"flex-1 bg-white rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500"+ (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={"flex-1 bg-white rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500" + (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
                       onBlur={handleBlur}
                     />
                   </div>
@@ -97,7 +105,7 @@ const ResetPasswordForm = () => {
                     type="submit"
                     className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300"
                   >
-                    Réinitialiser le mot de passe
+                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Réinitialiser le mot de passe"}
                   </button>
                 </div>
               </form>

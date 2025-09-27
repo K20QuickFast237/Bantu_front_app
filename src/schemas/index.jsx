@@ -60,3 +60,16 @@ export const validationExperienceSchema = Yup.object().shape({
   ville: Yup.string().required('La ville est requise'),
   pays: Yup.string().required('Le pays est requis'),
 });
+
+export const validationSchema = Yup.object({
+  titre_professionnel: Yup.string().required("Titre professionnel requis"),
+  email_pro: Yup.string().email("Email invalide").required("Email requis"),
+  telephone_pro: Yup.string().required("Téléphone requis"),
+  nom_entreprise: Yup.string().required("Nom de l'entreprise requis"),
+  description_entreprise: Yup.string().required("Description requise"),
+  site_web: Yup.string().url("URL invalide").required("Site web requis"),
+  adresse: Yup.string().required("Adresse requise"),
+  ville: Yup.string().required("Ville requise"),
+  pays: Yup.string().required("Pays requis"),
+  num_contribuable: Yup.string().required("Numéro contribuable requis"),
+});

@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {toast} from 'sonner';
+import { toast } from 'sonner';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -9,8 +9,11 @@ const LinkedInCallback = () => {
     const location = useLocation();
     const { login } = useAuth();
     const [error, setError] = useState(null);
+    const hasProcessed = useRef(false);
 
     const processLinkedInCode = useCallback(async () => {
+        if (hasProcessed.current) return;
+        hasProcessed.current = true;
         const searchParams = new URLSearchParams(location.search);
         const code = searchParams.get('code');
         const errorParam = searchParams.get('error');
@@ -35,14 +38,7 @@ const LinkedInCallback = () => {
             const response = await api.get(`/linkedin-login-callback?code=${code}`);
             const { user: apiUser, token } = response.data;
 
-            const userPayload = {
-                nom: apiUser.nom || '',
-                prenom: apiUser.prenom || '',
-                email: apiUser.email || '',
-                role: apiUser.role || '',
-            };
-
-            login(userPayload, token);
+            login(apiUser, token);
             toast.success('Connexion via LinkedIn réussie !');
             navigate('/WhatDoYouWantToDo', { replace: true });
         } catch (err) {
@@ -55,8 +51,7 @@ const LinkedInCallback = () => {
 
     useEffect(() => {
         processLinkedInCode();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Exécuter une seule fois au montage
+    }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">

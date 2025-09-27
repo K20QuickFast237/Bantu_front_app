@@ -8,11 +8,10 @@ import EmailSecureIcon from '../../assets/emailsecure.png'; // Renommage pour ê
 const EmailVerification = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
+    const { email, token, signature} = location.state || {};
     const [code, setCode] = useState(['', '', '', '', '', '']); // Array pour chaque chiffre du code
     const [isLoading, setIsLoading] = useState(false);
     const inputRefs = useRef([]); // Références pour chaque input afin de gérer le focus
-    const emailAddress = location.state?.email; // Récupérer l'email depuis la navigation
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -48,7 +47,7 @@ const EmailVerification = () => {
         }
         setIsLoading(true);
         try {
-            await api.post('/email/verify/', { code: fullCode });
+            await api.post(`/email/verify/${token}?signature=${signature}`, { code: fullCode });
             toast.success("Votre email a été vérifié avec succès !");
             setTimeout(() => {
                 navigate('/login');
@@ -63,7 +62,7 @@ const EmailVerification = () => {
     const handleResendCode = async () => {
         setIsLoading(true);
         try {
-            await api.post('/resend-verification-email', { email: emailAddress });
+            await api.post('/resend-verification-email', { email: email });
             toast.success("Un nouveau code a été envoyé à votre adresse email.");
         } catch (error) {
             toast.error(error.response?.data?.message || "Erreur lors du renvoi du code.");
@@ -92,7 +91,7 @@ const EmailVerification = () => {
                 {/* Description avec l'adresse email */}
                 <p className="text-gray-600 mb-6 leading-relaxed">
                     Nous venons d'envoyer un code de confirmation
-                    à votre adresse email <span className="font-semibold">{emailAddress}</span>
+                    à votre adresse email <span className="font-semibold">{email}</span>
                 </p>
 
                 {/* Champs de saisie du code */}

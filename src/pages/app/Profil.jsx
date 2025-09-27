@@ -10,20 +10,19 @@ import Infopersonelles from "../../components/app/infopersonelles"
 import PostesRecherches from "../../components/app/PostesRecherches";
 import PageWrapper from "../../components/public/PageWrapper";
 
-function Profil (){
-    return(
+function Profil() {
+    return (
         <>
-        <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} />
-        <PageWrapper>   
-            <HeaderProfil />
-            <Infopersonelles />
-            <PostesRecherches />
-            <Experiences />
-            <Competences />
-            <DiplomesFormations />
-            <AutresRessources />
-            <Footer />
-        </PageWrapper>
+            <PageWrapper>
+                <HeaderProfil />
+                <Infopersonelles />
+                <PostesRecherches />
+                <Experiences />
+                <Competences />
+                <DiplomesFormations />
+                <AutresRessources />
+                <Footer />
+            </PageWrapper>
         </>
     )
 };
