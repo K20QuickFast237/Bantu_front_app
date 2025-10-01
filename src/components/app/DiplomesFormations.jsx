@@ -59,7 +59,6 @@ const DiplomesFormations = () => {
       } else {
         // Ajout
         const response = await api.post('/formations', values);
-        console.log(response.data.id);
         const newFormation = {
           id: response.data.data.id,
           domaine_etude: values.domaine_etude,

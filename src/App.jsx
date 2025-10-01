@@ -29,7 +29,7 @@ import JobOffersPage from "./pages/app/JobOffersPage";
 import JobApplicationForm from "./pages/app/JobApplicationForm";
 import CandidatProfil from "./pages/app/CandidatProfil";
 import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
-import Test from "./components/app/Test"
+import Test from "./components/app/Test";
 import Dashboard_gestion_offres from "./pages/app/Dashboard_gestion_offres";
 import Dashboardcandidature from "./pages/app/Dashboardcandidature";
 

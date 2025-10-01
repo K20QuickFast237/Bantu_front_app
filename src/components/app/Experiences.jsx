@@ -56,7 +56,6 @@ const Experiences = () => {
       } else {
         // Ajouter une nouvelle expérience
         const response = await api.post('/experiences', values);
-        console.log(response.data);
         const newExperience = {
           id: response.data.data.id,
           titre_poste: values.titre_poste,

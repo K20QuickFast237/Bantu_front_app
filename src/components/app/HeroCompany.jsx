@@ -1,12 +1,14 @@
 import React from 'react';
 import CompanyBg from '../../assets/assets_application/Recherche_entreprise.png';
 import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
+import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; // Import de useNavigate
 import { ArrowLeft } from 'lucide-react'; // Import de l'icône de flèche
 
 const HeroCompany = () => {
   const navigate = useNavigate(); // Initialisation du hook
+  const { professionnel } = useAuth();
 
   const handleGoBack = () => {
     navigate('/dashboardEntreprise'); // Fonction de redirection
@@ -67,8 +69,8 @@ const HeroCompany = () => {
 
             {/* Company Info */}
             <div className='mt-15'>
-              <p className="text-[#10B981] text-xl sm:text-2xl font-bold">ATOM TECH</p>
-              <p className="text-gray-700 text-base sm:text-lg">contact@atomtechpro.com</p>
+              <p className="text-[#10B981] text-xl sm:text-2xl font-bold">{professionnel.nom_entreprise}</p>
+              <p className="text-gray-700 text-base sm:text-lg">{professionnel.email_pro}</p>
             </div>
           </div>
         </div>

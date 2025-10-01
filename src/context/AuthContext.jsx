@@ -41,8 +41,9 @@ export const AuthProvider = ({ children }) => {
         try {
           // Fetch /user pour données fraîches
           const response = await api.get('/user');
+          console.log(response);
           const apiUser = response.data.data || response.data;
-          console.log(response.data.profilCompleted);
+          console.log(response.data.data.profilCompleted);
           setUser(apiUser);
           setIsAuthenticated(true);
         } catch (error) {
@@ -57,11 +58,16 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    token, // FIX : Exposé pour les composants
+    token,
     isAuthenticated,
     isLoading,
-    login, 
-    logout
+    login,
+    logout,
+    // Exposition directe pour plus de praticité
+    particulier: user?.particulier || null,
+    professionnel: user?.professionnel || null,
+    profilCompleted: user?.profilCompleted || false,
+    role: user?.role || null,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
