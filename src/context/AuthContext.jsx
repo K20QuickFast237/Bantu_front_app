@@ -17,6 +17,11 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
   }
 
+  // Fonction pour mettre à jour l'utilisateur depuis d'autres composants
+  const updateUser = (updater) => {
+    setUser(updater);
+  };
+
   // Fonction pour déconnecter l'utilisateur
   const logout = async () => {
     try {
@@ -61,7 +66,8 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     isLoading,
     login, 
-    logout
+    logout,
+    updateUser // Exposer la nouvelle fonction
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
