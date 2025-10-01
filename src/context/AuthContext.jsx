@@ -17,6 +17,11 @@ export const AuthProvider = ({ children }) => {
     setIsAuthenticated(true);
   }
 
+  // Fonction pour mettre à jour l'utilisateur depuis d'autres composants
+  const updateUser = (updater) => {
+    setUser(updater);
+  };
+
   // Fonction pour déconnecter l'utilisateur
   const logout = async () => {
     try {
