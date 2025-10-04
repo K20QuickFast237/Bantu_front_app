@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
-import { Upload, X, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { ClipLoader } from "react-spinners";
+import { Upload, Trash2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -85,10 +87,12 @@ const MultiStepForm = () => {
     const fetchSkills = async () => {
       try {
         const response = await api.get('/skills');
-        console.log(response.data);
         setSkillsList(response.data) // [{id: 1, name: "React"}, {id: 2, name: "Laravel"}...]
       } catch (error) {
-        console.error("Erreur récupération skills :", error)
+        toast.error("rreur récupération competences", {
+          description: `${error}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        })
       }
     }
     fetchSkills()
@@ -175,11 +179,12 @@ const MultiStepForm = () => {
   
         console.log("Payload envoyé :", payload);
         await api.post('/offres', payload);
-  
-        alert("✅ Offre publiée avec succès !");
+        toast.success("Offre publiée avec succès !");
       } catch (error) {
-        console.error("❌ Erreur publication :", error);
-        alert("Erreur lors de la publication de l’offre");
+        toast.error("Erreur publication :", 
+          {
+            description: `${error} `|| "Erreur lors de la publication de l’offre"
+          });
       }
     };
 
@@ -434,13 +439,23 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Prix/Salaire / Rémunération Souhaitée</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération maximale Souhaitée</label>
         <input
           type="text"
           placeholder="Chiffrer en français"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           value={formData.remuneration_max}
         onChange={(e) => handleInputChange('remuneration_max', e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération minimale Souhaitée </label>
+        <input
+          type="text"
+          placeholder="Chiffrer en français"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          value={formData.remuneration_min}
+          onChange={(e) => handleInputChange('remuneration_min', e.target.value)}
         />
       </div>
 

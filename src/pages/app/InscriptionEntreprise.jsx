@@ -16,6 +16,7 @@ import {
   X,
 } from "lucide-react";
 import Header from "../../components/app/Header";
+import { ClipLoader } from "react-spinners";
 import Welcome1 from "../../assets/assets_application/welcome1.png";
 import { validationSchema } from "@/schemas";
 
@@ -92,7 +93,7 @@ const CompletionEntreprise = () => {
       num_contribuable: "",
     },
     validationSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm, setSubmitting }) => {
       try{
         const response = await api.post('/profile/professionnel', values);
         console.log(response.data);
@@ -106,6 +107,8 @@ const CompletionEntreprise = () => {
             description: `${err.response.data.message}` || "Email ou mot de passe incorrect. Veuillez réessayer.",
             duration: 5000,
         });
+      }finally{
+        setSubmitting(false);
       }
     },
   });
@@ -186,11 +189,12 @@ const CompletionEntreprise = () => {
           >
             <motion.button
               type="submit"
+              disabled={formik.isSubmitting }
               className="w-full bg-green-600 text-white py-3 rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200 font-semibold"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Enregistrer
+              {formik.isSubmitting  ? <ClipLoader size={22} color="#fff" /> : "Enregistrer"}
             </motion.button>
           </motion.div>
         </form>

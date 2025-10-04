@@ -7,9 +7,12 @@ import Icon1 from '../../assets/icon1.png'; // Postuler
 import Icon2 from '../../assets/icon2.png'; // Recruter
 import Icon3 from '../../assets/icon3.png'; // Acheter
 import Icon4 from '../../assets/icon4.png'; // Vendre
+import { useAuth } from '@/hooks/useAuth';
 
 const WhatDoYouWantToDo = () => {
     const navigate = useNavigate();
+    const { professionnel } = useAuth();
+    console.log(professionnel);
 
     // Fonction pour gérer le clic sur une carte
     const handleActionClick = (action) => {
@@ -21,7 +24,13 @@ const WhatDoYouWantToDo = () => {
                 navigate('/CandidatProfil');
                 break;
             case 'Recruter':
-                navigate('/inscriptionEntreprise');
+                if (professionnel && Object.keys(professionnel).length > 0) {
+                    // S'il est défini et non vide
+                    navigate('/dashboardEntreprise');
+                } else {
+                    // Sinon on l’envoie s’inscrire
+                    navigate('/inscriptionEntreprise');
+                }
                 break;
             case 'Acheter':
                 navigate('/acheter');
