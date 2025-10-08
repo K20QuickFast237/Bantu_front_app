@@ -267,45 +267,6 @@ const DiplomesFormations = () => {
             </DialogContent>
           </Dialog>
         </div>
-
-        {/* Liste des formations */}
-        {/* <div className="space-y-6">
-          {isLoading ? (
-            <div className="flex justify-center items-center p-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-            </div>
-          ) : formations.length === 0 ? (
-            <p className="text-gray-600">Aucune formation enregistrée.</p>
-          ) : (
-            formations.map((formation) => (
-              <div key={formation.id} className="flex justify-between items-start pb-4 border-b border-gray-200">
-                <div className="flex-grow">
-                  <p className="font-semibold text-gray-800">{formation.domaine_etude}</p>
-                  <p className="text-sm text-gray-600">{formation.etablissement}</p>
-                  <p className="text-sm text-gray-600">{formation.diplome}</p>
-                  <p className="text-sm text-gray-500">
-                    {formation.date_debut} - {formation.date_fin}
-                  </p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => openEditModal(formation)}
-                    className="flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 transition-colors text-xs"
-                  >
-                    <Edit size={14} className="mr-1" />
-                    Modifier
-                  </button>
-                  <button
-                    onClick={() => openDeleteModal(formation.id)}
-                    className="flex items-center px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors text-xs"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            ))
-          )}
-        </div> */}
         <div className="space-y-6">
           {isLoading ? (
             <div className="flex justify-center items-center p-8">

@@ -13,7 +13,7 @@ import {
   FileText,
   Users
 } from "lucide-react";
-
+import BantulinkLoader from '@/components/ui/BantulinkLoader';
 
 const JobOfferPage = () => {
   const { id } = useParams();
@@ -35,7 +35,9 @@ const JobOfferPage = () => {
     fetchJob();
   }, [id]);
 
-  if (loading) return <p className="text-center mt-20">Chargement...</p>;
+  if (loading) return <div className="flex items-center justify-center min-h-screen">
+        <BantulinkLoader/>
+      </div>;
   if (!job) return <p className="text-center mt-20">Offre non trouvée</p>;
 
   return (

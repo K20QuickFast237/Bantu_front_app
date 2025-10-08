@@ -3,6 +3,7 @@ import { MapPin, Clock, Calendar } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { motion } from 'framer-motion';
 import api from '@/services/api'; // 👈 ton instance axios déjà configurée
+import BantulinkLoader from '../ui/BantulinkLoader';
 
 const JobCard = () => {
   const [jobs, setJobs] = useState([]);
@@ -95,7 +96,7 @@ return (
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <p className="text-center text-gray-500">Chargement des offres...</p>
+          <BantulinkLoader/>
         ) : jobs.length === 0 ? (
           <p className="text-center text-gray-500">Aucune offre trouvée.</p>
         ) : (

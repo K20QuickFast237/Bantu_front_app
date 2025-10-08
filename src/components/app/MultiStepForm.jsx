@@ -4,6 +4,8 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import { ClipLoader } from "react-spinners";
 import { Upload, Trash2 } from 'lucide-react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import {
   Dialog,
   DialogContent,
@@ -15,75 +17,70 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Command,
+import {
+  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-  CommandList,} from "@/components/ui/command"
+  CommandList,
+} from "@/components/ui/command"
+
+const validationSchemas = [
+  // Step 1: EMPLOYEUR
+  Yup.object({
+    nom_entreprise: Yup.string().required('Nom requis'),
+    email_pro: Yup.string().email('Email invalide').required('Email requis'),
+    telephone_pro: Yup.string().required('Téléphone requis'),
+    pays: Yup.string().required('Pays requis'),
+    ville: Yup.string().required('Ville requise'),
+    adresse: Yup.string().required('Adresse requise'),
+    // Ajoute les autres validations si besoin
+  }),
+  // Step 2: OFFRE
+  Yup.object({
+    titre_poste: Yup.string().required('Titre requis'),
+    date_limite_soumission: Yup.string().required('Date requise'),
+    fonction: Yup.string().required('Fonction requise'),
+    // Ajoute les autres validations si besoin
+  }),
+  // Step 3: CANDIDATURE
+  Yup.object({
+    email_candidature: Yup.string().email('Email invalide').required('Email requis'),
+    // Ajoute les autres validations si besoin
+  }),
+  // Step 4: PUBLIER
+  Yup.object({}),
+];
 
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
+  const [formData, setFormData] = useState();
   const { professionnel } = useAuth();
-  const [formData, setFormData] = useState({
-      // EMPLOYEUR
-      nom_entreprise: '',
-      email_pro: '',
-      telephone_pro: '',
-      site_web: '',
-      logo: null,
-      pays: '',
-      ville: '',
-      adresse: '',
-      description_entreprise: '',
-
-  
-      // OFFRE
-      titre_poste: '',
-      date_limite_soumission: '',
-      fonction: '',
-      experience: '',
-      lieu_travail: '',
-      description_poste: '',
-      exigences: '',
-      responsabilites: '',
-      type_contrat: 'cdi',
-      remuneration_min: '',
-      remuneration_max: '',
-      
-      // CANDIDATURE
-      email_candidature: '',
-      url_candidature: '',
-      instructions_candidature: '',
-      documents_requis: ['CV', 'Lettre de motivation'],
-  
-      // Divers
-      skills: [],
-      statut: 'active',
-    });
-    const [documents, setDocuments] = useState([]);
-    const [newDoc, setNewDoc] = useState("");
+  const [documents, setDocuments] = useState([]);
+  const [newDoc, setNewDoc] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // 🔹 Préremplissage avec les infos du profil professionnel
-    useEffect(() => {
-      if (professionnel) {
-        setFormData((prev) => ({
-          ...prev,
-          nom_entreprise: professionnel.nom_entreprise || '',
-          email_pro: professionnel.email_pro || '',
-          telephone_pro: professionnel.telephone_pro || '',
-          site_web: professionnel.site_web || '',
-          pays: professionnel.pays || '',
-          ville: professionnel.ville || '',
-          adresse: professionnel.adresse || '',
-          description_entreprise: professionnel.description_entreprise || '',
-        }));
-      }
-    }, [professionnel]);
+  useEffect(() => {
+    if (professionnel) {
+      setFormData((prev) => ({
+        ...prev,
+        nom_entreprise: professionnel.nom_entreprise || '',
+        email_pro: professionnel.email_pro || '',
+        telephone_pro: professionnel.telephone_pro || '',
+        site_web: professionnel.site_web || '',
+        pays: professionnel.pays || '',
+        ville: professionnel.ville || '',
+        adresse: professionnel.adresse || '',
+        description_entreprise: professionnel.description_entreprise || '',
+      }));
+    }
+  }, [professionnel]);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchSkills = async () => {
       try {
         const response = await api.get('/skills');
@@ -95,22 +92,48 @@ const MultiStepForm = () => {
         })
       }
     }
-    fetchSkills()
+    fetchSkills();
   }, [])
 
-  // Ajouter une compétence
-  const addSkill = (id) => {
-    if (!formData.skills.includes(id)) {
-      setFormData(prev => ({ ...prev, skills: [...prev.skills, id] }))
+  const initialValues = {
+    nom_entreprise: professionnel?.nom_entreprise || '',
+    email_pro: professionnel?.email_pro || '',
+    telephone_pro: professionnel?.telephone_pro || '',
+    site_web: professionnel?.site_web || '',
+    logo: null,
+    pays: professionnel?.pays || '',
+    ville: professionnel?.ville || '',
+    adresse: professionnel?.adresse || '',
+    description_entreprise: professionnel?.description_entreprise || '',
+    titre_poste: '',
+    date_limite_soumission: '',
+    fonction: '',
+    experience: '',
+    lieu_travail: '',
+    description_poste: '',
+    exigences: '',
+    responsabilites: '',
+    type_contrat: 'cdi',
+    remuneration_min: '',
+    remuneration_max: '',
+    email_candidature: '',
+    url_candidature: '',
+    instructions_candidature: '',
+    documents_requis: ['CV', 'Lettre de motivation'],
+    skills: [],
+    statut: 'active',
+  };
+
+  // Remplace addSkill et removeSkill :
+  const addSkill = (id, formik) => {
+    if (!formik.values.skills.includes(id)) {
+      formik.setFieldValue('skills', [...formik.values.skills, id]);
     }
-  }
+  };
 
-  // Retirer une compétence
-  const removeSkill = (id) => {
-    setFormData(prev => ({ ...prev, skills: prev.skills.filter(s => s !== id) }))
-  }
-
-  
+  const removeSkill = (id, formik) => {
+    formik.setFieldValue('skills', formik.values.skills.filter(s => s !== id));
+  };
 
   const steps = [
     { number: 1, label: 'EMPLOYEUR', color: 'bg-orange-500' },
@@ -123,7 +146,7 @@ const MultiStepForm = () => {
   const addDocument = () => {
     if (newDoc && newDoc.trim() !== "") {
       setDocuments([...documents, newDoc]);
-      setNewDoc(""); 
+      setNewDoc("");
     }
   };
 
@@ -152,41 +175,25 @@ const MultiStepForm = () => {
     setCurrentStep(stepNumber);
   };
 
-  const handleSubmit = async () => {
-      try {
-        const payload = {
-          titre_poste: formData.titre_poste,
-          date_limite_soumission: formData.date_limite_soumission,
-          fonction: formData.fonction,
-          experience: formData.experience,
-          ville: formData.ville,
-          pays: formData.pays,
-          lieu_travail: formData.lieu_travail,
-          description_poste: formData.description_poste,
-          exigences: formData.exigences,
-          responsabilites: formData.responsabilites,
-          type_contrat: formData.type_contrat,
-          remuneration_max: formData.remuneration_max,
-          remuneration_min: formData.remuneration_min,
-          email_candidature: formData.email_candidature,
-          url_candidature: formData.url_candidature,
-          instructions_candidature: formData.instructions_candidature,
-          documents_requis: formData.documents_requis,
-          skills: formData.skills,
-          statut: formData.statut,
-          date_publication: new Date().toISOString().split('T')[0],
-        };
-  
-        console.log("Payload envoyé :", payload);
-        await api.post('/offres', payload);
-        toast.success("Offre publiée avec succès !");
-      } catch (error) {
-        toast.error("Erreur publication :", 
-          {
-            description: `${error} `|| "Erreur lors de la publication de l’offre"
-          });
-      }
-    };
+  const handleSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const payload = {
+        ...values,
+        documents_requis: documents.length > 0 ? documents : values.documents_requis,
+        skills: values.skills,
+        statut: values.statut,
+        date_publication: new Date().toISOString().split('T')[0],
+      };
+      await api.post('/offres', payload);
+      toast.success("Offre publiée avec succès !");
+    } catch (error) {
+      toast.error("Erreur publication :", {
+        description: `${error} ` || "Erreur lors de la publication de l’offre"
+      });
+    }
+    setLoading(false);
+  };
 
   const renderStepIndicator = () => (
     <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto px-4">
@@ -216,8 +223,9 @@ const MultiStepForm = () => {
   );
   <p className="bg-emerald-200 text-center w-80% font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
 
-  const renderEmployeurStep = () => (
-    <div className="max-w-8xl mx-auto space-y-6">
+  // Exemple d'intégration Formik pour le step 1
+  const renderEmployeurStep = (formik) => (
+    <Form className="max-w-8xl mx-auto space-y-6">
       <div className="text-center mb-6">
         <p className="bg-emerald-200  font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
       </div>
@@ -225,40 +233,37 @@ const MultiStepForm = () => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise *</label>
-          <input
-            type="text"
-            value={formData.nom_entreprise}
-            onChange={(e) => handleInputChange('nom_entreprise', e.target.value)}
+          <Field
+            name="nom_entreprise"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="nom_entreprise" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Email de l'entreprise *</label>
-          <input
+          <Field
+            name="email_pro"
             type="email"
-            value={formData.email_pro}
-            onChange={(e) => handleInputChange('email_pro', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="email_pro" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone de l'entreprise *</label>
-          <input
-            type="tel"
-            value={formData.telephone_pro}
-            onChange={(e) => handleInputChange('telephone_pro', e.target.value)}
+          <Field
+            name="telephone_pro"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="telephone_pro" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Site web de l'entreprise</label>
-          <input
+          <Field
+            name="site_web"
             type="url"
-            value={formData.site_web}
-            onChange={(e) => handleInputChange('site_web', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
@@ -282,51 +287,48 @@ const MultiStepForm = () => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Pays *</label>
-          <input
-            type="text"
-            value={formData.pays}
-            onChange={(e) => handleInputChange('pays', e.target.value)}
+          <Field
+            name="pays"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="pays" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Ville *</label>
-          <input
-            type="text"
-            value={formData.ville}
-            onChange={(e) => handleInputChange('ville', e.target.value)}
+          <Field
+            name="ville"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="ville" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
-          <input
-            type="text"
+          <Field
+            name="code_postal"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse locale *</label>
-          <input
-            type="text"
-            value={formData.adresse}
-            onChange={(e) => handleInputChange('adresse', e.target.value)}
+          <Field
+            name="adresse"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="adresse" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'entreprise</label>
-        <textarea
+        <Field
+          as="textarea"
+          name="description_entreprise"
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           placeholder="Décrivez votre entreprise..."
-          value={formData.description_entreprise}
-          onChange={(e) => handleInputChange('description_entreprise', e.target.value)}
         />
       </div>
 
@@ -334,128 +336,124 @@ const MultiStepForm = () => {
         <button
           type="button"
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          onClick={formik.handleReset}
         >
           Annuler
         </button>
         <button
-          onClick={handleNext}
+          type="submit"
           className="px-6 py-2 bg-orange-500 text-white rounded-md text-sm font-medium hover:bg-orange-600"
+          disabled={loading}
         >
-          Suivant
+          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </div>
+    </Form>
   );
 
-  const renderOffreStep = () => (
-    <div className="max-w-8xl mx-auto space-y-6">
+  const renderOffreStep = (formik) => (
+    <Form className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Titre de l'Offre</label>
-          <input
-            type="text"
+          <Field
+            name="titre_poste"
             placeholder="Titre du poste"
-            value={formData.titre_poste}
-            onChange={(e) => handleInputChange('titre_poste', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
+          <ErrorMessage name="titre_poste" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Date limite de soumission</label>
-          <input
+          <Field
+            name="date_limite_soumission"
             type="date"
-            value={formData.date_limite_soumission}
-            onChange={(e) => handleInputChange('date_limite_soumission', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
+          <ErrorMessage name="date_limite_soumission" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Fonction du poste</label>
-           <input
-            type="text"
-            value={formData.fonction}
-            onChange={(e) => handleInputChange('fonction', e.target.value)}
+          <Field
+            name="fonction"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
+          <ErrorMessage name="fonction" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
-          <select className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
-            <option>Débutant</option>
-            <option>Junior</option>
-            <option>Senior</option>
-          </select>
+          <Field as="select" name="experience" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            <option value="">Sélectionner</option>
+            <option value="debutant">Débutant</option>
+            <option value="junior">Junior</option>
+            <option value="senior">Senior</option>
+          </Field>
+          <ErrorMessage name="experience" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'offre</label>
-        <textarea
+        <Field
+          as="textarea"
+          name="description_poste"
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Décrivez l'offre d'emploi..."
-          value={formData.description_poste}
-        onChange={(e) => handleInputChange('description_poste', e.target.value)}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Responsabilités / Missions du poste</label>
-        <textarea
+        <Field
+          as="textarea"
+          name="responsabilites"
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les responsabilités..."
-          value={formData.responsabilites}
-          onChange={(e) => handleInputChange('responsabilites', e.target.value)}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Exigences du poste</label>
-        <textarea
+        <Field
+          as="textarea"
+          name="exigences"
           rows={3}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les exigences..."
-          value={formData.exigences}
-          onChange={(e) => handleInputChange('exigences', e.target.value)}
         />
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
-        <select 
-          value={formData.type_contrat}
-        onChange={(e) => handleInputChange('type_contrat', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-        >
+        <Field as="select" name="type_contrat" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
           <option value="cdi">CDI</option>
           <option value="cdd">CDD</option>
           <option value="stage">Stage</option>
           <option value="freelance">Freelance</option>
-        </select>
+        </Field>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération maximale Souhaitée</label>
-        <input
-          type="text"
+        <Field
+          name="remuneration_max"
+          type="number"
           placeholder="Chiffrer en français"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          value={formData.remuneration_max}
-        onChange={(e) => handleInputChange('remuneration_max', e.target.value)}
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération minimale Souhaitée </label>
-        <input
-          type="text"
+        <Field
+          name="remuneration_min"
+          type="number"
           placeholder="Chiffrer en français"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          value={formData.remuneration_min}
-          onChange={(e) => handleInputChange('remuneration_min', e.target.value)}
         />
       </div>
 
@@ -467,33 +465,33 @@ const MultiStepForm = () => {
           Retour
         </button>
         <button
-          onClick={handleNext}
+          type="submit"
           className="px-6 py-2 bg-green-500 text-white rounded-md text-sm font-medium hover:bg-green-600"
+          disabled={loading}
         >
-          Suivant
+          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </div>
+    </Form>
   );
 
-  const renderCandidatureStep = () => (
-    <div className="max-w-8xl mx-auto space-y-6">
+  const renderCandidatureStep = (formik) => (
+    <Form className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature *</label>
-          <input
+          <Field
+            name="email_candidature"
             type="email"
-            value={formData.email_candidature}
-            onChange={(e) => handleInputChange('email_candidature', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          <ErrorMessage name="email_candidature" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">URL de candidature (site web ou autre)</label>
-          <input
+          <Field
+            name="url_candidature"
             type="url"
-            value={formData.url_candidature}
-            onChange={(e) => handleInputChange('url_candidature', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -501,132 +499,132 @@ const MultiStepForm = () => {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Instructions de candidature (Facultatif)</label>
-        <textarea
+        <Field
+          as="textarea"
+          name="instructions_candidature"
           rows={4}
-          value={formData.instructions_candidature}
-          onChange={(e) => handleInputChange('instructions_candidature', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
       </div>
-       <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">
-        Compétences
-      </label>
+      <div className="space-y-3">
+        <label className="block text-sm font-medium text-gray-700">
+          Compétences
+        </label>
 
-      {/* Badges des compétences sélectionnées */}
-      <div className="flex flex-wrap gap-2">
-        {formData.skills.map((id) => {
-          const skill = skillsList.find((s) => s.id === id)
-          return (
-            <Badge
-              key={id}
-              onClick={() => removeSkill(id)}
-              className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white"
-            >
-              {skill ? skill.nom : id} ✕
-            </Badge>
-          )
-        })}
+        {/* Badges des compétences sélectionnées */}
+        <div className="flex flex-wrap gap-2">
+          {formik.values.skills.map((id) => {
+            const skill = skillsList.find((s) => s.id === id)
+            return (
+              <Badge
+                key={id}
+                onClick={() => removeSkill(id, formik)}
+                className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white"
+              >
+                {skill ? skill.nom : id} ✕
+              </Badge>
+            )
+          })}
+        </div>
+
+        {/* Liste des compétences avec recherche */}
+        <Command className="rounded-lg border shadow-md max-h-64 overflow-y-auto">
+          <CommandInput placeholder="Rechercher une compétence..." />
+          <CommandList>
+            <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              {skillsList.map((skill) => (
+                <CommandItem
+                  key={skill.id}
+                  onSelect={() => addSkill(skill.id, formik)}
+                >
+                  {skill.nom}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
       </div>
 
-      {/* Liste des compétences avec recherche */}
-      <Command className="rounded-lg border shadow-md max-h-64 overflow-y-auto">
-        <CommandInput placeholder="Rechercher une compétence..." />
-        <CommandList>
-          <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            {skillsList.map((skill) => (
-              <CommandItem
-                key={skill.id}
-                onSelect={() => addSkill(skill.id)}
-              >
-                {skill.nom}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </CommandList>
-      </Command>
-    </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Documents de candidature
+        </label>
 
-     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Documents de candidature
-      </label>
-
-      {/* ✅ Bouton qui ouvre la modal */}
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full flex items-center justify-center"
-          >
-            <Upload className="w-4 h-4 mr-2" />
-            Ajouter
-          </Button>
-        </DialogTrigger>
-
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ajouter un document requis</DialogTitle>
-          </DialogHeader>
-
-          <Input
-            type="text"
-            placeholder="Nom du document..."
-            value={newDoc}
-            onChange={(e) => setNewDoc(e.target.value)}
-          />
-
-          <DialogFooter>
+        {/*Bouton qui ouvre la modal */}
+        <Dialog>
+          <DialogTrigger asChild>
             <Button
+              type="button"
               variant="outline"
-              onClick={() => setNewDoc("")}
-              type="button"
+              className="w-full flex items-center justify-center"
             >
-              Annuler
-            </Button>
-            <Button
-              type="button"
-              onClick={addDocument}
-              disabled={!newDoc.trim()}
-            >
+              <Upload className="w-4 h-4 mr-2" />
               Ajouter
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DialogTrigger>
 
-      {/* Liste des documents */}
-      <div className="mt-4 space-y-2">
-        {documents.length > 0 ? (
-          documents.map((doc, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-3 border rounded"
-            >
-              <span>{doc}</span>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Ajouter un document requis</DialogTitle>
+            </DialogHeader>
+
+            <Input
+              type="text"
+              placeholder="Nom du document..."
+              value={newDoc}
+              onChange={(e) => setNewDoc(e.target.value)}
+            />
+
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setNewDoc("")}
+                type="button"
+              >
+                Annuler
+              </Button>
               <Button
                 type="button"
-                variant="destructive"
-                size="sm"
-                onClick={() => removeDocument(index)}
+                onClick={addDocument}
+                disabled={!newDoc.trim()}
               >
-                <Trash2 className="w-4 h-4 mr-1" />
-                Retirer
+                Ajouter
               </Button>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-sm">Aucun document ajouté</p>
-        )}
-      </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
-      <p className="text-sm text-blue-600 mt-2">
-        NB : Tout document spécifique sera demandé lors de la candidature en
-        ligne
-      </p>
-    </div>
+        {/* Liste des documents */}
+        <div className="mt-4 space-y-2">
+          {documents.length > 0 ? (
+            documents.map((doc, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded"
+              >
+                <span>{doc}</span>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => removeDocument(index)}
+                >
+                  <Trash2 className="w-4 h-4 mr-1" />
+                  Retirer
+                </Button>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm">Aucun document ajouté</p>
+          )}
+        </div>
+
+        <p className="text-sm text-blue-600 mt-2">
+          NB : Tout document spécifique sera demandé lors de la candidature en
+          ligne
+        </p>
+      </div>
       <div className="flex justify-between pt-6">
         <button
           onClick={handlePrevious}
@@ -635,17 +633,18 @@ const MultiStepForm = () => {
           Retour
         </button>
         <button
-          onClick={handleNext}
+          type="submit"
           className="px-6 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600"
+          disabled={loading}
         >
-          Suivant
+          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </div>
+    </Form>
   );
 
-  const renderPublierStep = () => (
-    <div className="max-w-8xl mx-auto text-center space-y-6">
+  const renderPublierStep = (formik) => (
+    <Form className="max-w-8xl mx-auto text-center space-y-6">
       <div className="mb-8">
         <div className="w-64 h-48 mx-auto bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
           <div className="text-orange-500 text-6xl">✓</div>
@@ -686,16 +685,16 @@ const MultiStepForm = () => {
         </button>
         <button
           disabled={!termsAccepted}
-          onClick={handleSubmit}
+          type="submit"
           className={`px-8 py-2 rounded-md text-sm font-medium ${termsAccepted
-              ? 'bg-orange-500 text-white hover:bg-orange-600'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            ? 'bg-orange-500 text-white hover:bg-orange-600'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
         >
           Publier
         </button>
       </div>
-    </div>
+    </Form>
   );
 
   const renderCurrentStep = () => {
@@ -714,14 +713,34 @@ const MultiStepForm = () => {
   };
 
   return (
-    <div className="min-h-screen mt-5 py-8">
-      <div className="container mx-auto px-4">
-        {renderStepIndicator()}
-        <div className="bg-white  p-8 max-w-6xl mx-auto">
-          {renderCurrentStep()}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchemas[currentStep - 1]}
+      onSubmit={(values, actions) => {
+        if (currentStep < 4) {
+          setCurrentStep(currentStep + 1);
+          actions.setSubmitting(false);
+        } else {
+          handleSubmit(values);
+          actions.setSubmitting(false);
+        }
+      }}
+      enableReinitialize
+    >
+      {(formik) => (
+        <div className="min-h-screen mt-5 py-8">
+          <div className="container mx-auto px-4">
+            {renderStepIndicator()}
+            <div className="bg-white p-8 max-w-6xl mx-auto">
+              {currentStep === 1 && renderEmployeurStep(formik)}
+              {currentStep === 2 && renderOffreStep(formik)}
+              {currentStep === 3 && renderCandidatureStep(formik)}
+              {currentStep === 4 && renderPublierStep(formik)}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </Formik>
   );
 };
 

@@ -3,49 +3,102 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
+import BantulinkLoader from '@/components/ui/BantulinkLoader';
+import { toast } from 'sonner';
 
 const JobApplicationForm = () => {
-  const { id } = useParams(); // Récupère l’ID du job depuis l’URL
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { professionnel } = useAuth(); // user connecté
+  const { particulier } = useAuth();
   const [job, setJob] = useState(null);
   const [applicationMethod, setApplicationMethod] = useState('bantuHire');
-  const [coverLetter, setCoverLetter] = useState(
-    `Bonjour,
-
-Je me permets de vous solliciter pour le poste de Business Developer CAM – Shopfloor, Belgique (f/x) – FR/NL F/H pour lequel je souhaite vous proposer ma candidature.
-Veuillez trouver en pièce jointe mon dossier.
-Je me tiens à votre disposition pour toutes questions relatives à mon profil.
-Bien cordialement.`
-  );
+  const [coverLetter, setCoverLetter] = useState('');
+  const [uploadedDocs, setUploadedDocs] = useState({});
+  const [loading, setLoading] = useState(false);
   const maxCharacters = 2000;
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const res = await api.get(`/offres/${id}`);
-        setJob(res.data);
+        let jobData = res.data;
+        if (
+          typeof jobData.documents_requis === "string" &&
+          jobData.documents_requis.startsWith("[")
+        ) {
+          try {
+            jobData.documents_requis = JSON.parse(jobData.documents_requis);
+          } catch (e) {
+            jobData.documents_requis = [];
+          }
+        }
+        setJob(jobData);
       } catch (error) {
-        console.error("Erreur de chargement de l'offre :", error);
         toast.error("Impossible de charger les informations de l'offre.");
       }
     };
     fetchJob();
   }, [id]);
 
-  // ✅ Soumission de la candidature
+  const handleFileChange = (docName, file) => {
+    setUploadedDocs(prev => ({
+      ...prev,
+      [docName]: file
+    }));
+  };
+
   const handleSubmitApplication = async () => {
-    if (!professionnel) {
+    if (!particulier) {
       toast.error("Veuillez vous connecter avant de postuler.");
       navigate('/connexion');
       return;
     }
-  }
+    setLoading(true);
+    try {
+      if (applicationMethod === 'bantuHire') {
+        // Appel API spécifique BantuHire
+        await api.post('/candidatures', {
+          offre_id: job.id,
+          motivation_text: coverLetter,
+          cv_genere: true
+        });
+        toast.success("Votre candidature a bien été envoyée !");
+        navigate('/mesCandidatures');
+      } else {
+        // Appel API classique avec fichiers
+        const formData = new FormData();
+        formData.append('offre_id', job.id);
+
+        // On ajoute toujours les fichiers si présents, sans vérifier documents_requis
+        if (uploadedDocs['cv']) {
+          formData.append('cv_url', uploadedDocs['cv']);
+        } else {
+          toast.error("Veuillez joindre votre CV.");
+          setLoading(false);
+          return;
+        }
+        if (uploadedDocs['lettre de motivation']) {
+          formData.append('motivation_url', uploadedDocs['lettre de motivation']);
+        } else {
+          toast.error("Veuillez joindre votre lettre de motivation.");
+          setLoading(false);
+          return;
+        }
+
+        await api.post('/candidatures', formData);
+        toast.success("Votre candidature a bien été envoyée !");
+        navigate('/mesCandidatures');
+      }
+    } catch (error) {
+      toast.error(`${error?.message} `||"Erreur lors de l'envoi de la candidature.");
+    }
+    setLoading(false);
+  };
 
   if (!job) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Chargement de l’offre...</p>
+        <BantulinkLoader />
       </div>
     );
   }
@@ -63,23 +116,6 @@ Bien cordialement.`
               </div>
               <h1 className="text-2xl font-bold text-gray-900">{job?.employeur?.nom_entreprise}</h1>
             </div>
-            <button className="flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors">
-              Partager
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5 ml-1"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186A.75.75 0 017.5 12V6a2.25 2.25 0 013-2.186m-3 2.186a2.25 2.25 0 00-3 2.186m3-2.186V12m0 0a2.25 2.25 0 003 2.186m-3-2.186A.75.75 0 0116.5 12V6a2.25 2.25 0 00-3-2.186m3 2.186a2.25 2.25 0 013 2.186m-3-2.186V12m0 0a2.25 2.25 0 013 2.186m-3-2.186A.75.75 0 007.5 12h9"
-                />
-              </svg>
-            </button>
           </div>
 
           <h2 className="text-3xl font-bold text-gray-900 mb-4">{job?.titre_poste}</h2>
@@ -110,30 +146,9 @@ Bien cordialement.`
             </div>
           </div>
 
-          {/* Sauvegarder Button */}
-          <div className="flex justify-start mb-8">
-            <button className="flex items-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-5 h-5 mr-2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-                />
-              </svg>
-              Sauvegarder
-            </button>
-          </div>
-
           {/* Ma candidature Section */}
           <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-            <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
+            <h3 className="text-orange-500 text-xl font-bold mb-4">Méthode de candidature</h3>
             <div className="space-y-4">
               <label className="flex items-center text-gray-700 cursor-pointer">
                 <input
@@ -143,7 +158,6 @@ Bien cordialement.`
                   checked={applicationMethod === 'bantuHire'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
                   className="form-radio h-5 w-5 text-green-600 border-gray-300 focus:ring-green-500"
-                  style={{ borderColor: applicationMethod === 'bantuHire' ? '#22C55E' : '#9CA3AF', color: applicationMethod === 'bantuHire' ? '#22C55E' : '' }}
                 />
                 <span className="ml-3">Je postule avec mon profil BantuHire</span>
               </label>
@@ -154,188 +168,167 @@ Bien cordialement.`
                   value="myCv"
                   checked={applicationMethod === 'myCv'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
-                  className="form-radio h-5 w-5 text-gray-600 border-gray-300 focus:ring-gray-500"
-                  style={{ borderColor: applicationMethod === 'myCv' ? '#D97706' : '#9CA3AF', color: applicationMethod === 'myCv' ? '#D97706' : '' }}
+                  className="form-radio h-5 w-5 text-orange-500 border-gray-300 focus:ring-orange-500"
                 />
-                <span className="ml-3">Je postule avec mon cv</span>
+                <span className="ml-3">Je postule avec mon CV</span>
               </label>
             </div>
           </div>
 
-          {/* Conditional Rendering Based on Application Method */}
+          {/* Dynamique selon la méthode */}
           {applicationMethod === 'bantuHire' ? (
-            <>
-              {/* Lettre de motivation Section (from JobApplicationForm.jsx) */}
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-                <h3 className="text-white text-xl font-bold px-4 py-3 rounded-t-lg" style={{ backgroundColor: '#10B981' }}>
-                  Lettre de motivation
-                </h3>
-                <div className="border border-gray-300 rounded-b-lg p-4">
-                  <textarea
-                    className="w-full h-48 p-2 text-gray-800 border-none focus:ring-0 focus:outline-none resize-none"
-                    placeholder="Bonjour,\n\nJe me permets de vous solliciter pour le poste de Business Developer CAM – Shopfloor, Belgique (f/x) – FR/NL F/H pour lequel je souhaite vous proposer ma candidature.\nVeuillez trouver en pièce jointe mon dossier.\nJe me tiens à votre disposition pour toutes questions relatives à mon profil.\nBien cordialement."
-                    value={coverLetter}
-                    onChange={(e) => setCoverLetter(e.target.value)}
-                    maxLength={maxCharacters}
-                    rows={10}
-                  ></textarea>
-                  <div className="text-right text-gray-500 text-sm mt-2">
-                    {coverLetter.length}/{maxCharacters} caractères
-                  </div>
-                </div>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-emerald-600 text-xl font-bold mb-4">Lettre de motivation</h3>
+              <textarea
+                className="w-full h-48 p-2 text-gray-800 border border-gray-300 rounded focus:ring-0 focus:outline-none resize-none"
+                placeholder="Rédigez votre lettre de motivation ici..."
+                value={coverLetter}
+                onChange={(e) => setCoverLetter(e.target.value)}
+                maxLength={maxCharacters}
+                rows={10}
+              />
+              <div className="text-right text-gray-500 text-sm mt-2">
+                {coverLetter.length}/{maxCharacters} caractères
               </div>
-
-              {/* Profil recherché Section (from JobApplicationForm.jsx) */}
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-                <h3 className="text-orange-500 text-xl font-bold mb-4">Profil recherché</h3>
-                <ul className="list-disc list-inside text-gray-700 space-y-2">
-                  <li>5 ans d'expérience minimum en design d'interfaces et d'expériences utilisateurs.</li>
-                  <li>Maîtrise des outils de design (Figma, Adobe XD, Sketch...).</li>
-                  <li>Maîtrise confirmée dans la conception de logiciels métiers complexes.</li>
-                  <li>Capacité à simplifier des interfaces riches sans perdre en efficacité.</li>
-                  <li>Sens du détail, créativité, autonomie et esprit d'équipe.</li>
-                  <li>Aisance dans la présentation de vos idées et livrables.</li>
-                  <li>Une sensibilité graphique pour les supports de communication est un plus.</li>
-                </ul>
-              </div>
-
-              {/* Bottom Action Buttons (from JobApplicationForm.jsx) */}
-              <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
-                <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-5 h-5 mr-2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M20.25 14.75V21H3.75V14.75A2.25 2.25 0 016 12.5h12a2.25 2.25 0 012.25 2.25zM12 9.5a3 3 0 100-6 3 3 0 000 6z"
-                    />
-                  </svg>
-                  Postuler
-                </button>
-                <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={2}
-                    stroke="currentColor"
-                    className="w-5 h-5 mr-2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
-                    />
-                  </svg>
-                  Sauvegarder
-                </button>
-              </div>
-            </>
+            </div>
           ) : (
-            <>
-              {/* My Application CV Section (from JobApplicationPage2.jsx) */}
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-                <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
-                <div className="space-y-4">
-                  <label className="flex items-start text-gray-700 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="applicationMethod"
-                      value="myCv"
-                      checked={applicationMethod === 'myCv'}
-                      onChange={(e) => setApplicationMethod(e.target.value)}
-                      className="form-radio h-4 w-4 text-orange-500 mt-1"
-                    />
-                    <div className="ml-2">
-                      <span>Je postule avec mon cv</span>
-                      <div className="flex items-center text-green-600 text-sm mt-1">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4 mr-1"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                          />
-                        </svg>
-                        <span>mon_cv.pdf</span>
-                      </div>
-                      <div className="mt-2 text-sm text-gray-500">
-                        <button className="text-blue-600 hover:underline">Importer un autre CV</button>
-                      </div>
-                      <div className="flex items-center space-x-2 mt-4">
-                        <button className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5 mr-2 text-gray-500"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
+              <div className="space-y-4">
+                {Array.isArray(job.documents_requis) && job.documents_requis.length > 0 ? (
+                  job.documents_requis.map((docName, idx) => (
+                    <label key={idx} className="flex items-start text-gray-700 cursor-pointer">
+                      <input
+                        type="radio"
+                        name={`applicationDoc_${docName}`}
+                        checked={true}
+                        readOnly
+                        className="form-radio h-4 w-4 text-orange-500 mt-1"
+                      />
+                      <div className="ml-2 w-full">
+                        <span>Joindre {docName}</span>
+                        {uploadedDocs[docName] ? (
+                          <div className="flex items-center text-green-600 text-sm mt-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                              />
+                            </svg>
+                            <span>{uploadedDocs[docName].name}</span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center text-gray-500 text-sm mt-1">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4 mr-1"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                              />
+                            </svg>
+                            <span>Aucun fichier sélectionné</span>
+                          </div>
+                        )}
+                        <div className="mt-2 text-sm text-gray-500">
+                          <label className="text-blue-600 hover:underline cursor-pointer">
+                            Importer un autre {docName}
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                              onChange={e => handleFileChange(docName, e.target.files[0])}
+                              className="hidden"
                             />
-                          </svg>
-                          Choisir Un Fichier
-                        </button>
-                        <button className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-2 mt-4">
+                          <label className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 mr-2 text-gray-500"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                              />
+                            </svg>
+                            Choisir Un Fichier
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                              onChange={e => handleFileChange(docName, e.target.files[0])}
+                              className="hidden"
                             />
-                          </svg>
-                        </button>
+                          </label>
+                          {uploadedDocs[docName] && (
+                            <button
+                              type="button"
+                              className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                              onClick={() => setUploadedDocs(prev => {
+                                const copy = { ...prev };
+                                delete copy[docName];
+                                return copy;
+                              })}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </label>
-                </div>
+                    </label>
+                  ))
+                ) : (
+                  <p className="text-gray-500">Aucun document requis pour cette offre.</p>
+                )}
               </div>
-
-              {/* Motivation Letter Section (from JobApplicationPage2.jsx) */}
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-                <h3 className="text-white bg-emerald-600 p-2 rounded-tr-2xl rounded-tl-2xl text-xl font-bold mb-4">Lettre de motivation</h3>
-                <div className="bg-gray-50 border border-gray-200 rounded-md p-4 text-gray-700 text-sm relative">
-                  <p>Bonjour,</p>
-                  <p className="mt-2">
-                    Je me permets de vous solliciter pour le poste de Business Developer CAM - Shopfloor, Belgique (IX) - FR/NL F/H pour lequel je souhaite vous proposer ma candidature.
-                  </p>
-                  <p className="mt-2">Veuillez trouver en pièce jointe mon dossier.</p>
-                  <p className="mt-2">Je me tiens à votre disposition pour toutes questions relatives à mon profil.</p>
-                  <p className="mt-2">Bien cordialement.</p>
-                  <div className="absolute bottom-2 right-2 text-xs text-gray-500">
-                    {coverLetter.length} / {maxCharacters} caractères
-                  </div>
-                </div>
-              </div>
-            </>
+            </div>
           )}
 
           {/* Envoyer ma candidature Button */}
           <div className="flex justify-center mt-6">
-            <button className="px-8 py-4 bg-orange-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-orange-600 transition-colors">
+            <button
+              className="px-8 py-4 bg-orange-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-orange-600 transition-colors flex items-center"
+              onClick={handleSubmitApplication}
+              disabled={loading}
+            >
+              {loading && (
+                <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+              )}
               Envoyer ma candidature
             </button>
           </div>

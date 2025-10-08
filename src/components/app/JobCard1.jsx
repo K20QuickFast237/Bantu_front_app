@@ -1,49 +1,35 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapPin, Clock, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom'; 
+import api from '@/services/api';
+import { useAuth } from '@/hooks/useAuth';
+import BantulinkLoader from '../ui/BantulinkLoader';
 
 const JobCard = () => {
-  const jobData = [
-    {
-      title: "Stage - Graphic & Motion Designer",
-      company: "ATOM TECH",
-      location: "Douala, akwa",
-      publicationDate: "30/06/2025",
-      contractType: "Stage",
-      workType: "Temps plein"
-    },
-    {
-      title: "Stage - Graphic & Motion Designer",
-      company: "ATOM TECH",
-      location: "Douala, akwa",
-      publicationDate: "30/06/2025",
-      contractType: "Stage",
-      workType: "Temps plein"
-    },
-    {
-      title: "Stage - Graphic & Motion Designer",
-      company: "ATOM TECH",
-      location: "Douala, akwa",
-      publicationDate: "30/06/2025",
-      contractType: "Stage",
-      workType: "Temps plein"
+  const { user } = useAuth();
+  const [jobData, setJobData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.id) {
+      api.get(`/matching/candidate/${user.id}`)
+        .then(res => setJobData(res.data || []))
+        .catch(() => setJobData([]))
+        .finally(() => setLoading(false));
     }
-  ];
+  }, [user]);
 
   const JobCardItem = ({ title, company, location, publicationDate, contractType, workType }) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-      
-      {/* Header with logo and company */}
       <div className="mb-4">
         <div className="flex flex-col gap-3">
           <div className='flex '>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-            <span className="text-xs font-semibold text-gray-600">Bantulink</span>
+              <span className="text-xs font-semibold text-gray-600">Bantulink</span>
+            </div>
+            <div className='mt-7 ml-3 font-semibold text-xl'>{company}</div>
           </div>
-          <div className='mt-7 ml-3 font-semibold text-xl'> ATOM TECH</div>
-          </div>
-          
           <Link to="/jobOffers"> 
             <h3 className="font-semibold underline hover:decoration-0 text-gray-900 text-lg leading-tight">
               {title}
@@ -51,24 +37,22 @@ const JobCard = () => {
           </Link>
         </div>
       </div>
-
-      {/* Publication date */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
         <Calendar className="w-4 h-4" />
         <span>Date de publication : {publicationDate}</span>
       </div>
-
-      {/* Location */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
         <span className="font-medium">Localisation :</span>
         <span>{location}</span>
       </div>
-
-      {/* Job details */}
       <div className="space-y-2 mb-4">
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <MapPin className="w-4 h-4" />
           <span>{location}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Clock className="w-4 h-4" />
+          <span>{contractType}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Clock className="w-4 h-4" />
@@ -80,50 +64,46 @@ const JobCard = () => {
 
   return (
     <>
-    <motion.section
+      <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-    
-     <div className="min-h-screen ">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+        <div className="min-h-screen ">
+          <div className="bg-white border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"></div>
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {loading ? (
+                <div className="col-span-3 text-center text-gray-500"><BantulinkLoader/></div>
+              ) : jobData.length === 0 ? (
+                <div className="col-span-3 text-center text-gray-500">Aucune offre trouvée.</div>
+              ) : (
+                jobData.map((job, index) => (
+                  <JobCardItem
+                    key={job.id || index}
+                    title={job.titre_poste}
+                    company={job.nom_entreprise || job.company}
+                    location={job.lieu_travail || job.location}
+                    publicationDate={job.date_publication || job.publicationDate}
+                    contractType={job.type_contrat || job.contractType}
+                    workType={job.workType || "Temps plein"}
+                  />
+                ))
+              )}
+            </div>
+            <div className="flex justify-start">
+              <Link to={"/rechercheOffre"}>
+                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                  Afficher plus
+                </button>
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Job Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          {jobData.map((job, index) => (
-            <JobCardItem
-              key={index}
-              title={job.title}
-              company={job.company}
-              location={job.location}
-              publicationDate={job.publicationDate}
-              contractType={job.contractType}
-              workType={job.workType}
-            />
-          ))}
-        </div>
-
-        {/* Load More Button */}
-        <div className="flex justify-start">
-          <Link to={"/rechercheOffre"}>
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-            Afficher plus
-          </button>
-          </Link>
-        </div>
-      </div>
-    </div>
-
-    </motion.section>
+      </motion.section>
     </>
   );
 };
