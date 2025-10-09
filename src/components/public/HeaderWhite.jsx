@@ -20,10 +20,7 @@ const HeaderWhite = () => {
       <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
-          <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">B</span>
-          </div>
-          <span className="ml-2 text-xl font-semibold text-gray-900">Bantulink</span>
+          <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
         </div>
 
         {/* Mobile Menu Button (Hamburger/Close Icon) */}
