@@ -5,7 +5,7 @@ import LeftArrowIcon from '../../assets/gauche.png';
 import RightArrowIcon from '../../assets/droite.png';
 import ReginaMilesImage from '../../assets/temoigne.png';
 import GraffittiRedIcon from '../../assets/Grafitti.png';
-import PhoneImage from '../../assets/telephone.png';
+import PhoneImage from '../../assets/telephone2.png';
 
 const TestimonialsSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -176,7 +176,7 @@ const TestimonialsSection = () => {
             <img
               src={PhoneImage}
               alt="SuperApp mobile interface"
-              className="w-1/2 max-w-sm h-auto relative z-10"
+              className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto relative z-10"
             />
           </motion.div>
         </motion.div>
