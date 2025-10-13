@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 
 // Importation des images
 import imgHero from '../../assets/imgHero.png';
+import imgHero2 from '../../assets/imgHero2.png';
 import fleche from '../../assets/fleche.png';
 import graffiti from '../../assets/graphitti.png';
 import ProfilesIcon from '../../assets/Profiles.png';
@@ -135,18 +136,19 @@ const HeroSection = () => {
             // Modification pour que le bas touche la fin de la section
             // Suppression de la classe translate-y négative
             className="absolute right-0 bottom-0
-                       w-[320px] h-[320px] md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] xl:w-[750px] xl:h-[750px]
+                       w-[320px] h-[320px] md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] xl:w-[650px] xl:h-[750px]
                        bg-contain bg-no-repeat bg-right-bottom z-10 animate-fade-in-right animation-delay-800
                        transform-gpu" // REMPLACÉ lg:-translate-y-48 par transform-gpu seul
-            style={{ backgroundImage: `url(${imgHero})` }}
+            // style={{ backgroundImage: `url(${imgHero})` }}
+            style={{ backgroundImage: `url(${imgHero2})` }}
           >
             {/* fleche.png par-dessus imgHero (la div de fond) */}
-            <img
+            {/* <img
               src={fleche}
               alt="Decorative arrow"
               className="absolute top-36 right-[-115px] w-full h-[80%] object-contain animate-bounce-slow"
               style={{ animationDelay: '1000ms' }}
-            />
+            /> */}
           </div>
         </div>
       </div>
