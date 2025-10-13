@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { toast } from 'sonner';
+import BantulinkLoader from '@/components/ui/BantulinkLoader';
 
 const COLORS = [
   'bg-blue-500',
@@ -44,6 +45,7 @@ const ApplicationsSection = () => {
       try {
         setLoading(true);
         const response = await api.get('/candidatures');
+        console.log(response.data);
         setApplications(response.data || []);
       } catch (error) {
         setApplications([]);
@@ -63,7 +65,7 @@ const ApplicationsSection = () => {
         </div>
         <div className="p-5 pt-0 space-y-3">
           {loading ? (
-            <div className="text-center text-gray-400 py-6">Chargement...</div>
+            <div className="text-center text-gray-400 py-6"><BantulinkLoader/></div>
           ) : applications.length === 0 ? (
             <div className="text-center text-gray-400 py-6">Aucune candidature trouvée.</div>
           ) : (

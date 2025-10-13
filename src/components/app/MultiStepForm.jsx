@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
@@ -25,6 +25,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { useNavigate } from 'react-router-dom';
 
 const validationSchemas = [
   // Step 1: EMPLOYEUR
@@ -35,19 +36,37 @@ const validationSchemas = [
     pays: Yup.string().required('Pays requis'),
     ville: Yup.string().required('Ville requise'),
     adresse: Yup.string().required('Adresse requise'),
-    // Ajoute les autres validations si besoin
+    description_entreprise: Yup.string().nullable(),
   }),
-  // Step 2: OFFRE
+  // Step 2: OFFRE (tous requis et typés)
   Yup.object({
     titre_poste: Yup.string().required('Titre requis'),
-    date_limite_soumission: Yup.string().required('Date requise'),
+    date_limite_soumission: Yup.date()
+      .typeError('Date invalide')
+      .required('Date requise'),
     fonction: Yup.string().required('Fonction requise'),
-    // Ajoute les autres validations si besoin
+    experience: Yup.string().required('Expérience requise'),
+    description_poste: Yup.string().required("Description requise"),
+    responsabilites: Yup.string().required("Responsabilités requises"),
+    exigences: Yup.string().required("Exigences requises"),
+    type_contrat: Yup.string()
+      .oneOf(['cdi', 'cdd', 'stage', 'freelance'], 'Type de contrat invalide')
+      .required('Type de contrat requis'),
+    remuneration_max: Yup.number()
+      .typeError('Montant invalide')
+      .required('Rémunération maximale requise')
+      .min(0, 'Doit être positif'),
+    remuneration_min: Yup.number()
+      .typeError('Montant invalide')
+      .required('Rémunération minimale requise')
+      .min(0, 'Doit être positif'),
   }),
   // Step 3: CANDIDATURE
   Yup.object({
     email_candidature: Yup.string().email('Email invalide').required('Email requis'),
-    // Ajoute les autres validations si besoin
+    url_candidature: Yup.string().url('URL invalide').nullable().required('URL requise'),
+    instructions_candidature: Yup.string().nullable().required('Instructions requises'),
+    skills: Yup.array().min(1, 'Au moins une compétence requise'),
   }),
   // Step 4: PUBLIER
   Yup.object({}),
@@ -62,6 +81,8 @@ const MultiStepForm = () => {
   const [newDoc, setNewDoc] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const formRef = useRef(null);
+  const navigate = useNavigate();
 
   // 🔹 Préremplissage avec les infos du profil professionnel
   useEffect(() => {
@@ -159,23 +180,40 @@ const MultiStepForm = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const scrollToTop = () => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const handleNext = () => {
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
+      scrollToTop();
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+      scrollToTop();
     }
   };
 
-  const handleStepClick = (stepNumber) => {
-    setCurrentStep(stepNumber);
+  const handleStepClick = async (stepNumber, formik) => {
+    if (stepNumber === currentStep) return;
+    // Validation avant de changer d'étape
+    const valid = await formik.validateForm();
+    formik.setTouched(
+      Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+    );
+    if (Object.keys(valid).length === 0) {
+      setCurrentStep(stepNumber);
+      scrollToTop();
+    }
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values, actions) => {
     setLoading(true);
     try {
       const payload = {
@@ -187,21 +225,35 @@ const MultiStepForm = () => {
       };
       await api.post('/offres', payload);
       toast.success("Offre publiée avec succès !");
+      actions.resetForm(); // Reset le formulaire
+      // Redirige vers dashboard_recruteur avec la section job-posts
+      navigate('/dashboard_recruteur', { state: { section: 'job-posts' } });
     } catch (error) {
       toast.error("Erreur publication :", {
-        description: `${error} ` || "Erreur lors de la publication de l’offre"
+        description: `${error} `|| "Erreur lors de la publication de l’offre"
       });
     }
     setLoading(false);
   };
 
-  const renderStepIndicator = () => (
+  // Passe formik à renderStepIndicator
+  const renderStepIndicator = (formik) => (
     <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto px-4">
       {steps.map((step, index) => (
         <React.Fragment key={step.number}>
           <div
             className="flex flex-col text-orange-600 items-center cursor-pointer"
-            onClick={() => handleStepClick(step.number)}
+            onClick={async () => {
+              if (step.number === currentStep) return;
+              // Validation avant de changer d'étape
+              const valid = await formik.validateForm();
+              formik.setTouched(
+                Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+              );
+              if (Object.keys(valid).length === 0) {
+                setCurrentStep(step.number);
+              }
+            }}
           >
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${currentStep === step.number ? step.color : 'bg-gray-300'
@@ -266,11 +318,12 @@ const MultiStepForm = () => {
             type="url"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="site_web" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Votre logo</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Votre logo</label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <div className="bg-gray-200 w-24 h-16 mx-auto rounded flex items-center justify-center mb-4">
             <span className="text-gray-500 text-sm">Rechercher</span>
@@ -310,6 +363,7 @@ const MultiStepForm = () => {
             name="code_postal"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
+          <ErrorMessage name="code_postal" component="div" className="text-red-500 text-xs" />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse locale *</label>
@@ -330,6 +384,7 @@ const MultiStepForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           placeholder="Décrivez votre entreprise..."
         />
+        <ErrorMessage name="description_entreprise" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div className="flex justify-between pt-6">
@@ -404,6 +459,7 @@ const MultiStepForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Décrivez l'offre d'emploi..."
         />
+        <ErrorMessage name="description_poste" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div>
@@ -415,6 +471,7 @@ const MultiStepForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les responsabilités..."
         />
+        <ErrorMessage name="responsabilites" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div>
@@ -426,6 +483,7 @@ const MultiStepForm = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les exigences..."
         />
+        <ErrorMessage name="exigences" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div>
@@ -436,6 +494,7 @@ const MultiStepForm = () => {
           <option value="stage">Stage</option>
           <option value="freelance">Freelance</option>
         </Field>
+        <ErrorMessage name="type_contrat" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div>
@@ -446,6 +505,7 @@ const MultiStepForm = () => {
           placeholder="Chiffrer en français"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
+        <ErrorMessage name="remuneration_max" component="div" className="text-red-500 text-xs" />
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération minimale Souhaitée </label>
@@ -455,6 +515,7 @@ const MultiStepForm = () => {
           placeholder="Chiffrer en français"
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
+        <ErrorMessage name="remuneration_min" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div className="flex justify-between pt-6">
@@ -494,6 +555,7 @@ const MultiStepForm = () => {
             type="url"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
+          <ErrorMessage name="url_candidature" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
 
@@ -505,6 +567,7 @@ const MultiStepForm = () => {
           rows={4}
           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
+        <ErrorMessage name="instructions_candidature" component="div" className="text-red-500 text-xs" />
       </div>
       <div className="space-y-3">
         <label className="block text-sm font-medium text-gray-700">
@@ -544,6 +607,7 @@ const MultiStepForm = () => {
             </CommandGroup>
           </CommandList>
         </Command>
+        <ErrorMessage name="skills" component="div" className="text-red-500 text-xs" />
       </div>
 
       <div>
@@ -697,6 +761,26 @@ const MultiStepForm = () => {
     </Form>
   );
 
+  // Fonction de validation globale
+  const validateAllSteps = async (values) => {
+    try {
+      // Fusionne tous les schémas
+      const fullSchema = validationSchemas
+        .reduce((acc, schema) => acc.concat(schema), Yup.object({}));
+      await fullSchema.validate(values, { abortEarly: false });
+      return {};
+    } catch (err) {
+      // Transforme les erreurs Yup en objet { champ: message }
+      const errors = {};
+      if (err.inner) {
+        err.inner.forEach(e => {
+          if (!errors[e.path]) errors[e.path] = e.message;
+        });
+      }
+      return errors;
+    }
+  };
+
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
@@ -716,21 +800,34 @@ const MultiStepForm = () => {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchemas[currentStep - 1]}
-      onSubmit={(values, actions) => {
+      onSubmit={async (values, actions) => {
         if (currentStep < 4) {
           setCurrentStep(currentStep + 1);
+          scrollToTop(); // Ajoute ceci ici !
           actions.setSubmitting(false);
         } else {
-          handleSubmit(values);
+          // Validation globale avant publication
+          const errors = await validateAllSteps(values);
+          if (Object.keys(errors).length > 0) {
+            actions.setErrors(errors);
+            // Affiche tous les champs comme touchés pour voir les erreurs
+            actions.setTouched(
+              Object.keys(values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+            );
+            toast.error("Veuillez corriger les erreurs dans le formulaire.");
+            actions.setSubmitting(false);
+            return;
+          }
+          await handleSubmit(values, actions);
           actions.setSubmitting(false);
         }
       }}
       enableReinitialize
     >
       {(formik) => (
-        <div className="min-h-screen mt-5 py-8">
+        <div ref={formRef} className="min-h-screen mt-5 py-8">
           <div className="container mx-auto px-4">
-            {renderStepIndicator()}
+            {renderStepIndicator(formik)}
             <div className="bg-white p-8 max-w-6xl mx-auto">
               {currentStep === 1 && renderEmployeurStep(formik)}
               {currentStep === 2 && renderOffreStep(formik)}

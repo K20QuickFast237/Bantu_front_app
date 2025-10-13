@@ -17,7 +17,7 @@ import {
   ArrowLeft, // Importez l'icône de flèche gauche
   ArrowLeftRight,
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom'; // Importez le hook de navigation
+import { useNavigate, useLocation } from 'react-router-dom'; // Importez le hook de navigation
 import Footer from '../../components/public/Footer';
 import DashboardSection from './DashboardSection';
 import JobPostsSection from './JobPostsSection';
@@ -201,7 +201,10 @@ const HeaderDashRecru = () => {
 
 // Composant principal DashboardRecruteurprofil
 const DashboardRecruteurprofil = () => {
-  const [activeSection, setActiveSection] = useState('dashboard');
+  const location = useLocation();
+  const [activeSection, setActiveSection] = useState(
+    location.state?.section || 'dashboard'
+  );
   const [animateCards, setAnimateCards] = useState(false);
 
   useEffect(() => {
