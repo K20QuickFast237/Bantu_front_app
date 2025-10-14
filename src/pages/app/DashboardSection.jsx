@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Eye,
   FileText,
@@ -11,6 +11,8 @@ import {
   Search,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import api from '@/services/api';
+import { useAuth } from '@/hooks/useAuth';
 
 // Composants UI réutilisables
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
@@ -77,99 +79,52 @@ const AvatarFallback = ({ children, className = '', ...props }) => (
 
 const DashboardSection = ({ animateCards }) => {
   const navigate = useNavigate();
+  const [stats, setStats] = useState([
+    { title: '0', subtitle: 'Vues Totales', color: 'bg-blue-50 border-blue-200', icon: Eye, iconColor: 'text-blue-600' },
+    { title: '0', subtitle: 'Candidatures cette semaine', color: 'bg-green-50 border-green-200', icon: FileText, iconColor: 'text-green-600' },
+    { title: '0', subtitle: 'Entretiens planifiés', color: 'bg-yellow-50 border-yellow-200', icon: Calendar, iconColor: 'text-yellow-600' },
+    { title: '0', subtitle: 'Candidats actifs', color: 'bg-pink-50 border-pink-200', icon: Users, iconColor: 'text-pink-600' },
+  ]);
+  const [jobPosts, setJobPosts] = useState([]);
+  const [recentApplications, setRecentApplications] = useState([]);
+  const { user } = useAuth();
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [offersResponse, applicationsResponse] = await Promise.all([
+          api.get('/mesoffres'),
+          api.get('/candidatures')
+        ]);
+
+        setJobPosts(offersResponse.data.data || []);
+        setRecentApplications(applicationsResponse.data || []);
+
+        // Calculer les stats
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+        const applicationsThisWeek = (applicationsResponse.data || []).filter(app => new Date(app.created_at) >= oneWeekAgo);
+
+        setStats(prevStats => [
+          { ...prevStats[0], title: '234' }, // TODO: Remplacer par des données dynamiques quand l'API sera prête
+          { ...prevStats[1], title: applicationsThisWeek.length },
+          { ...prevStats[2], title: '5' }, // TODO: Remplacer par des données dynamiques
+          { ...prevStats[3], title: '12' }, // TODO: Remplacer par des données dynamiques
+        ]);
+
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données du dashboard:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleCreateJobClick = () => {
     navigate('/createJob');
   };
-
-  const stats = [
-    {
-      title: '234',
-      subtitle: 'Vues Totales',
-      color: 'bg-blue-50 border-blue-200',
-      icon: Eye,
-      iconColor: 'text-blue-600'
-    },
-    {
-      title: '28',
-      subtitle: 'Candidatures cette semaine',
-      color: 'bg-green-50 border-green-200',
-      icon: FileText,
-      iconColor: 'text-green-600'
-    },
-    {
-      title: '5',
-      subtitle: 'Entretiens planifiés',
-      color: 'bg-yellow-50 border-yellow-200',
-      icon: Calendar,
-      iconColor: 'text-yellow-600'
-    },
-    {
-      title: '12',
-      subtitle: 'Candidats actifs',
-      color: 'bg-pink-50 border-pink-200',
-      icon: Users,
-      iconColor: 'text-pink-600'
-    },
-  ];
-
-  const jobPosts = [
-    {
-      title: 'Développeur Frontend',
-      company: 'Tech Company',
-      postedDays: 2,
-      applicants: 15,
-      status: 'actif',
-      statusColor: 'bg-green-500'
-    },
-    {
-      title: 'Designer UI/UX',
-      company: 'Design Studio',
-      postedDays: 5,
-      applicants: 8,
-      status: 'actif',
-      statusColor: 'bg-green-500'
-    },
-    {
-      title: 'Développeur Backend',
-      company: 'StartupXYZ',
-      postedDays: 1,
-      applicants: 23,
-      status: 'fermé',
-      statusColor: 'bg-red-500'
-    }
-  ];
-
-  const recentApplications = [
-    {
-      name: 'Sarah Martinez',
-      position: 'Dev Frontend',
-      time: 'il y a 2 heures',
-      avatar: 'SM',
-      color: 'bg-blue-500'
-    },
-    {
-      name: 'Paul Samuelle',
-      position: 'Designer',
-      time: 'il y a 1 jour',
-      avatar: 'PS',
-      color: 'bg-green-500'
-    },
-    {
-      name: 'Sarah Shaule',
-      position: 'Développeur',
-      time: 'il y a 3 jours',
-      avatar: 'SS',
-      color: 'bg-red-500'
-    },
-    {
-      name: 'David Stranges',
-      position: 'Manager',
-      time: 'il y a 1 semaine',
-      avatar: 'DS',
-      color: 'bg-orange-500'
-    }
-  ];
 
   const quickActions = [
     {
@@ -210,7 +165,7 @@ const DashboardSection = ({ animateCards }) => {
     <main className="flex-1 p-5 overflow-auto">
       <div className="flex justify-between items-center mb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900 mb-1">Bienvenue, Jean !</h1>
+          <h1 className="text-xl font-bold text-gray-900 mb-1">Bienvenue, {user.nom}</h1>
           <p className="text-sm text-gray-600">Voici votre tableau de bord de recrutement pour aujourd'hui.</p>
         </div>
         <div className="relative w-full max-w-xs">
@@ -261,25 +216,32 @@ const DashboardSection = ({ animateCards }) => {
               </Button>
             </CardHeader>
             <CardContent className="space-y-3">
-              {jobPosts.map((job, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transform hover:scale-[1.02] transition-transform"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-2.5 h-2.5 rounded-full ${job.statusColor}`}></div>
-                    <div>
-                      <h4 className="font-medium text-sm text-gray-900">{job.title}</h4>
-                      <p className="text-xs text-gray-600">{job.company}</p>
-                      <p className="text-xs text-gray-500">Publié il y a {job.postedDays} jours • {job.applicants} candidats</p>
+              {jobPosts.slice(0, 3).map((job) => {
+                const postedDate = new Date(job.created_at);
+                const today = new Date();
+                const diffTime = Math.abs(today - postedDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                return (
+                  <div
+                    key={job.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transform hover:scale-[1.02] transition-transform"
+                  >
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-2.5 h-2.5 rounded-full ${job.statut === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <div>
+                        <h4 className="font-medium text-sm text-gray-900">{job.titre_poste}</h4>
+                        <p className="text-xs text-gray-600">{job.nom_entreprise || 'Entreprise'}</p>
+                        <p className="text-xs text-gray-500">Publié il y a {diffDays} jours • {job.candidatures_count || 0} candidats</p>
+                      </div>
                     </div>
+                    <Button onClick={() => navigate(`/dashboard_candidature_spec/${job.id}`)} variant="outline" size="sm" className="hover:scale-105 transition-transform">
+                      <Eye className="w-3.5 h-3.5 mr-1.5" />
+                      Voir les candidatures
+                    </Button>
                   </div>
-                  <Button variant="outline" size="sm" className="hover:scale-105 transition-transform">
-                    <Eye className="w-3.5 h-3.5 mr-1.5" />
-                    Voir les candidatures
-                  </Button>
-                </div>
-              ))}
+                )
+              })}
             </CardContent>
           </Card>
         </div>
@@ -293,26 +255,37 @@ const DashboardSection = ({ animateCards }) => {
               </Button>
             </CardHeader>
             <CardContent className="space-y-3">
-              {recentApplications.map((application, index) => (
-                <div
-                  key={index}
-                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transform hover:scale-105 transition-all"
-                >
-                  <Avatar className="w-8 h-8">
-                    <AvatarFallback className={`${application.color} text-white text-xs`}>
-                      {application.avatar}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-sm text-gray-900 truncate">{application.name}</p>
-                    <p className="text-xs text-gray-600">{application.position}</p>
-                    <p className="text-xs text-gray-500">{application.time}</p>
+              {recentApplications.slice(0, 4).map((application) => {
+                const applicationDate = new Date(application.created_at);
+                const today = new Date();
+                const diffTime = Math.abs(today - applicationDate);
+                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
+                const timeAgo = diffDays > 0 ? `il y a ${diffDays} jour(s)` : `il y a ${diffHours} heure(s)`;
+                const avatarColors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-orange-500', 'bg-purple-500'];
+                const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+
+                return (
+                  <div
+                    key={application.id}
+                    className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer transform hover:scale-105 transition-all"
+                  >
+                    <Avatar className="w-8 h-8">
+                      <AvatarFallback className={`${randomColor} text-white text-xs`}>
+                        {application.candidat?.nom?.substring(0, 2).toUpperCase() || 'N/A'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm text-gray-900 truncate">{application.candidat?.nom || 'Candidat Anonyme'}</p>
+                      <p className="text-xs text-gray-600">{application.offre?.titre_poste || 'Poste non spécifié'}</p>
+                      <p className="text-xs text-gray-500">{timeAgo}</p>
+                    </div>
+                    <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.candidat_id}`)}>
+                      Voir
+                    </Button>
                   </div>
-                  <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform">
-                    Voir
-                  </Button>
-                </div>
-              ))}
+                )
+              })}
             </CardContent>
           </Card>
         </div>

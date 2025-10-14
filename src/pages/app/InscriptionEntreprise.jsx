@@ -101,7 +101,7 @@ const CompletionEntreprise = () => {
             duration: 3000,
         });
         resetForm();
-        navigate("/dashboardEntreprise");
+        navigate("/dashboardrecruteurprofil");
       }catch(err){
         toast.error("Erreur de connexion", {
             description: `${err.response.data.message}` || "Email ou mot de passe incorrect. Veuillez réessayer.",
