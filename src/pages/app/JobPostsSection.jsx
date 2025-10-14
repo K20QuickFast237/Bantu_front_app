@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Eye, Pencil, Trash } from "lucide-react";
+import api from "@/services/api";
+import BantulinkLoader from "@/components/ui/BantulinkLoader";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,9 +13,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import api from "@/services/api";
-import BantulinkLoader from "@/components/ui/BantulinkLoader";
 
 const JobPostsSection = () => {
   const [jobPosts, setJobPosts] = useState([]);
@@ -22,7 +22,6 @@ const JobPostsSection = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  // 🔹 Charger les offres
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -37,7 +36,6 @@ const JobPostsSection = () => {
     fetchJobs();
   }, []);
 
-  // 🔹 Ouvrir la modale d'édition
   const handleUpdate = (job) => {
     setSelectedJob(job);
     setFormData({
@@ -47,7 +45,6 @@ const JobPostsSection = () => {
     setOpenDialog(true);
   };
 
-  // 🔹 Soumettre la mise à jour
   const submitUpdate = async () => {
     try {
       await api.put(`/offres/${selectedJob.id}`, formData);
@@ -62,13 +59,11 @@ const JobPostsSection = () => {
     }
   };
 
-  // 🔹 Ouvrir la modale de confirmation avant suppression
   const confirmDelete = (job) => {
     setSelectedJob(job);
     setIsDeleteModalOpen(true);
   };
 
-  // 🔹 Supprimer après confirmation
   const handleConfirmDelete = async () => {
     try {
       await api.delete(`/offres/${selectedJob.id}`);
@@ -80,60 +75,74 @@ const JobPostsSection = () => {
     }
   };
 
+  // Pour le bouton "Afficher"
+  const handleViewApplications = (job) => {
+    window.location.href = `/dashboard_candidature_spec/${job.id}`;
+  };
+
   if (loading) return <BantulinkLoader />;
 
   return (
     <main className="flex-1 p-5 overflow-auto">
-      <div className="space-y-3">
+      <h2 className="text-2xl font-bold mb-2">Vos offres d'emploi</h2>
+      <p className="text-gray-500 mb-6 text-sm">Last login: Today at 9:30 AM</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         {jobPosts.map((job) => (
           <div
             key={job.id}
-            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transform hover:scale-[1.02] transition-transform"
+            className="bg-white rounded-xl shadow border border-gray-200 p-5 flex flex-col space-y-3"
           >
-            <div className="flex items-center space-x-3">
-              <div className={`w-2.5 h-2.5 rounded-full ${job.statusColor}`}></div>
-              <div>
-                <h4 className="font-medium text-sm text-gray-900">{job.titre_poste}</h4>
-                <p className="text-xs text-gray-600">{job.company}</p>
-                <p className="text-xs text-gray-500">
-                  Posté il y a {job.postedDays} jours • {job.applicants} candidats
-                </p>
+            <h3 className="font-bold text-lg mb-1">{job.titre_poste}</h3>
+            <div className="text-sm text-gray-700 mb-2">
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Date de publication :</span>
+                <span>{job.date_publication ? job.date_publication.split('-').reverse().join('/') : 'Non Spécifié'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-medium">Deadline :</span>
+                <span>{job.date_limite_soumission ? job.date_limite_soumission.split('-').reverse().join('/') : 'Non Spécifié'}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>⏲️</span>
+                <span>{job.type_contrat === "cdi" ? "Temps plein" : "Temps partiel"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>💰</span>
+                <span>Salaire : {job.remuneration_min ? `${job.remuneration_min} - ${job.remuneration_max || ''}` : "Non Spécifié"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>📄</span>
+                <span>Type de contra : {job.type_contrat ? job.type_contrat.toUpperCase() : "Non Spécifié"}</span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex gap-2 mt-2">
               <Button
-                variant="outline"
                 size="sm"
-                className="hover:scale-105 transition-transform"
+                className="bg-green-500 hover:bg-green-600 text-white px-4"
                 onClick={() => handleViewApplications(job)}
               >
-                <Eye className="w-3.5 h-3.5 mr-1.5" />
-                Voir candidatures
+                Afficher
               </Button>
               <Button
-                variant="outline"
                 size="sm"
-                className="hover:scale-105 transition-transform text-blue-600 border-blue-200"
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4"
                 onClick={() => handleUpdate(job)}
               >
-                <Pencil className="w-3.5 h-3.5 mr-1.5" />
                 Modifier
               </Button>
               <Button
-                variant="outline"
                 size="sm"
-                className="hover:scale-105 transition-transform text-red-600 border-red-200"
+                className="bg-red-500 hover:bg-red-600 text-white px-4"
                 onClick={() => confirmDelete(job)}
               >
-                <Trash className="w-3.5 h-3.5 mr-1.5" />
-                Supprimer
+                <Trash className="w-4 h-4 mr-1" />
               </Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* 🔸 Modal de mise à jour */}
+      {/* Modal de mise à jour */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
@@ -167,7 +176,7 @@ const JobPostsSection = () => {
         </DialogContent>
       </Dialog>
 
-      {/* 🔸 Modal de confirmation de suppression */}
+      {/* Modal de confirmation de suppression */}
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
