@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+// Importation de motion et ArrowLeft nécessaire pour la flèche animée
+import { motion } from 'framer-motion';
+import { ArrowLeft } from "lucide-react"; 
+
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
 import PageWrapper from '@/components/public/PageWrapper';
@@ -44,12 +48,26 @@ const JobOfferPage = () => {
     <>
       <PageWrapper>
         <HeaderProfil />
-        <div className="min-h-screen bg-gray-100 font-sans relative">
-          <Link to={"/CandidatProfil"}>
-            <button className='ml-5 border-2 px-4 mt-2 py-2 bg-gray-800 text-white rounded-2xl'>
-              retour
-            </button>
+        <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
+          
+          {/* Remplacement du bouton 'retour' par la flèche animée */}
+          <Link 
+              to={"/CandidatProfil"} 
+              // J'ai mis la flèche en position absolue en haut à gauche
+              className="absolute top-4 left-4 md:left-10 z-20"
+              aria-label="Retour au profil candidat"
+          >
+              <motion.div
+                  className="p-2 cursor-pointer transition-colors"
+                  // Animation au survol: petite échelle et décalage vers la gauche
+                  whileHover={{ scale: 1.2, x: -5 }} 
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              >
+                  {/* Icône ArrowLeft (avec trait) en bleu gras, sans arrière-plan */}
+                  <ArrowLeft className="w-8 h-8 text-blue-600 drop-shadow-md" />
+              </motion.div>
           </Link>
+          {/* Fin du remplacement */}
 
           {/* Fixed Footer for mobile */}
           <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
