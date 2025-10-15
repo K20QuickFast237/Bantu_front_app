@@ -49,8 +49,8 @@ const JobApplicationForm = () => {
 
   const handleSubmitApplication = async () => {
     if (!particulier) {
-      toast.error("Veuillez vous connecter avant de postuler.");
-      navigate('/connexion');
+      toast.error("Veuillez completer votre profil pour pouvoir postuler.");
+      // navigate('/connexion');
       return;
     }
     setLoading(true);
@@ -87,7 +87,7 @@ const JobApplicationForm = () => {
 
         await api.post('/candidatures', formData);
         toast.success("Votre candidature a bien été envoyée !");
-        navigate('/mesCandidatures');
+        navigate('/CandidatProfil');
       }
     } catch (error) {
       toast.error(`${error?.message} `||"Erreur lors de l'envoi de la candidature.");
