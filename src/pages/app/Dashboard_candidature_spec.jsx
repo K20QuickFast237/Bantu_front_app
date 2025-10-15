@@ -110,8 +110,8 @@ export default function DashboardCandidatureSpec() {
                                     <th className="px-6 py-3 text-left font-semibold text-gray-700 w-16"></th>
                                     <th className="px-6 py-3 text-left font-semibold text-gray-700">Nom de candidat</th>
                                     <th className="px-6 py-3 text-left font-semibold text-gray-700">Offre d'emploi</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Addresse</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Status</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Adresse</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Statut</th>
                                     <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
                                 </tr>
                             </thead>
@@ -130,8 +130,8 @@ export default function DashboardCandidatureSpec() {
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
-                                                <div className={`w-3 h-3 rounded-full bg-gray-300`}></div>
-                                                <span className="text-gray-700">{candidate.statut || ''}</span>
+                                                <div className="w-3 h-3 rounded-full bg-gray-800"></div> {/* Rond noir par défaut */}
+                                                <span className="text-gray-700">candidature</span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4">

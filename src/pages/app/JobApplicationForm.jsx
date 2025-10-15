@@ -11,9 +11,9 @@ const JobApplicationForm = () => {
   const navigate = useNavigate();
   const { particulier } = useAuth();
   const [job, setJob] = useState(null);
-  const [applicationMethod, setApplicationMethod] = useState('bantuHire');
-  const [coverLetter, setCoverLetter] = useState('');
-  const [uploadedDocs, setUploadedDocs] = useState({});
+  const [applicationMethod, setApplicationMethod] = useState('profil'); // Nouveau : 'profil' ou 'docs'
+  const [coverLetter, setCoverLetter] = useState(''); // Lettre pour profil
+  const [uploadedDocs, setUploadedDocs] = useState({ cv: null, certificats: [] }); // Pour docs
   const [loading, setLoading] = useState(false);
   const maxCharacters = 2000;
 
@@ -41,10 +41,11 @@ const JobApplicationForm = () => {
   }, [id]);
 
   const handleFileChange = (docName, file) => {
-    setUploadedDocs(prev => ({
-      ...prev,
-      [docName]: file
-    }));
+    if (docName === 'certificats') {
+      setUploadedDocs(prev => ({ ...prev, certificats: [...prev.certificats, file] }));
+    } else {
+      setUploadedDocs(prev => ({ ...prev, [docName]: file }));
+    }
   };
 
   const handleSubmitApplication = async () => {
@@ -55,38 +56,36 @@ const JobApplicationForm = () => {
     }
     setLoading(true);
     try {
-      if (applicationMethod === 'bantuHire') {
-        // Appel API spécifique BantuHire
+      if (applicationMethod === 'profil') {
+        // Postuler avec profil + lettre
+        if (!coverLetter.trim()) {
+          toast.error("Veuillez rédiger une lettre de motivation.");
+          setLoading(false);
+          return;
+        }
         await api.post('/candidatures', {
           offre_id: job.id,
+          type: 'profil',
           motivation_text: coverLetter,
-          cv_genere: true
+          cv_genere: true // Utilise infos de profil
         });
-        toast.success("Votre candidature a bien été envoyée !");
+        toast.success("Votre candidature a bien été envoyée !"); // Pop-up confirmation
         navigate('/mesCandidatures');
       } else {
-        // Appel API classique avec fichiers
-        const formData = new FormData();
-        formData.append('offre_id', job.id);
-
-        // On ajoute toujours les fichiers si présents, sans vérifier documents_requis
-        if (uploadedDocs['cv']) {
-          formData.append('cv_url', uploadedDocs['cv']);
-        } else {
+        // Postuler avec docs
+        if (!uploadedDocs.cv) {
           toast.error("Veuillez joindre votre CV.");
           setLoading(false);
           return;
         }
-        if (uploadedDocs['lettre de motivation']) {
-          formData.append('motivation_url', uploadedDocs['lettre de motivation']);
-        } else {
-          toast.error("Veuillez joindre votre lettre de motivation.");
-          setLoading(false);
-          return;
-        }
+        const formData = new FormData();
+        formData.append('offre_id', job.id);
+        formData.append('type', 'docs');
+        formData.append('cv_url', uploadedDocs.cv);
+        uploadedDocs.certificats.forEach(cert => formData.append('certificats[]', cert));
 
         await api.post('/candidatures', formData);
-        toast.success("Votre candidature a bien été envoyée !");
+        toast.success("Votre candidature a bien été envoyée !"); // Pop-up confirmation
         navigate('/mesCandidatures');
       }
     } catch (error) {
@@ -142,177 +141,85 @@ const JobApplicationForm = () => {
             </div>
             <div>
               <p className="font-semibold text-gray-800">Expérience</p>
-              <p>{job.exigences}</p>
+              <p>{job.experience_requise} ans</p>
             </div>
           </div>
 
-          {/* Ma candidature Section */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-            <h3 className="text-orange-500 text-xl font-bold mb-4">Méthode de candidature</h3>
-            <div className="space-y-4">
-              <label className="flex items-center text-gray-700 cursor-pointer">
+          {/* Choix de méthode (nouveau, sans changer design) */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+            <h3 className="text-lg font-semibold mb-3">Méthode de candidature</h3>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <label className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="radio"
-                  name="applicationMethod"
-                  value="bantuHire"
-                  checked={applicationMethod === 'bantuHire'}
+                  value="profil"
+                  checked={applicationMethod === 'profil'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
-                  className="form-radio h-5 w-5 text-green-600 border-gray-300 focus:ring-green-500"
+                  className="rounded"
                 />
-                <span className="ml-3">Je postule avec mon profil BantuHire</span>
+                <span>Avec mon profil personnel + lettre de motivation</span>
               </label>
-              <label className="flex items-center text-gray-700 cursor-pointer">
+              <label className="flex items-center space-x-2 cursor-pointer">
                 <input
                   type="radio"
-                  name="applicationMethod"
-                  value="myCv"
-                  checked={applicationMethod === 'myCv'}
+                  value="docs"
+                  checked={applicationMethod === 'docs'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
-                  className="form-radio h-5 w-5 text-orange-500 border-gray-300 focus:ring-orange-500"
+                  className="rounded"
                 />
-                <span className="ml-3">Je postule avec mon CV</span>
+                <span>Avec CV + certificats</span>
               </label>
             </div>
           </div>
 
-          {/* Dynamique selon la méthode */}
-          {applicationMethod === 'bantuHire' ? (
-            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-              <h3 className="text-emerald-600 text-xl font-bold mb-4">Lettre de motivation</h3>
+          {/* Contenu conditionnel */}
+          {applicationMethod === 'profil' ? (
+            // Section Profil + Lettre
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-3">Lettre de motivation</h3>
+              <p className="text-sm text-gray-600 mb-2">Utilisez vos infos personnelles (nom: {particulier?.nom}, adresse: {particulier?.adresse}, etc.).</p>
               <textarea
-                className="w-full h-48 p-2 text-gray-800 border border-gray-300 rounded focus:ring-0 focus:outline-none resize-none"
-                placeholder="Rédigez votre lettre de motivation ici..."
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
+                placeholder="Rédigez votre lettre de motivation (max 2000 caractères)..."
                 maxLength={maxCharacters}
-                rows={10}
+                rows={6}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md resize-none"
               />
-              <div className="text-right text-gray-500 text-sm mt-2">
-                {coverLetter.length}/{maxCharacters} caractères
-              </div>
+              <p className="text-sm text-gray-500 mt-1">{coverLetter.length}/{maxCharacters}</p>
             </div>
           ) : (
-            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-              <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
-              <div className="space-y-4">
-                {Array.isArray(job.documents_requis) && job.documents_requis.length > 0 ? (
-                  job.documents_requis.map((docName, idx) => (
-                    <label key={idx} className="flex items-start text-gray-700 cursor-pointer">
-                      <input
-                        type="radio"
-                        name={`applicationDoc_${docName}`}
-                        checked={true}
-                        readOnly
-                        className="form-radio h-4 w-4 text-orange-500 mt-1"
-                      />
-                      <div className="ml-2 w-full">
-                        <span>Joindre {docName}</span>
-                        {uploadedDocs[docName] ? (
-                          <div className="flex items-center text-green-600 text-sm mt-1">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4 mr-1"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                              />
-                            </svg>
-                            <span>{uploadedDocs[docName].name}</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center text-gray-500 text-sm mt-1">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-4 w-4 mr-1"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12h6m-6 4h6m2 2H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                              />
-                            </svg>
-                            <span>Aucun fichier sélectionné</span>
-                          </div>
-                        )}
-                        <div className="mt-2 text-sm text-gray-500">
-                          <label className="text-blue-600 hover:underline cursor-pointer">
-                            Importer un autre {docName}
-                            <input
-                              type="file"
-                              accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                              onChange={e => handleFileChange(docName, e.target.files[0])}
-                              className="hidden"
-                            />
-                          </label>
-                        </div>
-                        <div className="flex items-center space-x-2 mt-4">
-                          <label className="flex items-center px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 mr-2 text-gray-500"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                              />
-                            </svg>
-                            Choisir Un Fichier
-                            <input
-                              type="file"
-                              accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                              onChange={e => handleFileChange(docName, e.target.files[0])}
-                              className="hidden"
-                            />
-                          </label>
-                          {uploadedDocs[docName] && (
-                            <button
-                              type="button"
-                              className="p-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
-                              onClick={() => setUploadedDocs(prev => {
-                                const copy = { ...prev };
-                                delete copy[docName];
-                                return copy;
-                              })}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-5 w-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                />
-                              </svg>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </label>
-                  ))
-                ) : (
-                  <p className="text-gray-500">Aucun document requis pour cette offre.</p>
-                )}
+            // Section Docs (extension existante)
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">CV (obligatoire)</label>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => handleFileChange('cv', e.target.files[0])}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+                {uploadedDocs.cv && <p className="text-sm text-green-600 mt-1">CV sélectionné</p>}
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Certificats (optionnel)</label>
+                <input
+                  type="file"
+                  accept=".pdf,.jpg,.png"
+                  multiple
+                  onChange={(e) => handleFileChange('certificats', [...e.target.files])}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+                {uploadedDocs.certificats.length > 0 && <p className="text-sm text-green-600 mt-1">{uploadedDocs.certificats.length} certificat(s) sélectionné(s)</p>}
+              </div>
+              {job.documents_requis && job.documents_requis.length > 0 && (
+                <div className="mt-4 p-3 bg-blue-50 rounded">
+                  <p className="text-sm font-medium text-blue-800 mb-2">Documents requis :</p>
+                  <ul className="text-sm text-blue-700 space-y-1 list-disc pl-4">
+                    {job.documents_requis.map((doc, i) => <li key={i}>{doc}</li>)}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
