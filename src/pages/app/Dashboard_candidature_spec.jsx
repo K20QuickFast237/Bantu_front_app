@@ -3,28 +3,41 @@ import { ChevronDown, Download, Eye } from 'lucide-react';
 import HeaderProfil from '../../components/app/HeaderProfil';
 import Footer from '../../components/public/Footer';
 import api from '@/services/api';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 export default function DashboardCandidatureSpec() {
-    const { id } = useParams(); // récupère l'id de l'offre depuis l'URL
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [candidates, setCandidates] = useState([]);
     const [filteredCandidates, setFilteredCandidates] = useState([]);
+
+    // Nouvelle fonction pour filtrer les candidatures >24h
+    const filterOldCandidatures = (data) => {
+        const now = new Date();
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24h avant
+        return data.filter(c => {
+            if (!c.created_at) return false;
+            const createdDate = new Date(c.created_at);
+            return createdDate >= twentyFourHoursAgo; // Garde si <24h
+        });
+    };
 
     useEffect(() => {
         if (!id) return;
         api.get(`/offres/${id}/candidatures`)
             .then(response => {
                 const data = response.data || [];
-                setCandidates(data);
-                setFilteredCandidates(data);
+                const filteredOld = filterOldCandidatures(data); // Applique filtre 24h
+                setCandidates(filteredOld);
+                setFilteredCandidates(filteredOld);
             })
             .catch(() => {
                 setCandidates([]);
                 setFilteredCandidates([]);
             });
-    }, [id]);
+    }, [id]); // Refetch si id change (ex. : retour de détail)
 
     const handleFilter = () => {
         let filtered = candidates;
@@ -35,13 +48,26 @@ export default function DashboardCandidatureSpec() {
         if (toDate) {
             filtered = filtered.filter(c => c.created_at && c.created_at.slice(0, 10) <= toDate);
         }
+        // Réapplique filtre 24h après filtre date
+        filtered = filterOldCandidatures(filtered);
         setFilteredCandidates(filtered);
     };
 
     const handleReset = () => {
         setFromDate('');
         setToDate('');
-        setFilteredCandidates(candidates);
+        const filteredOld = filterOldCandidatures(candidates);
+        setFilteredCandidates(filteredOld);
+    };
+
+    // Nouvelle fonction pour cliquer "Afficher"
+    const handleViewCandidate = (candidate) => {
+        navigate(`/candidature_detail/${candidate.id}`, { 
+            state: { 
+                candidate, 
+                offreId: id // Pour retour
+            } 
+        });
     };
 
     return (
@@ -102,7 +128,7 @@ export default function DashboardCandidatureSpec() {
                         </button>
                     </div>
 
-                    {/* Table */}
+                    {/* Table – Cercle statut cohérent */}
                     <div className="overflow-x-auto border border-gray-300 rounded">
                         <table className="w-full">
                             <thead>
@@ -116,31 +142,44 @@ export default function DashboardCandidatureSpec() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredCandidates.map((candidate, idx) => (
-                                    <tr key={candidate.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="px-6 py-4 text-gray-700 font-medium">{idx + 1}</td>
-                                        <td className="px-6 py-4 text-green-600 font-medium">
-                                            {candidate.particulier?.nom || ''}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-700">
-                                            {candidate.offre?.titre_poste || ''}
-                                        </td>
-                                        <td className="px-6 py-4 text-gray-700">
-                                            {candidate.particulier?.adresse || ''}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-2">
-                                                <div className="w-3 h-3 rounded-full bg-gray-800"></div> {/* Rond noir par défaut */}
-                                                <span className="text-gray-700">candidature</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <Link to={`/candidature_detail/${candidate.id}`}>
-                                                <button className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">Afficher</button>
-                                            </Link>
-                                        </td>
+                                {filteredCandidates.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="6" className="px-6 py-4 text-center text-gray-500">Aucune candidature trouvée (ou expirée >24h)</td>
                                     </tr>
-                                ))}
+                                ) : (
+                                    filteredCandidates.map((candidate, idx) => {
+                                        const candidateStatut = candidate.statut || 'candidature';
+                                        const circleColor = candidateStatut === 'preselectionne' ? 'bg-orange-500' : candidateStatut === 'rejete' ? 'bg-red-500' : 'bg-gray-800';
+                                        return (
+                                            <tr key={candidate.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                <td className="px-6 py-4 text-gray-700 font-medium">{idx + 1}</td>
+                                                <td className="px-6 py-4 text-green-600 font-medium">
+                                                    {candidate.particulier?.nom || ''}
+                                                </td>
+                                                <td className="px-6 py-4 text-gray-700">
+                                                    {candidate.offre?.titre_poste || ''}
+                                                </td>
+                                                <td className="px-6 py-4 text-gray-700">
+                                                    {candidate.particulier?.adresse || ''}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <div className={`w-3 h-3 rounded-full ${circleColor}`}></div>
+                                                        <span className="text-gray-700 capitalize">{candidateStatut}</span>
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <button 
+                                                        onClick={() => handleViewCandidate(candidate)}
+                                                        className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
+                                                    >
+                                                        Afficher
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                )}
                             </tbody>
                         </table>
                     </div>
