@@ -73,7 +73,7 @@ const JobOfferPage = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
             <div className="flex justify-center gap-4">
               <Link to={`/jobApplicationform/${job.id}`}>
-                <button className="flex items-center justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                <button className="flex items-center cursor-pointer justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
                   Postuler
                 </button>
               </Link>
@@ -141,11 +141,11 @@ const JobOfferPage = () => {
 
                 {/* Boutons desktop */}
                 <div className="hidden lg:flex gap-4 mb-10">
-                  <a href={job.url_candidature} target="_blank" rel="noreferrer">
+                  <Link to={`/jobApplicationform/${job.id}`}>
                     <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
                       Postuler
                     </button>
-                  </a>
+                  </Link>
                   <button className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
                     Sauvegarder
                   </button>
