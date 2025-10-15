@@ -12,43 +12,59 @@ export default function DashboardCandidatureSpec() {
     const [toDate, setToDate] = useState('');
     const [candidates, setCandidates] = useState([]);
     const [filteredCandidates, setFilteredCandidates] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Nouvelle fonction pour filtrer les candidatures >24h
+    // Fonction pour filtrer les candidatures >24h
     const filterOldCandidatures = (data) => {
         const now = new Date();
-        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000); // 24h avant
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
         return data.filter(c => {
-            if (!c.created_at) return false;
+            if (!c.created_at) {
+                console.warn('Candidature sans created_at:', c.id);
+                return false;
+            }
             const createdDate = new Date(c.created_at);
-            return createdDate >= twentyFourHoursAgo; // Garde si <24h
+            if (isNaN(createdDate.getTime())) {
+                console.warn('Date invalide pour candidature:', c.id, c.created_at);
+                return false;
+            }
+            return createdDate >= twentyFourHoursAgo;
         });
     };
 
     useEffect(() => {
-        if (!id) return;
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        console.log('Fetch candidatures pour offre ID:', id);
+        setLoading(true);
         api.get(`/offres/${id}/candidatures`)
             .then(response => {
+                console.log('Réponse brute candidatures:', response.data); // Debug
                 const data = response.data || [];
-                const filteredOld = filterOldCandidatures(data); // Applique filtre 24h
+                const filteredOld = filterOldCandidatures(data);
+                console.log('Candidatures filtrées (24h):', filteredOld);
                 setCandidates(filteredOld);
                 setFilteredCandidates(filteredOld);
+                setLoading(false);
             })
-            .catch(() => {
+            .catch(error => {
+                console.error('Erreur fetch candidatures:', error);
                 setCandidates([]);
                 setFilteredCandidates([]);
+                setLoading(false);
             });
-    }, [id]); // Refetch si id change (ex. : retour de détail)
+    }, [id]);
 
     const handleFilter = () => {
         let filtered = candidates;
-
         if (fromDate) {
             filtered = filtered.filter(c => c.created_at && c.created_at.slice(0, 10) >= fromDate);
         }
         if (toDate) {
             filtered = filtered.filter(c => c.created_at && c.created_at.slice(0, 10) <= toDate);
         }
-        // Réapplique filtre 24h après filtre date
         filtered = filterOldCandidatures(filtered);
         setFilteredCandidates(filtered);
     };
@@ -60,26 +76,33 @@ export default function DashboardCandidatureSpec() {
         setFilteredCandidates(filteredOld);
     };
 
-    // Nouvelle fonction pour cliquer "Afficher"
     const handleViewCandidate = (candidate) => {
-        navigate(`/candidature_detail/${candidate.id}`, { 
+        const realId = candidate.id || candidate.candidature_id || 'unknown';
+        navigate(`/candidature_detail/${realId}`, { 
             state: { 
                 candidate, 
-                offreId: id // Pour retour
+                offreId: id 
             } 
         });
     };
 
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <HeaderProfil />
+                <div className="text-gray-500">Chargement des candidatures...</div>
+                <Footer />
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-white">
             <HeaderProfil />
-            {/* Main Content */}
             <main className="max-w-7xl mx-auto px-6 py-8">
-                {/* Candidature Section */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-green-600 mb-6">Candidature</h1>
 
-                    {/* Filter Section */}
                     <div className="bg-orange-50 p-6 rounded-lg mb-8">
                         <div className="flex gap-4 items-end">
                             <div className="flex-1">
@@ -118,7 +141,6 @@ export default function DashboardCandidatureSpec() {
                         </div>
                     </div>
 
-                    {/* Action Buttons */}
                     <div className="flex gap-4 mb-6">
                         <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
                             Configurer l'envoi des mails
@@ -128,7 +150,6 @@ export default function DashboardCandidatureSpec() {
                         </button>
                     </div>
 
-                    {/* Table – Cercle statut cohérent */}
                     <div className="overflow-x-auto border border-gray-300 rounded">
                         <table className="w-full">
                             <thead>
@@ -148,19 +169,31 @@ export default function DashboardCandidatureSpec() {
                                     </tr>
                                 ) : (
                                     filteredCandidates.map((candidate, idx) => {
+                                        const realId = candidate.id || candidate.candidature_id || idx; // Fallback ID pour key/log
                                         const candidateStatut = candidate.statut || 'candidature';
                                         const circleColor = candidateStatut === 'preselectionne' ? 'bg-orange-500' : candidateStatut === 'rejete' ? 'bg-red-500' : 'bg-gray-800';
+                                        // Extraction robuste comme CandidatureDetails (multi-fallback pour nom)
+                                        const nomCandidat = candidate.particulier?.nom || candidate.cv_genere?.informations?.nom || candidate.nom || '';
+                                        // Extraction adresse (simple, comme original)
+                                        const adresseCandidat = candidate.particulier?.adresse || '';
+                                        // Debug pour premier candidat
+                                        if (idx === 0) {
+                                            console.log('Full structure premier candidat ID ' + realId + ':', candidate);
+                                            console.log('Particulier du premier candidat:', candidate.particulier);
+                                            console.log('Nom extractions: particulier.nom="' + (candidate.particulier?.nom || 'null') + '", cv_genere.nom="' + (candidate.cv_genere?.informations?.nom || 'null') + '", candidate.nom="' + (candidate.nom || 'null') + '"');
+                                        }
+                                        console.log('Nom candidat affiché:', nomCandidat, 'Adresse:', adresseCandidat, 'pour ID:', realId);
                                         return (
-                                            <tr key={candidate.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                            <tr key={realId} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                                 <td className="px-6 py-4 text-gray-700 font-medium">{idx + 1}</td>
                                                 <td className="px-6 py-4 text-green-600 font-medium">
-                                                    {candidate.particulier?.nom || ''}
+                                                    {nomCandidat}
                                                 </td>
                                                 <td className="px-6 py-4 text-gray-700">
                                                     {candidate.offre?.titre_poste || ''}
                                                 </td>
                                                 <td className="px-6 py-4 text-gray-700">
-                                                    {candidate.particulier?.adresse || ''}
+                                                    {adresseCandidat}
                                                 </td>
                                                 <td className="px-6 py-4">
                                                     <div className="flex items-center gap-2">
