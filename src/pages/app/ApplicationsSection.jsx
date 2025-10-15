@@ -41,7 +41,7 @@ const ApplicationsSection = () => {
           api.get('/candidatures'),
           api.get('/mesoffres')
         ]);
-
+        console.log(applicationsResponse.data);
         const appsData = applicationsResponse.data || [];
         setApplications(appsData);
         setFilteredApplications(appsData);
