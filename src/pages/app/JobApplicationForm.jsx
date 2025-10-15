@@ -11,7 +11,7 @@ const JobApplicationForm = () => {
   const navigate = useNavigate();
   const { particulier } = useAuth();
   const [job, setJob] = useState(null);
-  const [applicationMethod, setApplicationMethod] = useState('profil'); // Nouveau : 'profil' ou 'docs'
+  const [applicationMethod, setApplicationMethod] = useState('profil'); // 'profil' ou 'docs'
   const [coverLetter, setCoverLetter] = useState(''); // Lettre pour profil
   const [uploadedDocs, setUploadedDocs] = useState({ cv: null, certificats: [] }); // Pour docs
   const [loading, setLoading] = useState(false);
@@ -67,9 +67,9 @@ const JobApplicationForm = () => {
           offre_id: job.id,
           type: 'profil',
           motivation_text: coverLetter,
-          cv_genere: true // Utilise infos de profil
+          cv_genere: true
         });
-        toast.success("Votre candidature a bien été envoyée !"); // Pop-up confirmation
+        toast.success("Votre candidature a bien été envoyée !");
         navigate('/mesCandidatures');
       } else {
         // Postuler avec docs
@@ -85,7 +85,7 @@ const JobApplicationForm = () => {
         uploadedDocs.certificats.forEach(cert => formData.append('certificats[]', cert));
 
         await api.post('/candidatures', formData);
-        toast.success("Votre candidature a bien été envoyée !"); // Pop-up confirmation
+        toast.success("Votre candidature a bien été envoyée !");
         navigate('/mesCandidatures');
       }
     } catch (error) {
@@ -145,81 +145,85 @@ const JobApplicationForm = () => {
             </div>
           </div>
 
-          {/* Choix de méthode (nouveau, sans changer design) */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-            <h3 className="text-lg font-semibold mb-3">Méthode de candidature</h3>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <label className="flex items-center space-x-2 cursor-pointer">
+          {/* Ma candidature Section */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+            <h3 className="text-orange-500 text-xl font-bold mb-4">Méthode de candidature</h3>
+            <div className="space-y-4">
+              <label className="flex items-center text-gray-700 cursor-pointer">
                 <input
                   type="radio"
+                  name="applicationMethod"
                   value="profil"
                   checked={applicationMethod === 'profil'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
-                  className="rounded"
+                  className="form-radio h-5 w-5 text-green-600 border-gray-300 focus:ring-green-500"
                 />
-                <span>Avec mon profil personnel + lettre de motivation</span>
+                <span className="ml-3">Je postule avec mon profil BantuHire</span>
               </label>
-              <label className="flex items-center space-x-2 cursor-pointer">
+              <label className="flex items-center text-gray-700 cursor-pointer">
                 <input
                   type="radio"
+                  name="applicationMethod"
                   value="docs"
                   checked={applicationMethod === 'docs'}
                   onChange={(e) => setApplicationMethod(e.target.value)}
-                  className="rounded"
+                  className="form-radio h-5 w-5 text-orange-500 border-gray-300 focus:ring-orange-500"
                 />
-                <span>Avec CV + certificats</span>
+                <span className="ml-3">Je postule avec mon CV</span>
               </label>
             </div>
           </div>
 
-          {/* Contenu conditionnel */}
+          {/* Dynamique selon la méthode */}
           {applicationMethod === 'profil' ? (
-            // Section Profil + Lettre
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Lettre de motivation</h3>
-              <p className="text-sm text-gray-600 mb-2">Utilisez vos infos personnelles (nom: {particulier?.nom}, adresse: {particulier?.adresse}, etc.).</p>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-emerald-600 text-xl font-bold mb-4">Lettre de motivation</h3>
               <textarea
+                className="w-full h-48 p-2 text-gray-800 border border-gray-300 rounded focus:ring-0 focus:outline-none resize-none"
+                placeholder="Rédigez votre lettre de motivation ici..."
                 value={coverLetter}
                 onChange={(e) => setCoverLetter(e.target.value)}
-                placeholder="Rédigez votre lettre de motivation (max 2000 caractères)..."
                 maxLength={maxCharacters}
-                rows={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md resize-none"
+                rows={10}
               />
-              <p className="text-sm text-gray-500 mt-1">{coverLetter.length}/{maxCharacters}</p>
+              <div className="text-right text-gray-500 text-sm mt-2">
+                {coverLetter.length}/{maxCharacters} caractères
+              </div>
             </div>
           ) : (
-            // Section Docs (extension existante)
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">CV (obligatoire)</label>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={(e) => handleFileChange('cv', e.target.files[0])}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                />
-                {uploadedDocs.cv && <p className="text-sm text-green-600 mt-1">CV sélectionné</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Certificats (optionnel)</label>
-                <input
-                  type="file"
-                  accept=".pdf,.jpg,.png"
-                  multiple
-                  onChange={(e) => handleFileChange('certificats', [...e.target.files])}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                />
-                {uploadedDocs.certificats.length > 0 && <p className="text-sm text-green-600 mt-1">{uploadedDocs.certificats.length} certificat(s) sélectionné(s)</p>}
-              </div>
-              {job.documents_requis && job.documents_requis.length > 0 && (
-                <div className="mt-4 p-3 bg-blue-50 rounded">
-                  <p className="text-sm font-medium text-blue-800 mb-2">Documents requis :</p>
-                  <ul className="text-sm text-blue-700 space-y-1 list-disc pl-4">
-                    {job.documents_requis.map((doc, i) => <li key={i}>{doc}</li>)}
-                  </ul>
+            <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
+              <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">CV (obligatoire)</label>
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={(e) => handleFileChange('cv', e.target.files[0])}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                  {uploadedDocs.cv && <p className="text-sm text-green-600 mt-1">CV sélectionné</p>}
                 </div>
-              )}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Certificats (optionnel)</label>
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.png"
+                    multiple
+                    onChange={(e) => handleFileChange('certificats', [...e.target.files])}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                  {uploadedDocs.certificats.length > 0 && <p className="text-sm text-green-600 mt-1">{uploadedDocs.certificats.length} certificat(s) sélectionné(s)</p>}
+                </div>
+                {job.documents_requis && job.documents_requis.length > 0 && (
+                  <div className="mt-4 p-3 bg-blue-50 rounded">
+                    <p className="text-sm font-medium text-blue-800 mb-2">Documents requis :</p>
+                    <ul className="text-sm text-blue-700 space-y-1 list-disc pl-4">
+                      {job.documents_requis.map((doc, i) => <li key={i}>{doc}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
