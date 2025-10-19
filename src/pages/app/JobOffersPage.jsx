@@ -6,8 +6,11 @@ import { ArrowLeft } from "lucide-react";
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
 import PageWrapper from '@/components/public/PageWrapper';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import api from '@/services/api';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
+import ProfileCompletionModal from '@/components/app/ProfileCompletionModal';
 import {
   MapPin,
   Mail,
@@ -23,6 +26,9 @@ const JobOfferPage = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+  const { particulier } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -39,6 +45,20 @@ const JobOfferPage = () => {
     fetchJob();
   }, [id]);
 
+  const handleApplyClick = () => {
+    // Vérifie si l'objet 'particulier' existe et n'est pas vide.
+    if (!particulier || Object.keys(particulier).length === 0) {
+      toast.info("Veuillez compléter votre profil pour postuler.");
+      setProfileModalOpen(true);
+    } else {
+      navigate(`/jobApplicationform/${job.id}`);
+    }
+  };
+
+  const onProfileComplete = () => {
+    navigate(`/jobApplicationform/${job.id}`);
+  };
+
   if (loading) return <div className="flex items-center justify-center min-h-screen">
         <BantulinkLoader/>
       </div>;
@@ -47,6 +67,11 @@ const JobOfferPage = () => {
   return (
     <>
       <PageWrapper>
+        <ProfileCompletionModal
+          isOpen={isProfileModalOpen}
+          onClose={() => setProfileModalOpen(false)}
+          onComplete={onProfileComplete}
+        />
         <HeaderProfil />
         <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
           
@@ -72,11 +97,9 @@ const JobOfferPage = () => {
           {/* Fixed Footer for mobile */}
           <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
             <div className="flex justify-center gap-4">
-              <Link to={`/jobApplicationform/${job.id}`}>
-                <button className="flex items-center cursor-pointer justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                  Postuler
-                </button>
-              </Link>
+              <button onClick={handleApplyClick} className="flex items-center cursor-pointer justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                Postuler
+              </button>
               <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
                 Sauvegarder
               </button>
@@ -141,11 +164,9 @@ const JobOfferPage = () => {
 
                 {/* Boutons desktop */}
                 <div className="hidden lg:flex gap-4 mb-10">
-                  <Link to={`/jobApplicationform/${job.id}`}>
-                    <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                      Postuler
-                    </button>
-                  </Link>
+                  <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                    Postuler
+                  </button>
                   <button className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
                     Sauvegarder
                   </button>
@@ -237,11 +258,9 @@ const JobOfferPage = () => {
 
             {/* Bottom buttons */}
             <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
-              <Link to={`/jobApplicationform/${job.id}`}>
-                <button className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                  Postuler
-                </button>
-              </Link>
+              <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
+                Postuler
+              </button>
               <button className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
                 Sauvegarder
               </button>
