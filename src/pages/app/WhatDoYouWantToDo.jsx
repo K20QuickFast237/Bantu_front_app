@@ -8,6 +8,7 @@ import Icon2 from '../../assets/icon2.png'; // Recruter
 import Icon3 from '../../assets/icon3.png'; // Acheter
 import Icon4 from '../../assets/icon4.png'; // Vendre
 import { useAuth } from '@/hooks/useAuth';
+import HeaderProfil from '@/components/app/HeaderProfil';
 
 const WhatDoYouWantToDo = () => {
     const navigate = useNavigate();
@@ -53,7 +54,7 @@ const WhatDoYouWantToDo = () => {
     return (
 
         <>
-            <Header />
+            <HeaderProfil />
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
                 <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center  justify-between p-8">
                     {/* Section Gauche : Titre et Image */}

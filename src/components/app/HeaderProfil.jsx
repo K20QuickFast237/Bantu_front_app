@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Edit, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 const HeaderProfil = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // <-- added
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
 
@@ -45,6 +46,10 @@ const HeaderProfil = () => {
     exit: { opacity: 0, y: -10, scale: 0.95 },
   };
 
+  // Ne pas afficher les liens de navigation sur la page WhatDoYouWantToDo
+  const hideNavLinksFor = ['/WhatDoYouWantToDo', '/whatdoyouwanttodo'];
+  const hideNavLinks = hideNavLinksFor.some(p => location.pathname.toLowerCase() === p.toLowerCase());
+
   return (
     <header className="flex items-center justify-between py-4 px-10 bg-white shadow-md border-b border-gray-200">
       <div className="flex items-center space-x-8">
@@ -52,14 +57,17 @@ const HeaderProfil = () => {
           <span className="text-green-500">Bantu</span><span className="text-red-500">Link</span>
         </Link>
 
-        <nav className="hidden md:flex space-x-6 text-gray-700 font-medium text-sm">
-          <Link to="/rechercheOffre" className="hover:text-green-600 transition-colors">
-            Trouver un job
-          </Link>
-          <Link to="/dashboard/candidate/jobs" className="hover:text-green-600 transition-colors">
-            Trouver une entreprise
-          </Link>
-        </nav>
+        {/* Affiche les liens seulement si la page courante n'est pas dans la liste de masquage */}
+        {!hideNavLinks && (
+          <nav className="hidden md:flex space-x-6 text-gray-700 font-medium text-sm">
+            <Link to="/rechercheOffre" className="hover:text-green-600 transition-colors">
+              Trouver un job
+            </Link>
+            <Link to="/dashboard/candidate/jobs" className="hover:text-green-600 transition-colors">
+              Trouver une entreprise
+            </Link>
+          </nav>
+        )}
       </div>
 
       <div className="relative" ref={profileMenuRef}>
