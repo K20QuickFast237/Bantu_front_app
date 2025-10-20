@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { 
+  Home,
   Settings, User, Briefcase, GraduationCap, Award, 
   Bell, Save,
 } from 'lucide-react';
@@ -8,6 +9,8 @@ import {
 import { useAuth } from '../../hooks/useAuth';
 import Experiences from '../../components/app/Experiences';
 import DiplomesFormations from '../../components/app/DiplomesFormations';
+import HeaderProfil from '@/components/app/HeaderProfil';
+import PageWrapper from '@/components/public/PageWrapper';
 
 // J'ai renommé 'Certifications' en 'Competences' pour correspondre à votre demande précédente.
 const Sidebar = ({ activeMenu, setActiveMenu }) => {
@@ -473,15 +476,18 @@ export default function ProfileConfiguration() {
   const [activeMenu, setActiveMenu] = useState('profil');
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
-      <div className="flex flex-col lg:flex-row gap-8">
-        <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
-        <main className="flex-1">
-          <div className="bg-white rounded-xl shadow-md">
-            {renderActiveView(activeMenu)}
-          </div>
-        </main>
+    <PageWrapper>
+      <HeaderProfil />
+      <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+          <main className="flex-1">
+            <div className="bg-white rounded-xl shadow-md">
+              {renderActiveView(activeMenu)}
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

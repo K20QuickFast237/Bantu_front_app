@@ -32,6 +32,11 @@ import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
 import Test from "./components/app/Test";
 import Dashboard_gestion_offres from "./pages/app/Dashboard_gestion_offres";
 import Dashboardcandidature from "./pages/app/Dashboardcandidature";
+import DashboardCandidature from "./pages/app/Dashboard_candidature";
+import DashboardCandidatureSpec from "./pages/app/Dashboard_candidature_spec";
+import CandidatureDetail from "./pages/app/CandidatureDetails";
+import Gestion_offre from "./pages/app/Gestion_offre";
+import ProfilCandidatByRecruteur from "./pages/app/ProfilCandidatByRecruteur";
 
 const App = () => {
   return (
@@ -62,6 +67,11 @@ const App = () => {
         <Route element={<PrivateRoutes />}>
           <Route path="/WhatDoYouWantToDo" element={<WhatDoYouWantToDo/>}/>
           <Route path="/Dashboard_gestion_offres" element={<Dashboard_gestion_offres/>}/>
+          <Route path="/dashboard_candidature" element={<DashboardCandidature />} />
+          <Route path="/dashboard_candidature_spec/:id" element={<DashboardCandidatureSpec />} />
+          <Route path="/candidature_detail/:id" element={<CandidatureDetail />} />
+          <Route path="/gestion_offre" element={<Gestion_offre />} />
+          <Route path="/profil_candidat_by_recruteur/:id" element={<ProfilCandidatByRecruteur />} />
           <Route path="/profil" element={<Profil />} />
           <Route path="/inscriptionEntreprise" element={<CompletionProfessionnel/>}/>
           <Route path="/dashboardEntreprise" element={<DashboardEntreprise/>}/>
