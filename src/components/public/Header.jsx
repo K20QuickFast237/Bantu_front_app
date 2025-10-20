@@ -34,7 +34,9 @@ const Header = () => {
       <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
-          <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+          <NavLink to="/home" className="flex items-center" aria-label="Accueil">
+            <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+          </NavLink>
         </div>
 
         {/* Mobile Menu Button (Hamburger/Close Icon) */}

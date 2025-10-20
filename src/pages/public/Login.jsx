@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 import personnesImage from '../../assets/personnes.png';
 import facebookLogo from '../../assets/facebook.png';
 import PageWrapper from '../../components/public/PageWrapper';
+import Header from '../../components/public/Header';
+import Footer from '../../components/public/Footer';
 
 const Login = () => {
     const navigate = useNavigate();
@@ -84,18 +86,12 @@ const Login = () => {
 
     return (
         <PageWrapper>
-            <div className="min-h-screen flex bg-gray-50 font-sans">
+            <Header />
+            {/* Espace en haut pour éviter le chevauchement avec le header fixe */}
+            <div className="min-h-screen flex bg-gray-50 font-sans py-20 md:pt-24">
 
                 {/* Section gauche : Illustration avec l'image personnes.png */}
                 <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white p-8 relative">
-                    <div className="absolute top-8 left-8">
-                        <a href="/" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors duration-200 group">
-                            <svg className="h-5 w-5 mr-2 transform -rotate-180 group-hover:rotate-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                            Retour
-                        </a>
-                    </div>
                     <img
                         src={personnesImage}
                         alt="Illustration de personnes travaillant ensemble"
@@ -250,6 +246,7 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </PageWrapper>
     );
 };
