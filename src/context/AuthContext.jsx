@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
+import { toast } from 'sonner';
 
 export const AuthContext = createContext(null);
 
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await api.post('/logout');
+      toast.success('Vous avez été déconnecté avec succès.');
     } catch(error) {
       console.error("Erreur lors de la déconnexion API, mais déconnexion locale quand même.", error);
     } finally {

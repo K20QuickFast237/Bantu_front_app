@@ -26,7 +26,7 @@ const WhatDoYouWantToDo = () => {
             case 'Recruter':
                 if (professionnel && Object.keys(professionnel).length > 0) {
                     // S'il est défini et non vide
-                    navigate('/dashboardEntreprise');
+                    navigate('/dashboardrecruteurprofil');
                 } else {
                     // Sinon on l’envoie s’inscrire
                     navigate('/inscriptionEntreprise');

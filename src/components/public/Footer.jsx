@@ -1,41 +1,40 @@
 import React from 'react';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
 
 const Footer = () => {
+  const { token } = useAuth();
+
   return (
     <>
-    <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-          >
       {/* Section Rejoignez l’écosystème (au-dessus du footer) */}
-      <div className="relative z-20 -mb-15">
-        <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
-          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
-              <h2 className="text-white text-lg lg:text-xl font-semibold">
-                Rejoignez l'écosystème tout-en-un de BantuLink
-              </h2>
-            </div>
-            <button className="bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors mt-3 whitespace-nowrap">
-              → Je crée mon compte maintenant
-            </button>
-          </div>
-
-          {/* Tags */}
-          <div className="flex  flex-wrap items-center gap-4 lg:gap-6 text-white text-sm mt-4">
-            {["Emploi & Recrutement", "Commerce & Services", "Communauté & Formation"].map((item, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-white rounded-full"></div>
-                <span>{item}</span>
+      {token ? null : (
+        <div className="relative z-20 -mb-15">
+          <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
+                <h2 className="text-white text-lg lg:text-xl font-semibold">
+                  Rejoignez l'écosystème tout-en-un de BantuLink
+                </h2>
               </div>
-            ))}
+              <button className="bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors mt-3 whitespace-nowrap">
+                → Je crée mon compte maintenant
+              </button>
+            </div>
+
+            {/* Tags */}
+            <div className="flex  flex-wrap items-center gap-4 lg:gap-6 text-white text-sm mt-4">
+              {["Emploi & Recrutement", "Commerce & Services", "Communauté & Formation"].map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-white rounded-full"></div>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 🔵 Footer principal */}
       <footer className="w-full bg-blue-800 pt-20">
@@ -88,7 +87,6 @@ const Footer = () => {
           </div>
         </div>
       </footer>
-      </motion.section>
     </>
   );
 };

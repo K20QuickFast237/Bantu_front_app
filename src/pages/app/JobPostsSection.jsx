@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
-const JobPostsSection = () => {
+const JobPostsSection = ({ setActiveSection }) => {
   const [jobPosts, setJobPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -185,11 +185,9 @@ const JobPostsSection = () => {
 
       {/* Bouton Créer une offre */}
       <div className="flex justify-end mb-6">
-        <Link to="/createJob">
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded">
-            Créer une offre d'emploi
-          </Button>
-        </Link>
+        <Button onClick={() => setActiveSection('create-job')} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded">
+          Créer une offre d'emploi
+        </Button>
       </div>
 
       <div className="overflow-x-auto border border-gray-300 rounded">

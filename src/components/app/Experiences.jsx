@@ -53,6 +53,9 @@ const Experiences = () => {
           )
         );
         toast.success('Expérience mise à jour avec succès');
+
+        // Déclencher l'événement pour mettre à jour la barre de progression
+        window.dispatchEvent(new Event('experiences-updated'));
       } else {
         // Ajouter une nouvelle expérience
         const response = await api.post('/experiences', values);
@@ -70,6 +73,9 @@ const Experiences = () => {
         setExperiences(prev => [...prev, newExperience]);
         // setExperiences([...experiences, response.data]);
         toast.success('Expérience ajoutée avec succès');
+
+        // Déclencher l'événement pour mettre à jour la barre de progression
+        window.dispatchEvent(new Event('experiences-updated'));
       }
       resetForm();
       setEditingExperience(null);
@@ -131,6 +137,9 @@ const Experiences = () => {
       await api.delete(`/experiences/${experienceToDelete}`);
       setExperiences(experiences.filter((exp) => exp.id !== experienceToDelete));
       toast.success('Expérience supprimée avec succès');
+
+      // Déclencher l'événement pour mettre à jour la barre de progression
+      window.dispatchEvent(new Event('experiences-updated'));
     } catch (error) {
       toast.error('Erreur lors de la suppression de l’expérience');
     } finally {

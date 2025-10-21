@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Edit, Settings, LogOut, ChevronDown, FileWarning } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const HeaderProfil = ({ onOpenProfileModal }) => {
@@ -21,16 +21,8 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
   }, []);
 
   const handleLogout = async () => {
-    // Le nettoyage du sessionStorage est déjà géré dans le contexte
-    sessionStorage.removeItem('token');
-    
-    // Appeler la fonction logout du contexte
-    if (logout) {
-      await logout();
-    }
-    
-    // Rediriger vers la page de connexion
-    navigate('/login', { replace: true });
+    logout();
+    navigate('/login');
   };
 
   const handleProfileClick = (e, to) => {
@@ -44,7 +36,6 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
 
   const userProfileItems = [
     { to: '/profil', label: "Voir le profil", icon: User, action: (e) => handleProfileClick(e, '/profil') },
-    { to: '/profil', label: "Modifier le profil", icon: Edit, action: (e) => handleProfileClick(e, '/profil') },
     { to: '/dashboard/candidate/settings', label: 'Paramètres', icon: Settings },
   ];
 

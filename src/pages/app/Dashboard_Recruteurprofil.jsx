@@ -28,6 +28,8 @@ import MessagesSection from './MessagesSection';
 import AnalyticsSection from './AnalyticsSection';
 import SettingsSection from './SettingsSection';
 import { useAuth } from '@/hooks/useAuth';
+import HeroCompany from '@/components/app/HeroCompany';
+import MultiStepForm from '@/components/app/MultiStepForm';
 import api from '@/services/api';
 
 // Composants UI réutilisables
@@ -151,16 +153,6 @@ const SlidebarDashRecru = ({ activeSection, setActiveSection }) => {
           <div>
             <p className="font-semibold text-gray-900 text-sm">{professionnel?.nom_entreprise}</p>
             <p className="text-xs text-gray-600">{professionnel?.titre_professionnel}</p>
-          </div>
-        </div>
-        <div className="mt-3 flex justify-between items-center text-xs">
-          <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1">
-            <p className="font-bold text-gray-900 text-base">{jobPosts.total}</p>
-            <span className="text-gray-600 text-xs">Offres d'emploi</span>
-          </div>
-          <div className="text-center p-2 rounded-md border border-gray-200 flex-1 mx-1">
-            <p className="font-bold text-green-600 text-base">47</p>
-            <span className="text-gray-600 text-xs">Candidats</span>
           </div>
         </div>
       </div>
@@ -375,9 +367,9 @@ const DashboardRecruteurprofil = () => {
   const renderSection = () => {
     switch (activeSection) {
       case 'dashboard':
-        return <DashboardSection animateCards={animateCards} />;
+        return <DashboardSection animateCards={animateCards} setActiveSection={setActiveSection} />;
       case 'job-posts':
-        return <JobPostsSection />;
+        return <JobPostsSection setActiveSection={setActiveSection} />;
       case 'applications':
         return <ApplicationsSection />;
       case 'messages':
@@ -386,8 +378,15 @@ const DashboardRecruteurprofil = () => {
         return <AnalyticsSection />;
       case 'settings':
         return <SettingsSection />;
+      case 'create-job':
+        return (
+          <>
+            <HeroCompany />
+            <MultiStepForm />
+          </>
+        );
       default:
-        return <DashboardSection animateCards={animateCards} />;
+        return <DashboardSection animateCards={animateCards} setActiveSection={setActiveSection} />;
     }
   };
 

@@ -18,19 +18,22 @@ import { Loader2, Trash2 } from 'lucide-react';
 const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   const { user, token, updateUser, particulier } = useAuth();
   const [imageFile, setImageFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(particulier?.image_profil || null);
+  const [previewImage, setPreviewImage] = useState(particulier?.image_profil || '');
+  const [cvFiles, setCvFiles] = useState([]);
+  const [lettreFiles, setLettreFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validationSchema = Yup.object({
-    date_naissance: Yup.date().required('Date de naissance requise'),
-    telephone: Yup.string().required('Téléphone requis'),
-    adresse: Yup.string().required('Adresse requise'),
-    ville: Yup.string().required('Ville requise'),
-    pays: Yup.string().required('Pays requis'),
-    titre_professionnel: Yup.string().required('Titre professionnel requis'),
-    resume_profil: Yup.string().required('Résumé profil requis'),
-    cv_link: Yup.string().url('URL CV invalide').required('Lien CV requis'),
-    lettre_motivation_link: Yup.string().url('URL lettre invalide').required('Lien lettre requis'),
+    date_naissance: Yup.date().required('La date de naissance est requise'),
+    telephone: Yup.string().required('Le téléphone est requis'),
+    adresse: Yup.string().required("L'adresse est requise"),
+    ville: Yup.string().required('La ville est requise'),
+    pays: Yup.string().required('Le pays est requis'),
+    titre_professionnel: Yup.string().required('Le titre professionnel est requis'),
+    resume_profil: Yup.string().required('Le résumé du profil est requis'),
+    // La validation du CV et de la lettre est maintenant conditionnelle
+    cv_link: Yup.string().url('URL CV invalide'),
+    lettre_motivation_link: Yup.string().url('URL lettre invalide'),
     is_visible: Yup.string().oneOf(['0', '1']).nullable(),
   });
 
@@ -52,10 +55,18 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       setIsSubmitting(true);
+      
       const formData = new FormData();
       Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+      
       if (imageFile) formData.append('image_profil', imageFile);
-
+      if (cvFiles.length > 0) {
+        cvFiles.forEach(file => formData.append('cv_files[]', file));
+      }
+      if (lettreFiles.length > 0) {
+        lettreFiles.forEach(file => formData.append('lettre_motivation_files[]', file));
+      }
+      
       try {
         const response = await api.post('/profile/particulier', formData, {
           headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
@@ -65,7 +76,10 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
           ...prevUser,
           particulier: updatedParticulier
         }));
-        setPreviewImage(updatedParticulier.image_profil || null);
+        setPreviewImage(updatedParticulier.image_profil || '');
+        // Dispatch event to update profile completion bar
+        window.dispatchEvent(new CustomEvent('profile-updated'));
+
         toast.success('Profil mis à jour avec succès !');
         onClose();
         if (onComplete) {
@@ -90,9 +104,29 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
     }
   };
 
+  const handleCvUpload = (e) => {
+    const files = e.target.files;
+    if (files) {
+      setCvFiles(prev => [...prev, ...Array.from(files)]);
+    }
+  };
+
+  const handleLettreUpload = (e) => {
+    const files = e.target.files;
+    if (files) {
+      setLettreFiles(prev => [...prev, ...Array.from(files)]);
+    }
+  };
+
+  const removeFile = (fileList, setFileList, index) => {
+    const newFiles = [...fileList];
+    newFiles.splice(index, 1);
+    setFileList(newFiles);
+  }
+
   const handleImageDelete = () => {
     setImageFile(null);
-    setPreviewImage(null);
+    setPreviewImage('');
     toast.success('Image supprimée.');
   };
 
@@ -165,16 +199,47 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
                 </button>
               )}
             </div>
+            {previewImage && (
+              <div className="mt-2">
+                <img src={previewImage} alt="Aperçu" className="h-20 w-20 rounded-full object-cover border-2 border-gray-300" />
+              </div>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Lien CV (URL)</label>
-            <input type="url" {...formik.getFieldProps('cv_link')} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
-            {formik.touched.cv_link && formik.errors.cv_link && <p className="text-red-500 text-xs mt-1">{formik.errors.cv_link}</p>}
+            <label className="block text-sm font-medium text-gray-700 mb-1">CV</label>
+            <input type="file" accept=".pdf,.doc,.docx" onChange={handleCvUpload} multiple className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <div className="mt-2 space-y-1">
+              {cvFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
+                  <span className="text-gray-700 truncate">{file.name}</span>
+                  <button type="button" onClick={() => removeFile(cvFiles, setCvFiles, index)} className="text-red-500 hover:text-red-700 ml-2">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {particulier?.cv_link && cvFiles.length === 0 && (
+              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>
+            )}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Lien Lettre de motivation (URL)</label>
-            <input type="url" {...formik.getFieldProps('lettre_motivation_link')} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
-            {formik.touched.lettre_motivation_link && formik.errors.lettre_motivation_link && <p className="text-red-500 text-xs mt-1">{formik.errors.lettre_motivation_link}</p>}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Lettre de motivation</label>
+            <input type="file" accept=".pdf,.doc,.docx" onChange={handleLettreUpload} multiple className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <div className="mt-2 space-y-1">
+              {lettreFiles.map((file, index) => (
+                <div key={index} className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
+                  <span className="text-gray-700 truncate">{file.name}</span>
+                  <button type="button" onClick={() => removeFile(lettreFiles, setLettreFiles, index)} className="text-red-500 hover:text-red-700 ml-2">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+            {particulier?.lettre_motivation_link && lettreFiles.length === 0 && (
+              <p className="text-gray-500 text-xs mt-1">
+                Lettre actuelle : <a href={particulier.lettre_motivation_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.
+              </p>
+            )}
           </div>
           <div>
             <label className="flex items-center space-x-2">
@@ -189,7 +254,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
                 Annuler
               </button>
             </DialogClose>
-            <button type="submit" disabled={isSubmitting || !formik.isValid} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center">
+            <button type="submit" disabled={isSubmitting} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 flex items-center">
               {isSubmitting && <Loader2 className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />}
               Enregistrer
             </button>

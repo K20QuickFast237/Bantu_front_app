@@ -111,42 +111,15 @@ const Competences = () => {
     setNewSkills([]);
     setIsModalOpen(false);
     toast.success('Compétences ajoutées avec succès');
+
+    // Déclencher l'événement pour mettre à jour la barre de progression
+    window.dispatchEvent(new Event('competences-updated'));
   } catch {
     toast.error("Erreur lors de l'ajout des compétences");
   } finally {
     setIsSubmitting(false);
   }
 };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   if (newSkills.length === 0) {
-  //     toast.error('Veuillez ajouter au moins une compétence.');
-  //     return;
-  //   }
-
-  //   setIsSubmitting(true);
-  //   try {
-  //     // Ajouter chaque compétence avec son niveau individuellement
-  //     const addedSkills = [];
-  //     for (const skill of newSkills) {
-  //       const response = await api.post(`/user/${user.id}/skill`, {
-  //         id: skill.id,
-  //         niveau: skill.niveau
-  //       });
-  //       addedSkills.push(response.data);
-  //     }
-
-  //     setCompetences([...competences, ...addedSkills]);
-  //     setNewSkills([]);
-  //     setIsModalOpen(false);
-  //     toast.success('Compétences ajoutées avec succès');
-  //   } catch {
-  //     toast.error("Erreur lors de l'ajout des compétences");
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
   const handleConfirmDelete = async () => {
     setIsSubmitting(true);
@@ -156,6 +129,9 @@ const Competences = () => {
       setIsDeleteModalOpen(false);
       setCompetenceToDelete(null);
       toast.success('Compétence supprimée avec succès');
+
+      // Déclencher l'événement pour mettre à jour la barre de progression
+      window.dispatchEvent(new Event('competences-updated'));
     } catch {
       toast.error('Erreur lors de la suppression de la compétence');
     } finally {
