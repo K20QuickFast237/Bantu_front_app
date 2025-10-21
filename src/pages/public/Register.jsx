@@ -9,6 +9,10 @@ import { registerUser } from '../../services/auth';
 import toast from 'react-hot-toast';
 import api from '@/services/api';
 
+// Ajout des imports Header et Footer
+import Header from '../../components/public/Header';
+import Footer from '../../components/public/Footer';
+
 import personnesImage from '../../assets/personnes.png';
 import googleLogo from '../../assets/google.png';      
 import appleLogo from '../../assets/apple.png';        
@@ -49,23 +53,15 @@ const Register = () => {
   });
   return (
     <PageWrapper>
-
-      <div className="min-h-screen flex bg-gray-50 font-sans">
-        <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white px-8 relative"> {/* Ajout de 'relative' ici pour le positionnement absolu de la flèche */}
-          {/* Flèche de retour : Positionnée de manière absolue en haut à gauche de ce panneau BLANC. */}
-          <div className="absolute top-8 left-4 sm:left-6 lg:left-8"> {/* Ajuster les valeurs left si nécessaire pour le pixel perfect */}
-            <a href="/" className="flex items-center text-gray-700 hover:text-gray-900 transition-colors duration-200 group"> {/* Couleur de texte pour le "Retour" fidèle à l'image (noir/gris foncé) */}
-              {/* Icône de flèche SVG pour une personnalisation précise de la forme et de l'animation. */}
-              <svg className="h-5 w-5 mr-2 transform -rotate-180 group-hover:rotate-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-              Retour
-            </a>
-          </div>
+      <Header />
+      {/* Espace en haut pour éviter le chevauchement avec le header fixe */}
+      <div className="min-h-screen flex bg-gray-50 font-sans py-20 md:pt-24">
+        {/* Illustration (left) - bouton "Retour" supprimé pour éviter chevauchement */}
+        <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white px-8"> 
           <img
-            src={personnesImage} // Utilisation de l'image "personnes.png"
+            src={personnesImage}
             alt="Illustration de personnes travaillant ensemble"
-            className="max-w-full h-auto object-contain" // Permet à l'image de s'adapter tout en conservant ses proportions
+            className="max-w-full h-auto object-contain"
           />
         </div>
 
@@ -262,6 +258,7 @@ const Register = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </PageWrapper>
   );
 };

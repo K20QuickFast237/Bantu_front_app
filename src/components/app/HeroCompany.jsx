@@ -34,17 +34,6 @@ const HeroCompany = () => {
           {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
 
-          {/* Bouton de retour */}
-          <div className="absolute top-4 left-4 z-20">
-            <button
-              onClick={handleGoBack}
-              className="flex items-center text-white bg-gray-800/50 hover:bg-gray-700/70 backdrop-blur-sm rounded-full py-2 px-4 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              Retour
-            </button>
-          </div>
-
           {/* Content */}
           <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col justify-center h-full">
             {/* Top Text */}

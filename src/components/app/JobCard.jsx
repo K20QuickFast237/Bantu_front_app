@@ -116,21 +116,20 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
     </motion.div>
   );
 
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-    >
-      <div className="min-h-screen">
-        {/* Header */}
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between py-6">
-              <div className="flex items-center">
-                <h1 className="text-2xl font-semibold text-emerald-400">Vos résultats de recherche</h1>
-              </div>
+return (
+  <motion.section
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, amount: 0.1 }}
+    transition={{ duration: 0.8, ease: 'easeOut' }}
+  >
+    <div className="min-h-screen">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between py-6">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-semibold text-emerald-400">Offres d’emploi disponibles</h1>
             </div>
           </div>
         </div>
