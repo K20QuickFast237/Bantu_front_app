@@ -61,13 +61,13 @@ const HeaderWhite = () => {
             to="/login"
             className="px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
           >
-            Login
+            Connexion
           </NavLink>
           <NavLink
             to="/register"
             className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
           >
-            Register
+            Inscription
           </NavLink>
         </div>
       </div>

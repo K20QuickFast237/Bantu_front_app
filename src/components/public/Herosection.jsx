@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 // Importation des images
-import imgHero from '../../assets/imgHero.png';
-import imgHero2 from '../../assets/imgHero2.png';
-import fleche from '../../assets/fleche.png';
+// import imgHero2 from '../../assets/imgHero2.png'; // Remplacé par le carrousel
+// import fleche from '../../assets/fleche.png';
 import graffiti from '../../assets/graphitti.png';
 import ProfilesIcon from '../../assets/Profiles.png';
 import BuyIcon from '../../assets/Buy.png';
@@ -17,6 +16,24 @@ const HeroSection = () => {
     hidden: { y: -100, opacity: 0 },
     visible: { y: 0, opacity: 1 },
   };
+
+  // Images pour le carrousel
+  const carouselImages = [
+    'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop', // Réunion d'équipe
+    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop', // Personnes travaillant sur des ordinateurs
+    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop', // Collaboration sur un projet
+    'https://images.unsplash.com/photo-1600880292203-942bb68b2432?q=80&w=1887&auto=format&fit=crop', // Poignée de main
+    'https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=1887&auto=format&fit=crop', // Femme d'affaires dans un bureau
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % carouselImages.length);
+    }, 4000); // Change d'image toutes les 4 secondes
+    return () => clearInterval(timer);
+  }, [carouselImages.length]);
 
   return (
     // Section principale avec le fond dégradé et le débordement masqué
@@ -131,25 +148,41 @@ const HeroSection = () => {
         </motion.div>
 
         {/* Colonne droite: image téléphone + flèche */}
-        <div className="relative w-full h-full flex justify-end items-end">
-          <div
-            // Modification pour que le bas touche la fin de la section
-            // Suppression de la classe translate-y négative
-            className="absolute right-0 bottom-0
-                       w-[320px] h-[320px] md:w-[450px] md:h-[450px] lg:w-[650px] lg:h-[650px] xl:w-[650px] xl:h-[750px]
-                       bg-contain bg-no-repeat bg-right-bottom z-10 animate-fade-in-right animation-delay-800
-                       transform-gpu" // REMPLACÉ lg:-translate-y-48 par transform-gpu seul
-            // style={{ backgroundImage: `url(${imgHero})` }}
-            style={{ backgroundImage: `url(${imgHero2})` }}
+        <div className="relative w-full h-full hidden lg:flex justify-center items-center">
+          {/* SVG pour la forme de vague */}
+          <svg width="0" height="0">
+            <defs>
+              <clipPath id="waveClip" clipPathUnits="objectBoundingBox">
+                <path d="M 0.25 0 L 1 0 L 1 1 L 0.25 1 L 0 0.5 Z" />
+              </clipPath>
+            </defs>
+          </svg>
+
+          <motion.div
+            className="w-[550px] h-[650px] xl:w-[600px] xl:h-[700px] relative shadow-2xl"
+            style={{ clipPath: 'url(#waveClip)' }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.5, ease: 'easeOut' }}
           >
-            {/* fleche.png par-dessus imgHero (la div de fond) */}
-            {/* <img
-              src={fleche}
-              alt="Decorative arrow"
-              className="absolute top-36 right-[-115px] w-full h-[80%] object-contain animate-bounce-slow"
-              style={{ animationDelay: '1000ms' }}
-            /> */}
-          </div>
+            {/* Carrousel d'images à l'intérieur */}
+            <motion.div
+              className="w-full h-full"
+              animate={{ x: `-${currentImageIndex * 100}%` }}
+              transition={{ duration: 1, ease: [0.42, 0, 0.58, 1] }}
+            >
+              <div className="flex w-max h-full">
+                {carouselImages.map((src, index) => (
+                  <img
+                    key={index}
+                    src={src}
+                    alt={`Slide ${index + 1}`} // La largeur de l'image doit correspondre à la largeur du conteneur
+                    className="w-[600px] h-full object-cover"
+                  />
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
       

@@ -125,6 +125,7 @@ const validationSchemas = [
   }),
   // Step 2: OFFRE (tous requis et typés)
   Yup.object({
+    categorie_id: Yup.string().required('Catégorie requise'),
     titre_poste: Yup.string().required('Titre requis'),
     date_limite_soumission: Yup.date()
       .typeError('Date invalide')
@@ -160,6 +161,7 @@ const validationSchemas = [
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [formData, setFormData] = useState();
   const { professionnel } = useAuth();
   const [documents, setDocuments] = useState([]);
@@ -200,6 +202,22 @@ const MultiStepForm = () => {
       }
     }
     fetchSkills();
+
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/categories');
+        console.log(response);
+        // Assurer que nous avons bien un tableau. L'API peut retourner { data: [...] }
+        const categories = Array.isArray(response.data) ? response.data : response.data?.data || [];
+        setCategoriesList(categories);
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des catégories.", {
+          description: `${error.message}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        });
+      }
+    };
+    fetchCategories();
   }, [])
 
   const initialValues = {
@@ -212,6 +230,7 @@ const MultiStepForm = () => {
     ville: professionnel?.ville || '',
     adresse: professionnel?.adresse || '',
     description_entreprise: professionnel?.description_entreprise || '',
+    categorie_id: '',
     titre_poste: '',
     date_limite_soumission: '',
     fonction: '',
@@ -262,9 +281,9 @@ const MultiStepForm = () => {
   };
 
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // const handleInputChange = (field, value) => {
+  //   setFormData(prev => ({ ...prev, [field]: value }));
+  // };
 
   const scrollToTop = () => {
     if (formRef.current) {
@@ -272,12 +291,12 @@ const MultiStepForm = () => {
     }
   };
 
-  const handleNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-      scrollToTop();
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentStep < 4) {
+  //     setCurrentStep(currentStep + 1);
+  //     scrollToTop();
+  //   }
+  // };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -286,22 +305,22 @@ const MultiStepForm = () => {
     }
   };
 
-  const handleStepClick = async (stepNumber, formik) => {
-    if (stepNumber === currentStep) return;
-    // Validation avant de changer d'étape
-    const valid = await formik.validateForm();
-    formik.setTouched(
-      Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-    );
-    if (Object.keys(valid).length === 0) {
-      setCurrentStep(stepNumber);
-      scrollToTop();
-    }
-  };
+  // const handleStepClick = async (stepNumber, formik) => {
+  //   if (stepNumber === currentStep) return;
+  //   // Validation avant de changer d'étape
+  //   const valid = await formik.validateForm();
+  //   formik.setTouched(
+  //     Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+  //   );
+  //   if (Object.keys(valid).length === 0) {
+  //     setCurrentStep(stepNumber);
+  //     scrollToTop();
+  //   }
+  // };
 
   const handleCancel = () => {
     setShowPreview(false);
-    navigate('/dashboardrecruteurprofil', { state: { section: 'job-posts' } });
+    navigate('/dashboard' );
   };
 
   // Fonction unique pour publier l'offre
@@ -319,7 +338,7 @@ const MultiStepForm = () => {
       await api.post('/offres', payload);
       toast.success("Offre publiée avec succès !");
       actions.resetForm();
-      navigate('/dashboardrecruteurprofil', { state: { section: 'job-posts' } });
+      navigate('/job-post');
     } catch (error) {
       toast.error("Erreur de publication :", {
         description: error.response?.data?.message || "Une erreur inattendue est survenue.",
@@ -484,7 +503,7 @@ const MultiStepForm = () => {
         <button
           type="button"
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          onClick={formik.handleReset}
+          onClick={handleCancel}
         >
           Annuler
         </button>
@@ -521,6 +540,22 @@ const MultiStepForm = () => {
           <ErrorMessage name="date_limite_soumission" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+        <Field as="select" name="categorie_id" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+          <option value="">Sélectionner une catégorie</option>
+          {categoriesList.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.nom}
+            </option>
+          ))}
+        </Field>
+        <ErrorMessage name="categorie_id" component="div" className="text-red-500 text-xs" />
+      </div>
+
+
+
 
       <div className="grid grid-cols-2 gap-4">
         <div>

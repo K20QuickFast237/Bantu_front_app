@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
 const Header = () => {
   // State for scroll effect and mobile menu visibility
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, token, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Adds/removes scroll listener for header background change
   useEffect(() => {
@@ -15,6 +17,11 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   // Class for NavLink styling, applies active state visual feedback
   const navLinkClass = ({ isActive }) =>
@@ -73,18 +80,37 @@ const Header = () => {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center space-x-4">
-          <NavLink
-            to="/login"
-            className="px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
-          >
-            Login
-          </NavLink>
-          <NavLink
-            to="/register"
-            className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
-          >
-            Register
-          </NavLink>
+          {user && token ? (
+            <>
+              <NavLink
+                to="/profil" // ou une autre route de dashboard
+                className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+              >
+                Mon compte
+              </NavLink>
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 text-white bg-red-600 rounded-full font-medium hover:bg-red-700 transition-colors"
+              >
+                Déconnexion
+              </button>
+            </>
+          ) : (
+            <>
+              <NavLink
+                to="/login"
+                className="px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
+              >
+                Connexion
+              </NavLink>
+              <NavLink
+                to="/register"
+                className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+              >
+                Inscription
+              </NavLink>
+            </>
+          )}
         </div>
       </div>
 
@@ -101,20 +127,40 @@ const Header = () => {
           <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Tarifs</NavLink>
           <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Support</NavLink>
           <div className="w-full max-w-xs px-4 mt-6 space-y-4"> {/* Added container for auth buttons to control width */}
-            <NavLink
-              to="/login"
-              className="block w-full text-center px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Login
-            </NavLink>
-            <NavLink
-              to="/register"
-              className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Register
-            </NavLink>
+            {user && token ? (
+              <>
+                <NavLink
+                  to="/profil"
+                  className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Mon compte
+                </NavLink>
+                <button
+                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  className="block w-full text-center px-6 py-2 text-white bg-red-600 rounded-full font-medium hover:bg-red-700 transition-colors"
+                >
+                  Déconnexion
+                </button>
+              </>
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  className="block w-full text-center px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Connexion
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Inscription
+                </NavLink>
+              </>
+            )}
           </div>
         </div>
       </div>

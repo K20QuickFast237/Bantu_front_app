@@ -3,20 +3,26 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from 'react-router-dom';
+import Infopersonelles from '@/components/app/infopersonelles';
+import Experiences from '@/components/app/Experiences';
+import Competences from '@/components/app/Competences';
+import DiplomesFormations from '@/components/app/DiplomesFormations';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
+import AutresRessources from '@/components/app/AutresRessources';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Download, Mail, Phone, Linkedin, User, Briefcase, Star, GraduationCap, FileText, MessageSquare } from 'lucide-react';
-
+import { Eye } from 'lucide-react';
 const ApplicationsSection = () => {
   const [applications, setApplications] = useState([]);
   const [filteredApplications, setFilteredApplications] = useState([]);
   const [offersList, setOffersList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState('list'); // 'list' or 'detail'
+  const [view, setView] = useState('list'); // 'list', 'detail', or 'profile'
   const [detailLoading, setDetailLoading] = useState(false);
   const [statusChangeLoading, setStatusChangeLoading] = useState({ preselect: false, reject: false });
   const [selectedApplication, setSelectedApplication] = useState(null);
-
+  const [selectedProfile, setSelectedProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(false);
   const navigate = useNavigate();
   const [filters, setFilters] = useState({
     fromDate: '',
@@ -93,7 +99,7 @@ const ApplicationsSection = () => {
     setSelectedApplication(null); // Clear previous data
     try {
       // Comme demandé, utilisation de PUT pour récupérer les détails.
-      const response = await api.put(`/candidatures/${application.id}`);
+      const response = await api.get(`/candidatures/${application.id}`);
       setSelectedApplication(response.data);
     } catch (error) {
       toast.error(error.message || "Erreur lors du chargement des détails de la candidature.");
@@ -106,6 +112,24 @@ const ApplicationsSection = () => {
   const handleBackToList = () => {
     setSelectedApplication(null);
     setView('list');
+  };
+
+  const handleShowProfile = async (particulierId) => {
+    if (!particulierId) {
+      toast.error("ID du candidat manquant.");
+      return;
+    }
+    setProfileLoading(true);
+    setView('profile');
+    try {
+      const response = await api.get(`/user/${particulierId}`);
+      setSelectedProfile(response.data);
+    } catch (error) {
+      toast.error("Erreur lors du chargement du profil du candidat.");
+      setView('detail'); // Revenir à la vue précédente en cas d'erreur
+    } finally {
+      setProfileLoading(false);
+    }
   };
 
   const handleStatusChange = async (newStatus) => {
@@ -158,6 +182,40 @@ const ApplicationsSection = () => {
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
+  const renderProfileView = () => {
+    if (profileLoading) {
+      return (
+        <div className="flex justify-center items-center h-full min-h-[500px]">
+          <BantulinkLoader />
+        </div>
+      );
+    }
+
+    if (!selectedProfile) {
+      return (
+        <div className="text-center py-10">
+          <p>Profil non trouvé.</p>
+          <Button onClick={() => setView('detail')} className="mt-4" variant="outline">Retour à la candidature</Button>
+        </div>
+      );
+    }
+
+    // Pour que les composants enfants fonctionnent, nous devons simuler le contexte `useAuth`
+    // ou leur passer les données nécessaires via les props.
+    // Ici, nous passons les données via les props.
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <Button onClick={() => setView('detail')} variant="ghost" className="mb-6">
+          <ChevronLeft size={20} className="mr-2" /> Retour à la candidature
+        </Button>
+        <Infopersonelles onEditClick={() => {}} particulier={selectedProfile.particulier} user={selectedProfile.user} />
+        <Experiences experiences={selectedProfile.experiences} />
+        <Competences competences={selectedProfile.competences} />
+        <DiplomesFormations formations={selectedProfile.formations} />
+        <AutresRessources ressources={selectedProfile.autres_ressources} />
+      </div>
+    );
+  };
   const renderDetailView = () => {
     if (detailLoading) {
       return (
@@ -176,136 +234,109 @@ const ApplicationsSection = () => {
       );
     }
 
-    const candidate = selectedApplication.particulier || {};
-    const offer = selectedApplication.offre_emploi || selectedApplication.offre || {};
-    const experiences = candidate.experiences || [];
-    const competences = candidate.competences || [];
-    const formations = candidate.formations || [];
-    const autresRessources = candidate.autres_ressources || [];
+    const { particulier, offre, motivation_text, cv_url, certificats, cv_genere } = selectedApplication;
+    const infos = {
+        nom: particulier?.nom || 'N/A',
+        prenom: particulier?.prenom || null,
+        email: particulier?.email || 'N/A',
+        telephone: particulier?.telephone ||'N/A',
+        adresse: particulier?.adresse ||'N/A',
+    };
+    const nomComplet = infos.prenom ? `${infos.nom} ${infos.prenom}` : infos.nom;
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Candidature | {offer.titre_poste || 'N/A'} | {offer.entreprise || 'N/A'} ||{candidate.nom} {candidate.prenom}</h1>
-          <p className="text-gray-600 text-sm">Date de candidature : 10/9/2025</p>
-        </div>
-        <Button onClick={handleBackToList} variant="ghost" className="mb-6">
-          <ChevronLeft size={20} className="mr-2" /> Retour à la liste
-        </Button>
-
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-          <div className="flex flex-col md:flex-row items-start gap-8">
-            <div className="flex-shrink-0">
-              <div className="w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center">
-                {candidate.photo ? (
-                  <img src={candidate.photo} alt={`${candidate.nom} ${candidate.prenom}`} className="w-32 h-32 rounded-full object-cover" />
-                ) : (
-                  <User size={64} className="text-gray-400" />
-                )}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="bg-orange-50 p-6 mb-8">
+              <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                      <button
+                          onClick={handleBackToList}
+                          className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
+                          aria-label="Retour à la liste"
+                      >
+                          <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <div>
+                          <h1 className="text-3xl font-bold text-green-600 mb-2">
+                              Candidature | {offre?.titre_poste || ''} | {nomComplet}
+                          </h1>
+                          <p className="text-gray-700">
+                              Date de candidature : {selectedApplication.created_at ? selectedApplication.created_at.slice(0, 10).split('-').reverse().join('/') : ''}
+                          </p>
+                      </div>
+                  </div>
+                  <div className="flex gap-3">
+                      <Button
+                          className="bg-orange-500 hover:bg-orange-600"
+                          onClick={() => handleStatusChange("preselectionne")}
+                          disabled={statusChangeLoading.preselect || selectedApplication.statut === 'preselectionne'}
+                      >
+                          {statusChangeLoading.preselect ? 'Chargement...' : 'Présélectionner'}
+                      </Button>
+                      <Button
+                          variant="destructive"
+                          onClick={() => handleStatusChange("rejete")}
+                          disabled={statusChangeLoading.reject || selectedApplication.statut === 'rejete'}
+                      >
+                          {statusChangeLoading.reject ? 'Chargement...' : 'Rejeter'}
+                      </Button>
+                  </div>
               </div>
-            </div>
-            <div className="flex-grow">
-              <h1 className="text-3xl font-bold text-gray-900 mb-1">{candidate.nom} {candidate.prenom}</h1>
-              <p className="text-md text-gray-600 mb-4">{candidate.titre_profil || 'Titre du profil non renseigné'}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-700">
-                <div className="flex items-center gap-2"><Mail size={14} className="text-gray-400" /> {candidate.email || 'N/A'}</div>
-                <div className="flex items-center gap-2"><Phone size={14} className="text-gray-400" /> {candidate.telephone || 'N/A'}</div>
-                <div className="flex items-center gap-2"><User size={14} className="text-gray-400" /> {candidate.genre || 'N/A'}</div>
-                {candidate.linkedin && <div className="flex items-center gap-2"><Linkedin size={14} className="text-gray-400" /> <a href={candidate.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Profil LinkedIn</a></div>}
+          </div>
+
+          <div className="bg-white border border-gray-300 rounded-lg p-6 mb-8">
+              <h2 className="text-xl font-bold text-gray-900 mb-6">Information personnelles</h2>
+              <div className="space-y-4">
+                  <div>
+                      <span className="font-bold text-gray-900">Nom : </span>
+                      <span className="text-gray-700">{infos.nom}</span>
+                  </div>
+                  {infos.prenom && infos.prenom !== 'N/A' && (
+                      <div>
+                          <span className="font-bold text-gray-900">Prénom : </span>
+                          <span className="text-gray-700">{infos.prenom}</span>
+                      </div>
+                  )}
+                  <div>
+                      <span className="font-bold text-gray-900">Adresse : </span>
+                      <span className="text-gray-700">{infos.adresse}</span>
+                  </div>
+                  <div>
+                      <span className="font-bold text-gray-900">Email : </span>
+                      <span className="text-gray-700">{infos.email}</span>
+                  </div>
+                  <div>
+                      <span className="font-bold text-gray-900">Téléphone : </span>
+                      <span className="text-gray-700">{infos.telephone}</span>
+                  </div>
               </div>
-              <div className="mt-6 flex gap-3">
-                <Button
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={() => handleStatusChange('preselectionne')}
-                  disabled={statusChangeLoading.preselect || selectedApplication.statut === 'preselectionne'}
-                >
-                  {statusChangeLoading.preselect ? 'Chargement...' : 'Présélectionner'}
-                </Button>
-                <Button
-                  variant="destructive"
-                  onClick={() => handleStatusChange('rejete')}
-                  disabled={statusChangeLoading.reject || selectedApplication.statut === 'rejete'}
-                >
-                  {statusChangeLoading.reject ? 'Chargement...' : 'Rejeter'}
-                </Button>
-                {selectedApplication.statut === 'preselectionne' && (
-                  <Button
-                    className="bg-green-600 hover:bg-green-700"
-                    onClick={() => handleStartConversation(candidate.user_id)}
-                  >
-                    <MessageSquare size={16} className="mr-2" /> Contacter
-                  </Button>
-                )}
+          </div>
+
+          <div className="bg-white border border-gray-300 rounded-lg p-6 mb-12">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Profil candidat</h2>
+              <div className="flex gap-8">
+                  {cv_genere ? (
+                      <button
+                        onClick={() => handleShowProfile(selectedApplication.particulier_id || selectedApplication.candidat_id)}
+                        className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2"
+                      >
+                          <User className="w-4 h-4" />
+                          Voir le profil du candidat
+                      </button>
+                  ) : cv_url ? (
+                      <>
+                          <a href={`/storage/${cv_url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 font-medium underline flex items-center gap-2">
+                              <Eye className="w-4 h-4" />
+                              Prévisualiser le CV
+                          </a>
+                          <a href={`/storage/${cv_url}`} download className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2">
+                              <Download className="w-4 h-4" />
+                              Télécharger le CV
+                          </a>
+                      </>
+                  ) : <p className="text-gray-500">Aucun CV ou profil BantuLink fourni.</p>}
               </div>
-            </div>
           </div>
-        </div>
-
-        {candidate.resume && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <h2 className="text-xl font-bold text-orange-500 mb-3">Résumé du Profil</h2>
-            <p className="text-gray-700 leading-relaxed">{candidate.resume}</p>
-          </div>
-        )}
-
-        {experiences.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <h2 className="text-xl font-bold text-orange-500 mb-4 flex items-center gap-2"><Briefcase size={20} /> Expériences</h2>
-            <div className="space-y-6">
-              {experiences.map(exp => (
-                <div key={exp.id} className="pl-4 border-l-2 border-orange-500">
-                  <h3 className="font-semibold text-gray-800">{exp.titre_poste}</h3>
-                  <p className="text-sm text-gray-600">{exp.entreprise} • {exp.lieu}</p>
-                  <p className="text-xs text-gray-500">{formatDate(exp.date_debut)} - {exp.en_cours ? 'Aujourd\'hui' : formatDate(exp.date_fin)}</p>
-                  <p className="text-sm text-gray-700 mt-2">{exp.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {competences.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <h2 className="text-xl font-bold text-orange-500 mb-4 flex items-center gap-2"><Star size={20} /> Compétences</h2>
-            <div className="flex flex-wrap gap-2">
-              {competences.map(comp => (
-                <span key={comp.id} className="bg-gray-100 text-gray-800 text-sm font-medium px-3 py-1 rounded-full">{comp.nom}</span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {formations.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <h2 className="text-xl font-bold text-orange-500 mb-4 flex items-center gap-2"><GraduationCap size={20} /> Diplômes & Formations</h2>
-            <div className="space-y-6">
-              {formations.map(form => (
-                <div key={form.id} className="pl-4 border-l-2 border-orange-500">
-                  <h3 className="font-semibold text-gray-800">{form.diplome}</h3>
-                  <p className="text-sm text-gray-600">{form.etablissement}</p>
-                  <p className="text-xs text-gray-500">{formatDate(form.date_debut)} - {formatDate(form.date_fin)}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {autresRessources.length > 0 && (
-          <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-            <h2 className="text-xl font-bold text-orange-500 mb-4 flex items-center gap-2"><FileText size={20} /> Autres Ressources</h2>
-            <div className="space-y-3">
-              {autresRessources.map(res => (
-                <div key={res.id} className="flex items-center gap-4">
-                  <span className="text-gray-700 font-medium">{res.nom_document}:</span>
-                  <a href={res.url_document} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm flex items-center gap-2">
-                    <span>{res.url_document.split('/').pop()}</span>
-                    <Download size={16} />
-                  </a>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     );
   };
@@ -428,6 +459,17 @@ const ApplicationsSection = () => {
             {renderDetailView()}
           </motion.div>
         )}
+        {view === 'profile' ? (
+          <motion.div
+            key="profile"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            {renderProfileView()}
+          </motion.div>
+        ) : null}
       </AnimatePresence>
     </main>
   );

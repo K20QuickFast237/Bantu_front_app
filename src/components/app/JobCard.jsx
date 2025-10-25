@@ -163,7 +163,8 @@ return (
           )}
         </div>
       </div>
-    </motion.section>
+    </div>
+  </motion.section>
   );
 };
 

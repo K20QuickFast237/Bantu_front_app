@@ -53,7 +53,7 @@ const HeroCompany = () => {
           <div className="flex items-center">
             {/* Logo - Half inside, half outside */}
             <div className="bg-gray-200 p-6 mr-4">
-              <img src={BantulinkLogo} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+              <img src={`/storage/${professionnel.logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
 
             {/* Company Info */}

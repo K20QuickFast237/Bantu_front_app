@@ -18,7 +18,7 @@ import { Loader2, Trash2 } from 'lucide-react';
 const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   const { user, token, updateUser, particulier } = useAuth();
   const [imageFile, setImageFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(particulier?.image_profil || '');
+  const [previewImage, setPreviewImage] = useState(particulier?.image_profil ? `/storage/${particulier.image_profil}` : '');
   const [cvFiles, setCvFiles] = useState([]);
   const [lettreFiles, setLettreFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,7 +76,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
           ...prevUser,
           particulier: updatedParticulier
         }));
-        setPreviewImage(updatedParticulier.image_profil || '');
+        setPreviewImage(updatedParticulier.image_profil ? `/storage/${updatedParticulier.image_profil}` : '');
         // Dispatch event to update profile completion bar
         window.dispatchEvent(new CustomEvent('profile-updated'));
 
@@ -219,7 +219,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
               ))}
             </div>
             {particulier?.cv_link && cvFiles.length === 0 && (
-              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>
+              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={`${import.meta.env.VITE_API_BASE_URL}/storage/${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>
             )}
           </div>
           <div>
@@ -237,7 +237,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
             </div>
             {particulier?.lettre_motivation_link && lettreFiles.length === 0 && (
               <p className="text-gray-500 text-xs mt-1">
-                Lettre actuelle : <a href={particulier.lettre_motivation_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.
+                Lettre actuelle : <a href={`${import.meta.env.VITE_API_BASE_URL}/storage/${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.
               </p>
             )}
           </div>

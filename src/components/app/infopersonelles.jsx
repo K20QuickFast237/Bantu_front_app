@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Mail, Phone, User, Edit, Map, Eye } from 'lucide-react';
+import { Mail, Phone, User, Edit, Map, Eye, FileText} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
@@ -148,7 +148,7 @@ const Infopersonelles = ({ onEditClick }) => {
             <div className="flex justify-center md:justify-start">
               <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300">
                 {particulier.image_profil ? (
-                  <img src={particulier.image_profil} alt="Profil" className="w-full h-full object-cover rounded-full" />
+                  <img src={`/storage/${particulier.image_profil}`} alt="Profil" className="w-full h-full object-cover rounded-full" />
                 ) : (
                   <User size={50} className="text-gray-500 sm:size-[60px]" />
                 )}
@@ -183,16 +183,16 @@ const Infopersonelles = ({ onEditClick }) => {
                 </div>
                 {particulier.cv_link && (
                   <div className="flex items-center">
-                    <User size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
+                    <a href={`/storage/${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir le CV
                     </a>
                   </div>
                 )}
                 {particulier.lettre_motivation_link && (
                   <div className="flex items-center">
-                    <User size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={particulier.lettre_motivation_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
+                    <a href={`/storage/${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir la lettre de motivation
                     </a>
                   </div>

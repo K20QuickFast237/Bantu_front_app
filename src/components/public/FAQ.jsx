@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import api from '../../services/api';
 import Fleche2Icon from '../../assets/fleche2.png';
 import GraffitiRedIcon from '../../assets/Grafitti.png';
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const faqs = [
     {
@@ -23,6 +28,29 @@ const FAQ = () => {
 
   const toggleFAQ = (index) => {
     setOpenIndex(openIndex === index ? null : index);
+  };
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      toast.error("Veuillez entrer une adresse e-mail.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await api.post('/newsletter/subscribe', { email });
+      toast.success("Merci pour votre inscription à notre newsletter !");
+      setEmail(''); // Réinitialiser le champ après succès
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de l'inscription.";
+      toast.error("Erreur d'inscription", {
+        description: errorMessage,
+      });
+      console.error("Newsletter subscription error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -72,7 +100,8 @@ const FAQ = () => {
           >
             Si vous avez des questions, nous y répondrons.
           </motion.p>
-          <motion.div
+          <motion.form
+            onSubmit={handleSubscribe}
             className="flex flex-row items-center w-full max-w-sm border border-gray-300 rounded-full overflow-hidden p-1 bg-white shadow-sm"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -81,17 +110,22 @@ const FAQ = () => {
           >
             <input
               type="email"
-              placeholder="Enter Votre Email"
-              className="flex-grow p-2 text-gray-700 placeholder-gray-400 focus:outline-none bg-transparent"
+              placeholder="Entrez votre email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="flex-grow p-2 text-gray-700 placeholder-gray-400 focus:outline-none bg-transparent ml-2"
+              disabled={isSubmitting}
             />
             <motion.button
-              className="px-6 py-2 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-colors duration-200 focus:outline-none"
+              type="submit"
+              className="px-6 py-2 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-colors duration-200 focus:outline-none flex items-center justify-center disabled:bg-gray-500"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              disabled={isSubmitting}
             >
-              S'inscrire
+              {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : "S'inscrire"}
             </motion.button>
-          </motion.div>
+          </motion.form>
         </motion.div>
 
         {/* Section de droite : Questions/Réponses fréquentes */}
