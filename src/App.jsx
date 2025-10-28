@@ -30,7 +30,7 @@ import JobApplicationForm from "./pages/app/JobApplicationForm";
 import CandidatProfil from "./pages/app/CandidatProfil";
 import CompanyProfilePage from "./pages/app/CompanyProfilePage"; // Nouvelle page profil entreprise
 import CompletionProfessionnel from "./pages/app/InscriptionEntreprise";
-import Test from "./components/app/Test";
+
 import DashboardCandidatureSpec from "./pages/app/Dashboard_candidature_spec";
 import ProfilCandidatByRecruteur from "./pages/app/ProfilCandidatByRecruteur";
 
@@ -61,7 +61,6 @@ const App = () => {
           <Route path="/support" element={<Support />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/test" element={<Test/>}/>
           <Route path="/EmailVerification" element={<EmailVerification/>}/>
           <Route path="/auth/linkedin/callback" element={<LinkedInCallback />} />
           <Route path="/forgotpassword1" element={<ForgotPasswordForm/>}/>
