@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion'; // Ajout pour animation dropdown
+import { Globe, ChevronDown } from 'lucide-react'; // Icône pour langue
+import { useTranslation } from 'react-i18next'; // Hook pour traductions
+import i18n from '@/i18n';
 
 const HeaderWhite = () => {
-  // State for mobile menu visibility
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false); // État pour dropdown langue
+  const { t } = useTranslation(); // Hook i18n
 
-  // Class for NavLink styling, applies active state visual feedback
   const navLinkClass = ({ isActive }) =>
     `relative pb-1 font-light transition-colors duration-200 ${
       isActive
@@ -14,9 +17,20 @@ const HeaderWhite = () => {
         : 'text-gray-900 hover:text-blue-500'
     }`;
 
+  // Fonction pour switch langue
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setIsLangOpen(false); // Ferme le dropdown
+  };
+
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -10, scale: 0.95 },
+  };
+
   return (
-    
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-200 px-4 sm:px-6 lg:px-8"> {/* Adjusted padding for better responsiveness */}
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md border-b border-gray-200 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
@@ -26,15 +40,15 @@ const HeaderWhite = () => {
           <span className="ml-2 text-xl font-semibold text-gray-900">Bantulink</span>
         </div>
 
-        {/* Mobile Menu Button (Hamburger/Close Icon) */}
+        {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-gray-900 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition-colors" // Added padding and hover effect for better touch
+            className="text-gray-900 focus:outline-none p-2 rounded-md hover:bg-gray-100 transition-colors"
             aria-label="Toggle mobile menu"
           >
             <svg
-              className="w-7 h-7" // Slightly larger for easier tap
+              className="w-7 h-7"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -49,14 +63,56 @@ const HeaderWhite = () => {
           </button>
         </div>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-8">
-          <NavLink to="/home" className={navLinkClass}>Accueil</NavLink>
-          <NavLink to="/about" className={navLinkClass}>À Propos</NavLink>
-          <NavLink to="/features" className={navLinkClass}>Fonctionnalités</NavLink>
-          <NavLink to="/pricing" className={navLinkClass}>Tarifs</NavLink>
-          <NavLink to="/support" className={navLinkClass}>Support</NavLink>
-        </nav>
+        {/* Desktop Navigation Links + Langue Dropdown */}
+        <div className="hidden md:flex items-center space-x-8">
+          <nav className="flex items-center space-x-8">
+            <NavLink to="/home" className={navLinkClass}>{t('header.home')}</NavLink>
+            <NavLink to="/about" className={navLinkClass}>{t('header.about')}</NavLink>
+            <NavLink to="/features" className={navLinkClass}>{t('header.features')}</NavLink>
+            <NavLink to="/pricing" className={navLinkClass}>{t('header.pricing')}</NavLink>
+            <NavLink to="/support" className={navLinkClass}>{t('header.support')}</NavLink>
+          </nav>
+
+          {/* Dropdown Langue */}
+          <div className="relative">
+            <button
+              onClick={() => setIsLangOpen(!isLangOpen)}
+              className="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100 transition-colors"
+            >
+              <Globe className="w-4 h-4" />
+              <span className="text-sm font-medium">{t('header.language')}</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <AnimatePresence>
+              {isLangOpen && (
+                <motion.ul
+                  variants={dropdownVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="absolute top-full right-0 mt-1 w-24 bg-white rounded-md shadow-lg border border-gray-200"
+                >
+                  <li>
+                    <button
+                      onClick={() => changeLanguage('fr')}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      {t('header.fr')}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => changeLanguage('en')}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                    >
+                      {t('header.en')}
+                    </button>
+                  </li>
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
 
         {/* Desktop Auth Buttons */}
         <div className="hidden md:flex items-center space-x-4">
@@ -64,43 +120,43 @@ const HeaderWhite = () => {
             to="/login"
             className="px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
           >
-            Login
+            {t('header.login')}
           </NavLink>
           <NavLink
             to="/register"
             className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
           >
-            Register
+            {t('header.register')}
           </NavLink>
         </div>
       </div>
 
-      {/* Mobile Menu (Visible when mobileMenuOpen is true) */}
+      {/* Mobile Menu */}
       <div
         className={`md:hidden absolute top-full left-0 right-0 bg-white shadow-lg border-t border-gray-200 transition-all duration-300 ease-in-out transform ${
-          mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none' // Smooth slide-down effect
+          mobileMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
         }`}
       >
-        <div className="flex flex-col items-center py-6 space-y-4"> {/* Increased vertical padding and spacing */}
-          <NavLink to="/home" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Accueil</NavLink>
-          <NavLink to="/about" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>À Propos</NavLink>
-          <NavLink to="/features" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Fonctionnalités</NavLink>
-          <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Tarifs</NavLink>
-          <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>Support</NavLink>
-          <div className="w-full max-w-xs px-4 mt-6 space-y-4"> {/* Added container for auth buttons to control width */}
+        <div className="flex flex-col items-center py-6 space-y-4">
+          <NavLink to="/home" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.home')}</NavLink>
+          <NavLink to="/about" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.about')}</NavLink>
+          <NavLink to="/features" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.features')}</NavLink>
+          <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.pricing')}</NavLink>
+          <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.support')}</NavLink>
+          <div className="w-full max-w-xs px-4 mt-6 space-y-4">
             <NavLink
               to="/login"
               className="block w-full text-center px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Login
+              {t('header.login')}
             </NavLink>
             <NavLink
               to="/register"
               className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Register
+              {t('header.register')}
             </NavLink>
           </div>
         </div>

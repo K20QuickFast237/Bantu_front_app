@@ -2,27 +2,30 @@ import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react'; 
 import FaqImage from '../../assets/faq2.png'; 
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
-const faqs = [
-  {
-    question: "Quels modes de paiement acceptez-vous ?",
-    answer: "Nous acceptons les cartes de crédit (Visa, MasterCard, American Express), PayPal, et les virements bancaires pour les plans annuels."
-  },
-  {
-    question: "Puis-je changer mon plan à tout moment ?",
-    answer: "Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment depuis votre tableau de bord. Les changements de plan prennent effet immédiatement ou à la fin de votre cycle de facturation actuel, selon le cas."
-  },
-  {
-    question: "Y a-t-il un essai gratuit disponible ?",
-    answer: "Oui, nous offrons un essai gratuit de 14 jours pour notre plan Pro, vous permettant d'explorer toutes les fonctionnalités avant de vous engager."
-  },
-  {
-    question: "Que se passe-t-il si je j'annule mon abonnement ?",
-    answer: "Si vous annulez votre abonnement, votre compte restera actif jusqu'à la fin de la période de facturation en cours. Après cela, votre accès aux fonctionnalités premium sera révoqué, et votre compte passera au plan gratuit."
-  }
-];
+
 
 const FaqTarif = () => {
+  const { t } = useTranslation(); // Hook i18n
+  const faqs = [
+  {
+    question: t('tarif.faq.paymentMethods.question'),
+    answer: t('tarif.faq.paymentMethods.answer')
+  },
+  {
+    question: t('tarif.faq.changePlan.question'),
+    answer: t('tarif.faq.changePlan.answer')
+  },
+  {
+    question: t('tarif.faq.freeTrial.question'),
+    answer: t('tarif.faq.freeTrial.answer')
+  },
+  {
+    question: t('tarif.faq.cancelSubscription.question'),
+    answer: t('tarif.faq.cancelSubscription.answer')
+  }
+];
   // État pour gérer quel élément de la FAQ est ouvert
   // Un tableau vide signifie qu'aucun n'est ouvert par défaut
   const [openIndex, setOpenIndex] = useState(null);
@@ -41,7 +44,7 @@ const FaqTarif = () => {
       >
       <div className="text-center mb-16">
         <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 leading-tight">
-          Foires Aux Questions
+          {t('tarif.faq.title')}
         </h2>
       </div>
 

@@ -1,25 +1,29 @@
 import React from "react";
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const features = [
+  
   {
-    title: "Smart Job Search",
-    desc: "Find offers tailored to your profile with our AI-powered matching algorithm that learns your preferences.",
+    title: t('career.smartSearch.title'),
+    desc: t('career.smartSearch.desc'),
   },
   {
-    title: "Real-time chat",
-    desc: "Talk to recruiters instantly and get immediate feedback on your applications and interview requests.",
+    title: t('career.realTimeChat.title'),
+    desc: t('career.realTimeChat.desc'),
   },
   {
-    title: "Video Interviews",
-    desc: "Get hired from your couch with seamless video interviews integrated directly into the platform.",
+    title: t('career.videoInterviews.title'),
+    desc: t('career.videoInterviews.desc'),
   },
   {
-    title: "Skill Certifications",
-    desc: "Validate your skills, stand out from the crowd with verified certifications and skill assessments.",
+    title: t('career.skillCertifications.title'),
+    desc: t('career.skillCertifications.desc'),
   },
 ];
 
 const FonctionnalitesCareer = () => {
+  const { t } = useTranslation(); // Hook i18n
+
   return (
     <section className="relative w-full bg-[#EBF4FF] py-14 overflow-hidden">
       {/* Vague top */}
@@ -43,10 +47,10 @@ const FonctionnalitesCareer = () => {
             BantuHire
           </span>
           <h2 className="text-2xl md:text-3xl font-extrabold text-[#1a2979] text-center mb-2">
-            Your Career Journey Starts Here
+            {t('career.title')}
           </h2>
           <p className="text-gray-500 text-center max-w-2xl">
-            Connect with opportunities, showcase your skills, and land your dream job with intelligent matching.
+            {t('career.subtitle')}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-14">

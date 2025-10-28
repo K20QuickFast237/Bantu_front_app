@@ -1,0 +1,316 @@
+{
+  "header": {
+    "home": "Accueil",
+    "about": "À Propos",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "support": "Support",
+    "login": "Connexion",
+    "register": "Inscription",
+    "myAccount": "Mon compte",
+    "logout": "Déconnexion",
+    "language": "Langue",
+    "fr": "Français",
+    "en": "English",
+    "findJob": "Trouver un job",
+    "findCompany": "Trouver une entreprise",
+    "settings": "Paramètres"
+  },
+  "login": {
+    "title": "Se connecter",
+    "email": "Email",
+    "password": "Mot de passe",
+    "rememberMe": "Se souvenir de moi",
+    "forgotPassword": "Mot de passe oublié ?",
+    "connect": "Se connecter",
+    "continueWith": "Continuer avec",
+    "notRegistered": "Pas encore inscrit ?",
+    "signUp": "S'inscrire",
+    "googleError": "Erreur de connexion avec Google",
+    "success": "Connexion réussie !",
+    "error": "Erreur de connexion",
+    "invalid": "Email ou mot de passe incorrect. Veuillez réessayer.",
+    "emailPlaceholder": "Entrez votre adresse email",
+    "passwordPlaceholder": "Entrez votre mot de passe"
+  },
+  "register": {
+    "title": "Créer mon compte",
+    "name": "Nom",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "register": "S'inscrire",
+    "continueWith": "Continuer avec",
+    "alreadyRegistered": "Déjà inscrit ?",
+    "login": "Se connecter",
+    "success": "Inscription réussie !",
+    "successDesc": "Un code de vérification vous a été envoyé par mail, vérifiez votre boîte courriel",
+    "error": "Erreur lors de l'inscription",
+    "errorDesc": "Une erreur est survenue lors de l'inscription. Veuillez réessayer.",
+    "namePlaceholder": "Entrez votre nom",
+    "emailPlaceholder": "Entrez votre adresse email",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "confirmPasswordPlaceholder": "Confirmez votre mot de passe"
+  },
+  "category": {
+    "title": "Parcourir Par Catégorie",
+    "description": "Choisissez une catégorie ci-dessous pour trouver des sujets d'aide spécifiques et des questions fréquemment posées adaptées à vos besoins.",
+    "account": {
+      "title": "Compte & Connexion",
+      "desc": "Gérez les paramètres de votre compte, la récupération de mot de passe et les problèmes de connexion."
+    },
+    "orders": {
+      "title": "Commandes & Paiements",
+      "desc": "Suivre les commandes, les méthodes de paiement, les questions de facturation et les remboursements"
+    },
+    "jobs": {
+      "title": "Emplois & Candidatures",
+      "desc": "Trouvez de l'aide avec les annonces d'emploi, les candidatures et les processus de recrutement."
+    },
+    "disputes": {
+      "title": "Litiges & Support Client",
+      "desc": "Signalez des problèmes, résolvez des litiges et obtenez de l'assistance pour le support client."
+    },
+    "explore": "Explorer les sujets"
+  },
+    "about": {
+    "hero": {
+      "title": "À PROPOS"
+    },
+    "whoWeAre": {
+      "title": "Qui sommes-nous ?",
+      "description": "Bantulink n'est pas qu'une simple plateforme numérique. C'est la révolution technologique qui transforme l'Afrique francophone en connectant les talents avec les opportunités et en simplifiant le commerce en ligne pour tous. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
+    },
+    "mission": {
+      "title": "Notre Mission",
+      "description": "Connecter les talents avec les opportunités et simplifier le commerce en ligne pour tous les africains francophones. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
+    },
+    "vision": {
+      "title": "Notre Vision",
+      "description": "Devenir la super application de référence en Afrique francophone, facilitant l'emploi et le commerce pour des millions d'utilisateurs d'ici 2027."
+    }
+  },
+  "aide": {
+    "hero": {
+      "title": "Besoin d'aide ?",
+      "subtitle": "Comment pouvons-nous vous aider aujourd'hui ?",
+      "searchPlaceholder": "Rechercher des sujets, mots-clés ou questions...",
+      "searchButton": "Rechercher",
+      "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé.",
+      "popularSearches": "Recherches populaires :",
+      "popular1": "Réinitialisation du mot de passe",
+      "popular2": "Problèmes de paiement",
+      "popular3": "Candidatures"
+    },
+    "categories": {
+      "account": {
+        "title": "Compte & Connexion",
+        "desc": "Gérez les paramètres de votre compte, la récupération de mot de passe et les problèmes de connexion."
+      },
+      "orders": {
+        "title": "Commandes & Paiements",
+        "desc": "Suivre les commandes, les méthodes de paiement, les questions de facturation et les remboursements"
+      },
+      "jobs": {
+        "title": "Emplois & Candidatures",
+        "desc": "Trouvez de l'aide avec les annonces d'emploi, les candidatures et les processus de recrutement."
+      },
+      "disputes": {
+        "title": "Litiges & Support Client",
+        "desc": "Signalez des problèmes, résolvez des litiges et obtenez de l'assistance pour le support client."
+      }
+    },
+    "topics": {
+      "resetPassword": {
+        "title": "Comment réinitialiser mon mot de passe ?",
+        "category": "Compte et Connexion"
+      },
+      "paymentMethods": {
+        "title": "Méthodes de paiement acceptées",
+        "category": "Commandes et paiements"
+      },
+      "applyJobs": {
+        "title": "Comment postuler pour des emplois",
+        "category": "Emplois et candidatures"
+      },
+      "reportContent": {
+        "title": "Signaler du contenu inapproprié",
+        "category": "Litiges et support client"
+      }
+    }
+  },
+  "tarif": {
+    "cta": {
+      "title": "Besoin d'une solution sur mesure pour vous ?",
+      "description": "Contactez notre équipe pour discuter des fonctionnalités d'entreprise, des intégrations personnalisées et des options de tarification en volume adaptées à votre organisation.",
+      "button": "Contactez-nous"
+    },
+    "faq": {
+      "title": "Foires Aux Questions",
+      "paymentMethods": {
+        "question": "Quels modes de paiement acceptez-vous ?",
+        "answer": "Nous acceptons les cartes de crédit (Visa, MasterCard, American Express), PayPal, et les virements bancaires pour les plans annuels."
+      },
+      "changePlan": {
+        "question": "Puis-je changer mon plan à tout moment ?",
+        "answer": "Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment depuis votre tableau de bord. Les changements de plan prennent effet immédiatement ou à la fin de votre cycle de facturation actuel, selon le cas."
+      },
+      "freeTrial": {
+        "question": "Y a-t-il un essai gratuit disponible ?",
+        "answer": "Oui, nous offrons un essai gratuit de 14 jours pour notre plan Pro, vous permettant d'explorer toutes les fonctionnalités avant de vous engager."
+      },
+      "cancelSubscription": {
+        "question": "Que se passe-t-il si je j'annule mon abonnement ?",
+        "answer": "Si vous annulez votre abonnement, votre compte restera actif jusqu'à la fin de la période de facturation en cours. Après cela, votre accès aux fonctionnalités premium sera révoqué, et votre compte passera au plan gratuit."
+      }
+    }
+  },
+  "coreValues": {
+    "title": "Nos Valeurs Fondamentales",
+    "security": {
+      "title": "Sécurité",
+      "description": "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son parcours, a un accès égal aux opportunités."
+    },
+    "excellence": {
+      "title": "Excellence",
+      "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
+    }
+  },
+  "business": {
+    "title": "Your Business Empire Awaits",
+    "subtitle": "Launch, grow, and scale your business with powerful e-commerce tools and marketing features.",
+    "onlineStore": {
+      "title": "Your Online Store",
+      "description": "Open your shop in minutes with our intuitive store builder. Customize everything from layout to payment options.",
+      "features": [
+        "Drag & drop store builder",
+        "Customizable themes",
+        "Integrated payment gateways"
+      ]
+    },
+    "promotion": {
+      "title": "Promote Your Products",
+      "description": "Promote what matters most with targeted advertising and featured listings to reach more customers.",
+      "features": [
+        "Featured product listings",
+        "Targeted advertising",
+        "Analytics dashboard"
+      ]
+    },
+    "chat": {
+      "title": "Chat with Buyers",
+      "description": "Build trust with real conversations. Answer questions, negotiate prices, and close deals faster.",
+      "features": [
+        "Real-time messaging",
+        "File sharing",
+        "Order tracking"
+      ]
+    }
+  },
+  "faq": {
+    "hero": {
+      "title": "Peut-Être Que Votre Question A Reçu Une Réponse, Vérifiez-La",
+      "whatIs": {
+        "question": "C'est Quoi Bantulink ?",
+        "answer": "Bantulink est une SuperApp qui combine recrutement et e-commerce, permettant aux utilisateurs de trouver un emploi, recruter, vendre ou acheter en toute simplicité dans une seule plateforme."
+      },
+      "services": {
+        "question": "Quels Sont Les Services Que Vous Proposez ?",
+        "answer": "Nous proposons BantuHire pour le recrutement (recherche d'emploi, réseautage, certifications) et BantuMarket pour le commerce (boutiques personnalisées, paiements sécurisés, chat avec clients)."
+      },
+      "access": {
+        "question": "Comment Y Accéder ?",
+        "answer": "Vous pouvez accéder à Bantulink via notre application mobile disponible sur iOS et Android, ou via notre site web. Inscrivez-vous avec votre email pour commencer."
+      }
+    },
+    "newsletter": {
+      "placeholder": "Entrez votre email pour vous abonner",
+      "button": "S'abonner",
+      "success": "Merci pour votre inscription à notre newsletter !",
+      "error": "Veuillez entrer une adresse e-mail valide."
+    }
+  },
+  "career": {
+    "title": "Votre Parcours Professionnel Commence Ici",
+    "subtitle": "Connectez-vous avec des opportunités, mettez en valeur vos compétences et décrochez le job de vos rêves avec un matching intelligent.",
+    "smartSearch": {
+      "title": "Recherche d'emploi intelligente",
+      "desc": "Trouvez des offres adaptées à votre profil avec notre algorithme de matching alimenté par l'IA qui apprend vos préférences."
+    },
+    "realTimeChat": {
+      "title": "Chat en temps réel",
+      "desc": "Parlez aux recruteurs instantanément et obtenez un retour immédiat sur vos candidatures et demandes d'entretien."
+    },
+    "videoInterviews": {
+      "title": "Entretiens vidéo",
+      "desc": "Soyez embauché depuis votre canapé avec des entretiens vidéo fluides intégrés directement dans la plateforme."
+    },
+    "skillCertifications": {
+      "title": "Certifications de compétences",
+      "desc": "Validez vos compétences, démarquez-vous de la foule avec des certifications vérifiées et des évaluations de compétences."
+    }
+  },
+  "features": {
+    "title": "FONCTIONNALITÉS",
+    "bantuHire": {
+      "title": "BantuHire — Le Travail Vous Trouve",
+      "description": "Matching d'emploi alimenté par l'IA qui vous connecte avec des opportunités basées sur vos compétences et préférences. Fini le scrolling interminable — laissez le job parfait venir à vous.",
+      "features": [
+        "Recommandations d'emploi IA",
+        "Candidatures en un clic",
+        "Suggestions de parcours professionnel"
+      ]
+    },
+    "bantuMarket": {
+      "title": "BantuMarket — Vendez Plus Intelligemment, Pas Plus Dur",
+      "description": "Lancez votre boutique en ligne en minutes avec des outils conçus pour les entrepreneurs africains. De la gestion des stocks aux paiements sécurisés, nous couvrons tout.",
+      "features": [
+        "Configuration facile de la boutique",
+        "Annonces optimisées pour mobile",
+        "Analyses intégrées"
+      ]
+    },
+    "community": {
+      "title": "Les Services Communautaires Appellent, Pas Besoin De Les Retarder",
+      "description": "Échangez, Apprenez, Grandissez Ensemble. Freelancers, Recruteurs, Vendeurs Et Acheteurs Vous Attendent.",
+      "button": "Rejoindre La Communauté"
+    }
+  },
+  
+  "experiences": {
+    "title": "Expériences",
+    "add": "Ajouter",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer ?",
+    "deleteDesc": "Cette action est irréversible. L'expérience sera définitivement supprimée.",
+    "cancel": "Annuler",
+    "jobTitle": "Titre du poste",
+    "company": "Entreprise",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "description": "Description des tâches",
+    "address": "Adresse",
+    "city": "Ville",
+    "country": "Pays",
+    "post": "Poste",
+    "location": "Localisation",
+    "date": "Date",
+    "missions": "Description, Missions",
+    "noExperiences": "Aucune expérience enregistrée.",
+    "successUpdate": "Expérience mise à jour avec succès",
+    "successAdd": "Expérience ajoutée avec succès",
+    "successDelete": "Expérience supprimée avec succès",
+    "errorLoad": "Erreur lors du chargement des expériences",
+    "errorSave": "Erreur lors de la sauvegarde de l’expérience",
+    "errorDelete": "Erreur lors de la suppression de l’expérience"
+  }
+}
