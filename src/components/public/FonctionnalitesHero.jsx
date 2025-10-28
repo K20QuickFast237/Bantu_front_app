@@ -1,9 +1,6 @@
 import React from "react";
-import { useTranslation } from 'react-i18next'; // Ajout
 
 const FonctionnalitesHero = () => {
-  const { t } = useTranslation(); // Hook i18n
-
   return (
     <section className="relative w-full py-18 bg-[#f4f7fb] overflow-hidden">
       {/* Rectangle vert avec texte centré */}
@@ -12,7 +9,7 @@ const FonctionnalitesHero = () => {
           className="rounded-2xl shadow-2xl w-[90vw] max-w-[420px] h-[160px] md:h-[220px] flex items-center justify-center bg-[#19b885]"
         >
           <span className="text-white text-2xl md:text-3xl font-bold select-none">
-            {t('featuresHero.mockup')}
+            App Mockup
           </span>
         </div>
       </div>
@@ -47,48 +44,42 @@ const FonctionnalitesHero = () => {
           />
         </svg>
       </div>
-
-      {/* Contenu principal */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Colonne gauche: Texte et boutons */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center lg:text-left"
-          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Transform Your Future with BantuLink
-            </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-lg">
-              The SuperApp connecting Francophone Africa: Find jobs, recruit talent, buy & sell seamlessly—all in one place.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <button className="flex items-center gap-2 px-7 py-3 bg-[#1a2979] text-white font-semibold rounded-xl shadow hover:bg-[#16205c] transition">
-                {/* Briefcase icon with white border */}
-                <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
-                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
-                    <rect x="6" y="7" width="12" height="10" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
-                    <path d="M9 7V5a3 3 0 0 1 6 0v2" stroke="#fff" strokeWidth="2" fill="none"/>
-                  </svg>
-                </span>
-                {t('featuresHero.tryBantuHire')}
-              </button>
-              <button className="flex items-center gap-2 px-7 py-3 bg-[#ffb400] text-white font-semibold rounded-xl shadow hover:bg-[#e09e00] transition">
-                {/* Market/cart icon with white border */}
-                <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
-                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
-                    <circle cx="9" cy="20" r="1" fill="#fff" />
-                    <circle cx="17" cy="20" r="1" fill="#fff" />
-                    <path d="M5 6h2l1 7h8l1-7h2" stroke="#fff" strokeWidth="2" fill="none"/>
-                    <rect x="7" y="6" width="10" height="7" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
-                  </svg>
-                </span>
-                {t('featuresHero.exploreBantuMarket')}
-              </button>
-            </div>
-          </motion.div>
+      {/* Texte et boutons */}
+      <div className="relative z-20 flex flex-col items-center mt-12 text-center">
+        <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-2 text-gray-900">
+          All-in-One Power.
+        </h1>
+        <h2 className="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
+          <span className="text-[#19b885]">Two Worlds.</span>
+          <span className="text-[#0c1f69]">One App.</span>
+        </h2>
+        <p className="text-gray-500 text-base md:text-lg mb-8">
+          From finding jobs to launching your business,<br />
+          BantuLink is your launchpad.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button className="flex items-center gap-2 px-7 py-3 bg-[#1a2979] text-white font-semibold rounded-xl shadow hover:bg-[#16205c] transition">
+            {/* Briefcase icon with white border */}
+            <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
+                <rect x="6" y="7" width="12" height="10" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
+                <path d="M9 7V5a3 3 0 0 1 6 0v2" stroke="#fff" strokeWidth="2" fill="none"/>
+              </svg>
+            </span>
+            Try BantuHire
+          </button>
+          <button className="flex items-center gap-2 px-7 py-3 bg-[#ffb400] text-white font-semibold rounded-xl shadow hover:bg-[#e09e00] transition">
+            {/* Market/cart icon with white border */}
+            <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
+                <circle cx="9" cy="20" r="1" fill="#fff" />
+                <circle cx="17" cy="20" r="1" fill="#fff" />
+                <path d="M5 6h2l1 7h8l1-7h2" stroke="#fff" strokeWidth="2" fill="none"/>
+                <rect x="7" y="6" width="10" height="7" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
+              </svg>
+            </span>
+            Explore BantuMarket
+          </button>
         </div>
       </div>
     </section>

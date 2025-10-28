@@ -73,7 +73,7 @@
     },
     "explore": "Explore Topics"
   },
-    "about": {
+  "about": {
     "hero": {
       "title": "ABOUT"
     },
@@ -88,6 +88,20 @@
     "vision": {
       "title": "Our Vision",
       "description": "Become the reference super app in Francophone Africa, facilitating employment and commerce for millions of users by 2027."
+    },
+    "values": {
+      "innovation": {
+        "title": "Innovation",
+        "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+      },
+      "inclusion": {
+        "title": "Inclusion",
+        "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of background, has equal access to opportunities."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
+      }
     }
   },
   "aide": {
@@ -156,32 +170,9 @@
         "answer": "Yes, you can upgrade or downgrade your plan anytime from your dashboard. Plan changes take effect immediately or at the end of your current billing cycle, as applicable."
       },
       "freeTrial": {
-        "question": "Is there a free trial available?",
-        "answer": "Yes, we offer a 14-day free trial for our Pro plan, allowing you to explore all features before committing."
-      },
-      "cancelSubscription": {
-        "question": "What happens if I cancel my subscription?",
-        "answer": "If you cancel your subscription, your account will remain active until the end of the current billing period. After that, your access to premium features will be revoked, and your account will revert to the free plan."
+        "question": "Do you offer a free trial?",
+        "answer": "Yes, new users get a 14-day free trial on all paid plans. No credit card required to start."
       }
-    }
-  },
-  "coreValues": {
-    "title": "Our Core Values",
-    "security": {
-      "title": "Security",
-      "description": "Security is not an option at BantuLink, it's our absolute priority. In a digital environment where trust is fragile, we have chosen to invest massively in the most advanced security technologies."
-    },
-    "innovation": {
-      "title": "Innovation",
-      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
-    },
-    "inclusion": {
-      "title": "Inclusion",
-      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of background, has equal access to opportunities."
-    },
-    "excellence": {
-      "title": "Excellence",
-      "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
     }
   },
   "business": {
@@ -278,14 +269,12 @@
         "Built-in analytics"
       ]
     },
-    
     "community": {
       "title": "The Community Services Call, No Need To Delay Them",
       "description": "Exchange, Learn, Grow Together. Freelancers, Recruiters, Sellers And Buyers Are Waiting For You.",
       "button": "Join The Community"
     }
   },
-  
   "experiences": {
     "title": "Experiences",
     "add": "Add",
@@ -313,5 +302,147 @@
     "errorLoad": "Error loading experiences",
     "errorSave": "Error saving the experience",
     "errorDelete": "Error deleting the experience"
+  },
+  "footer": {
+    "ecosystemTitle": "Join the all-in-one BantuLink ecosystem",
+    "createAccount": "→ I create my account now",
+    "tags": [
+      "Employment & Recruitment",
+      "Commerce & Services",
+      "Community & Training"
+    ],
+    "logo": "SiteLogo",
+    "columns": {
+      "product": {
+        "title": "Product",
+        "items": [
+          "BantuLink",
+          "BantuMarket",
+          "Certifications & Training",
+          "Subscriptions & Pricing",
+          "Mobile App"
+        ]
+      },
+      "useCases": {
+        "title": "Use Cases",
+        "items": [
+          "For job seekers",
+          "For recruiters",
+          "For sellers",
+          "For buyers",
+          "For freelancers"
+        ]
+      },
+      "resources": {
+        "title": "Resources",
+        "items": [
+          "Help Center",
+          "FAQ",
+          "Tutorials",
+          "Blog & Tips",
+          "Technical Support"
+        ]
+      },
+      "company": {
+        "title": "Company",
+        "items": [
+          "About us",
+          "Team & partners",
+          "Terms of use",
+          "Privacy policy",
+          "Contact us"
+        ]
+      },
+      "social": {
+        "title": "Let's do it!"
+      }
+    },
+    "copyright": "Copyright © 2025 BantuLink. All rights reserved."
+  },
+  "hero": {
+    "title": "One App,<br/>Two Worlds:<br/><span className=\"text-gray-900 bg-clip-text\">Recruitment & E-Commerce United.</span>",
+    "subtitle": "Find A Job, Recruit, Sell Or Buy Safely With BantuLink.",
+    "candidate": "I Am A Candidate",
+    "recruiter": "I am a Recruiter",
+    "seller": "I am a Seller",
+    "buyer": "I am a Buyer"
+  },
+  "coreValues": {
+    "title": "Our Core Values",
+    "security": {
+      "title": "Security",
+      "description": "Security is not an option at BantuLink, it's our absolute priority. In a digital environment where trust is fragile, we have chosen to invest massively in the most advanced security technologies."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of their educational level or resources, can access digital opportunities."
+    },
+    "excellence": {
+      "title": "Excellence",
+      "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
+    }
+  },
+  "history": {
+    "title": "Our Story",
+    "timeline": {
+      "2024": {
+        "month": "May",
+        "desc": "It all starts with a shared observation by the TNK SYNERGIES LTD team: the idea of BantuLink is born from this observation: create a super-app that solves these two challenges simultaneously, with a 100% African approach."
+      },
+      "2025": {
+        "month": "June",
+        "desc": "2025 marks the start of BantuLink's technical development. Our team of 15 experienced developers, based in Douala, works in agile mode to create a robust, secure, and intuitive platform."
+      },
+      "today": {
+        "month": "July",
+        "desc": "Every line of code is designed for the African user: multilingual interfaces (French/English)."
+      }
+    }
+  },
+  "partners": {
+    "tnkTitle": "TNK SYNERGIES LTD: the company revolutionizing digital Africa",
+    "tnkDesc": "TNK SYNERGIES LTD is not a tech company like the others. Founded in 2024 by a team of experienced African entrepreneurs, our company has set itself the mission of creating the digital solutions that Francophone Africa lacks.",
+    "website": "Website:",
+    "linkedin": "LinkedIn:",
+    "facebook": "Facebook:",
+    "instagram": "Instagram:",
+    "partnersTitle": "Our various partners",
+    "partnersList": [
+      "TNK Synergies",
+      "Apple",
+      "Microsoft"
+    ]
+  },
+  "stats": {
+    "users": "Active Users",
+    "providers": "Certified Providers",
+    "companies": "Registered Companies",
+    "satisfaction": "Customer Satisfaction"
+  },
+  "testimonials": {
+    "title": "Satisfying Our Clients Is<br className=\"hidden md:inline\"/>Our Best Advertising.",
+    "quote1": "Bantulink helps you see how many extra days you have left to work to reach your goal.",
+    "name1": "Regina Miles",
+    "role1": "Designer",
+    "quote2": "An incredible experience! The team exceeded all my expectations. I highly recommend their services.",
+    "name2": "John Doe",
+    "role2": "Developer",
+    "quote3": "Very satisfied with the final result. Quality is on point and customer support is excellent.",
+    "name3": "Jane Smith",
+    "role3": "Entrepreneur",
+    "quote4": "An intuitive platform that facilitates professional and commercial connections. A must!",
+    "name4": "Alex Dupont",
+    "role4": "Freelancer",
+    "quote5": "Bantulink allowed me to develop my network and boost my online sales quickly.",
+    "name5": "Marie Dubois",
+    "role5": "Seller",
+    "appPreview": {
+      "title": "Take a look inside<br/>our SuperApp",
+      "description": "Problem aimed at solving the silos between employment, local commerce, and skill development in Francophone Africa."
+    }
   }
 }

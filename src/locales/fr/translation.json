@@ -73,7 +73,7 @@
     },
     "explore": "Explorer les sujets"
   },
-    "about": {
+  "about": {
     "hero": {
       "title": "À PROPOS"
     },
@@ -88,6 +88,20 @@
     "vision": {
       "title": "Notre Vision",
       "description": "Devenir la super application de référence en Afrique francophone, facilitant l'emploi et le commerce pour des millions d'utilisateurs d'ici 2027."
+    },
+    "values": {
+      "innovation": {
+        "title": "Innovation",
+        "description": "L'innovation est dans notre ADN. Nous ne suivons pas seulement les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+      },
+      "inclusion": {
+        "title": "Inclusion",
+        "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son parcours, a un accès égal aux opportunités."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
+      }
     }
   },
   "aide": {
@@ -134,84 +148,61 @@
         "category": "Emplois et candidatures"
       },
       "reportContent": {
-        "title": "Signaler du contenu inapproprié",
+        "title": "Signaler un contenu inapproprié",
         "category": "Litiges et support client"
       }
     }
   },
   "tarif": {
     "cta": {
-      "title": "Besoin d'une solution sur mesure pour vous ?",
-      "description": "Contactez notre équipe pour discuter des fonctionnalités d'entreprise, des intégrations personnalisées et des options de tarification en volume adaptées à votre organisation.",
-      "button": "Contactez-nous"
+      "title": "Besoin d'une solution personnalisée pour vous ?",
+      "description": "Contactez notre équipe pour discuter des fonctionnalités entreprise, des intégrations personnalisées et des options de tarification en volume adaptées à votre organisation.",
+      "button": "Nous contacter"
     },
     "faq": {
-      "title": "Foires Aux Questions",
+      "title": "Questions Fréquemment Posées",
       "paymentMethods": {
-        "question": "Quels modes de paiement acceptez-vous ?",
-        "answer": "Nous acceptons les cartes de crédit (Visa, MasterCard, American Express), PayPal, et les virements bancaires pour les plans annuels."
+        "question": "Quelles méthodes de paiement acceptez-vous ?",
+        "answer": "Nous acceptons les cartes de crédit (Visa, MasterCard, American Express), PayPal et les virements bancaires pour les plans annuels."
       },
       "changePlan": {
-        "question": "Puis-je changer mon plan à tout moment ?",
-        "answer": "Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment depuis votre tableau de bord. Les changements de plan prennent effet immédiatement ou à la fin de votre cycle de facturation actuel, selon le cas."
+        "question": "Puis-je changer de plan à tout moment ?",
+        "answer": "Oui, vous pouvez passer à un plan supérieur ou inférieur à tout moment depuis votre tableau de bord. Les changements de plan prennent effet immédiatement ou à la fin de votre cycle de facturation actuel, selon le cas."
       },
       "freeTrial": {
-        "question": "Y a-t-il un essai gratuit disponible ?",
-        "answer": "Oui, nous offrons un essai gratuit de 14 jours pour notre plan Pro, vous permettant d'explorer toutes les fonctionnalités avant de vous engager."
-      },
-      "cancelSubscription": {
-        "question": "Que se passe-t-il si je j'annule mon abonnement ?",
-        "answer": "Si vous annulez votre abonnement, votre compte restera actif jusqu'à la fin de la période de facturation en cours. Après cela, votre accès aux fonctionnalités premium sera révoqué, et votre compte passera au plan gratuit."
+        "question": "Proposez-vous un essai gratuit ?",
+        "answer": "Oui, les nouveaux utilisateurs bénéficient d'un essai gratuit de 14 jours sur tous les plans payants. Aucune carte de crédit n'est requise pour commencer."
       }
     }
   },
-  "coreValues": {
-    "title": "Nos Valeurs Fondamentales",
-    "security": {
-      "title": "Sécurité",
-      "description": "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées."
-    },
-    "innovation": {
-      "title": "Innovation",
-      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
-    },
-    "inclusion": {
-      "title": "Inclusion",
-      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son parcours, a un accès égal aux opportunités."
-    },
-    "excellence": {
-      "title": "Excellence",
-      "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
-    }
-  },
   "business": {
-    "title": "Your Business Empire Awaits",
-    "subtitle": "Launch, grow, and scale your business with powerful e-commerce tools and marketing features.",
+    "title": "Votre Empire Commercial Vous Attend",
+    "subtitle": "Lancez, développez et mettez à l'échelle votre entreprise avec des outils e-commerce puissants et des fonctionnalités marketing.",
     "onlineStore": {
-      "title": "Your Online Store",
-      "description": "Open your shop in minutes with our intuitive store builder. Customize everything from layout to payment options.",
+      "title": "Votre Boutique En Ligne",
+      "description": "Ouvrez votre boutique en quelques minutes avec notre constructeur de boutique intuitif. Personnalisez tout, de la mise en page aux options de paiement.",
       "features": [
-        "Drag & drop store builder",
-        "Customizable themes",
-        "Integrated payment gateways"
+        "Constructeur de boutique par glisser-déposer",
+        "Thèmes personnalisables",
+        "Passerelles de paiement intégrées"
       ]
     },
     "promotion": {
-      "title": "Promote Your Products",
-      "description": "Promote what matters most with targeted advertising and featured listings to reach more customers.",
+      "title": "Promouvez Vos Produits",
+      "description": "Mettez en avant ce qui compte le plus avec de la publicité ciblée et des annonces en vedette pour atteindre plus de clients.",
       "features": [
-        "Featured product listings",
-        "Targeted advertising",
-        "Analytics dashboard"
+        "Annonces de produits en vedette",
+        "Publicité ciblée",
+        "Tableau de bord analytique"
       ]
     },
     "chat": {
-      "title": "Chat with Buyers",
-      "description": "Build trust with real conversations. Answer questions, negotiate prices, and close deals faster.",
+      "title": "Discutez Avec Les Acheteurs",
+      "description": "Créez de la confiance avec de vraies conversations. Répondez aux questions, négociez les prix et concluez des affaires plus rapidement.",
       "features": [
-        "Real-time messaging",
-        "File sharing",
-        "Order tracking"
+        "Messagerie en temps réel",
+        "Partage de fichiers",
+        "Suivi des commandes"
       ]
     }
   },
@@ -284,7 +275,6 @@
       "button": "Rejoindre La Communauté"
     }
   },
-  
   "experiences": {
     "title": "Expériences",
     "add": "Ajouter",
@@ -312,5 +302,147 @@
     "errorLoad": "Erreur lors du chargement des expériences",
     "errorSave": "Erreur lors de la sauvegarde de l’expérience",
     "errorDelete": "Erreur lors de la suppression de l’expérience"
+  },
+  "footer": {
+    "ecosystemTitle": "Rejoignez l'écosystème tout-en-un de BantuLink",
+    "createAccount": "→ Je crée mon compte maintenant",
+    "tags": [
+      "Emploi & Recrutement",
+      "Commerce & Services",
+      "Communauté & Formation"
+    ],
+    "logo": "SiteLogo",
+    "columns": {
+      "product": {
+        "title": "Produit",
+        "items": [
+          "BantuLink",
+          "BantuMarket",
+          "Certifications & Formations",
+          "Abonnements & Tarifs",
+          "Application Mobile"
+        ]
+      },
+      "useCases": {
+        "title": "Cas d'usage",
+        "items": [
+          "Pour les chercheurs d'emplois",
+          "Pour les recruteurs",
+          "Pour les vendeurs",
+          "Pour les acheteurs",
+          "Pour les freelances"
+        ]
+      },
+      "resources": {
+        "title": "Ressources",
+        "items": [
+          "Centre d'aide",
+          "Foire aux questions (FAQ)",
+          "Tutoriels",
+          "Blog & Astuces",
+          "Assistance technique"
+        ]
+      },
+      "company": {
+        "title": "Entreprise",
+        "items": [
+          "À propos de nous",
+          "Équipe & partenaires",
+          "Conditions d'utilisation",
+          "Politique de confidentialité",
+          "Nous contacter"
+        ]
+      },
+      "social": {
+        "title": "Faisons-le!"
+      }
+    },
+    "copyright": "Copyright © 2025 BantuLink. Tous droits réservés."
+  },
+  "coreValues": {
+    "title": "Nos Valeurs Fondamentales",
+    "security": {
+      "title": "Sécurité",
+      "description": "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son niveau éducatif ou ses ressources, peut accéder aux opportunités numériques."
+    },
+    "excellence": {
+      "title": "Excellence",
+      "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
+    }
+  },
+  "history": {
+    "title": "Notre Histoire",
+    "timeline": {
+      "2024": {
+        "month": "Mai",
+        "desc": "Tout commence par un constat partagé par l'équipe de TNK SYNERGIES LTD : l'idée de BantuLink naît de cette observation : créer une super-application qui résout ces deux défis simultanément, avec une approche 100% africaine."
+      },
+      "2025": {
+        "month": "Juin",
+        "desc": "2025 marque le début du développement technique de BantuLink. Notre équipe de 15 développeurs expérimentés, basée à Douala, travaille en mode agile pour créer une plateforme robuste, sécurisée et intuitive."
+      },
+      "today": {
+        "month": "Juillet",
+        "desc": "Chaque ligne de code est pensée pour l'utilisateur africain : interfaces multilingues (français/anglais)."
+      }
+    }
+  },
+  "partners": {
+    "tnkTitle": "TNK SYNERGIES LTD : l'entreprise qui révolutionne l'Afrique numérique",
+    "tnkDesc": "TNK SYNERGIES LTD n'est pas une entreprise technologique comme les autres. Fondée en 2024 par une équipe d'entrepreneurs africains expérimentés, notre société s'est donnée pour mission de créer les solutions numériques qui manquent à l'Afrique francophone.",
+    "website": "Site web :",
+    "linkedin": "LinkedIn :",
+    "facebook": "Facebook :",
+    "instagram": "Instagram :",
+    "partnersTitle": "Nos différents partenaires",
+    "partnersList": [
+      "TNK Synergies",
+      "Apple",
+      "Microsoft"
+    ]
+  },
+  "hero": {
+    "title": "Une Seule App,<br/>Deux Mondes:<br/><span className=\"text-gray-900 bg-clip-text\">Recrutement & E-Commerce Réunis.</span>",
+    "subtitle": "Trouvez Un Emploi, Recrutez, Vendez Ou Achetez En Toute Sécurité Avec BantuLink.",
+    "candidate": "Je Suis Un Candidat",
+    "recruiter": "Je suis un Recruteur",
+    "seller": "Je suis un Vendeur",
+    "buyer": "Je suis un Acheteur"
+  },
+  "stats": {
+    "users": "Utilisateurs Actifs",
+    "providers": "Prestataires Certifiés",
+    "companies": "Entreprises Inscrites",
+    "satisfaction": "De Satisfaction Client"
+  },
+  "testimonials": {
+    "title": "Satisfaire Nos Clients Est<br className=\"hidden md:inline\"/>Notre Meilleure Publicité.",
+    "quote1": "Bantulink vous aide à voir combien de jours supplémentaires il vous reste à travailler pour atteindre votre objectif.",
+    "name1": "Regina Miles",
+    "role1": "Designer",
+    "quote2": "Une expérience incroyable ! L'équipe a dépassé toutes mes attentes. Je recommande vivement leurs services.",
+    "name2": "John Doe",
+    "role2": "Développeur",
+    "quote3": "Très satisfait du résultat final. La qualité est au rendez-vous et le support client est excellent.",
+    "name3": "Jane Smith",
+    "role3": "Entrepreneur",
+    "quote4": "Une plateforme intuitive qui facilite les connexions professionnelles et commerciales. Un must !",
+    "name4": "Alex Dupont",
+    "role4": "Freelancer",
+    "quote5": "Bantulink m'a permis de développer mon réseau et de booster mes ventes en ligne rapidement.",
+    "name5": "Marie Dubois",
+    "role5": "Vendeuse",
+    "appPreview": {
+      "title": "Jetez un œil à l'intérieur de<br/>notre SuperApp",
+      "description": "Problème visant à résoudre le cloisonnement entre emploi, commerce local et développement de compétences en Afrique francophone."
+    }
   }
 }
