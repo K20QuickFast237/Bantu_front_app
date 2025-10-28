@@ -205,7 +205,7 @@ const MultiStepForm = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await api.get('/categories');
+        const response = await api.get('/offres-categories');
         console.log(response);
         // Assurer que nous avons bien un tableau. L'API peut retourner { data: [...] }
         const categories = Array.isArray(response.data) ? response.data : response.data?.data || [];

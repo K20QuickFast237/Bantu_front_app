@@ -129,15 +129,17 @@ const Dashboard = ({ setActiveSection }) => {
     {
       title: 'Créer une offre',
       subtitle: 'Publier un nouveau poste',
+      onClick: handleCreateJobClick,
       icon: Plus,
-      bgColor: 'bg-[#0A2342]',
-      textColor: 'text-white',
-      iconColor: 'text-white'
+      bgColor: 'bg-white',
+      textColor: 'text-gray-800',
+      iconColor: 'text-gray-800'
     },
     {
       title: 'Modifier le profil',
       subtitle: 'Mettre à jour vos infos',
       icon: User,
+      onClick: () => navigate('/settings'),
       bgColor: 'bg-white',
       textColor: 'text-gray-800',
       iconColor: 'text-gray-800'
@@ -146,6 +148,7 @@ const Dashboard = ({ setActiveSection }) => {
       title: 'Changer de mode',
       subtitle: 'Voir en tant que candidat',
       icon: ArrowLeftRight,
+      onClick: () => navigate('/profil'),
       bgColor: 'bg-white',
       textColor: 'text-green-600',
       iconColor: 'text-green-600'
@@ -154,6 +157,7 @@ const Dashboard = ({ setActiveSection }) => {
       title: 'Voir les statistiques',
       subtitle: 'Analyses de performance',
       icon: BarChart3,
+      onClick: () => navigate('/analytics'),
       bgColor: 'bg-white',
       textColor: 'text-orange-500',
       iconColor: 'text-orange-500'
@@ -300,7 +304,8 @@ const Dashboard = ({ setActiveSection }) => {
             return (
               <Card
                 key={index}
-                className={`cursor-pointer flex items-center justify-between transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg ${action.bgColor}`}
+                onClick={action.onClick}
+                className={`cursor-pointer transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg ${action.bgColor}`}
               >
                 <CardContent className="p-4 flex items-center space-x-3">
                   <Icon className={`w-6 h-6 flex-shrink-0 ${action.iconColor}`} />

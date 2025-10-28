@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import echo from '@/services/echo';
 import { Search, Send, Paperclip, ArrowLeft, Plus, MoreVertical, PanelLeft, Trash2, Loader2, File, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api';
@@ -32,57 +33,79 @@ const SearchInput = ({ placeholder, value, onChange }) => (
   </div>
 );
 
-const ConversationItem = ({ conv, onSelect, isSelected }) => (
-  <div
-    onClick={() => onSelect(conv)}
-    className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-200 ${isSelected ? 'bg-green-100' : 'hover:bg-gray-50'}`}
-  >
-    <Avatar fallback={conv.participant?.name?.substring(0, 2).toUpperCase() || '??'} color={conv.color} online={conv.participant?.online} />
-    <div className="flex-grow ml-4 min-w-0">
-      <div className="flex justify-between items-center">
-        <p className="font-semibold text-sm text-gray-800 truncate">{conv.participant?.name || 'Utilisateur inconnu'}</p>
-        <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{conv.last_message_time}</p>
-      </div>
-      <div className="flex justify-between items-start mt-1">
-        <p className="text-xs text-gray-500 truncate pr-4">{conv.last_message}</p>
-        {conv.unread_count > 0 && (
-          <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0">
-            {conv.unread_count}
-          </span>
-        )}
+const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
+  // Trouver l'autre participant dans la conversation
+  const otherParticipant = conv.participants?.find(p => p.id !== currentUser?.id);
+  const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+  const lastMessage = conv.messages?.[conv.messages.length - 1];
+
+  return (
+    <div
+      onClick={() => onSelect(conv)}
+      className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors duration-200 ${isSelected ? 'bg-green-100' : 'hover:bg-gray-50'}`}
+    >
+      <Avatar fallback={participantName.substring(0, 2).toUpperCase() || '??'} color={conv.color} online={otherParticipant?.is_active} />
+      <div className="flex-grow ml-4 min-w-0">
+        <div className="flex justify-between items-center">
+          <p className="font-semibold text-sm text-gray-800 truncate">{participantName}</p>
+          <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{lastMessage ? new Date(lastMessage.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''}</p>
+        </div>
+        <div className="flex justify-between items-start mt-1">
+          <p className="text-xs text-gray-500 truncate pr-4">{lastMessage?.content || 'Pas de messages'}</p>
+          {conv.unread_count > 0 && (
+            <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0">
+              {conv.unread_count}
+            </span>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
-
-const ConversationList = ({ conversations, onSelect, selectedId, loading }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const filteredConversations = conversations.filter(c =>
-    c.participant?.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+};
+
+const ConversationList = ({ conversations, onSelect, selectedId, loading, currentUser }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredConversations = conversations.filter(c => {
+    if (!currentUser) return false;
+    const otherParticipant = c.participants?.find(p => p.id !== currentUser.id);
+    if (!otherParticipant) return false;
+    const participantName = [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ');
+    return participantName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (loading) {
     return (
-      <div className="w-full md:w-1/3 lg:w-1/4 h-full flex flex-col bg-white border-r border-gray-200 items-center justify-center">
+      <div className="w-full h-full flex flex-col bg-white border-r border-gray-200 items-center justify-center" style={{ flexShrink: 0 }}>
         <Loader2 className="w-8 h-8 animate-spin text-[#009739]" />
         <p className="mt-2 text-gray-600">Chargement...</p>
       </div>
     );
   }
-
   if (conversations.length === 0) {
     return (
-      <div className="w-full h-full flex flex-col bg-white border-r border-gray-200 items-center justify-center text-center p-4">
-        <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
-        <p className="mt-2 text-gray-600 text-sm">
-          Aucune conversation. Une conversation est créée lorsque vous présélectionnez un candidat.
+      <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
+            <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#009739]">
+              <Plus className="w-5 h-5" />
+            </button>
+          </div>
+          <SearchInput
+            placeholder="Rechercher une conversation..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <p className="w-full h-full flex flex-col bg-white items-center justify-center">
+          Aucune conversation pour l'instant.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="w-full md:w-1/3 lg:w-1/4 h-full flex flex-col bg-white border-r border-gray-200">
+    <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
       <div className="p-4 border-b border-gray-200">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
@@ -102,6 +125,7 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading }) => {
             key={conv.id}
             conv={conv}
             onSelect={onSelect}
+            currentUser={currentUser}
             isSelected={selectedId === conv.id}
           />
         ))}
@@ -118,6 +142,33 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const textareaRef = useRef(null); // Added textareaRef for auto-resizing
+
+  // 👇 Real-time integration
+  useEffect(() => {
+    if (!conversation?.id || !user) { // Ensure conversation and user are available
+      return;
+    }
+
+    // Subscribe to the private channel for this conversation
+    // The channel name should match your Laravel backend's broadcasting setup
+    const channelName = `private-chat.${conversation.id}`; // Assuming private channels for chat
+    const channel = echo.private(channelName);
+
+    // Listen for the 'MessageSent' event (adjust event name if different in Laravel)
+    channel.listen('MessageSent', (e) => { // Assuming 'MessageSent' is the event name
+      // Check if the message is not from the current user to avoid duplicates
+      // (messages sent by the current user are optimistically added)
+      if (e.message.user_id !== user.id) {
+        setMessages(prevMessages => [...prevMessages, e.message]);
+      }
+      onMessageSent(); // To refresh the conversation list in the sidebar (e.g., last message, unread count)
+    });
+
+    // Cleanup function: unsubscribe from the channel when component unmounts
+    // or when the selected conversation changes
+    return () => { echo.leave(channelName); };
+  }, [conversation?.id, user, onMessageSent]); // Re-run effect if conversation or user changes
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -136,6 +187,15 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
     fetchMessages();
   }, [conversation?.id]);
 
+  // Auto-resize textarea
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto'; // Reset height
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [newMessage]);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -143,6 +203,12 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
   const handleSend = async () => {
     if ((newMessage.trim() || attachments.length > 0) && conversation?.id) {
       const tempId = Date.now();
+      // Ensure user.id is available for optimistic update
+      if (!user?.id) {
+        toast.error("Erreur: Utilisateur non identifié pour l'envoi du message.");
+        return;
+      }
+
       const sentMessage = {
         id: tempId,
         content: newMessage,
@@ -150,7 +216,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         attachments: attachments.map(file => ({ name: file.name, url: URL.createObjectURL(file) })), // Preview
         created_at_time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         isSending: true,
-      };
+      }; // Optimistic update
       setMessages(prev => [...prev, sentMessage]);
       setNewMessage('');
 
@@ -240,11 +306,10 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
                 </button>
               )}
               <div
-                className={`max-w-xs md:max-w-md p-3 rounded-2xl break-words ${
-                  msg.user_id === user.id
+                className={`max-w-xs md:max-w-md p-3 rounded-2xl break-words ${msg.user_id === user.id
                     ? 'bg-[#009739] text-white rounded-br-none'
                     : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
-                } ${msg.isSending ? 'opacity-50' : ''}`}
+                  } ${msg.isSending ? 'opacity-50' : ''}`}
               >
                 <p className="text-sm">{msg.content}</p>
                 <p className={`text-xs mt-1 ${msg.user_id === user.id ? 'text-green-100' : 'text-gray-400'}`}>
@@ -294,6 +359,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
             onChange={handleFileSelect}
             className="hidden"
           />
+          {/* Added textareaRef to the textarea */}
           <button onClick={() => fileInputRef.current.click()} className="p-2 text-gray-500 hover:text-gray-800 flex-shrink-0">
             <Paperclip className="w-5 h-5" />
           </button>
@@ -301,6 +367,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => {
+              // Auto-resize textarea logic
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 handleSend();
@@ -308,6 +375,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
             }}
             placeholder="Écrivez votre message..."
             rows="1"
+            ref={textareaRef} // Assign ref here
             className="flex-grow px-4 py-2.5 border border-gray-200 rounded-full bg-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-[#009739] transition-all"
             style={{ maxHeight: '120px' }}
           />
@@ -329,14 +397,31 @@ const MessagesSection = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isListVisible, setIsListVisible] = useState(true);
-  const location = useLocation();
+  const { state: locationState } = useLocation();
+  const { user } = useAuth(); // Get user here for conversation processing
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const fetchConversations = async () => {
     setLoading(true);
     try {
       const response = await api.get('/conversations');
-      setConversations(response.data || []);
-      return response.data || [];
+      const rawConversations = response.data || [];
+
+      const processedConversations = rawConversations.map(conv => {
+        const otherParticipant = user ? conv.participants.find(p => p.id !== user.id) : null;
+        const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+        const colors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-orange-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
+        const color = colors[((otherParticipant?.id || 0) % colors.length)];
+
+        return {
+          ...conv,
+          participant: otherParticipant ? { id: otherParticipant.id, name: participantName, online: otherParticipant.is_active } : { name: 'Utilisateur inconnu' },
+          color: color
+        };
+      });
+
+      setConversations(processedConversations);
+      return processedConversations;
     } catch (error) {
       toast.error("Erreur lors du chargement des conversations.");
       setConversations([]);
@@ -347,9 +432,18 @@ const MessagesSection = () => {
   };
 
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
     const init = async () => {
       const convs = await fetchConversations();
-      const conversationIdFromState = location.state?.conversationId;
+      const conversationIdFromState = locationState?.conversationId;
 
       if (conversationIdFromState && convs.length > 0) {
         const conversationToSelect = convs.find(c => c.id === conversationIdFromState);
@@ -358,12 +452,57 @@ const MessagesSection = () => {
         }
       }
     };
-    init();
-  }, [location.state?.conversationId]);
+    init(); // Call init only once user is available
+  }, [locationState?.conversationId, user]); // Depend on user
 
   const handleSelectConversation = (conv) => {
     setSelectedConversation(conv);
   };
+
+  if (isMobile) {
+    return (
+      <div className="h-[calc(100vh-56px)] w-full bg-white overflow-hidden relative">
+        <AnimatePresence initial={false}>
+          {selectedConversation ? (
+            <motion.div
+              key="chat"
+              className="w-full h-full absolute top-0 left-0"
+              initial={{ x: '100%' }}
+              animate={{ x: '0%' }}
+              exit={{ x: '100%' }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <ChatView
+                conversation={selectedConversation}
+                onBack={() => setSelectedConversation(null)}
+                onToggleList={() => { }}
+                isListVisible={false}
+                onMessageSent={fetchConversations}
+                onMessageDeleted={fetchConversations}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="list"
+              className="w-full h-full absolute top-0 left-0"
+              initial={{ x: 0 }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              <ConversationList
+                conversations={conversations}
+                onSelect={handleSelectConversation}
+                selectedId={null}
+                currentUser={user}
+                loading={loading}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-[calc(100vh-56px)] w-full bg-white overflow-hidden">
@@ -371,6 +510,7 @@ const MessagesSection = () => {
         {isListVisible && (
           <motion.div
             className="w-full md:w-1/3 lg:w-1/4 h-full"
+            style={{ flexShrink: 0 }} // Empêche la sidebar d'être compressée par le flex-grow du chat
             initial={{ x: '-100%' }}
             animate={{ x: '0%' }}
             exit={{ x: '-100%' }}
@@ -380,6 +520,7 @@ const MessagesSection = () => {
               conversations={conversations}
               onSelect={handleSelectConversation}
               selectedId={selectedConversation?.id}
+              currentUser={user}
               loading={loading}
             />
           </motion.div>
@@ -398,26 +539,7 @@ const MessagesSection = () => {
           />
         ) : (
           <div className="flex flex-grow flex-col items-center justify-center bg-gray-50 text-center p-8 h-full">
-            <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-gray-400"
-              >
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800">Votre messagerie</h3>
-            <p className="text-gray-500 mt-2 max-w-sm">
-              Sélectionnez une conversation pour commencer à discuter.
-            </p>
+            {/* Placeholder content */}
           </div>
         )}
       </div>

@@ -34,11 +34,11 @@ const Header = () => {
   return (
     
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 px-4 sm:px-6 lg:px-8 ${ // Adjusted padding for better responsiveness
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 px-10 sm:px-6 lg:px-8 ${ // Adjusted padding for better responsiveness
         scrolled ? 'bg-white shadow-md border-b border-gray-200' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
+      <div className="px-10 py-4 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
           <NavLink to="/home" className="flex items-center" aria-label="Accueil">

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '@/services/api';
 import { toast } from 'sonner';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
@@ -35,7 +36,6 @@ const JobApplicationManagement = () => {
           api.get('/candidatures'),
           api.get('/mesoffres')
         ]);
-        console.log(applicationsResponse.data);
         const appsData = applicationsResponse.data || [];
         setApplications(appsData);
         setFilteredApplications(appsData);
@@ -50,7 +50,7 @@ const JobApplicationManagement = () => {
         setApplications([]);
         setFilteredApplications([]);
         setOffersList([]);
-        toast.error(error.message || "Erreur lors du chargement des données.");
+        toast.error("Erreur lors du chargement des données.");
       } finally {
         setLoading(false);
       }
@@ -81,45 +81,74 @@ const JobApplicationManagement = () => {
     setFilters(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleReset = () => {
+    setFilters({
+      fromDate: '',
+      toDate: '',
+      offer: '',
+      status: ''
+    });
+    setFilteredApplications(applications);
+  };
+
   return (
     <main className="flex-1 p-5 overflow-auto">
-      <h2 className="text-2xl font-bold mb-2">Gestion des candidatures</h2>
-      <p className="text-gray-500 mb-6 text-sm">
-        Filtrez et consultez toutes les candidatures reçues pour vos offres.
-      </p>
-
+      {/* Hero Section */}
+      <div className="bg-[#FFF3EB] px-4 sm:px-8 pb-8 pt-12 relative">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-[#10B981] text-2xl md:text-3xl font-bold">Mes Candidatures</h1>
+          <p className="text-sm md:text-base font-semibold mt-1">
+            Filtrez et consultez toutes les candidatures reçues pour vos offres.
+          </p>
+        </motion.div>
+      </div>
       {/* Filter Section */}
-      <div className="bg-gray-50 p-4 rounded-lg border mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end cursor-pointer">
-          <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Du</label>
-              <input type="date" name="fromDate" value={filters.fromDate} onChange={handleFilterChange} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Au</label>
-              <input type="date" name="toDate" value={filters.toDate} onChange={handleFilterChange} className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-orange-500" />
-            </div>
+      <div className="bg-orange-50 p-6 rounded-lg mb-8">
+        <div className="flex flex-wrap gap-4 items-end">
+          <div className="flex-1 min-w-[150px]">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Du</label>
+            <input type="date" name="fromDate" value={filters.fromDate} onChange={handleFilterChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Offres</label>
-            <select name="offer" value={filters.offer} onChange={handleFilterChange} className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <div className="flex-1 min-w-[150px]">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Au</label>
+            <input type="date" name="toDate" value={filters.toDate} onChange={handleFilterChange} className="w-full border border-gray-300 rounded px-3 py-2" />
+          </div>
+          <div className="flex-1 min-w-[150px]">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Offres</label>
+            <select name="offer" value={filters.offer} onChange={handleFilterChange} className="w-full border border-gray-300 rounded px-3 py-2 appearance-none bg-white cursor-pointer">
               <option value="">Toutes les offres</option>
               {offersList.map(offer => (
                 <option key={offer.id} value={offer.id}>{offer.titre_poste}</option>
               ))}
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Statut</label>
-            <select name="status" value={filters.status} onChange={handleFilterChange} className="w-full border border-gray-300 rounded-md px-3 py-2 appearance-none bg-white cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500">
+          <div className="flex-1 min-w-[150px]">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+            <select name="status" value={filters.status} onChange={handleFilterChange} className="w-full border border-gray-300 rounded px-3 py-2 appearance-none bg-white cursor-pointer">
               <option value="">Tous les statuts</option>
               {Object.entries(statusOptions).map(([key, { label }]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
             </select>
           </div>
+          <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded" onClick={handleReset} type="button">
+            Tout afficher
+          </button>
         </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex gap-4 mb-6">
+        <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
+          Configurer l'envoi des mails
+        </button>
+        <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-auto">
+          Exporter les données
+        </button>
       </div>
 
       {/* Table */}

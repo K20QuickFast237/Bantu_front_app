@@ -87,11 +87,6 @@ const JobOfferPage = () => {
     }
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen">
-        <BantulinkLoader/>
-      </div>;
-  if (!job) return <p className="text-center mt-20">Offre non trouvée</p>;
-
   return (
     <>
       <PageWrapper>
@@ -101,15 +96,19 @@ const JobOfferPage = () => {
           onComplete={onProfileComplete}
         />
         <HeaderProfil />
-        <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
-          
-          {/* Remplacement du bouton 'retour' par la flèche animée */}
-          <Link 
-              to={"/CandidatProfil"} 
-              // J'ai mis la flèche en position absolue en haut à gauche
+        {loading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <BantulinkLoader />
+          </div>
+        ) : (
+          <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
+            
+            {/* Remplacement du bouton 'retour' par la flèche animée */}
+            <button 
+              onClick={() => navigate(-1)}
               className="absolute top-4 left-4 md:left-10 z-20"
-              aria-label="Retour au profil candidat"
-          >
+              aria-label="Retour à la page précédente"
+            >
               <motion.div
                   className="p-2 cursor-pointer transition-colors"
                   // Animation au survol: petite échelle et décalage vers la gauche
@@ -117,9 +116,9 @@ const JobOfferPage = () => {
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                   {/* Icône ArrowLeft (avec trait) en bleu gras, sans arrière-plan */}
-                  <ArrowLeft className="w-8 h-8 text-blue-600 drop-shadow-md" />
+                  <ArrowLeft className="w-8 h-8 text-green-500 drop-shadow-md" />
               </motion.div>
-          </Link>
+          </button>
           {/* Fin du remplacement */}
 
           {/* Fixed Footer for mobile */}
@@ -135,7 +134,7 @@ const JobOfferPage = () => {
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto bg-white rounded-lg my-8 p-6 lg:p-8">
+          <div className="mx-auto bg-white rounded-lg my-8 p-6 md:mx-10 lg:mx-10">
             <div className="flex flex-col lg:flex-row gap-8">
 
               {/* Left Column */}
@@ -298,6 +297,7 @@ const JobOfferPage = () => {
             </div>
           </div>
         </div>
+        )}
         <Footer />
       </PageWrapper>
     </>

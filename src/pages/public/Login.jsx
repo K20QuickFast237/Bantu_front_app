@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useFormik } from 'formik';
 import { validationLoginSchema } from '../../schemas';
@@ -19,6 +19,8 @@ import Footer from '../../components/public/Footer';
 const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth(); // Utilisation du contexte d'authentification
+    const location = useLocation();
+    const from = location.state?.from?.pathname || '/WhatDoYouWantToDo';
 
     // Centraliser la logique de succès de connexion
     const handleLoginSuccess = (apiUser, token, formActions = null) => {
@@ -29,7 +31,7 @@ const Login = () => {
         setTimeout(() => {
             login(apiUser, token);
             if (formActions) formActions.resetForm();
-            navigate('/WhatDoYouWantToDo', { replace: true });
+            navigate(from, { replace: true });
         }, 1000);
     };
 

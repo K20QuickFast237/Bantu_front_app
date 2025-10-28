@@ -4,7 +4,16 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, Download, User, Eye, MessageSquare } from 'lucide-react';
+import { ChevronLeft, Download, User, Eye, Calendar } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 const JobApplicationDetail = () => {
   const { id } = useParams();
@@ -12,6 +21,9 @@ const JobApplicationDetail = () => {
   const [application, setApplication] = useState(null);
   const [loading, setLoading] = useState(true);
   const [statusChangeLoading, setStatusChangeLoading] = useState({ preselect: false, reject: false });
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [interviewDate, setInterviewDate] = useState('');
+  const [inviteLoading, setInviteLoading] = useState(false);
 
   useEffect(() => {
     const fetchApplication = async () => {
@@ -52,18 +64,23 @@ const JobApplicationDetail = () => {
     }
   };
 
-  const handleStartConversation = async () => {
-    const candidateId = application?.particulier_id || application?.candidat_id;
-    if (!candidateId) {
-      toast.error("Impossible de trouver l'identifiant du candidat.");
+  const handleSendInvitation = async () => {
+    if (!interviewDate) {
+      toast.error("Veuillez sélectionner une date pour l'entretien.");
       return;
     }
+    setInviteLoading(true);
     try {
-      const response = await api.post('/conversations', { user_id: candidateId });
-      const conversationId = response.data.id;
-      navigate('/chat', { state: { conversationId: conversationId } });
+      await api.post(`/candidatures/${id}/inviter`, {
+        date_entretien: interviewDate,
+      });
+      toast.success("Invitation à l'entretien envoyée avec succès !");
+      setIsInviteModalOpen(false);
+      setInterviewDate('');
     } catch (error) {
-      toast.error(error.response?.data?.message || "Erreur lors de la création de la conversation.");
+      toast.error(error.response?.data?.message || "Erreur lors de l'envoi de l'invitation.");
+    } finally {
+      setInviteLoading(false);
     }
   };
 
@@ -118,10 +135,10 @@ const JobApplicationDetail = () => {
                 <div className="flex gap-3">
                     <Button
                         variant="outline"
-                        onClick={handleStartConversation}
+                        onClick={() => setIsInviteModalOpen(true)}
                     >
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        Contacter
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Inviter à un entretien
                     </Button>
                     <Button
                         className="bg-orange-500 hover:bg-orange-600"
@@ -194,6 +211,33 @@ const JobApplicationDetail = () => {
                 ) : <p className="text-gray-500">Aucun CV ou profil BantuLink fourni.</p>}
             </div>
         </div>
+
+        {/* Modal d'invitation à l'entretien */}
+        <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
+          <DialogContent>
+              <DialogHeader>
+                  <DialogTitle>Inviter à un entretien</DialogTitle>
+                  <DialogDescription>
+                      Sélectionnez une date et une heure pour l'entretien avec <strong>{nomComplet}</strong>.
+                  </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                  <label htmlFor="interviewDate" className="block text-sm font-medium text-gray-700 mb-2">
+                      Date et heure de l'entretien
+                  </label>
+                  <Input
+                      id="interviewDate"
+                      type="datetime-local"
+                      value={interviewDate}
+                      onChange={(e) => setInterviewDate(e.target.value)}
+                  />
+              </div>
+              <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsInviteModalOpen(false)}>Annuler</Button>
+                  <Button onClick={handleSendInvitation} disabled={inviteLoading}>{inviteLoading ? 'Envoi...' : 'Confirmer l\'invitation'}</Button>
+              </DialogFooter>
+          </DialogContent>
+        </Dialog>
     </div>
   );
 };

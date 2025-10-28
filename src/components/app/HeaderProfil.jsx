@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { User, Settings, LogOut, ChevronDown, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 
 const HeaderProfil = ({ onOpenProfileModal }) => {
@@ -69,8 +69,16 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
           </nav>
         )}
       </div>
+      <div className="flex items-center space-x-2">
+        <button
+          onClick={() => navigate('/candidat_chat')}
+          className="p-2 text-gray-600 hover:text-black relative transition-colors rounded-full hover:bg-gray-100"
+        >
+          <MessageSquare className="w-5 h-5" />
+          <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-[#009739] text-white text-[9px] rounded-full flex items-center justify-center border-2 border-white">5</span>
+        </button>
 
-      <div className="relative" ref={profileMenuRef}>
+          <div className="relative" ref={profileMenuRef}>
         <button
           onClick={() => setProfileMenuOpen(!isProfileMenuOpen)}
           className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors group"
@@ -112,6 +120,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
       </div>
     </header>
   );

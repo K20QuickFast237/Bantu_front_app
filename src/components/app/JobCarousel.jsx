@@ -1,15 +1,21 @@
-import React, { useState, useRef } from 'react';
-import { ChevronLeft, ChevronRight, MapPin, Clock, Calendar, Building } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, MapPin, Clock, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import CompanyCard from './CompanyCard';
+import api from '@/services/api';
+import BantulinkLoader from '../ui/BantulinkLoader';
+
 
 // Imports des images
-import CompanyBg from '../../assets/assets_application/Recherche_entreprise.png';
 import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 
 const JobCarousel = () => {
   const [activeTab, setActiveTab] = useState('graphiste');
   const jobCarouselRef = useRef(null);
   const companyCarouselRef = useRef(null);
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   // Données factices pour les offres d'emploi
   const jobOffers = [
@@ -65,54 +71,20 @@ const JobCarousel = () => {
     },
   ];
 
-  // Données factices pour les entreprises
-  const companies = [
-    {
-      id: 1,
-      name: "ATOM TECH",
-      logo: BantulinkLogo,
-      bgImage: CompanyBg,
-      sector: "Technologie / IA",
-      location: "Douala, akwa",
-      offers: "05 offres"
-    },
-    {
-      id: 2,
-      name: "ATOM TECH",
-      logo: BantulinkLogo,
-      bgImage: CompanyBg,
-      sector: "Technologie / IA",
-      location: "Douala, akwa",
-      offers: "05 offres"
-    },
-    {
-      id: 3,
-      name: "ATOM TECH",
-      logo: BantulinkLogo,
-      bgImage: CompanyBg,
-      sector: "Technologie / IA",
-      location: "Douala, akwa",
-      offers: "05 offres"
-    },
-    {
-      id: 4,
-      name: "ATOM TECH",
-      logo: BantulinkLogo,
-      bgImage: CompanyBg,
-      sector: "Technologie / IA",
-      location: "Douala, akwa",
-      offers: "05 offres"
-    },
-    {
-      id: 5,
-      name: "ATOM TECH",
-      logo: BantulinkLogo,
-      bgImage: CompanyBg,
-      sector: "Technologie / IA",
-      location: "Douala, akwa",
-      offers: "05 offres"
-    },
-  ];
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      setLoading(true);
+      try {
+        const response = await api.get('/entreprises/avec-offres-en-cours');
+        setCompanies(response.data.data || []);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des entreprises:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCompanies();
+  }, []);
 
   const tabs = [
     { id: 'communication', label: 'Communication' },
@@ -146,9 +118,9 @@ const JobCarousel = () => {
         <div className="flex flex-col gap-3">
           <div className='flex'>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-              <span className="text-xs font-semibold text-gray-600">Bantulink</span>
+              <img src={`/storage/public/${job.logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
-            <div className='mt-7 ml-3 font-semibold text-xl'>{job.company}</div>
+            <div className='mt-7 ml-3 font-semibold text-xl'>{job.name}</div>
           </div>
           
           <h3 className="font-semibold underline text-gray-900 text-lg leading-tight">
@@ -189,10 +161,10 @@ const JobCarousel = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto py-8 bg-white font-sans">
+    <div className="mx-auto py-8 bg-white font-sans">
       {/* Section "Recherches populaires" */}
-      <div className="mb-10 px-4 sm:px-6 lg:px-8">
-        <h2 className="text-xl md:text-3xl font-bold text-emerald-600 mb-4">Recherches populaires</h2>
+      <div className="mb-10 px-10 sm:px-6 lg:px-8">
+        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">Recherches populaires</h2>
         <div className="flex items-center overflow-x-auto whitespace-nowrap scroll-smooth pb-2 relative">
           {tabs.map((tab) => (
             <button
@@ -219,7 +191,7 @@ const JobCarousel = () => {
 
       {/* Section "Job Offers Carousel" */}
       <motion.div 
-        className="mb-10 relative px-4 sm:px-6 lg:px-8"
+        className="mb-10 relative px-10 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
@@ -229,7 +201,7 @@ const JobCarousel = () => {
           ref={jobCarouselRef}
           className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
         >
-          {jobOffers.map((job) => (
+          {jobOffers.slice(0, 5).map((job) => (
             <div
               key={job.id}
               className="job-card min-w-[300px] md:min-w-[350px] lg:min-w-[400px] flex-shrink-0 snap-start"
@@ -262,52 +234,17 @@ const JobCarousel = () => {
       </div>
 
       {/* Section "Les entreprises qui recrutent" */}
-      <div className="px-4 sm:px-6 lg:px-8 relative">
-        <h2 className="text-xl md:text-2xl font-bold text-teal-500 mb-6">Les entreprises qui recrutent</h2>
-        <div
-          ref={companyCarouselRef}
-          className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
+      {loading ? (
+        <div className="flex justify-center p-10"><BantulinkLoader /></div>
+      ) : (
+        <div className="px-4 sm:px-6 lg:px-8 relative">
+          <h2 className="text-xl md:text-2xl font-bold text-emerald-400 mb-6">Les entreprises qui recrutent</h2>
+          <div
+            ref={companyCarouselRef}
+            className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
         >
-          {companies.map((company) => (
-            <div 
-              key={company.id} 
-              className="company-card min-w-[70%] sm:min-w-[10%] md:min-w-[10%] lg:min-w-[330px] xl:min-w-[400px] 
-                         bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0 snap-start flex flex-col"
-            >
-              {/* Background image */}
-              <div
-                className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0"
-                style={{ backgroundImage: `url(${company.bgImage})` }}
-              ></div>
-
-              <div className="p-4 relative flex-1 flex flex-col">
-                {/* Logo d'entreprise flottant */}
-                <div className="absolute -top-10 left-4 w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
-                  <img src={company.logo} alt={company.name} className="w-full h-full object-contain p-2" />
-                </div>
-
-                <div className="mt-12 flex-1 flex flex-col">
-                  <h3 className="font-bold text-gray-900 text-lg mb-2 underline">{company.name}</h3>
-
-                  <p className="text-sm text-gray-600 mb-2 flex items-center gap-2">
-                    <Building className="w-4 h-4 text-black" />
-                    {company.sector}
-                  </p>
-
-                  <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-                    <MapPin className="w-4 h-4 text-black" />
-                    <span>{company.location}</span>
-                  </div>
-
-                  <div className="flex justify-between items-center mt-auto">
-                    <p className="text-base font-semibold text-gray-800">{company.offers}</p>
-                    <button className="border border-orange-500 text-orange-500 py-1.5 px-4 rounded-lg text-sm font-medium hover:bg-orange-50 hover:text-orange-600 transition-colors">
-                      Voir
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {companies.slice(0, 5).map((company) => (
+            <CompanyCard key={company.id} company={company} />
           ))}
         </div>
         {/* Navigation Arrows for Company Carousel */}
@@ -324,12 +261,15 @@ const JobCarousel = () => {
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
+      )}
 
       {/* "Afficher toutes les entreprises" button */}
       <div className="px-4 sm:px-6 lg:px-8 mt-8">
-        <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-          Afficher toutes les entreprises
-        </button>
+        <Link to="/all-companies">
+          <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+            Afficher toutes les entreprises
+          </button>
+        </Link>
       </div>
     </div>
   );

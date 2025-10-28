@@ -20,13 +20,13 @@ const JobCard = () => {
     }
   }, [user]);
 
-  const JobCardItem = ({ title, company, location, publicationDate, contractType, workType }) => (
+  const JobCardItem = ({ title, company, location, publicationDate, contractType, workType, logo}) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
       <div className="mb-4">
         <div className="flex flex-col gap-3">
           <div className='flex '>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-              <span className="text-xs font-semibold text-gray-600">Bantulink</span>
+                <img src={`/storage/public/${logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
             <div className='mt-7 ml-3 font-semibold text-xl'>{company}</div>
           </div>
@@ -86,6 +86,7 @@ const JobCard = () => {
                     key={job.id || index}
                     title={job.titre_poste}
                     company={job.nom_entreprise || job.company}
+                    logo={job.logo}
                     location={job.lieu_travail || job.location}
                     publicationDate={job.date_publication || job.publicationDate}
                     contractType={job.type_contrat || job.contractType}

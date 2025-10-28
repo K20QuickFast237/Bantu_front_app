@@ -93,7 +93,7 @@ const HeroSection = () => {
           {/* Bouton Candidat */}
           <motion.div variants={itemVariants}>
             <Link
-              to="/dashboard/candidate"
+              to="/candidatProfil"
               className="inline-block w-fit animate-pulse px-8 py-3 bg-gray-800 text-white text-lg font-semibold rounded-full shadow-lg
                          hover:bg-gray-900 transition-all duration-300 transform hover:scale-105 animate-fade-in-up animation-delay-400"
             >
@@ -108,7 +108,7 @@ const HeroSection = () => {
           >
             {/* Recruteur */}
             <Link
-              to="/dashboardEntreprise"
+              to="/dashboard"
               className="items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-4 mb-5
                          text-base font-medium text-gray-800 shadow-sm hover:shadow-md
                          transition-all duration-200 transform hover:-translate-y-1"

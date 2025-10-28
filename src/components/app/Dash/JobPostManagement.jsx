@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Eye, Pencil, Trash, Share2, Edit2, Trash2, CheckCircle, AlertCircle } from "lucide-react";
+import { Eye, Pencil, Trash, Share2, Search, MapPin, ChevronLeft, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import api from "@/services/api"; // Assurez-vous que le chemin est correct
+import api from "@/services/api";
 import BantulinkLoader from "@/components/ui/BantulinkLoader";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,17 +14,16 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
-const JobPostManagement = ({ setActiveSection }) => {
+const JobPostManagement = () => {
   const [jobPosts, setJobPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState(null);
   const [formData, setFormData] = useState({ titre_poste: "", remuneration_min: "" });
   const [openDialog, setOpenDialog] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [view, setView] = useState("list"); // 'list' or 'detail'
-  const [viewingJob, setViewingJob] = useState(null);
   const navigate = useNavigate();
   const [filters, setFilters] = useState({
     searchTerm: "",
@@ -40,7 +39,7 @@ const JobPostManagement = ({ setActiveSection }) => {
         const res = await api.get("/mesoffres");
         setJobPosts(res.data.data || []);
       } catch (err) {
-        console.error(err);
+        toast.error("Erreur lors du chargement des données.");
       } finally {
         setLoading(false);
       }
@@ -71,6 +70,16 @@ const JobPostManagement = ({ setActiveSection }) => {
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleResetFilters = () => {
+    setFilters({
+      searchTerm: "",
+      status: "",
+      startDate: "",
+      endDate: "",
+    });
+    setFilteredJobPosts(jobPosts);
   };
 
 
@@ -113,85 +122,95 @@ const JobPostManagement = ({ setActiveSection }) => {
     }
   };
 
-  // Pour le bouton "Afficher"
-  const handleViewApplications = (job) => {
-    setViewingJob(job);
-    setView("detail");
-  };
-
-  const handleBackToList = () => {
-    setViewingJob(null);
-    setView("list");
-  };
-
-  if (loading) return <BantulinkLoader />;
 
   const renderListView = () => (
-    <>
-      <h2 className="text-2xl font-bold mb-2">Vos offres d'emploi</h2>
-      <p className="text-gray-500 mb-6 text-sm">
-        Gérez vos offres d'emploi publiées.
-      </p>
+    <div className="font-sans relative overflow-hidden">
+      {/* Hero Section */}
+      <div className="bg-[#FFF3EB] px-4 sm:px-8 pb-32 pt-12 relative">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-[#10B981] text-2xl md:text-3xl font-bold">Mes offres d'emploi</h1>
+          <p className="text-sm md:text-base font-semibold mt-1">
+            Gérez vos offres d'emploi et consultez les candidatures.
+          </p>
+        </motion.div>
+      </div>
 
-      {/* Section des filtres */}
-      <div className="mb-4 p-4 bg-gray-50 rounded-lg border">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-          <div>
-            <label htmlFor="searchTerm" className="text-sm font-medium text-gray-700 block mb-1">Rechercher par nom</label>
-            <Input
-              id="searchTerm"
-              name="searchTerm"
-              type="text"
-              placeholder="Titre du poste..."
-              value={filters.searchTerm}
-              onChange={handleFilterChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="status" className="text-sm font-medium text-gray-700 block mb-1">Statut</label>
-            <select
-              id="status"
-              name="status"
-              value={filters.status}
-              onChange={handleFilterChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
-            >
-              <option value="">Tous</option>
-              <option value="active">Actif</option>
-              <option value="inactive">Inactif</option>
-            </select>
-          </div>
-          <div>
-            <label htmlFor="startDate" className="text-sm font-medium text-gray-700 block mb-1">Date de publication (début)</label>
-            <Input
-              id="startDate"
-              name="startDate"
-              type="date"
-              value={filters.startDate}
-              onChange={handleFilterChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="endDate" className="text-sm font-medium text-gray-700 block mb-1">Date de publication (fin)</label>
-            <Input
-              id="endDate"
-              name="endDate"
-              type="date"
-              value={filters.endDate}
-              onChange={handleFilterChange}
-            />
-          </div>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 -mt-24 relative z-10">
+        <div className="shadow-xl rounded-xl overflow-hidden bg-white/90">
+          {/* Filter Section */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            className="overflow-hidden border border-white/10 backdrop-blur-sm bg-white/90"
+          > 
+            <div className="flex flex-wrap gap-4 items-end p-4 bg-white/90">
+              <div className="flex items-center flex-1 min-w-[180px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
+                  <Search className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
+                  <Input id="searchTerm" name="searchTerm" type="text" placeholder="Titre du poste..." value={filters.searchTerm} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
+              </div>
+              <div className="flex items-center flex-1 min-w-[150px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
+                  <MapPin className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
+                  <select id="status" name="status" value={filters.status} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none appearance-none">
+                      <option value="">Tous les statuts</option>
+                      <option value="active">Actif</option>
+                      <option value="inactive">Inactif</option>
+                  </select>
+              </div>
+              <div className="flex items-center flex-1 min-w-[150px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
+                  <Calendar className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
+                  <Input id="startDate" name="startDate" type="date" value={filters.startDate} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
+              </div>
+              <div className="flex items-center flex-1 min-w-[150px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
+                  <Calendar className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
+                  <Input id="endDate" name="endDate" type="date" value={filters.endDate} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
+              </div>
+              <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold" type="button" onClick={handleResetFilters}>
+                  Tout afficher
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Stats Section */}
+          <motion.div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-gray-200">
+            {[{title: jobPosts.length, subtitle: 'Offres créées'}, {title: '15', subtitle: 'Candidatures'}, {title: '02', subtitle: 'Actives'}, {title: '00', subtitle: 'Inactives'}].map((stat, i) => (
+              <motion.div
+                key={i}
+                whileHover={{ y: -5 }}
+                className="p-6 border-r border-gray-200 last:border-none hover:bg-gray-50 transition-all duration-200"
+              >
+                <p className="text-2xl md:text-3xl text-center font-bold text-gray-800">{stat.title}</p>
+                <p className="text-sm md:text-base text-center font-medium text-gray-600 mt-2">
+                  {stat.subtitle}
+                </p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
 
-      {/* Bouton Créer une offre */}
-      <div className="flex justify-end mb-6">
-        <Button onClick={() =>  navigate('/createJob')} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded">
-          Créer une offre d'emploi
-        </Button>
-      </div>
+        <main className="max-w-7xl mx-auto px-6 py-8">
+          <div className="flex justify-end mb-8">
+            <Button onClick={() => navigate('/createJob')} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded">
+              Créer une offre d'emploi
+            </Button>
+          </div>
 
+          {/* Table */}
+          {renderTable()}
+        </main>
+      </div>
+    </div>
+  );
+
+  const renderTable = () => (
       <div className="overflow-x-auto border border-gray-300 rounded">
+        {loading ? (
+          <div className="text-center py-10"><BantulinkLoader /></div>
+        ) : (
         <table className="w-full">
           <thead>
             <tr className="bg-gray-100 border-b border-gray-300">
@@ -204,7 +223,8 @@ const JobPostManagement = ({ setActiveSection }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredJobPosts.map((job, idx) => (
+            {filteredJobPosts.length > 0 ? (
+              filteredJobPosts.map((job, idx) => (
               <tr key={job.id} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                 <td className="px-6 py-4 text-green-600 font-medium">
                   {job.titre_poste}
@@ -217,11 +237,13 @@ const JobPostManagement = ({ setActiveSection }) => {
                     <span className="text-gray-700 capitalize">{job.statut || 'N/A'}</span>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-gray-700 font-medium">
-                  {job.candidatures || '0'} candidatures
+                <td className="px-6 py-4 text-gray-700 font-medium cursor-pointer hover:text-blue-500">
+                  <Link to={`/dashboard_candidature_spec/${job.id}`}>
+                    {job.candidatures || '0'} candidatures
+                  </Link>
                 </td>
                 <td className="px-6 py-4 flex items-center gap-2">
-                  <Button size="sm" variant="outline" className="text-green-500 border-green-500 hover:bg-green-50 hover:text-green-600" onClick={() => handleViewApplications(job)}>
+                  <Button size="sm" variant="outline" className="text-green-500 border-green-500 hover:bg-green-50 hover:text-green-600" onClick={() => navigate(`/job-post/${job.id}`)}>
                     <Eye className="w-4 h-4" />
                   </Button>
                   <Button size="sm" variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-50 hover:text-orange-600" onClick={() => handleUpdate(job)}>
@@ -232,149 +254,29 @@ const JobPostManagement = ({ setActiveSection }) => {
                   </Button>
                 </td>
               </tr>
-            ))}
+            )) 
+            ): (
+                <tr>
+                  <td colSpan="6" className="text-center text-gray-500 py-10">Aucune offre trouvée.</td>
+                </tr>
+              )}
           </tbody>
         </table>
+      )}  
       </div>
-    </>
   );
-
-  const renderDetailView = () => {
-    if (!viewingJob) {
-      return (
-        <div className="text-center py-10">
-          <p>Aucune offre sélectionnée.</p>
-          <Button onClick={handleBackToList} className="mt-4">Retour à la liste</Button>
-        </div>
-      );
-    }
-
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <Button onClick={handleBackToList}>Retour à la liste</Button>
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{viewingJob.titre_poste || "Titre non disponible"}</h1>
-              <p className="text-gray-600 text-sm">
-                Publié le : {viewingJob.date_publication ? new Date(viewingJob.date_publication).toLocaleDateString('fr-FR') : 'N/A'} | 
-                Deadline : {viewingJob.date_limite_soumission ? new Date(viewingJob.date_limite_soumission).toLocaleDateString('fr-FR') : 'N/A'}
-              </p>
-            </div>
-            <button className="flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold cursor-pointer">
-              <Share2 size={18} />
-              <span>Partager</span>
-            </button>
-          </div>
-          <div className="grid grid-cols-2 gap-6 mb-6">
-            <div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Type de contrat</p>
-                <p className="text-gray-900 font-semibold">{viewingJob.type_contrat || 'N/A'}</p>
-              </div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Salaire</p>
-                <p className="text-gray-900 font-semibold">
-                  {viewingJob.remuneration_min ? `${viewingJob.remuneration_min} - ${viewingJob.remuneration_max || ''}` : "Non spécifié"}
-                </p>
-              </div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Expérience</p>
-                <p className="text-gray-900 font-semibold">{viewingJob.experience || 'N/A'}</p>
-              </div>
-            </div>
-            <div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Lieu</p>
-                <p className="text-gray-900 font-semibold">{`${viewingJob.ville || ''}, ${viewingJob.pays || ''}`}</p>
-              </div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Télétravail</p>
-                <p className="text-gray-900 font-semibold">{viewingJob.teletravail ? 'Autorisé' : 'Non autorisé'}</p>
-              </div>
-              <div className="mb-4">
-                <p className="text-gray-600 text-xs font-semibold mb-1">Niveau d'études</p>
-                <p className="text-gray-900 font-semibold">{viewingJob.niveau_etudes || 'N/A'}</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <Link to={`/dashboard_candidature_spec/${viewingJob.id}`}>
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Eye size={16} className="mr-2" />
-                Voir les candidatures ({viewingJob.candidatures || 0})
-              </Button>
-            </Link>
-            <Button variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-50 hover:text-orange-600" onClick={() => handleUpdate(viewingJob)}>
-              <Pencil size={16} className="mr-2" />
-              Modifier
-            </Button>
-            <Button variant="destructive" onClick={() => confirmDelete(viewingJob)}>
-              <Trash size={16} className="mr-2" />
-              Supprimer
-            </Button>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">Description de l'offre</h2>
-          <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: viewingJob.description_poste || "Aucune description." }} />
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">Missions de l'employé</h2>
-          <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: viewingJob.responsabilites || "Aucune mission spécifiée." }} />
-        </div>
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h2 className="text-2xl font-bold text-orange-500 mb-4">Profil recherché</h2>
-          <div className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: viewingJob.exigences_poste || "Aucun profil spécifié." }} />
-        </div>
-        <div className="flex gap-3">
-          <Link to={`/dashboard_candidature_spec/${viewingJob.id}`}>
-            <Button className="bg-green-600 hover:bg-green-700">
-              <Eye size={16} className="mr-2" />
-              Voir les candidatures ({viewingJob.candidatures || 0})
-            </Button>
-          </Link>
-          <Button variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-50 hover:text-orange-600" onClick={() => handleUpdate(viewingJob)}>
-            <Pencil size={16} className="mr-2" />
-            Modifier
-          </Button>
-          <Button variant="destructive" onClick={() => confirmDelete(viewingJob)}>
-            <Trash size={16} className="mr-2" />
-            Supprimer
-          </Button>
-        </div>
-      </div>
-    </div>
-    );
-  };
-
+  
   return (
-    <main className="flex-1 p-5 overflow-auto">
-      <AnimatePresence mode="wait">
-        {view === "list" ? (
-          <motion.div
-            key="list"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 50 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            {renderListView()}
-          </motion.div>
-        ) : (
-          <motion.div
-            key="detail"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            {renderDetailView()}
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <main className="flex-1 overflow-auto">
+      <motion.div
+        key="list"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 50 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+      >
+        {renderListView()}
+      </motion.div>
       {/* Modal de mise à jour */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>

@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Search, MapPin, ChevronDown, ArrowLeft } from 'lucide-react';
+import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// NOTE: Ensure react-router-dom is available in your environment for Link to work
-import { Link } from 'react-router-dom';
 
 const JobSearchDashboard = ({
   searchTerm,
+  allJobTitle=false,
   setSearchTerm,
   locationTerm,
   setLocationTerm,
   selectedContract,
   setSelectedContract,
-  selectedEducation,
-  setSelectedEducation
+  selectedEducation, setSelectedEducation,
+  hideContractFilter = false,
+  hideEducationFilter = false,
+  searchProfileButtonText = "Rechercher des profils",
+  title = "Rechercher parmi toutes les offres d'emploi"
 }) => {
   const [contractOpen, setContractOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
@@ -31,24 +33,9 @@ const JobSearchDashboard = ({
       >
         <div className="bg-[#FFF3EB] pb-12 pt-3 px-4 md:px-10 font-sans relative">
           
-          {/* Animated Back Arrow (Blue, No Background, with line/trait) */}
-          <Link 
-              to={"/CandidatProfil"} 
-              className="absolute top-4 left-4 md:left-10 z-10"
-              aria-label="Retour au profil candidat"
-          >
-              <motion.div
-                  className="p-2 cursor-pointer transition-colors"
-                  whileHover={{ scale: 1.2, x: -5 }} 
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              >
-                  <ArrowLeft className="w-8 h-8 text-blue-600 font-extrabold drop-shadow-md" />
-              </motion.div>
-          </Link>
-          
           {/* Title */}
           <h2 className="text-xl md:text-3xl font-bold text-center mb-6 pt-8">
-            Trouvez une offre d'emploi
+            {allJobTitle ? "Trouvez une offre d'emploi" : title}
           </h2>
 
           {/* First Row - Search Bar */}
@@ -77,12 +64,13 @@ const JobSearchDashboard = ({
                 transition={{ type: "spring", stiffness: 400 }}
               />
             </div>
-            <button className="bg-[#F97316] text-white px-6 py-3 text-sm font-semibold min-w-[180px] hover:bg-[#E06714] transition-colors">
-              Rechercher des profils
+            <button className="bg-[#F97316] text-white px-6 py-3 text-sm font-semibold min-w-[180px] hover:bg-[#E06714] transition-colors w-full sm:w-auto">
+              {searchProfileButtonText}
             </button>
           </div>
 
           {/* Second Row - Filters */}
+          {(!hideContractFilter || !hideEducationFilter) && (
           <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-b-xl overflow-hidden border-t border-gray-200">
             {/* Type de contrat Dropdown */}
             <motion.div
@@ -162,6 +150,7 @@ const JobSearchDashboard = ({
               </AnimatePresence>
             </motion.div>
           </div>
+          )}
         </div>
       </motion.section>
     </>

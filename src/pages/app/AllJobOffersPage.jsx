@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import JobCard from "../../components/app/JobCard";
 import JobSearchDashboard from "../../components/app/JobSearchDashboard";
-import JobCarousel from "../../components/app/JobCarousel";
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from "../../components/public/Footer";
 
-function Recherche_offre() {
-  // States partagés pour temps réel
+function AllJobOffersPage() {
+  // States partagés pour les filtres en temps réel
   const [searchTerm, setSearchTerm] = useState('');
   const [locationTerm, setLocationTerm] = useState('');
   const [selectedContract, setSelectedContract] = useState('');
@@ -18,25 +17,23 @@ function Recherche_offre() {
       <JobSearchDashboard
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
-        allJobTitle={true}
         locationTerm={locationTerm}
         setLocationTerm={setLocationTerm}
-        selectedContract={selectedContract}
-        setSelectedContract={setSelectedContract}
-        selectedEducation={selectedEducation}
-        setSelectedEducation={setSelectedEducation}
+        hideContractFilter={true}
+        hideEducationFilter={true}
+        searchProfileButtonText="Rechercher des offres"
+        title="Rechercher parmi toutes les offres d'emploi"
       />
       <JobCard
         searchTerm={searchTerm}
         locationTerm={locationTerm}
         selectedContract={selectedContract}
         selectedEducation={selectedEducation}
-        limit={6}
+        paginationEnabled={true}
       />
-      <JobCarousel />
       <Footer />
     </>
   );
 }
 
-export default Recherche_offre;
+export default AllJobOffersPage;
