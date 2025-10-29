@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Mail, Phone, User, Edit, Map, Eye, FileText} from 'lucide-react';
+import { Mail, Phone, User, Edit, Map, Eye, FileText, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
+import { toast } from 'sonner';
+import { Switch } from '@radix-ui/react-switch';
 
 const Infopersonelles = ({ onEditClick }) => {
-  const { user, particulier } = useAuth();
+  const { user, particulier, token } = useAuth();
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [profileData, setProfileData] = useState({
     infosPersonnelles: 0,
@@ -13,6 +15,7 @@ const Infopersonelles = ({ onEditClick }) => {
     experiences: 0,
     formations: 0
   });
+  const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
 
   useEffect(() => {
     // Calcul du pourcentage de complétion pour les infos personnelles
@@ -29,7 +32,8 @@ const Infopersonelles = ({ onEditClick }) => {
         'resume_profil',
         'cv_link',
         'lettre_motivation_link',
-        'image_profil'
+        'image_profil',
+        'is_visible',
       ];
       
       const filledFields = requiredFields.filter(field => {
@@ -123,6 +127,26 @@ const Infopersonelles = ({ onEditClick }) => {
     };
   }, [user, particulier]);
 
+  const handleVisibilityToggle = async (checked) => {
+    setIsUpdatingVisibility(true);
+    const newVisibility = checked ? 1 : 0;
+
+    try {
+      const response = await api.put('/profile/particulier', { is_visible: newVisibility }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Déclenche un événement pour que la page parente (Profil.jsx) rafraîchisse les données.
+      window.dispatchEvent(new CustomEvent('profile-updated'));
+      toast.success(`Votre profil est maintenant ${newVisibility === 1 ? 'visible' : 'caché'}.`);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la visibilité:", error.response?.data || error.message);
+      toast.error("Erreur lors de la mise à jour de la visibilité.");
+    } finally {
+      setIsUpdatingVisibility(false);
+    }
+  };
+
   // Affichage des infos si particulier existe
   if (particulier) {
     return (
@@ -148,7 +172,7 @@ const Infopersonelles = ({ onEditClick }) => {
             <div className="flex justify-center md:justify-start">
               <div className="relative w-24 h-24 sm:w-28 sm:h-28 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden border border-gray-300">
                 {particulier.image_profil ? (
-                  <img src={`/storage/${particulier.image_profil}`} alt="Profil" className="w-full h-full object-cover rounded-full" />
+                  <img src={`${particulier.image_profil}`} alt="Profil" className="w-full h-full object-cover rounded-full" />
                 ) : (
                   <User size={50} className="text-gray-500 sm:size-[60px]" />
                 )}
@@ -173,9 +197,16 @@ const Infopersonelles = ({ onEditClick }) => {
                   <span>Âge : {new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear()} ans</span>
                 </div>
                  {/* Indication de visibilité du profil */}
-                <div className="flex items-center">
-                  <Eye className="mr-2 text-gray-500 min-w-[16px]"/>
-                  <span className="text-blue-600 font-medium">Votre profil est visible par les recruteurs</span>
+                <div className="flex items-center gap-2">
+                  <Eye size={16} className="text-gray-500 min-w-[16px]" />
+                  <label htmlFor="visibility-switch" className="text-gray-700 cursor-pointer text-sm">
+                    Profil {particulier.is_visible === false ? 'caché' : 'visible'} des recruteurs
+                  </label>
+                  {isUpdatingVisibility ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Switch id="visibility-switch" checked={particulier.is_visible === true} onCheckedChange={handleVisibilityToggle} />
+                  )}
                 </div>
                 <div className="flex items-center col-span-2">
                   <Mail size={16} className="mr-2 text-gray-500 min-w-[16px]" />

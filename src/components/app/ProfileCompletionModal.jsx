@@ -16,11 +16,11 @@ import {
 import { Loader2, Trash2 } from 'lucide-react';
 
 const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
-  const { user, token, updateUser, particulier } = useAuth();
+  const { user, particulier } = useAuth();
   const [imageFile, setImageFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(particulier?.image_profil ? `/storage/${particulier.image_profil}` : '');
-  const [cvFiles, setCvFiles] = useState([]);
-  const [lettreFiles, setLettreFiles] = useState([]);
+  const [previewImage, setPreviewImage] = useState(particulier?.image_profil ? `${particulier.image_profil}` : '');
+  const [cvFile, setCvFile] = useState(null);
+  const [lettreFile, setLettreFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validationSchema = Yup.object({
@@ -60,23 +60,24 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
       Object.entries(values).forEach(([key, value]) => formData.append(key, value));
       
       if (imageFile) formData.append('image_profil', imageFile);
-      if (cvFiles.length > 0) {
-        cvFiles.forEach(file => formData.append('cv_files[]', file));
-      }
-      if (lettreFiles.length > 0) {
-        lettreFiles.forEach(file => formData.append('lettre_motivation_files[]', file));
-      }
+      if (cvFile) formData.append('cv_file', cvFile);
+      if (lettreFile) formData.append('lettre_motivation_file', lettreFile);
       
       try {
-        const response = await api.post('/profile/particulier', formData, {
-          headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
-        });
-        const updatedParticulier = response.data.data?.particulier || response.data.particulier || {};
-        updateUser(prevUser => ({
-          ...prevUser,
-          particulier: updatedParticulier
-        }));
-        setPreviewImage(updatedParticulier.image_profil ? `/storage/${updatedParticulier.image_profil}` : '');
+        let response;
+        // Si un profil 'particulier' existe déjà, on met à jour (PUT)
+        // Sinon, on crée le profil (POST)
+        if (particulier && Object.keys(particulier).length > 0) {
+          // Laravel ne gère pas bien FormData avec PUT, on doit le "tricher" avec POST et _method
+          formData.append('_method', 'PUT');
+          response = await api.post('/profile/particulier', formData);
+        } else {
+          response = await api.post('/profile/particulier', formData);
+        }
+
+        const updatedParticulier = response.data.data || {};
+
+        setPreviewImage(updatedParticulier.image_profil ? `${updatedParticulier.image_profil}` : '');
         // Dispatch event to update profile completion bar
         window.dispatchEvent(new CustomEvent('profile-updated'));
 
@@ -105,31 +106,23 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   };
 
   const handleCvUpload = (e) => {
-    const files = e.target.files;
-    if (files) {
-      setCvFiles(prev => [...prev, ...Array.from(files)]);
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setCvFile(file);
     }
   };
 
   const handleLettreUpload = (e) => {
-    const files = e.target.files;
-    if (files) {
-      setLettreFiles(prev => [...prev, ...Array.from(files)]);
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setLettreFile(file);
     }
   };
 
-  const removeFile = (fileList, setFileList, index) => {
-    const newFiles = [...fileList];
-    newFiles.splice(index, 1);
-    setFileList(newFiles);
-  }
-
-  const handleImageDelete = () => {
-    setImageFile(null);
-    setPreviewImage('');
-    toast.success('Image supprimée.');
+  const removeFile = (setFile) => {
+    setFile(null);
   };
-
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -192,12 +185,6 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Image de profil</label>
             <div className="flex items-center space-x-4">
               <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
-              {previewImage && (
-                <button type="button" onClick={handleImageDelete} className="flex items-center px-3 py-2 border border-red-300 rounded-md text-red-600 hover:bg-red-100">
-                  <Trash2 size={16} className="mr-1" />
-                  Supprimer
-                </button>
-              )}
             </div>
             {previewImage && (
               <div className="mt-2">
@@ -207,39 +194,35 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">CV</label>
-            <input type="file" accept=".pdf,.doc,.docx" onChange={handleCvUpload} multiple className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <input type="file" accept=".pdf,.doc,.docx" onChange={handleCvUpload} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
             <div className="mt-2 space-y-1">
-              {cvFiles.map((file, index) => (
-                <div key={index} className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
-                  <span className="text-gray-700 truncate">{file.name}</span>
-                  <button type="button" onClick={() => removeFile(cvFiles, setCvFiles, index)} className="text-red-500 hover:text-red-700 ml-2">
+              {cvFile && (
+                <div className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
+                  <span className="text-gray-700 truncate">{cvFile.name}</span>
+                  <button type="button" onClick={() => removeFile(setCvFile)} className="text-red-500 hover:text-red-700 ml-2">
                     <Trash2 size={14} />
                   </button>
                 </div>
-              ))}
+              )}
             </div>
-            {particulier?.cv_link && cvFiles.length === 0 && (
-              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={`${import.meta.env.VITE_API_BASE_URL}/storage/${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>
-            )}
+            {particulier?.cv_link && !cvFile && (
+              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={`${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Lettre de motivation</label>
-            <input type="file" accept=".pdf,.doc,.docx" onChange={handleLettreUpload} multiple className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <input type="file" accept=".pdf,.doc,.docx" onChange={handleLettreUpload} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
             <div className="mt-2 space-y-1">
-              {lettreFiles.map((file, index) => (
-                <div key={index} className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
-                  <span className="text-gray-700 truncate">{file.name}</span>
-                  <button type="button" onClick={() => removeFile(lettreFiles, setLettreFiles, index)} className="text-red-500 hover:text-red-700 ml-2">
+              {lettreFile && (
+                <div className="flex items-center justify-between text-xs bg-gray-100 p-1 rounded">
+                  <span className="text-gray-700 truncate">{lettreFile.name}</span>
+                  <button type="button" onClick={() => removeFile(setLettreFile)} className="text-red-500 hover:text-red-700 ml-2">
                     <Trash2 size={14} />
                   </button>
                 </div>
-              ))}
+              )}
             </div>
-            {particulier?.lettre_motivation_link && lettreFiles.length === 0 && (
-              <p className="text-gray-500 text-xs mt-1">
-                Lettre actuelle : <a href={`${import.meta.env.VITE_API_BASE_URL}/storage/${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.
-              </p>
-            )}
+            {particulier?.lettre_motivation_link && !lettreFile && (
+              <p className="text-gray-500 text-xs mt-1">Lettre actuelle : <a href={`${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.</p>            )}
           </div>
           <div>
             <label className="flex items-center space-x-2">
