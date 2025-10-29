@@ -1,36 +1,39 @@
-  import React from 'react';
-  import aboutHeroImage from '../../assets/aboutHero.png'; // Importe l'image depuis le dossier assets
-  import { motion } from 'framer-motion';
+import React from 'react';
+import aboutHeroImage from '../../assets/aboutHero.png'; // Importe l'image depuis le dossier assets
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
-  const AboutHero = () => {
-    return (
-      <section 
-        className="relative w-full h-80 md:h-96 flex items-center justify-center text-center overflow-hidden"
-        style={{
-          backgroundImage: `url(${aboutHeroImage})`, // Utilise la variable importée pour l'image
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <motion.section
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }} // Anime une seule fois lorsque 30% de l'élément est visible
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-              >
-        {/* Overlay avec dégradé et opacité pour que le texte soit lisible, comme sur l'image */}
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30"></div> 
-        <div className="absolute inset-0 bg-black opacity-30"></div> {/* Assombrit légèrement l'image */}
+const AboutHero = () => {
+  const { t } = useTranslation(); // Hook i18n
 
-        {/* Contenu de la section hero */}
-        <div className="relative z-10 p-4">
-          <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-wide">
-            A PROPOS
-          </h1>
-        </div>
-        </motion.section>
-      </section>
-    );
-  };
+  return (
+    <section 
+      className="relative w-full h-80 md:h-96 flex items-center justify-center text-center overflow-hidden"
+      style={{
+        backgroundImage: `url(${aboutHeroImage})`, // Utilise la variable importée pour l'image
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    >
+      <motion.section
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }} // Anime une seule fois lorsque 30% de l'élément est visible
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+            >
+      {/* Overlay avec dégradé et opacité pour que le texte soit lisible, comme sur l'image */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 to-purple-600/30"></div> 
+      <div className="absolute inset-0 bg-black opacity-30"></div> {/* Assombrit légèrement l'image */}
 
-  export default AboutHero;
+      {/* Contenu de la section hero */}
+      <div className="relative z-10 p-4">
+        <h1 className="text-white text-4xl sm:text-5xl md:text-6xl font-bold uppercase tracking-wide">
+          {t('about.hero.title')}
+        </h1>
+      </div>
+      </motion.section>
+    </section>
+  );
+};
+
+export default AboutHero;

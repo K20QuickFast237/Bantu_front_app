@@ -56,6 +56,9 @@ const DiplomesFormations = () => {
           )
         );
         toast.success('Formation mise à jour avec succès');
+
+        // Déclencher l'événement pour mettre à jour la barre de progression
+        window.dispatchEvent(new Event('formations-updated'));
       } else {
         // Ajout
         const response = await api.post('/formations', values);
@@ -69,6 +72,9 @@ const DiplomesFormations = () => {
         }
         setFormations(prev => [...prev, newFormation]);
         toast.success('Formation ajoutée avec succès');
+
+        // Déclencher l'événement pour mettre à jour la barre de progression
+        window.dispatchEvent(new Event('formations-updated'));
       }
       setIsModalOpen(false);
       resetForm(); // Nettoyer le formulaire après ajout ou update
@@ -122,6 +128,9 @@ const DiplomesFormations = () => {
       await api.delete(`/formations/${formationToDelete}`);
       setFormations(formations.filter((formation) => formation.id !== formationToDelete));
       toast.success('Formation supprimée avec succès');
+
+      // Déclencher l'événement pour mettre à jour la barre de progression
+      window.dispatchEvent(new Event('formations-updated'));
     } catch (error) {
       toast.error('Erreur lors de la suppression de la formation');
     } finally {

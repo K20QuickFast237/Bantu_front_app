@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Clock, Calendar } from 'lucide-react';
+import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api'; // 👈 ton instance axios déjà configurée
 import BantulinkLoader from '../ui/BantulinkLoader';
 
-const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation }) => {
+const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation, paginationEnabled = false, limit = 6 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const JOBS_PER_PAGE = 9;
+
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filteredJobs, setFilteredJobs] = useState([]);
@@ -15,7 +18,7 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
     const fetchJobs = async () => {
       try {
         const response = await api.get('/offres');
-        console.log(response.data.data); // 👈 appelle {{local_base_url}}/offres
+        console.log(response.data.data); 
         setJobs(response.data.data); // selon ton API : ajuste si c'est response.data.data
       } catch (err) {
         console.error("Erreur lors du chargement des offres :", err);
@@ -61,6 +64,25 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
     console.log('Filtered jobs:', newFiltered); // Pour debug
   }, [jobs, searchTerm, locationTerm, selectedContract, selectedEducation]);
 
+  // Calculs pour la pagination ou la limitation
+  const jobsToDisplay = paginationEnabled
+    ? filteredJobs.slice((currentPage - 1) * JOBS_PER_PAGE, currentPage * JOBS_PER_PAGE)
+    : filteredJobs.slice(0, limit);
+
+  const totalPages = paginationEnabled ? Math.ceil(filteredJobs.length / JOBS_PER_PAGE) : 0;
+
+  // Réinitialiser la page actuelle si les filtres changent
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, locationTerm, selectedContract, selectedEducation]);
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
   const JobCardItem = ({ job }) => (
     <motion.div
       layout // Pour transitions fluides entre états
@@ -77,7 +99,7 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
             <div className="flex flex-col gap-3">
               <div className='flex'>
                 <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-                  <span className="text-xs font-semibold text-gray-600">Bantulink</span>
+                  <img src={`/storage/public/${job.employeur.logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
                 </div>
                 <div className='mt-7 ml-3 font-semibold text-xl'>{job.employeur.nom_entreprise || "Entreprise inconnue"}</div>
               </div>
@@ -164,7 +186,8 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
           </div>
         </div>
       </div>
-    </motion.section>
+    </div>
+  </motion.section>
   );
 }
 

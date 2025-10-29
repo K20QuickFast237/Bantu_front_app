@@ -1,0 +1,448 @@
+{
+  "header": {
+    "home": "Home",
+    "about": "About",
+    "features": "Features",
+    "pricing": "Pricing",
+    "support": "Support",
+    "login": "Login",
+    "register": "Register",
+    "myAccount": "My Account",
+    "logout": "Logout",
+    "language": "Language",
+    "fr": "Français",
+    "en": "English",
+    "findJob": "Find a job",
+    "findCompany": "Find a company",
+    "settings": "Settings"
+  },
+  "login": {
+    "title": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "connect": "Sign In",
+    "continueWith": "Continue with",
+    "notRegistered": "Not registered yet?",
+    "signUp": "Sign Up",
+    "googleError": "Google login error",
+    "success": "Login successful!",
+    "error": "Login error",
+    "invalid": "Invalid email or password. Please try again.",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password"
+  },
+  "register": {
+    "title": "Create My Account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "register": "Register",
+    "continueWith": "Continue with",
+    "alreadyRegistered": "Already registered?",
+    "login": "Sign In",
+    "success": "Registration successful!",
+    "successDesc": "A verification code has been sent to your email, check your inbox",
+    "error": "Registration error",
+    "errorDesc": "An error occurred during registration. Please try again.",
+    "namePlaceholder": "Enter your name",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm your password"
+  },
+  "category": {
+    "title": "Browse By Category",
+    "description": "Choose a category below to find specific help topics and frequently asked questions tailored to your needs.",
+    "account": {
+      "title": "Account & Login",
+      "desc": "Manage your account settings, password recovery, and login issues."
+    },
+    "orders": {
+      "title": "Orders & Payments",
+      "desc": "Track orders, payment methods, billing questions, and refunds"
+    },
+    "jobs": {
+      "title": "Jobs & Applications",
+      "desc": "Get help with job postings, applications, and recruitment processes."
+    },
+    "disputes": {
+      "title": "Disputes & Customer Support",
+      "desc": "Report issues, resolve disputes, and get customer support assistance."
+    },
+    "explore": "Explore Topics"
+  },
+  "about": {
+    "hero": {
+      "title": "ABOUT"
+    },
+    "whoWeAre": {
+      "title": "Who We Are?",
+      "description": "Bantulink is not just a digital platform. It's the technological revolution transforming Francophone Africa by connecting talents with opportunities and simplifying online commerce for everyone. We create digital bridges between employers and candidates, sellers and buyers."
+    },
+    "mission": {
+      "title": "Our Mission",
+      "description": "Connect talents with opportunities and simplify online commerce for all Francophone Africans. We create digital bridges between employers and candidates, sellers and buyers."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "Become the reference super app in Francophone Africa, facilitating employment and commerce for millions of users by 2027."
+    },
+    "values": {
+      "innovation": {
+        "title": "Innovation",
+        "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+      },
+      "inclusion": {
+        "title": "Inclusion",
+        "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of background, has equal access to opportunities."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
+      }
+    }
+  },
+  "aide": {
+    "hero": {
+      "title": "Need Help?",
+      "subtitle": "How can we help you today?",
+      "searchPlaceholder": "Search for topics, keywords, or questions...",
+      "searchButton": "Search",
+      "noResults": "No results found. Try another keyword.",
+      "popularSearches": "Popular searches:",
+      "popular1": "Password reset",
+      "popular2": "Payment issues",
+      "popular3": "Applications"
+    },
+    "categories": {
+      "account": {
+        "title": "Account & Login",
+        "desc": "Manage your account settings, password recovery, and login issues."
+      },
+      "orders": {
+        "title": "Orders & Payments",
+        "desc": "Track orders, payment methods, billing questions, and refunds"
+      },
+      "jobs": {
+        "title": "Jobs & Applications",
+        "desc": "Get help with job postings, applications, and recruitment processes."
+      },
+      "disputes": {
+        "title": "Disputes & Customer Support",
+        "desc": "Report issues, resolve disputes, and get customer support assistance."
+      }
+    },
+    "topics": {
+      "resetPassword": {
+        "title": "How to reset my password?",
+        "category": "Account and Login"
+      },
+      "paymentMethods": {
+        "title": "Accepted payment methods",
+        "category": "Orders and payments"
+      },
+      "applyJobs": {
+        "title": "How to apply for jobs",
+        "category": "Jobs and applications"
+      },
+      "reportContent": {
+        "title": "Report inappropriate content",
+        "category": "Disputes and customer support"
+      }
+    }
+  },
+  "tarif": {
+    "cta": {
+      "title": "Need a custom solution for you?",
+      "description": "Contact our team to discuss enterprise features, custom integrations, and volume pricing options tailored to your organization.",
+      "button": "Contact us"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "paymentMethods": {
+        "question": "What payment methods do you accept?",
+        "answer": "We accept credit cards (Visa, MasterCard, American Express), PayPal, and bank transfers for annual plans."
+      },
+      "changePlan": {
+        "question": "Can I change my plan anytime?",
+        "answer": "Yes, you can upgrade or downgrade your plan anytime from your dashboard. Plan changes take effect immediately or at the end of your current billing cycle, as applicable."
+      },
+      "freeTrial": {
+        "question": "Do you offer a free trial?",
+        "answer": "Yes, new users get a 14-day free trial on all paid plans. No credit card required to start."
+      }
+    }
+  },
+  "business": {
+    "title": "Your Business Empire Awaits",
+    "subtitle": "Launch, grow, and scale your business with powerful e-commerce tools and marketing features.",
+    "onlineStore": {
+      "title": "Your Online Store",
+      "description": "Open your shop in minutes with our intuitive store builder. Customize everything from layout to payment options.",
+      "features": [
+        "Drag & drop store builder",
+        "Customizable themes",
+        "Integrated payment gateways"
+      ]
+    },
+    "promotion": {
+      "title": "Promote Your Products",
+      "description": "Promote what matters most with targeted advertising and featured listings to reach more customers.",
+      "features": [
+        "Featured product listings",
+        "Targeted advertising",
+        "Analytics dashboard"
+      ]
+    },
+    "chat": {
+      "title": "Chat with Buyers",
+      "description": "Build trust with real conversations. Answer questions, negotiate prices, and close deals faster.",
+      "features": [
+        "Real-time messaging",
+        "File sharing",
+        "Order tracking"
+      ]
+    }
+  },
+  "faq": {
+    "hero": {
+      "title": "Maybe Your Question Has Been Answered, Check It",
+      "whatIs": {
+        "question": "What is Bantulink?",
+        "answer": "Bantulink is a SuperApp that combines recruitment and e-commerce, allowing users to find a job, recruit, sell or buy easily on a single platform."
+      },
+      "services": {
+        "question": "What Services Do You Offer?",
+        "answer": "We offer BantuHire for recruitment (job search, networking, certifications) and BantuMarket for commerce (custom stores, secure payments, chat with clients)."
+      },
+      "access": {
+        "question": "How to Access It?",
+        "answer": "You can access Bantulink via our mobile app available on iOS and Android, or via our website. Sign up with your email to get started."
+      }
+    },
+    "newsletter": {
+      "placeholder": "Enter your email to subscribe",
+      "button": "Subscribe",
+      "success": "Thank you for subscribing to our newsletter!",
+      "error": "Please enter a valid email address."
+    }
+  },
+  "career": {
+    "title": "Your Career Journey Starts Here",
+    "subtitle": "Connect with opportunities, showcase your skills, and land your dream job with intelligent matching.",
+    "smartSearch": {
+      "title": "Smart Job Search",
+      "desc": "Find offers tailored to your profile with our AI-powered matching algorithm that learns your preferences."
+    },
+    "realTimeChat": {
+      "title": "Real-time chat",
+      "desc": "Talk to recruiters instantly and get immediate feedback on your applications and interview requests."
+    },
+    "videoInterviews": {
+      "title": "Video Interviews",
+      "desc": "Get hired from your couch with seamless video interviews integrated directly into the platform."
+    },
+    "skillCertifications": {
+      "title": "Skill Certifications",
+      "desc": "Validate your skills, stand out from the crowd with verified certifications and skill assessments."
+    }
+  },
+  "features": {
+    "title": "FEATURES",
+    "bantuHire": {
+      "title": "BantuHire — The Job Finds You",
+      "description": "AI-powered job matching that connects you with opportunities based on your skills and preferences. No more endless scrolling—let the perfect job come to you.",
+      "features": [
+        "AI job recommendations",
+        "One-click applications",
+        "Career path suggestions"
+      ]
+    },
+    "bantuMarket": {
+      "title": "BantuMarket — Sell Smarter, Not Harder",
+      "description": "Launch your online store in minutes with tools designed for African entrepreneurs. From inventory management to secure payments, we've got you covered.",
+      "features": [
+        "Easy store setup",
+        "Mobile-optimized listings",
+        "Built-in analytics"
+      ]
+    },
+    "community": {
+      "title": "The Community Services Call, No Need To Delay Them",
+      "description": "Exchange, Learn, Grow Together. Freelancers, Recruiters, Sellers And Buyers Are Waiting For You.",
+      "button": "Join The Community"
+    }
+  },
+  "experiences": {
+    "title": "Experiences",
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete?",
+    "deleteDesc": "This action is irreversible. The experience will be permanently deleted.",
+    "cancel": "Cancel",
+    "jobTitle": "Job Title",
+    "company": "Company",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "description": "Task Description",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "post": "Position",
+    "location": "Location",
+    "date": "Date",
+    "missions": "Description, Missions",
+    "noExperiences": "No experiences recorded.",
+    "successUpdate": "Experience updated successfully",
+    "successAdd": "Experience added successfully",
+    "successDelete": "Experience deleted successfully",
+    "errorLoad": "Error loading experiences",
+    "errorSave": "Error saving the experience",
+    "errorDelete": "Error deleting the experience"
+  },
+  "footer": {
+    "ecosystemTitle": "Join the all-in-one BantuLink ecosystem",
+    "createAccount": "→ I create my account now",
+    "tags": [
+      "Employment & Recruitment",
+      "Commerce & Services",
+      "Community & Training"
+    ],
+    "logo": "SiteLogo",
+    "columns": {
+      "product": {
+        "title": "Product",
+        "items": [
+          "BantuLink",
+          "BantuMarket",
+          "Certifications & Training",
+          "Subscriptions & Pricing",
+          "Mobile App"
+        ]
+      },
+      "useCases": {
+        "title": "Use Cases",
+        "items": [
+          "For job seekers",
+          "For recruiters",
+          "For sellers",
+          "For buyers",
+          "For freelancers"
+        ]
+      },
+      "resources": {
+        "title": "Resources",
+        "items": [
+          "Help Center",
+          "FAQ",
+          "Tutorials",
+          "Blog & Tips",
+          "Technical Support"
+        ]
+      },
+      "company": {
+        "title": "Company",
+        "items": [
+          "About us",
+          "Team & partners",
+          "Terms of use",
+          "Privacy policy",
+          "Contact us"
+        ]
+      },
+      "social": {
+        "title": "Let's do it!"
+      }
+    },
+    "copyright": "Copyright © 2025 BantuLink. All rights reserved."
+  },
+  "hero": {
+    "title": "One App,<br/>Two Worlds:<br/><span className=\"text-gray-900 bg-clip-text\">Recruitment & E-Commerce United.</span>",
+    "subtitle": "Find A Job, Recruit, Sell Or Buy Safely With BantuLink.",
+    "candidate": "I Am A Candidate",
+    "recruiter": "I am a Recruiter",
+    "seller": "I am a Seller",
+    "buyer": "I am a Buyer"
+  },
+  "coreValues": {
+    "title": "Our Core Values",
+    "security": {
+      "title": "Security",
+      "description": "Security is not an option at BantuLink, it's our absolute priority. In a digital environment where trust is fragile, we have chosen to invest massively in the most advanced security technologies."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of their educational level or resources, can access digital opportunities."
+    },
+    "excellence": {
+      "title": "Excellence",
+      "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
+    }
+  },
+  "history": {
+    "title": "Our Story",
+    "timeline": {
+      "2024": {
+        "month": "May",
+        "desc": "It all starts with a shared observation by the TNK SYNERGIES LTD team: the idea of BantuLink is born from this observation: create a super-app that solves these two challenges simultaneously, with a 100% African approach."
+      },
+      "2025": {
+        "month": "June",
+        "desc": "2025 marks the start of BantuLink's technical development. Our team of 15 experienced developers, based in Douala, works in agile mode to create a robust, secure, and intuitive platform."
+      },
+      "today": {
+        "month": "July",
+        "desc": "Every line of code is designed for the African user: multilingual interfaces (French/English)."
+      }
+    }
+  },
+  "partners": {
+    "tnkTitle": "TNK SYNERGIES LTD: the company revolutionizing digital Africa",
+    "tnkDesc": "TNK SYNERGIES LTD is not a tech company like the others. Founded in 2024 by a team of experienced African entrepreneurs, our company has set itself the mission of creating the digital solutions that Francophone Africa lacks.",
+    "website": "Website:",
+    "linkedin": "LinkedIn:",
+    "facebook": "Facebook:",
+    "instagram": "Instagram:",
+    "partnersTitle": "Our various partners",
+    "partnersList": [
+      "TNK Synergies",
+      "Apple",
+      "Microsoft"
+    ]
+  },
+  "stats": {
+    "users": "Active Users",
+    "providers": "Certified Providers",
+    "companies": "Registered Companies",
+    "satisfaction": "Customer Satisfaction"
+  },
+  "testimonials": {
+    "title": "Satisfying Our Clients Is<br className=\"hidden md:inline\"/>Our Best Advertising.",
+    "quote1": "Bantulink helps you see how many extra days you have left to work to reach your goal.",
+    "name1": "Regina Miles",
+    "role1": "Designer",
+    "quote2": "An incredible experience! The team exceeded all my expectations. I highly recommend their services.",
+    "name2": "John Doe",
+    "role2": "Developer",
+    "quote3": "Very satisfied with the final result. Quality is on point and customer support is excellent.",
+    "name3": "Jane Smith",
+    "role3": "Entrepreneur",
+    "quote4": "An intuitive platform that facilitates professional and commercial connections. A must!",
+    "name4": "Alex Dupont",
+    "role4": "Freelancer",
+    "quote5": "Bantulink allowed me to develop my network and boost my online sales quickly.",
+    "name5": "Marie Dubois",
+    "role5": "Seller",
+    "appPreview": {
+      "title": "Take a look inside<br/>our SuperApp",
+      "description": "Problem aimed at solving the silos between employment, local commerce, and skill development in Francophone Africa."
+    }
+  }
+}

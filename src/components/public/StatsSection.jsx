@@ -1,7 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const StatsSection = () => {
+  const { t } = useTranslation(); // Ajout
   // Variants pour l'animation des éléments statistiques
   const statItemVariants = {
     hidden: { y: 50, opacity: 0 },
@@ -37,7 +39,7 @@ const StatsSection = () => {
           transition={{ delay: 0.1 }}
         >
           <span className="text-4xl md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">10K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">Utilisateurs Actifs</span>
+          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.users')}</span>
         </motion.div>
 
         {/* Prestataires Certifiés */}
@@ -49,7 +51,7 @@ const StatsSection = () => {
           transition={{ delay: 0.2 }}
         >
           <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">2K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-2 font-light">Prestataires Certifiés</span>
+          <span className="text-lg text-center sm:text-left sm:ml-2 font-light">{t('stats.providers')}</span>
         </motion.div>
 
         {/* Entreprises Inscrites */}
@@ -61,7 +63,7 @@ const StatsSection = () => {
           transition={{ delay: 0.3 }}
         >
           <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">1,5K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">Entreprises Inscrites</span>
+          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.companies')}</span>
         </motion.div>
 
         {/* Satisfaction Client */}
@@ -73,7 +75,7 @@ const StatsSection = () => {
           transition={{ delay: 0.4 }}
         >
           <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">98%</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">De Satisfaction Client</span>
+          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.satisfaction')}</span>
         </motion.div>
 
       </div>
@@ -83,5 +85,3 @@ const StatsSection = () => {
 };
 
 export default StatsSection;
-
-

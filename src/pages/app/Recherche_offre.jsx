@@ -18,6 +18,7 @@ function Recherche_offre() {
       <JobSearchDashboard
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
+        allJobTitle={true}
         locationTerm={locationTerm}
         setLocationTerm={setLocationTerm}
         selectedContract={selectedContract}
@@ -30,6 +31,7 @@ function Recherche_offre() {
         locationTerm={locationTerm}
         selectedContract={selectedContract}
         selectedEducation={selectedEducation}
+        limit={6}
       />
       <JobCarousel />
       <Footer />

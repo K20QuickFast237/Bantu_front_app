@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // Importation de motion et ArrowLeft nécessaire pour la flèche animée
 import { motion } from 'framer-motion';
-import { ArrowLeft } from "lucide-react"; 
+import { ArrowLeft, Loader2 } from "lucide-react"; 
 
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
@@ -27,7 +27,8 @@ const JobOfferPage = () => {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
-  const { particulier } = useAuth();
+  const { particulier, user } = useAuth();
+  const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -59,10 +60,32 @@ const JobOfferPage = () => {
     navigate(`/jobApplicationform/${job.id}`);
   };
 
-  if (loading) return <div className="flex items-center justify-center min-h-screen">
-        <BantulinkLoader/>
-      </div>;
-  if (!job) return <p className="text-center mt-20">Offre non trouvée</p>;
+  const handleSaveOffer = async () => {
+    if (!user) {
+      toast.info("Veuillez vous connecter pour sauvegarder une offre.");
+      navigate('/login');
+      return;
+    }
+
+    if (!job || !job.id) {
+      toast.error("Impossible de trouver l'identifiant de l'offre.");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await api.post('/favoris/ajouter', {
+        offre_emploi_id: job.id
+      });
+      toast.success("Offre sauvegardée avec succès !");
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Erreur lors de la sauvegarde de l'offre.";
+      // Gère le cas où l'offre est déjà en favoris (conflit)
+      toast.error(errorMessage, { description: error.response?.status === 409 ? "Cette offre est peut-être déjà dans vos favoris." : "" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <>
@@ -73,15 +96,19 @@ const JobOfferPage = () => {
           onComplete={onProfileComplete}
         />
         <HeaderProfil />
-        <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
-          
-          {/* Remplacement du bouton 'retour' par la flèche animée */}
-          <Link 
-              to={"/CandidatProfil"} 
-              // J'ai mis la flèche en position absolue en haut à gauche
+        {loading ? (
+          <div className="flex items-center justify-center min-h-screen">
+            <BantulinkLoader />
+          </div>
+        ) : (
+          <div className="min-h-screen bg-gray-100 font-sans relative pt-10">
+            
+            {/* Remplacement du bouton 'retour' par la flèche animée */}
+            <button 
+              onClick={() => navigate(-1)}
               className="absolute top-4 left-4 md:left-10 z-20"
-              aria-label="Retour au profil candidat"
-          >
+              aria-label="Retour à la page précédente"
+            >
               <motion.div
                   className="p-2 cursor-pointer transition-colors"
                   // Animation au survol: petite échelle et décalage vers la gauche
@@ -89,9 +116,9 @@ const JobOfferPage = () => {
                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                   {/* Icône ArrowLeft (avec trait) en bleu gras, sans arrière-plan */}
-                  <ArrowLeft className="w-8 h-8 text-blue-600 drop-shadow-md" />
+                  <ArrowLeft className="w-8 h-8 text-green-500 drop-shadow-md" />
               </motion.div>
-          </Link>
+          </button>
           {/* Fin du remplacement */}
 
           {/* Fixed Footer for mobile */}
@@ -100,13 +127,14 @@ const JobOfferPage = () => {
               <button onClick={handleApplyClick} className="flex items-center cursor-pointer justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
                 Postuler
               </button>
-              <button className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-                Sauvegarder
+              <button onClick={handleSaveOffer} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200">
+                {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
+                {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
               </button>
             </div>
           </div>
 
-          <div className="max-w-6xl mx-auto bg-white rounded-lg my-8 p-6 lg:p-8">
+          <div className="mx-auto bg-white rounded-lg my-8 p-6 md:mx-10 lg:mx-10">
             <div className="flex flex-col lg:flex-row gap-8">
 
               {/* Left Column */}
@@ -167,8 +195,9 @@ const JobOfferPage = () => {
                   <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
                     Postuler
                   </button>
-                  <button className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-                    Sauvegarder
+                  <button onClick={handleSaveOffer} disabled={isSaving} className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200 flex items-center">
+                    {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
+                    {isSaving ? 'Sauvegarde...' : 'Sauvegardar'}
                   </button>
                 </div>
 
@@ -261,12 +290,14 @@ const JobOfferPage = () => {
               <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
                 Postuler
               </button>
-              <button className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors">
-                Sauvegarder
+              <button onClick={handleSaveOffer} disabled={isSaving} className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200 flex items-center">
+                {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
+                {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
               </button>
             </div>
           </div>
         </div>
+        )}
         <Footer />
       </PageWrapper>
     </>

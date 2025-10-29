@@ -60,7 +60,7 @@ const CardTitle = ({ children, className = '', ...props }) => (
 );
 
 const CardContent = ({ children, className = '', ...props }) => (
-  <div className={`p-5 pt-0 ${className}`} {...props}>
+  <div className={`p-5 ${className}`} {...props}>
     {children}
   </div>
 );
@@ -77,18 +77,23 @@ const AvatarFallback = ({ children, className = '', ...props }) => (
   </div>
 );
 
-const DashboardSection = ({ animateCards }) => {
+const Dashboard = ({ setActiveSection }) => {
   const navigate = useNavigate();
   const [stats, setStats] = useState([
     { title: '0', subtitle: 'Vues Totales', color: 'bg-blue-50 border-blue-200', icon: Eye, iconColor: 'text-blue-600' },
-    { title: '0', subtitle: 'Candidatures cette semaine', color: 'bg-green-50 border-green-200', icon: FileText, iconColor: 'text-green-600' },
+    { title: '0', subtitle: 'Totales des offres', color: 'bg-green-50 border-green-200', icon: FileText, iconColor: 'text-green-600' },
     { title: '0', subtitle: 'Entretiens planifiés', color: 'bg-yellow-50 border-yellow-200', icon: Calendar, iconColor: 'text-yellow-600' },
     { title: '0', subtitle: 'Candidats actifs', color: 'bg-pink-50 border-pink-200', icon: Users, iconColor: 'text-pink-600' },
   ]);
   const [jobPosts, setJobPosts] = useState([]);
   const [recentApplications, setRecentApplications] = useState([]);
   const { user } = useAuth();
-
+  const [animateCards, setAnimateCards] = useState(false);
+  
+  useEffect(() => {
+    setTimeout(() => setAnimateCards(true), 100);
+  }, []);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,15 +106,9 @@ const DashboardSection = ({ animateCards }) => {
         setJobPosts(offersResponse.data.data || []);
         setRecentApplications(applicationsResponse.data || []);
 
-        // Calculer les stats
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-        const applicationsThisWeek = (applicationsResponse.data || []).filter(app => new Date(app.created_at) >= oneWeekAgo);
-
         setStats(prevStats => [
           { ...prevStats[0], title: '234' }, // TODO: Remplacer par des données dynamiques quand l'API sera prête
-          { ...prevStats[1], title: applicationsThisWeek.length },
+          { ...prevStats[1], title: offersResponse.data.total?.toString() || '0' }, // TODO: Remplacer par des données dynamiques
           { ...prevStats[2], title: '5' }, // TODO: Remplacer par des données dynamiques
           { ...prevStats[3], title: '12' }, // TODO: Remplacer par des données dynamiques
         ]);
@@ -130,15 +129,17 @@ const DashboardSection = ({ animateCards }) => {
     {
       title: 'Créer une offre',
       subtitle: 'Publier un nouveau poste',
+      onClick: handleCreateJobClick,
       icon: Plus,
-      bgColor: 'bg-[#0A2342]',
-      textColor: 'text-white',
-      iconColor: 'text-white'
+      bgColor: 'bg-white',
+      textColor: 'text-gray-800',
+      iconColor: 'text-gray-800'
     },
     {
       title: 'Modifier le profil',
       subtitle: 'Mettre à jour vos infos',
       icon: User,
+      onClick: () => navigate('/settings'),
       bgColor: 'bg-white',
       textColor: 'text-gray-800',
       iconColor: 'text-gray-800'
@@ -147,6 +148,7 @@ const DashboardSection = ({ animateCards }) => {
       title: 'Changer de mode',
       subtitle: 'Voir en tant que candidat',
       icon: ArrowLeftRight,
+      onClick: () => navigate('/profil'),
       bgColor: 'bg-white',
       textColor: 'text-green-600',
       iconColor: 'text-green-600'
@@ -155,6 +157,7 @@ const DashboardSection = ({ animateCards }) => {
       title: 'Voir les statistiques',
       subtitle: 'Analyses de performance',
       icon: BarChart3,
+      onClick: () => navigate('/analytics'),
       bgColor: 'bg-white',
       textColor: 'text-orange-500',
       iconColor: 'text-orange-500'
@@ -301,6 +304,7 @@ const DashboardSection = ({ animateCards }) => {
             return (
               <Card
                 key={index}
+                onClick={action.onClick}
                 className={`cursor-pointer transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg ${action.bgColor}`}
               >
                 <CardContent className="p-4 flex items-center space-x-3">
@@ -319,4 +323,4 @@ const DashboardSection = ({ animateCards }) => {
   );
 };
 
-export default DashboardSection;
+export default Dashboard;

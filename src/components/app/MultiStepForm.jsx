@@ -3,20 +3,9 @@ import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
 import { ClipLoader } from "react-spinners";
-import { Upload, Trash2 } from 'lucide-react';
+import { Upload, Trash2, Eye, Share2, Edit, X } from 'lucide-react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-} from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
 import {
   Command,
   CommandEmpty,
@@ -25,7 +14,103 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import { useNavigate } from 'react-router-dom';
+
+// Composant de prévisualisation
+const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
+
+  return (
+    <div className="max-w-5xl mx-auto space-y-4">
+      {/* Header Card */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex justify-between items-start mb-4">
+          <h1 className="text-2xl font-bold text-gray-900">{values.titre_poste}</h1>
+          <div className="flex items-center gap-2">
+            <button className="text-teal-500 font-medium flex items-center gap-1">
+              Partager <Share2 className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        
+        <div className="text-sm text-gray-600 mb-6">
+          Date de publication : {new Date().toLocaleDateString('fr-FR')} • Date limite : {new Date(values.date_limite_soumission).toLocaleDateString('fr-FR')}
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-6">
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Type de contrat</div>
+            <div className="text-gray-700">{values.type_contrat.toUpperCase()}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Lieu</div>
+            <div className="text-gray-700">{values.ville}, {values.pays}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Salaire</div>
+            <div className="text-gray-700">{values.remuneration_min} - {values.remuneration_max}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Télétravail</div>
+            <div className="text-gray-700">{values.teletravail ? 'Autorisé' : 'Non autorisé'}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Expérience</div>
+            <div className="text-gray-700">{values.experience}</div>
+          </div>
+          <div>
+            <div className="font-semibold text-gray-900 mb-1">Niveau d'études</div>
+            <div className="text-gray-700">{values.niveau_etudes || 'Non spécifié'}</div>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <button onClick={onEdit} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+            <Edit className="w-5 h-5" />
+            Modifier l'offre
+          </button>
+          <button onClick={onSubmit} className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center transition-colors">
+            Publier
+          </button>
+          <button onClick={onCancel} className="bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+            <X className="w-5 h-5" />
+            Annuler
+          </button>
+        </div>
+      </div>
+
+      {/* Description Card */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <h2 className="text-xl font-bold text-orange-500 mb-4">Description de l'offre</h2>
+        <p className="text-gray-700 mb-6 leading-relaxed whitespace-pre-line">{values.description_poste}</p>
+
+        <h3 className="text-xl font-bold text-orange-500 mb-4">Missions de l'employé</h3>
+        <div className="space-y-2 text-gray-700 mb-6 whitespace-pre-line">{values.responsabilites}</div>
+
+        <h3 className="text-xl font-bold text-orange-500 mb-4">Profil recherché</h3>
+        <div className="space-y-2 text-gray-700 whitespace-pre-line">{values.exigences}</div>
+      </div>
+
+      {/* Bottom Action Buttons */}
+      <div className="bg-white rounded-lg shadow-sm p-6 flex gap-3">
+        <button onClick={onEdit} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+          <Edit className="w-5 h-5" />
+          Modifier l'offre
+        </button>
+        <button onClick={onSubmit} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+          Publier l'offre
+        </button>
+        <button onClick={onCancel} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
+          <X className="w-5 h-5" />
+          Annuler
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const validationSchemas = [
   // Step 1: EMPLOYEUR
@@ -40,6 +125,7 @@ const validationSchemas = [
   }),
   // Step 2: OFFRE (tous requis et typés)
   Yup.object({
+    categorie_id: Yup.string().required('Catégorie requise'),
     titre_poste: Yup.string().required('Titre requis'),
     date_limite_soumission: Yup.date()
       .typeError('Date invalide')
@@ -75,12 +161,14 @@ const validationSchemas = [
 const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
+  const [categoriesList, setCategoriesList] = useState([]);
   const [formData, setFormData] = useState();
   const { professionnel } = useAuth();
   const [documents, setDocuments] = useState([]);
   const [newDoc, setNewDoc] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPreview, setShowPreview] = useState(false); // Nouvel état pour la prévisualisation
   const formRef = useRef(null);
   const navigate = useNavigate();
 
@@ -105,15 +193,31 @@ const MultiStepForm = () => {
     const fetchSkills = async () => {
       try {
         const response = await api.get('/skills');
-        setSkillsList(response.data) // [{id: 1, name: "React"}, {id: 2, name: "Laravel"}...]
+        setSkillsList(response.data)
       } catch (error) {
-        toast.error("rreur récupération competences", {
+        toast.error("erreur récupération competences", {
           description: `${error}` || "Une erreur inattendue est survenue",
           duration: 3000
         })
       }
     }
     fetchSkills();
+
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/offres-categories');
+        console.log(response);
+        // Assurer que nous avons bien un tableau. L'API peut retourner { data: [...] }
+        const categories = Array.isArray(response.data) ? response.data : response.data?.data || [];
+        setCategoriesList(categories);
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des catégories.", {
+          description: `${error.message}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        });
+      }
+    };
+    fetchCategories();
   }, [])
 
   const initialValues = {
@@ -126,6 +230,7 @@ const MultiStepForm = () => {
     ville: professionnel?.ville || '',
     adresse: professionnel?.adresse || '',
     description_entreprise: professionnel?.description_entreprise || '',
+    categorie_id: '',
     titre_poste: '',
     date_limite_soumission: '',
     fonction: '',
@@ -176,9 +281,9 @@ const MultiStepForm = () => {
   };
 
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  // const handleInputChange = (field, value) => {
+  //   setFormData(prev => ({ ...prev, [field]: value }));
+  // };
 
   const scrollToTop = () => {
     if (formRef.current) {
@@ -186,12 +291,12 @@ const MultiStepForm = () => {
     }
   };
 
-  const handleNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-      scrollToTop();
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentStep < 4) {
+  //     setCurrentStep(currentStep + 1);
+  //     scrollToTop();
+  //   }
+  // };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -200,21 +305,28 @@ const MultiStepForm = () => {
     }
   };
 
-  const handleStepClick = async (stepNumber, formik) => {
-    if (stepNumber === currentStep) return;
-    // Validation avant de changer d'étape
-    const valid = await formik.validateForm();
-    formik.setTouched(
-      Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-    );
-    if (Object.keys(valid).length === 0) {
-      setCurrentStep(stepNumber);
-      scrollToTop();
-    }
+  // const handleStepClick = async (stepNumber, formik) => {
+  //   if (stepNumber === currentStep) return;
+  //   // Validation avant de changer d'étape
+  //   const valid = await formik.validateForm();
+  //   formik.setTouched(
+  //     Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+  //   );
+  //   if (Object.keys(valid).length === 0) {
+  //     setCurrentStep(stepNumber);
+  //     scrollToTop();
+  //   }
+  // };
+
+  const handleCancel = () => {
+    setShowPreview(false);
+    navigate('/dashboard' );
   };
 
-  const handleSubmit = async (values, actions) => {
+  // Fonction unique pour publier l'offre
+  const publishOffer = async (values, actions) => {
     setLoading(true);
+    setShowPreview(false); // Ferme la prévisualisation si elle est ouverte
     try {
       const payload = {
         ...values,
@@ -225,18 +337,18 @@ const MultiStepForm = () => {
       };
       await api.post('/offres', payload);
       toast.success("Offre publiée avec succès !");
-      actions.resetForm(); // Reset le formulaire
-      // Redirige vers dashboard_recruteur avec la section job-posts
-      navigate('/dashboard_recruteur', { state: { section: 'job-posts' } });
+      actions.resetForm();
+      navigate('/job-post');
     } catch (error) {
-      toast.error("Erreur publication :", {
-        description: `${error} `|| "Erreur lors de la publication de l’offre"
+      toast.error("Erreur de publication :", {
+        description: error.response?.data?.message || "Une erreur inattendue est survenue.",
       });
+    } finally {
+      setLoading(false);
+      actions.setSubmitting(false);
     }
-    setLoading(false);
   };
 
-  // Passe formik à renderStepIndicator
   const renderStepIndicator = (formik) => (
     <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto px-4">
       {steps.map((step, index) => (
@@ -391,7 +503,7 @@ const MultiStepForm = () => {
         <button
           type="button"
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          onClick={formik.handleReset}
+          onClick={handleCancel}
         >
           Annuler
         </button>
@@ -428,6 +540,22 @@ const MultiStepForm = () => {
           <ErrorMessage name="date_limite_soumission" component="div" className="text-red-500 text-xs" />
         </div>
       </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+        <Field as="select" name="categorie_id" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+          <option value="">Sélectionner une catégorie</option>
+          {categoriesList.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.nom}
+            </option>
+          ))}
+        </Field>
+        <ErrorMessage name="categorie_id" component="div" className="text-red-500 text-xs" />
+      </div>
+
+
+
 
       <div className="grid grid-cols-2 gap-4">
         <div>
@@ -708,23 +836,23 @@ const MultiStepForm = () => {
   );
 
   const renderPublierStep = (formik) => (
-    <Form className="max-w-8xl mx-auto text-center space-y-6">
+    showPreview ? <OffrePreview values={formik.values} onEdit={handlePrevious} onCancel={handleCancel} onSubmit={() => publishOffer(formik.values, formik.actions)} skillsList={skillsList} /> : <Form className="max-w-8xl mx-auto text-center space-y-6">
       <div className="mb-8">
         <div className="w-64 h-48 mx-auto bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
           <div className="text-orange-500 text-6xl">✓</div>
         </div>
       </div>
-
+  
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">
           Veuillez prendre 1min pour relire les informations que vous avez entrées par rapport à l'offre. Si tout est correct, veuillez publier l'offre.
         </h2>
-
+  
         <p className="text-gray-700">
           Vous pourrez suivre l'offre et ses candidatures dans votre dashboard
         </p>
       </div>
-
+  
       <div className="flex items-center justify-center space-x-2 mt-8">
         <input
           type="checkbox"
@@ -739,13 +867,29 @@ const MultiStepForm = () => {
           {' '}de BantuLink
         </label>
       </div>
-
+  
       <div className="flex justify-center space-x-4 pt-6">
         <button
           onClick={handlePrevious}
           className="px-8 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          type="button"
         >
           Retour
+        </button>
+        <button
+          disabled={!termsAccepted}
+          type="button" // Changé de submit à button
+          onClick={() => {
+            if (termsAccepted) {
+              setShowPreview(true);
+            }
+          }}
+          className={`px-8 py-2 rounded-md text-sm font-medium flex items-center ${termsAccepted
+            ? 'bg-blue-500 text-white hover:bg-blue-600'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+        >
+          <Eye className="mr-2 h-4 w-4" /> Prévisualiser
         </button>
         <button
           disabled={!termsAccepted}
@@ -758,6 +902,7 @@ const MultiStepForm = () => {
           Publier
         </button>
       </div>
+
     </Form>
   );
 
@@ -803,7 +948,7 @@ const MultiStepForm = () => {
       onSubmit={async (values, actions) => {
         if (currentStep < 4) {
           setCurrentStep(currentStep + 1);
-          scrollToTop(); // Ajoute ceci ici !
+          scrollToTop();
           actions.setSubmitting(false);
         } else {
           // Validation globale avant publication
@@ -818,11 +963,10 @@ const MultiStepForm = () => {
             actions.setSubmitting(false);
             return;
           }
-          await handleSubmit(values, actions);
-          actions.setSubmitting(false);
+          
+          publishOffer(values, actions);
         }
       }}
-      enableReinitialize
     >
       {(formik) => (
         <div ref={formRef} className="min-h-screen mt-5 py-8">
