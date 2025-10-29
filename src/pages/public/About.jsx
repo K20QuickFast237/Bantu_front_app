@@ -2,7 +2,7 @@ import AboutHero from "../../components/public/AboutHero";
 import AboutSection from "../../components/public/AboutSection";
 import CoreValuesSection from "../../components/public/CoreValuesSection";
 import Footer from "../../components/public/Footer";
-import HeaderWhite from "../../components/public/HeaderWhite";
+import Header from "../../components/public/Header";
 import NotreHistoire from "../../components/public/NotreHistoire";
 import PageWrapper from "../../components/public/PageWrapper";
 import PartnersSection from "../../components/public/PartnersSection";
@@ -12,7 +12,7 @@ function About (){
     return(
         <> 
         <PageWrapper>
-            <HeaderWhite />
+            <Header />
             <AboutHero />
             <AboutSection />
             <NotreHistoire />

@@ -186,8 +186,7 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
           </div>
         </div>
       </div>
-    </div>
-  </motion.section>
+   </motion.section>
   );
 }
 
