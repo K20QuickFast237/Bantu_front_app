@@ -116,55 +116,56 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
     </motion.div>
   );
 
-return (
-  <motion.section
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.1 }}
-    transition={{ duration: 0.8, ease: 'easeOut' }}
-  >
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-emerald-400">Offres d’emploi disponibles</h1>
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+    >
+      <div className="min-h-screen">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-6">
+              <div className="flex items-center">
+                <h1 className="text-2xl font-semibold text-emerald-400">Offres d’emploi disponibles</h1>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {loading ? (
-            <BantulinkLoader />
-          ) : filteredJobs.length === 0 ? (
-            <p className="text-center text-gray-500">Aucune offre trouvée.</p>
-          ) : (
-            <AnimatePresence>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {filteredJobs.map((job) => (
-                  <JobCardItem
-                    key={job.id}
-                    job={job}
-                  />
-                ))}
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {loading ? (
+              <BantulinkLoader />
+            ) : filteredJobs.length === 0 ? (
+              <p className="text-center text-gray-500">Aucune offre trouvée.</p>
+            ) : (
+              <AnimatePresence>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {filteredJobs.map((job) => (
+                    <JobCardItem
+                      key={job.id}
+                      job={job}
+                    />
+                  ))}
+                </div>
+              </AnimatePresence>
+            )}
+
+            {/* Load More Button */}
+            {!loading && filteredJobs.length > 0 && (
+              <div className="flex justify-start">
+                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                  Afficher plus
+                </button>
               </div>
-            </AnimatePresence>
-          )}
-
-          {/* Load More Button */}
-          {!loading && filteredJobs.length > 0 && (
-            <div className="flex justify-start">
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                Afficher plus
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </motion.section>
   );
-};
+}
 
 export default JobCard;
