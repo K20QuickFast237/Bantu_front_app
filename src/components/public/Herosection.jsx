@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
 // Importation des images
 // import imgHero2 from '../../assets/imgHero2.png'; // Remplacé par le carrousel
@@ -11,6 +12,7 @@ import BuyIcon from '../../assets/Buy.png';
 import SellIcon from '../../assets/Sell.png';
 
 const HeroSection = () => {
+  const { t } = useTranslation(); // Ajout
   // Variants pour les animations
   const itemVariants = {
     hidden: { y: -100, opacity: 0 },
@@ -74,20 +76,15 @@ const HeroSection = () => {
           <motion.h1
             className="text-4xl md:text-5xl lg:text-5xl font-extrabold text-gray-900 leading-tight mb-4"
             variants={itemVariants}
-          >
-            Une Seule App,<br />
-            Deux Mondes :<br />
-            <span className="text-gray-900 bg-clip-text ">
-              Recrutement & E-Commerce Réunis.
-            </span>
-          </motion.h1>
+            dangerouslySetInnerHTML={{ __html: t('hero.title') }} // Pour gérer les <br/> et <span>
+          />
 
           {/* Sous-titre */}
           <motion.p
             className="text-gray-600 font-light max-w-lg mb-8"
             variants={itemVariants}
           >
-            Trouvez Un Emploi, Recrutez, Vendez Ou Achetez En Toute Sécurité Avec BantuLink.
+            {t('hero.subtitle')}
           </motion.p>
 
           {/* Bouton Candidat */}
@@ -97,7 +94,7 @@ const HeroSection = () => {
               className="inline-block w-fit animate-pulse px-8 py-3 bg-gray-800 text-white text-lg font-semibold rounded-full shadow-lg
                          hover:bg-gray-900 transition-all duration-300 transform hover:scale-105 animate-fade-in-up animation-delay-400"
             >
-              Je Suis Un Candidat
+              {t('hero.candidate')}
             </Link>
           </motion.div>
 
@@ -116,7 +113,7 @@ const HeroSection = () => {
               <div className="w-12 h-12 bg-purple-200 flex items-center justify-center mb-3 rounded-full flex-shrink-0">
                 <img src={ProfilesIcon} alt="Recruteur Icon" className="w-7 h-7" />
               </div>
-              Je suis un Recruteur
+              {t('hero.recruiter')}
             </Link>
 
             {/* Vendeur */}
@@ -129,7 +126,7 @@ const HeroSection = () => {
               <div className="w-12 h-12 bg-yellow-100 flex items-center justify-center mb-3 rounded-full flex-shrink-0">
                 <img src={SellIcon} alt="Vendeur Icon" className="w-7 h-6" />
               </div>
-              Je suis un Vendeur
+              {t('hero.seller')}
             </Link>
 
             {/* Acheteur */}
@@ -142,7 +139,7 @@ const HeroSection = () => {
               <div className="w-12 h-12 bg-blue-100 flex items-center justify-center mb-3 rounded-full flex-shrink-0">
                 <img src={BuyIcon} alt="Acheteur Icon" className="w-7 h-7" />
               </div>
-              Je suis un Acheteur
+              {t('hero.buyer')}
             </Link>
           </motion.div>
         </motion.div>

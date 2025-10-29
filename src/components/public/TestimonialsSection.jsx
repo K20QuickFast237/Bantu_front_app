@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 import LeftArrowIcon from '../../assets/gauche.png';
 import RightArrowIcon from '../../assets/droite.png';
 import ReginaMilesImage from '../../assets/temoigne.png';
@@ -8,42 +9,43 @@ import GraffittiRedIcon from '../../assets/Grafitti.png';
 import PhoneImage from '../../assets/telephone2.png';
 
 const TestimonialsSection = () => {
+  const { t } = useTranslation(); // Ajout
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const testimonials = [
     {
       id: 1,
-      quote: "Bantulink vous aide à voir combien de jours supplémentaires il vous reste à travailler pour atteindre votre objectif.",
-      name: "Regina Miles",
-      role: "Designer",
+      quote: t('testimonials.quote1'),
+      name: t('testimonials.name1'),
+      role: t('testimonials.role1'),
       rating: 4,
     },
     {
       id: 2,
-      quote: "Une expérience incroyable ! L'équipe a dépassé toutes mes attentes. Je recommande vivement leurs services.",
-      name: "John Doe",
-      role: "Développeur",
+      quote: t('testimonials.quote2'),
+      name: t('testimonials.name2'),
+      role: t('testimonials.role2'),
       rating: 5,
     },
     {
       id: 3,
-      quote: "Très satisfait du résultat final. La qualité est au rendez-vous et le support client est excellent.",
-      name: "Jane Smith",
-      role: "Entrepreneur",
+      quote: t('testimonials.quote3'),
+      name: t('testimonials.name3'),
+      role: t('testimonials.role3'),
       rating: 4,
     },
     {
       id: 4,
-      quote: "Une plateforme intuitive qui facilite les connexions professionnelles et commerciales. Un must !",
-      name: "Alex Dupont",
-      role: "Freelancer",
+      quote: t('testimonials.quote4'),
+      name: t('testimonials.name5'), // Correction: name4 -> name4 (erreur dans original ?)
+      role: t('testimonials.role4'),
       rating: 5,
     },
     {
       id: 5,
-      quote: "Bantulink m'a permis de développer mon réseau et de booster mes ventes en ligne rapidement.",
-      name: "Marie Dubois",
-      role: "Vendeuse",
+      quote: t('testimonials.quote5'),
+      name: t('testimonials.name5'),
+      role: t('testimonials.role5'),
       rating: 4,
     },
   ];
@@ -75,9 +77,9 @@ const TestimonialsSection = () => {
         <img src={GraffittiRedIcon} alt="Decorative lines" className="h-17 w-16 mt-[-40px] ml-90" />
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-            <h2 className="text-4xl lg:text-3xl font-bold text-gray-800 text-center md:text-left leading-tight md:max-w-lg mb-8 md:mb-0">
-              Satisfaire Nos Clients Est <br className="hidden md:inline"/> Notre Meilleure Publicité.
-            </h2>
+            <h2 className="text-4xl lg:text-3xl font-bold text-gray-800 text-center md:text-left leading-tight md:max-w-lg mb-8 md:mb-0"
+               dangerouslySetInnerHTML={{ __html: t('testimonials.title') }} // Pour gérer les <br/>
+            />
             <div className="flex space-x-4">
               <motion.button
                 className="p-3 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200"
@@ -160,11 +162,12 @@ const TestimonialsSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <h3 className="text-3xl sm:text-3xl font-medium mb-4">
-            Jetez un œil à l'intérieur de <br /> notre SuperApp
+          <h3 className="text-3xl sm:text-3xl font-medium mb-4"
+             dangerouslySetInnerHTML={{ __html: t('testimonials.appPreview.title') }} // Pour <br/>
+          >
           </h3>
           <p className="text-lg mb-10 max-w-2xl">
-            Problème visant à résoudre le cloisonnement entre emploi, commerce local et développement de compétences en Afrique francophone.
+            {t('testimonials.appPreview.description')}
           </p>
           <motion.div
             className="relative w-full max-w-2xl flex justify-center items-end"

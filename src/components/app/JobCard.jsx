@@ -138,35 +138,34 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
     </motion.div>
   );
 
-return (
-  <motion.section
-    initial={{ opacity: 0, y: 50 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, amount: 0.1 }}
-    transition={{ duration: 0.8, ease: 'easeOut' }}
-  >
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="mx-auto px-10 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between py-6">
-            <div className="flex items-center">
-              <h1 className="text-2xl font-semibold text-emerald-400">Offres d’emploi disponibles</h1>
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+    >
+      <div className="min-h-screen">
+        {/* Header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between py-6">
+              <div className="flex items-center">
+                <h1 className="text-2xl font-semibold text-emerald-400">Offres d’emploi disponibles</h1>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="mx-auto px-10 sm:px-6 lg:px-8 py-8">
-          {loading ? (
-            <BantulinkLoader />
-          ) : filteredJobs.length === 0 ? (
-            <p className="text-center text-gray-500">Aucune offre trouvée.</p>
-          ) : (
-            <>
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {loading ? (
+              <BantulinkLoader />
+            ) : filteredJobs.length === 0 ? (
+              <p className="text-center text-gray-500">Aucune offre trouvée.</p>
+            ) : (
               <AnimatePresence>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                  {jobsToDisplay.map((job) => (
+                  {filteredJobs.map((job) => (
                     <JobCardItem
                       key={job.id}
                       job={job}
@@ -174,44 +173,22 @@ return (
                   ))}
                 </div>
               </AnimatePresence>
-              
-              {/* Affiche soit la pagination, soit le bouton "Afficher plus" */}
-              {paginationEnabled && totalPages > 1 && (
-                <div className="flex justify-center items-center space-x-4 mt-8">
-                  <button
-                    onClick={handlePrevPage}
-                    disabled={currentPage === 1}
-                    className="p-2 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <span className="text-gray-700 font-medium">
-                    Page {currentPage} sur {totalPages}
-                  </span>
-                  <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className="p-2 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-                </div>
-              )}
+            )}
 
-              {!paginationEnabled && filteredJobs.length > limit && (
-                <div className="flex justify-start">
-                  <Link to="/all-jobs" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                    Afficher plus
-                  </Link>
-                </div>
-              )}
-            </>
-          )}
+            {/* Load More Button */}
+            {!loading && filteredJobs.length > 0 && (
+              <div className="flex justify-start">
+                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                  Afficher plus
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   </motion.section>
   );
-};
+}
 
 export default JobCard;
