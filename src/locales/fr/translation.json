@@ -359,6 +359,152 @@
     },
     "copyright": "Copyright © 2025 BantuLink. Tous droits réservés."
   },
+  "pricing": {
+  "hero": {
+    "title": "Choisissez la solution qui va accompagner votre croissance",
+    "button": "voir nos plans"
+  },
+  "plans": {
+    "title": "Plans Flexibles Pour Chaque Utilisateur",
+    "subtitle": "Que vous soyez recruteur, freelance, vendeur ou acheteur, choisissez le plan qui correspond à vos besoins.",
+    "basic": {
+      "name": "Basique",
+      "price": "Gratuit",
+      "description": "Parfait pour commencer avec les fonctionnalités de base en matière de mise en réseau.",
+      "features": [
+        "Jusqu'à 50 connexions",
+        "Fonctionnalités de profil de base",
+        "Accès communautaire",
+        "Support par e-mail"
+      ],
+      "button": "Commencer"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$9.99",
+      "period": "/mois",
+      "description": "Idéal pour les professionnels et les entreprises en croissance",
+      "popular": "Le plus populaire",
+      "features": [
+        "Connexions illimitées",
+        "Fonctionnalités avancées du profil",
+        "Correspondance prioritaire",
+        "Tableau de bord analytique",
+        "Support prioritaire"
+      ],
+      "button": "S'abonner"
+    },
+    "enterprise": {
+      "name": "Entreprise",
+      "price": "Personnalisé",
+      "description": "Solutions sur mesure pour les grandes organisations et les équipes",
+      "features": [
+        "Tout dans Pro",
+        "Gestion d'équipe",
+        "Intégrations personnalisées",
+        "Support dédié",
+        "Garantie SLA"
+      ],
+      "button": "Contactez les ventes"
+    }
+  },
+  "stats": {
+    "users": "Utilisateurs Actifs",
+    "providers": "Prestataires certifiés",
+    "companies": "Entreprise Inscrites",
+    "satisfaction": "De satisfaction client"
+  }
+},
+"help": {
+  "hero": {
+    "title": "Centre d'aide BantuLink",
+    "subtitle": "Trouvez des réponses à vos questions et obtenez le soutien dont vous avez besoin. Nous sommes ici pour vous aider à réussir dans votre parcours.",
+    "searchPlaceholder": "Recherchez un sujet ou un mot-clé...",
+    "searchButton": "Rechercher",
+    "supportBadge": "Support disponible 24/7",
+    "popularSearches": "Recherches populaires :",
+    "popular1": "Réinitialisation du mot de passe",
+    "popular2": "Problèmes de paiement",
+    "popular3": "Candidatures",
+    "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé."
+  },
+  "contact": {
+    "title": "Besoin D'aide ?",
+    "subtitle": "Vous ne trouvez pas ce que vous cherchez ? Notre équipe de support dédiée est prête à vous aider avec toutes les questions ou préoccupations que vous pourriez avoir.",
+    "liveChat": "Démarrer un chat en direct",
+    "emailSupport": "Email Support",
+    "quickResponse": "Réponse rapide",
+    "quickResponseDesc": "Temps de réponse moyen inférieur à 2 heures",
+    "expertSupport": "Support expert",
+    "expertSupportDesc": "Équipe compétente prête à aider",
+    "available247": "Disponible 24/7",
+    "available247Desc": "Assistance 24 heures sur 24"
+  },
+  "testimonials": {
+    "title": "Ce Que Disent Nos Utilisateurs",
+    "subtitle": "Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre centre d'aide et notre support.",
+    "users": [
+      {
+        "initials": "SJ",
+        "name": "Sarah Johnson",
+        "role": "Freelancer",
+        "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
+      },
+      {
+        "initials": "MC",
+        "name": "Michael Chen",
+        "role": "Business Owner",
+        "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
+      },
+      {
+        "initials": "AO",
+        "name": "Amara Okafor",
+        "role": "Job Seeker",
+        "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
+      }
+    ]
+  },
+  "topics": {
+    "title": "Sujets D'aide Populaires",
+    "subtitle": "Accès rapide aux sujets d'aide et solutions les plus recherchés de notre communauté.",
+    "items": [
+      {
+        "title": "Comment réinitialiser mon mot de passe ?",
+        "category": "Compte et Connexion",
+        "views": "2.3k vues"
+      },
+      {
+        "title": "Méthodes de paiement acceptées",
+        "category": "Commandes et paiements",
+        "views": "1.8k vues"
+      },
+      {
+        "title": "Comment postuler pour des emplois",
+        "category": "Emplois et candidatures",
+        "views": "3.1k vues"
+      },
+      {
+        "title": "Signaler du contenu inapproprié",
+        "category": "Litiges et support client",
+        "views": "1.2k vues"
+      },
+      {
+        "title": "Processus de vérification de compte",
+        "category": "Compte et Connexion",
+        "views": "2.7k vues"
+      },
+      {
+        "title": "Politique et processus de remboursement",
+        "category": "Commandes et paiements",
+        "views": "1.9k vues"
+      }
+    ]
+  }
+},
+"cancelSubscription": {
+  "question": "Puis-je annuler mon abonnement à tout moment ?",
+  "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Lorsque vous annulez, vous conservez l'accès à vos fonctionnalités payantes jusqu'à la fin de votre période de facturation en cours."
+},
   "coreValues": {
     "title": "Nos Valeurs Fondamentales",
     "security": {
@@ -376,7 +522,8 @@
     "excellence": {
       "title": "Excellence",
       "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
-    }
+    },
+    "alt": "Décoration Demi-cercle"
   },
   "history": {
     "title": "Notre Histoire",

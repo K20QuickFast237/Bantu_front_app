@@ -359,6 +359,152 @@
     },
     "copyright": "Copyright © 2025 BantuLink. All rights reserved."
   },
+  "help": {
+  "hero": {
+    "title": "BantuLink Help Center",
+    "subtitle": "Find answers to your questions and get the support you need. We are here to help you succeed in your journey.",
+    "searchPlaceholder": "Search for a topic or keyword...",
+    "searchButton": "Search",
+    "supportBadge": "24/7 Support Available",
+    "popularSearches": "Popular searches:",
+    "popular1": "Password reset",
+    "popular2": "Payment issues",
+    "popular3": "Applications",
+    "noResults": "No results found. Try another keyword."
+  },
+  "contact": {
+    "title": "Need Help?",
+    "subtitle": "Can't find what you're looking for? Our dedicated support team is ready to help you with any questions or concerns you may have.",
+    "liveChat": "Start Live Chat",
+    "emailSupport": "Email Support",
+    "quickResponse": "Quick response",
+    "quickResponseDesc": "Average response time under 2 hours",
+    "expertSupport": "Expert support",
+    "expertSupportDesc": "Competent team ready to help",
+    "available247": "Available 24/7",
+    "available247Desc": "24/7 assistance"
+  },
+  "testimonials": {
+    "title": "What Our Users Say",
+    "subtitle": "Real feedback from BantuLink users about their experience with our help center and support.",
+    "users": [
+      {
+        "initials": "SJ",
+        "name": "Sarah Johnson",
+        "role": "Freelancer",
+        "review": "The help center made it very easy to understand how to set up my profile and start getting clients. Excellent resource!"
+      },
+      {
+        "initials": "MC",
+        "name": "Michael Chen",
+        "role": "Business Owner",
+        "review": "Quick responses to all my questions about payments and billing. The search feature works perfectly."
+      },
+      {
+        "initials": "AO",
+        "name": "Amara Okafor",
+        "role": "Job Seeker",
+        "review": "I found exactly what I needed to complete my applications. The step-by-step guides are very helpful."
+      }
+    ]
+  },
+  "topics": {
+    "title": "Popular Help Topics",
+    "subtitle": "Quick access to the most searched help topics and solutions from our community.",
+    "items": [
+      {
+        "title": "How to reset my password?",
+        "category": "Account and Login",
+        "views": "2.3k views"
+      },
+      {
+        "title": "Accepted payment methods",
+        "category": "Orders and payments",
+        "views": "1.8k views"
+      },
+      {
+        "title": "How to apply for jobs",
+        "category": "Jobs and applications",
+        "views": "3.1k views"
+      },
+      {
+        "title": "Report inappropriate content",
+        "category": "Disputes and customer support",
+        "views": "1.2k views"
+      },
+      {
+        "title": "Account verification process",
+        "category": "Account and Login",
+        "views": "2.7k views"
+      },
+      {
+        "title": "Refund policy and process",
+        "category": "Orders and payments",
+        "views": "1.9k views"
+      }
+    ]
+  }
+},
+  "cancelSubscription": {
+  "question": "Can I cancel my subscription anytime?",
+  "answer": "Yes, you can cancel your subscription at any time. When you cancel, you'll continue to have access to your paid features until the end of your current billing period."
+},
+  "pricing": {
+  "hero": {
+    "title": "Choose the solution that will support your growth",
+    "button": "see our plans"
+  },
+  "plans": {
+    "title": "Flexible Plans For Every User",
+    "subtitle": "Whether you're a recruiter, freelancer, seller or buyer, choose the plan that fits your needs.",
+    "basic": {
+      "name": "Basic",
+      "price": "Free",
+      "description": "Perfect for getting started with basic networking features.",
+      "features": [
+        "Up to 50 connections",
+        "Basic profile features",
+        "Community access",
+        "Email support"
+      ],
+      "button": "Get Started"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$9.99",
+      "period": "/month",
+      "description": "Ideal for professionals and growing businesses",
+      "popular": "Most popular",
+      "features": [
+        "Unlimited connections",
+        "Advanced profile features",
+        "Priority matching",
+        "Analytics dashboard",
+        "Priority support"
+      ],
+      "button": "Subscribe"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "price": "Custom",
+      "description": "Custom solutions for large organizations and teams",
+      "features": [
+        "Everything in Pro",
+        "Team management",
+        "Custom integrations",
+        "Dedicated support",
+        "SLA guarantee"
+      ],
+      "button": "Contact Sales"
+    }
+  },
+  "stats": {
+    "users": "Active Users",
+    "providers": "Certified Providers",
+    "companies": "Registered Companies",
+    "satisfaction": "Customer Satisfaction"
+  }
+},
   "hero": {
     "title": "One App,<br/>Two Worlds:<br/><span className=\"text-gray-900 bg-clip-text\">Recruitment & E-Commerce United.</span>",
     "subtitle": "Find A Job, Recruit, Sell Or Buy Safely With BantuLink.",
@@ -384,7 +530,8 @@
     "excellence": {
       "title": "Excellence",
       "description": "Excellence drives everything we do. From user experience to customer service, we strive to exceed expectations at every touchpoint."
-    }
+    },
+    "alt": "Semi-circle decoration"
   },
   "history": {
     "title": "Our Story",
