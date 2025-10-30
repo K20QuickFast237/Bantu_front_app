@@ -10,6 +10,12 @@ import graffiti from '../../assets/graphitti.png';
 import ProfilesIcon from '../../assets/Profiles.png';
 import BuyIcon from '../../assets/Buy.png';
 import SellIcon from '../../assets/Sell.png';
+// Ajout : imports des nouvelles images locales pour le carrousel
+import slide1 from '../../assets/slide1.jpg';
+import slide2 from '../../assets/slide2.jpg';
+import slide3 from '../../assets/slide3.jpg';
+import slide4 from '../../assets/slide4.jpg';
+import slide5 from '../../assets/slide5.jpg';
 
 const HeroSection = () => {
   const { t } = useTranslation(); // Ajout
@@ -19,13 +25,13 @@ const HeroSection = () => {
     visible: { y: 0, opacity: 1 },
   };
 
-  // Images pour le carrousel
+  // Images pour le carrousel (remplacées par les imports locaux)
   const carouselImages = [
-    'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop', // Réunion d'équipe
-    'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2071&auto=format&fit=crop', // Personnes travaillant sur des ordinateurs
-    'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop', // Collaboration sur un projet
-    'https://images.unsplash.com/photo-1600880292203-942bb68b2432?q=80&w=1887&auto=format&fit=crop', // Poignée de main
-    'https://images.unsplash.com/photo-1573496130407-57329f01f769?q=80&w=1887&auto=format&fit=crop', // Femme d'affaires dans un bureau
+    slide1,
+    slide2,
+    slide3,
+    slide4,
+    slide5,
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -118,7 +124,7 @@ const HeroSection = () => {
 
             {/* Vendeur */}
             <Link
-              to="/vendeur"
+              to="/candidatProfil"
               className="items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-4 mb-5
                          text-base font-medium text-gray-800 shadow-sm hover:shadow-md
                          transition-all duration-200 transform hover:-translate-y-1"
@@ -131,7 +137,7 @@ const HeroSection = () => {
 
             {/* Acheteur */}
             <Link
-              to="/acheteur"
+              to="/candidatProfil"
               className="items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-4 mb-5
                          text-base font-medium text-gray-800 shadow-sm hover:shadow-md
                          transition-all duration-200 transform hover:-translate-y-1"
@@ -156,7 +162,7 @@ const HeroSection = () => {
           </svg>
 
           <motion.div
-            className="w-[550px] h-[650px] xl:w-[600px] xl:h-[700px] relative shadow-2xl"
+            className="w-[500px] h-[600px] xl:w-[540px] xl:h-[650px] relative shadow-2xl"
             style={{ clipPath: 'url(#waveClip)' }}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -174,7 +180,7 @@ const HeroSection = () => {
                     key={index}
                     src={src}
                     alt={`Slide ${index + 1}`} // La largeur de l'image doit correspondre à la largeur du conteneur
-                    className="w-[600px] h-full object-cover"
+                    className="w-[500px] xl:w-[540px] h-full object-cover"
                   />
                 ))}
               </div>
