@@ -501,6 +501,59 @@
     ]
   }
 },
+"profile": {
+  "otherResources": {
+    "title": "Autres Ressources",
+    "website": "Site internet / Portofolio",
+    "linkedin": "LinkedIn",
+    "behance": "Behance",
+    "github": "GitHub",
+    "notProvided": "Non renseigné"
+  },
+  "skills": {
+    "title": "Compétences",
+    "add": "Ajouter",
+    "addSkill": "Ajouter une compétence",
+    "selectSkill": "Sélectionner une compétence",
+    "selectLevel": "Sélectionner le niveau",
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé",
+    "save": "Enregistrer",
+    "noSkills": "Aucune compétence enregistrée.",
+    "level": "Niveau",
+    "uses": "utilisations",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+    "deleteDescription": "Cette action est irréversible. La compétence sera définitivement supprimée.",
+    "noDescription": "Pas de description",
+    "alreadyAdded": "Cette compétence est déjà ajoutée.",
+    "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau"
+  },
+  "education": {
+    "title": "Diplomes et Formations",
+    "add": "Ajouter",
+    "addEducation": "Ajouter une formation",
+    "editEducation": "Modifier une formation",
+    "fieldOfStudy": "Domaine d'étude",
+    "institution": "Etablissement",
+    "diploma": "Diplôme",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "noEducation": "Aucune formation enregistrée.",
+    "notSpecified": "Non spécifié",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+    "deleteDescription": "Cette action est irréversible. La formation sera définitivement supprimée."
+  },
+  "company": {
+    "view": "Voir",
+    "offers": "offres",
+    "noOffers": "Cette entreprise n'a aucune offre d'emploi pour le moment.",
+    "noCompanies": "Aucune entreprise trouvée pour ces critères.",
+    "page": "Page",
+    "of": "sur"
+  }
+},
+
 "cancelSubscription": {
   "question": "Puis-je annuler mon abonnement à tout moment ?",
   "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Lorsque vous annulez, vous conservez l'accès à vos fonctionnalités payantes jusqu'à la fin de votre période de facturation en cours."

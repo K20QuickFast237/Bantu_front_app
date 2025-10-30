@@ -445,10 +445,67 @@
     ]
   }
 },
+"profile": {
+  "otherResources": {
+    "title": "Other Resources",
+    "website": "Website / Portfolio",
+    "linkedin": "LinkedIn",
+    "behance": "Behance",
+    "github": "GitHub",
+    "notProvided": "Not provided"
+  },
+  "skills": {
+    "title": "Skills",
+    "add": "Add",
+    "addSkill": "Add a skill",
+    "selectSkill": "Select a skill",
+    "selectLevel": "Select level",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "save": "Save",
+    "noSkills": "No skills recorded.",
+    "level": "Level",
+    "uses": "uses",
+    "deleteConfirm": "Are you sure you want to delete?",
+    "deleteDescription": "This action is irreversible. The skill will be permanently deleted.",
+    "noDescription": "No description",
+    "alreadyAdded": "This skill is already added.",
+    "selectSkillAndLevel": "Please select a skill and level"
+  },
+  "education": {
+    "title": "Diplomas and Training",
+    "add": "Add",
+    "addEducation": "Add education",
+    "editEducation": "Edit education",
+    "fieldOfStudy": "Field of study",
+    "institution": "Institution",
+    "diploma": "Diploma",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "noEducation": "No education recorded.",
+    "notSpecified": "Not specified",
+    "deleteConfirm": "Are you sure you want to delete?",
+    "deleteDescription": "This action is irreversible. The education will be permanently deleted."
+  },
+  "company": {
+    "view": "View",
+    "offers": "offers",
+    "noOffers": "This company has no job offers at the moment.",
+    "noCompanies": "No companies found for these criteria.",
+    "page": "Page",
+    "of": "of"
+  }
+},
+"hero_company": {
+    "create_job_offers": "Create job offers easily",
+    "and_quickly": "and quickly"
+},
   "cancelSubscription": {
   "question": "Can I cancel my subscription anytime?",
   "answer": "Yes, you can cancel your subscription at any time. When you cancel, you'll continue to have access to your paid features until the end of your current billing period."
 },
+
   "pricing": {
   "hero": {
     "title": "Choose the solution that will support your growth",

@@ -3,8 +3,10 @@ import api from '@/services/api';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import BantulinkLoader from '../ui/BantulinkLoader';
 import CompanyCard from './CompanyCard';
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const CompanyList = ({ searchTerm, locationTerm }) => {
+  const { t } = useTranslation(); // Hook i18n
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +56,7 @@ const CompanyList = ({ searchTerm, locationTerm }) => {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <span className="text-gray-700 font-medium">
-                Page {currentPage} sur {totalPages}
+                {t('profile.company.page')} {currentPage} {t('profile.company.of')} {totalPages}
               </span>
               <button
                 onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
@@ -67,7 +69,7 @@ const CompanyList = ({ searchTerm, locationTerm }) => {
           )}
         </>
       ) : (
-        <p className="text-center text-gray-500 py-10">Aucune entreprise trouvée pour ces critères.</p>
+        <p className="text-center text-gray-500 py-10">{t('profile.company.noCompanies')}</p>
       )}
     </div>
   );
