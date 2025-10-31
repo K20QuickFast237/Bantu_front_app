@@ -5,8 +5,10 @@ import { Link } from 'react-router-dom';
 import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
 import BantulinkLoader from '../ui/BantulinkLoader';
+import { useTranslation } from 'react-i18next';
 
 const JobCard = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [jobData, setJobData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,10 +41,10 @@ const JobCard = () => {
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
         <Calendar className="w-4 h-4" />
-        <span>Date de publication : {publicationDate}</span>
+        <span>{t('jobCard.publicationDate')} {publicationDate}</span>
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-        <span className="font-medium">Localisation :</span>
+        <span className="font-medium">{t('jobCard.location')}</span>
         <span>{location}</span>
       </div>
       <div className="space-y-2 mb-4">
@@ -79,7 +81,7 @@ const JobCard = () => {
               {loading ? (
                 <div className="col-span-3 text-center text-gray-500"><BantulinkLoader/></div>
               ) : jobData.length === 0 ? (
-                <div className="col-span-3 text-center text-gray-500">Aucune offre trouvée.</div>
+                <div className="col-span-3 text-center text-gray-500">{t('jobCard.noJobsFound')}</div>
               ) : (
                 jobData.map((job, index) => (
                   <JobCardItem
@@ -98,7 +100,7 @@ const JobCard = () => {
             <div className="flex justify-start">
               <Link to={"/rechercheOffre"}>
                 <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                  Afficher plus
+                  {t('jobCard.showMore')}
                 </button>
               </Link>
             </div>

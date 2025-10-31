@@ -5,8 +5,10 @@ import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
 import { Switch } from '@radix-ui/react-switch';
+import { useTranslation } from 'react-i18next';
 
 const Infopersonelles = ({ onEditClick }) => {
+  const { t } = useTranslation();
   const { user, particulier, token } = useAuth();
   const [profileCompletion, setProfileCompletion] = useState(0);
   const [profileData, setProfileData] = useState({
@@ -18,7 +20,6 @@ const Infopersonelles = ({ onEditClick }) => {
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
 
   useEffect(() => {
-    // Calcul du pourcentage de complétion pour les infos personnelles
     const calculatePersonalInfoCompletion = () => {
       if (!particulier) return 0;
       
@@ -43,7 +44,6 @@ const Infopersonelles = ({ onEditClick }) => {
       return Math.round((filledFields.length / requiredFields.length) * 100);
     };
 
-    // Récupération des compétences
     const fetchCompetences = async () => {
       try {
         if (!user?.id) return;
@@ -56,7 +56,6 @@ const Infopersonelles = ({ onEditClick }) => {
       }
     };
 
-    // Récupération des expériences
     const fetchExperiences = async () => {
       try {
         const response = await api.get('/experiences');
@@ -68,7 +67,6 @@ const Infopersonelles = ({ onEditClick }) => {
       }
     };
 
-    // Récupération des formations
     const fetchFormations = async () => {
       try {
         const response = await api.get('/formations');
@@ -95,7 +93,6 @@ const Infopersonelles = ({ onEditClick }) => {
 
       setProfileData(newProfileData);
 
-      // Calcul du pourcentage global (moyenne des 4 sections)
       const totalCompletion = Math.round(
         (infosPersonnellesCompletion + competencesCompletion + experiencesCompletion + formationsCompletion) / 4
       );
@@ -107,18 +104,15 @@ const Infopersonelles = ({ onEditClick }) => {
       updateProfileCompletion();
     }
 
-    // Mettre en place un écouteur d'événements pour les mises à jour du profil
     const profileUpdateListener = () => {
       updateProfileCompletion();
     };
 
-    // Écouter les événements personnalisés pour les mises à jour
     window.addEventListener('profile-updated', profileUpdateListener);
     window.addEventListener('competences-updated', profileUpdateListener);
     window.addEventListener('experiences-updated', profileUpdateListener);
     window.addEventListener('formations-updated', profileUpdateListener);
 
-    // Nettoyer les écouteurs d'événements lors du démontage
     return () => {
       window.removeEventListener('profile-updated', profileUpdateListener);
       window.removeEventListener('competences-updated', profileUpdateListener);
@@ -136,7 +130,6 @@ const Infopersonelles = ({ onEditClick }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      // Déclenche un événement pour que la page parente (Profil.jsx) rafraîchisse les données.
       window.dispatchEvent(new CustomEvent('profile-updated'));
       toast.success(`Votre profil est maintenant ${newVisibility === 1 ? 'visible' : 'caché'}.`);
     } catch (error) {
@@ -147,7 +140,6 @@ const Infopersonelles = ({ onEditClick }) => {
     }
   };
 
-  // Affichage des infos si particulier existe
   if (particulier) {
     return (
       <div className="p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto mb-8 mt-5 border border-gray-200">
@@ -158,13 +150,15 @@ const Infopersonelles = ({ onEditClick }) => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 gap-3">
-            <h2 className="text-lg sm:text-xl font-semibold text-blue-800">Informations Personnelles</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-blue-800">
+              {t('personalInfo.title')}
+            </h2>
             <button
               onClick={onEditClick}
               className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm"
             >
               <Edit size={16} className="mr-1" />
-              Modifier
+              {t('profile.skills.add')}
             </button>
           </div>
           
@@ -194,13 +188,18 @@ const Infopersonelles = ({ onEditClick }) => {
                 </div>
                 <div className="flex items-center">
                   <User size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                  <span>Âge : {new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear()} ans</span>
+                  <span>
+                    {t('personalInfo.age', { 
+                      age: new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear() 
+                    })}
+                  </span>
                 </div>
-                 {/* Indication de visibilité du profil */}
                 <div className="flex items-center gap-2">
                   <Eye size={16} className="text-gray-500 min-w-[16px]" />
                   <label htmlFor="visibility-switch" className="text-gray-700 cursor-pointer text-sm">
-                    Profil {particulier.is_visible === false ? 'caché' : 'visible'} des recruteurs
+                    {t('personalInfo.profileVisibility', { 
+                      status: particulier.is_visible === false ? t('personalInfo.hidden') : t('personalInfo.visible') 
+                    })}
                   </label>
                   {isUpdatingVisibility ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -216,7 +215,7 @@ const Infopersonelles = ({ onEditClick }) => {
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                     <a href={`/storage/${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
-                      Voir le CV
+                      {t('personalInfo.viewCV')}
                     </a>
                   </div>
                 )}
@@ -224,7 +223,7 @@ const Infopersonelles = ({ onEditClick }) => {
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                     <a href={`/storage/${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
-                      Voir la lettre de motivation
+                      {t('personalInfo.viewMotivationLetter')}
                     </a>
                   </div>
                 )}
@@ -235,7 +234,9 @@ const Infopersonelles = ({ onEditClick }) => {
           {/* Barre de progression style LinkedIn */}
           <div className="mt-6 border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center mb-2">
-              <h4 className="text-sm font-semibold text-gray-700">Force de votre profil</h4>
+              <h4 className="text-sm font-semibold text-gray-700">
+                {t('personalInfo.profileStrength')}
+              </h4>
               <span className="text-sm font-medium text-blue-600">{profileCompletion}%</span>
             </div>
             
@@ -249,10 +250,10 @@ const Infopersonelles = ({ onEditClick }) => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
               {Object.entries(profileData).map(([key, value]) => {
                 const label = {
-                  infosPersonnelles: 'Infos personnelles',
-                  competences: 'Compétences',
-                  experiences: 'Expériences',
-                  formations: 'Formations'
+                  infosPersonnelles: t('personalInfo.personalInfo'),
+                  competences: t('personalInfo.skills'),
+                  experiences: t('personalInfo.experiences'),
+                  formations: t('personalInfo.education')
                 }[key];
                 
                 const getStatusColor = (percent) => {
@@ -288,10 +289,10 @@ const Infopersonelles = ({ onEditClick }) => {
             
             <p className="text-xs text-gray-500 mt-3">
               {profileCompletion < 30 ? 
-                "Votre profil est incomplet. Complétez les sections manquantes pour augmenter votre visibilité." :
+                t('personalInfo.incompleteProfile') :
                 profileCompletion < 70 ? 
-                "Votre profil progresse bien. Continuez à ajouter des informations pour le rendre plus attractif." :
-                "Excellent ! Votre profil est bien rempli et attrayant pour les recruteurs."}
+                t('personalInfo.progressingProfile') :
+                t('personalInfo.excellentProfile')}
             </p>
           </div>
         </motion.section>
@@ -300,9 +301,7 @@ const Infopersonelles = ({ onEditClick }) => {
   }
 
   // Si pas de particulier, on ne rend rien, car la modale sera affichée par le parent.
-  return (
-    null
-  );
+  return null;
 };
 
 export default Infopersonelles;

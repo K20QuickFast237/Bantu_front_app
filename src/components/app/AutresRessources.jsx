@@ -13,6 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useTranslation } from 'react-i18next';
 
 const validationSchema = Yup.object({
   portfolio_link: Yup.string().url('URL du portfolio invalide').nullable(),
@@ -22,6 +23,7 @@ const validationSchema = Yup.object({
 });
 
 const AutresRessources = () => {
+  const { t } = useTranslation();
   const { particulier } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -68,7 +70,7 @@ const AutresRessources = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-400">
-          <h2 className="text-xl font-semibold text-blue-800">Autres Ressources</h2>
+          <h2 className="text-xl font-semibold text-blue-800">{t('profile.otherResources.title')}</h2>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <button
@@ -76,7 +78,7 @@ const AutresRessources = () => {
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <Edit size={16} className="mr-1" />
-                Modifier
+                {t('profile.skills.add')}
               </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg bg-white rounded-lg shadow-md p-0">
@@ -87,7 +89,7 @@ const AutresRessources = () => {
               </DialogHeader>
               <form onSubmit={formik.handleSubmit} className="p-6 space-y-4">
                 <div>
-                  <label htmlFor="portfolio_link" className="block text-gray-700 font-medium mb-2">Site internet / Portfolio</label>
+                  <label htmlFor="portfolio_link" className="block text-gray-700 font-medium mb-2">{t('profile.otherResources.website')}</label>
                   <input
                     id="portfolio_link"
                     type="text"
@@ -100,7 +102,7 @@ const AutresRessources = () => {
                   ) : null}
                 </div>
                 <div>
-                  <label htmlFor="linkedin_link" className="block text-gray-700 font-medium mb-2">LinkedIn</label>
+                  <label htmlFor="linkedin_link" className="block text-gray-700 font-medium mb-2">{t('profile.otherResources.linkedin')}</label>
                   <input
                     id="linkedin_link"
                     type="text"
@@ -113,20 +115,20 @@ const AutresRessources = () => {
                   ) : null}
                 </div>
                 <div>
-                  <label htmlFor="behance_link" className="block text-gray-700 font-medium mb-2">Behance</label>
+                  <label htmlFor="behance_link" className="block text-gray-700 font-medium mb-2">{t('profile.otherResources.behance')}</label>
                   <input
                     id="behance_link"
                     type="text"
-                    {...formik.getFieldProps('linkedin_link')}
+                    {...formik.getFieldProps('behance_link')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://linkedin.com/in/votre-profil"
+                    placeholder="https://behance.net/votre-profil"
                   />
-                  {formik.touched.linkedin_link && formik.errors.linkedin_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.linkedin_link}</p>
+                  {formik.touched.behance_link && formik.errors.behance_link ? (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.behance_link}</p>
                   ) : null}
                 </div>
                 <div>
-                  <label htmlFor="github_link" className="block text-gray-700 font-medium mb-2">GitHub</label>
+                  <label htmlFor="github_link" className="block text-gray-700 font-medium mb-2">{t('profile.otherResources.github')}</label>
                   <input
                     id="github_link"
                     type="text"
@@ -145,7 +147,7 @@ const AutresRessources = () => {
                     className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {formik.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Enregistrer
+                    {t('profile.skills.save')}
                   </button>
                 </div>
               </form>
@@ -155,20 +157,20 @@ const AutresRessources = () => {
 
         <div className="space-y-4 text-sm text-gray-700">
           <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">Site internet / Portfolio</p>
-            {renderLink(particulier?.portfolio_link, Globe, 'Portfolio') || <span className="text-gray-500">Non renseigné</span>}
+            <p className="w-40 text-gray-700 font-medium">{t('profile.otherResources.website')}</p>
+            {renderLink(particulier?.portfolio_link, Globe, 'Portfolio') || <span className="text-gray-500">{t('profile.otherResources.notProvided')}</span>}
           </div>
           <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">LinkedIn</p>
-            {renderLink(particulier?.linkedin_link, Linkedin, 'LinkedIn') || <span className="text-gray-500">Non renseigné</span>}
+            <p className="w-40 text-gray-700 font-medium">{t('profile.otherResources.linkedin')}</p>
+            {renderLink(particulier?.linkedin_link, Linkedin, 'LinkedIn') || <span className="text-gray-500">{t('profile.otherResources.notProvided')}</span>}
           </div>
           <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">Behance</p>
-            {renderLink(particulier?.behance_link, Globe, 'Behance') || <span className="text-gray-500">Non renseigné</span>}
+            <p className="w-40 text-gray-700 font-medium">{t('profile.otherResources.behance')}</p>
+            {renderLink(particulier?.behance_link, Globe, 'Behance') || <span className="text-gray-500">{t('profile.otherResources.notProvided')}</span>}
           </div>
           <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">GitHub</p>
-            {renderLink(particulier?.github_link, Github, 'GitHub') || <span className="text-gray-500">Non renseigné</span>}
+            <p className="w-40 text-gray-700 font-medium">{t('profile.otherResources.github')}</p>
+            {renderLink(particulier?.github_link, Github, 'GitHub') || <span className="text-gray-500">{t('profile.otherResources.notProvided')}</span>}
           </div>
         </div>
       </motion.section>

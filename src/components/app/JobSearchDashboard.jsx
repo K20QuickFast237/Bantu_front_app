@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const JobSearchDashboard = ({
   searchTerm,
@@ -16,10 +17,10 @@ const JobSearchDashboard = ({
   searchProfileButtonText = "Rechercher des profils",
   title = "Rechercher parmi toutes les offres d'emploi"
 }) => {
+  const { t } = useTranslation();
   const [contractOpen, setContractOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
 
-  // Options pour dropdowns (ajuste selon tes besoins)
   const contractOptions = ['CDI', 'CDD', 'Stage', 'Freelance', 'Alternance'];
   const educationOptions = ['Bac', 'Bac+2', 'Bac+3', 'Bac+5', 'Doctorat'];
 
@@ -35,7 +36,7 @@ const JobSearchDashboard = ({
           
           {/* Title */}
           <h2 className="text-xl md:text-3xl font-bold text-center mb-6 pt-8">
-            {allJobTitle ? "Trouvez une offre d'emploi" : title}
+            {allJobTitle ? t('jobSearch.findJobOffer') : title}
           </h2>
 
           {/* First Row - Search Bar */}
@@ -44,7 +45,7 @@ const JobSearchDashboard = ({
               <Search className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="Recherchez par titre, compétences, mots clés,…"
+                placeholder={t('jobSearch.searchPlaceholder')}
                 className="w-full outline-none text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,7 +57,7 @@ const JobSearchDashboard = ({
               <MapPin className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="choisir le pays ou la ville"
+                placeholder={t('jobSearch.locationPlaceholder')}
                 className="w-full outline-none text-sm"
                 value={locationTerm}
                 onChange={(e) => setLocationTerm(e.target.value)}
@@ -80,7 +81,7 @@ const JobSearchDashboard = ({
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedContract || 'Type de contrat'}
+                {selectedContract || t('jobSearch.contractType')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${contractOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>
@@ -119,7 +120,7 @@ const JobSearchDashboard = ({
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedEducation || 'Niveau d\'étude'}
+                {selectedEducation || t('jobSearch.educationLevel')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${educationOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>
