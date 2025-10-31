@@ -207,6 +207,11 @@
     }
   },
   "faq": {
+    "form": {
+        "title": "J'ai Une Question Pour Bantulink",
+        "subtitle": "Si vous avez des questions, nous y répondrons.",
+        "subscribeSuccess": "Merci pour votre inscription à notre newsletter !"
+    },
     "hero": {
       "title": "Peut-Être Que Votre Question A Reçu Une Réponse, Vérifiez-La",
       "whatIs": {
@@ -224,7 +229,7 @@
     },
     "newsletter": {
       "placeholder": "Entrez votre email pour vous abonner",
-      "button": "S'abonner",
+      "button": "S'inscrire",
       "success": "Merci pour votre inscription à notre newsletter !",
       "error": "Veuillez entrer une adresse e-mail valide."
     }
@@ -253,21 +258,35 @@
     "title": "FONCTIONNALITÉS",
     "bantuHire": {
       "title": "BantuHire — Le Travail Vous Trouve",
-      "description": "Matching d'emploi alimenté par l'IA qui vous connecte avec des opportunités basées sur vos compétences et préférences. Fini le scrolling interminable — laissez le job parfait venir à vous.",
-      "features": [
-        "Recommandations d'emploi IA",
-        "Candidatures en un clic",
-        "Suggestions de parcours professionnel"
-      ]
+      "description": "La plateforme qui connecte talents et recruteurs en un clic.",
+      "simplifiedSearch": {
+        "title": "Recherche Simplifiée",
+        "description": "Trouver rapidement un emploi selon vos critères."
+      },
+      "networking": {
+        "title": "Réseautage & Certifications",
+        "description": "Développez votre réseau et obtenez des badges."
+      },
+      "directMessaging": {
+        "title": "Messagerie Directe",
+        "description": "Échangez avec candidats / recruteurs."
+      }
     },
     "bantuMarket": {
-      "title": "BantuMarket — Vendez Plus Intelligemment, Pas Plus Dur",
-      "description": "Lancez votre boutique en ligne en minutes avec des outils conçus pour les entrepreneurs africains. De la gestion des stocks aux paiements sécurisés, nous couvrons tout.",
-      "features": [
-        "Configuration facile de la boutique",
-        "Annonces optimisées pour mobile",
-        "Analyses intégrées"
-      ]
+      "title": "BantuMarket — Le commerce sans frontières",
+      "description": "La plateforme qui connecte talents et recruteurs en un clic.",
+      "customShop": {
+        "title": "Boutique Personnalisée",
+        "description": "Créez et gérez facilement votre propre boutique."
+      },
+      "securePayment": {
+        "title": "Paiement Sécurisé",
+        "description": "Transactions protégées et livraisons suivies."
+      },
+      "clientChat": {
+        "title": "Chat Avec Clients",
+        "description": "Répondez directement aux questions des acheteurs."
+      }
     },
     "community": {
       "title": "Les Services Communautaires Appellent, Pas Besoin De Les Retarder",

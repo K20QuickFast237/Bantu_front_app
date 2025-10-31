@@ -207,6 +207,11 @@
     }
   },
   "faq": {
+     "form": {
+        "title": "I Have a Question For Bantulink",
+        "subtitle": "If you have questions, we will answer them.",
+        "subscribeSuccess": "Thank you for subscribing to our newsletter!"
+      },
     "hero": {
       "title": "Maybe Your Question Has Been Answered, Check It",
       "whatIs": {
@@ -224,7 +229,7 @@
     },
     "newsletter": {
       "placeholder": "Enter your email to subscribe",
-      "button": "Subscribe",
+      "button": "Sign Up",
       "success": "Thank you for subscribing to our newsletter!",
       "error": "Please enter a valid email address."
     }
@@ -253,21 +258,35 @@
     "title": "FEATURES",
     "bantuHire": {
       "title": "BantuHire — The Job Finds You",
-      "description": "AI-powered job matching that connects you with opportunities based on your skills and preferences. No more endless scrolling—let the perfect job come to you.",
-      "features": [
-        "AI job recommendations",
-        "One-click applications",
-        "Career path suggestions"
-      ]
+      "description": "The platform that connects talents and recruiters in one click.",
+      "simplifiedSearch": {
+        "title": "Simplified Search",
+        "description": "Quickly find a job according to your criteria."
+      },
+      "networking": {
+        "title": "Networking & Certifications",
+        "description": "Expand your network and earn badges."
+      },
+      "directMessaging": {
+        "title": "Direct Messaging",
+        "description": "Chat with candidates / recruiters."
+      }
     },
     "bantuMarket": {
-      "title": "BantuMarket — Sell Smarter, Not Harder",
-      "description": "Launch your online store in minutes with tools designed for African entrepreneurs. From inventory management to secure payments, we've got you covered.",
-      "features": [
-        "Easy store setup",
-        "Mobile-optimized listings",
-        "Built-in analytics"
-      ]
+      "title": "BantuMarket — Commerce without borders",
+      "description": "The platform that connects talents and recruiters in one click.",
+      "customShop": {
+        "title": "Custom Shop",
+        "description": "Easily create and manage your own shop."
+      },
+      "securePayment": {
+        "title": "Secure Payment",
+        "description": "Protected transactions and tracked deliveries."
+      },
+      "clientChat": {
+        "title": "Chat With Clients",
+        "description": "Respond directly to buyers' questions."
+      }
     },
     "community": {
       "title": "The Community Services Call, No Need To Delay Them",

@@ -1,146 +1,167 @@
-import React from 'react';
-import { Mail, Phone, MapPin, Download, Share2 } from 'lucide-react';
-import HeaderProfil from '@/components/app/HeaderProfil';
-import Footer from '@/components/public/Footer';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Mail, Phone, MapPin, Download, Share2, User, Briefcase, Linkedin, Github, Globe, ChevronLeft } from 'lucide-react';
+import api from '@/services/api';
+import { toast } from 'sonner';
+import BantulinkLoader from '@/components/ui/BantulinkLoader';
+import { Button } from '@/components/ui/button';
 
 export default function ProfilCandidatByRecruteur() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [candidat, setCandidat] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCandidat = async () => {
+      if (!id) return;
+      setLoading(true);
+      try {
+        const response = await api.get(`/user/${id}`);
+        setCandidat(response.data);
+      } catch (error) {
+        toast.error("Erreur lors du chargement du profil du candidat.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCandidat();
+  }, [id, navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <BantulinkLoader />
+      </div>
+    );
+  }
+
+  if (!candidat) {
+    return (
+      <div className="text-center py-10">
+        <p>Candidat non trouvé.</p>
+        <Button onClick={() => navigate(-1)} className="mt-4" variant="outline">Retour</Button>
+      </div>
+    );
+  }
+
+  const { particulier, experiences, skills } = candidat;
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 py-8">
+      <div className="mx-auto px-10 py-8">
         {/* Title Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Candidature | Web design | Abraham TADZONG MBIPE</h1>
-          <p className="text-gray-600 text-sm">Date de candidature : 10/9/2025</p>
+          <Button onClick={() => navigate(-1)} variant="ghost" className="mb-4">
+            <ChevronLeft size={20} className="mr-2" />
+            Retour
+          </Button>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">Profil de {candidat.prenom} {candidat.nom}</h1>
+          <p className="text-gray-600 text-sm">Membre depuis {new Date(candidat.created_at).toLocaleDateString('fr-FR')}</p>
         </div>
 
         {/* Personal Info Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-300 p-6 mb-6">
           <h2 className="text-2xl font-bold text-blue-900 mb-6">Informations Personnelles</h2>
-          <div className="flex gap-8">
+          <div className="flex flex-col md:flex-row gap-8">
             {/* Photo */}
             <div className="flex-shrink-0">
-              <div className="w-40 h-40 bg-gray-300 rounded-full flex items-center justify-center relative">
-                <span className="text-gray-400 text-4xl">👤</span>
-                <div className="absolute bottom-2 right-2 w-12 h-12 bg-gray-500 rounded-full flex items-center justify-center border-4 border-white">
-                  <span className="text-white text-lg">📷</span>
+              {particulier?.image_profil ? (
+                <img src={particulier.image_profil} alt="Profil" className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-md" />
+              ) : (
+                <div className="w-40 h-40 bg-gray-300 rounded-full flex items-center justify-center">
+                  <User className="w-20 h-20 text-gray-500" />
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Center Info */}
             <div className="flex-1">
-              <h3 className="text-2xl font-bold text-gray-900 mb-1">ABRAHAM TADZONG MBIPE</h3>
-              <p className="text-gray-700 text-sm mb-6">Concepteur Et Développeur D'application</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-1">{candidat.prenom} {candidat.nom}</h3>
+              <p className="text-gray-700 text-sm mb-6">{particulier?.titre_professionnel}</p>
               
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-3">
-                  <span>✉️</span>
-                  <span className="text-gray-700">tadzongmbipeabraham@gmail.com</span>
+                  <Mail size={16} className="text-gray-500" />
+                  <a href={`mailto:${candidat.email}`} className="text-gray-700 hover:underline">{candidat.email}</a>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span>👤</span>
-                  <span className="text-gray-700">Homme</span>
+                  <Phone size={16} className="text-gray-500" />
+                  <span className="text-gray-700">{particulier?.telephone}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <MapPin size={16} className="text-gray-500" />
+                  <span className="text-gray-700">{particulier?.adresse}, {particulier?.ville}, {particulier?.pays}</span>
                 </div>
               </div>
             </div>
 
             {/* Right Info */}
-            <div className="flex-1">
-              <div className="mb-4">
-                <p className="text-green-600 font-semibold mb-2">Vous Êtes :</p>
-                <div className="border border-gray-300 rounded px-3 py-2 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 bg-green-600 rounded-full"></span>
-                    <span className="text-gray-700 text-sm">En recherche active</span>
-                  </div>
-                  <span className="text-gray-400">▼</span>
-                </div>
-              </div>
-
+            <div className="flex-1 space-y-4">
               <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-3">
-                  <span>📞</span>
-                  <span className="text-gray-700">+237 674 882 527</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span>in</span>
-                  <a href="#" className="text-green-600 hover:underline">http://linkedin.com/in/atomabraham</a>
-                </div>
+                <p className="text-green-600 font-semibold">Visibilité :</p>
+                <span className={`px-3 py-1 text-xs font-medium rounded-full ${particulier?.is_visible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  {particulier?.is_visible ? 'Visible par les recruteurs' : 'Non visible'}
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Profile Summary */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Résumé Du Profil</h2>
-          <p className="text-gray-700 text-sm leading-relaxed">
-            Lorem ipsum is simply dummy Text Of The Printing And Typesetting industry. Lorem ipsum has been the industry's Standard Dummy, text ever since the 1500s, when an Unknown Printer took a galley of type and Scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic Typesetting, remaining Essentially Unchanged. Lorem ipsum is simply dummy Text Of The Printing And Typesetting industry. Lorem ipsum has been the industry's Standard Dummy text ever since the 1500s, when an Unknown Printer took a galley of type and Scrambled it to make a type specimen book.
-          </p>
-        </div>
+        {particulier?.resume_profil && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Résumé Du Profil</h2>
+            <p className="text-gray-700 text-sm leading-relaxed">{particulier.resume_profil}</p>
+          </div>
+        )}
 
         {/* Experiences */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Expériences</h2>
-          <div className="space-y-6">
-            {[
-              { title: 'Développeur Web', company: 'AFDA TECH', location: 'Douala, Cameroon', type: 'Freelance', date: 'Jan 2022 - Apr 2022' },
-              { title: 'UI/UX Designer', company: 'AFDA TECH', location: 'Douala, Cameroon', type: 'Freelance', date: 'Jan 2022 - Apr 2022' },
-              { title: 'Graphiste', company: 'AFDA TECH', location: 'Douala, Cameroon', type: 'Freelance', date: 'Jan 2022 - Apr 2022' },
-              { title: 'Développeur Web', company: 'AFDA TECH', location: 'Douala, Cameroon', type: 'Freelance', date: 'Jan 2022 - Apr 2022' }
-            ].map((exp, idx) => (
-              <div key={idx} className="border-l-4 border-green-600 pl-4">
-                <h3 className="font-semibold text-gray-800">{exp.title}</h3>
-                <p className="text-gray-600 text-sm">{exp.company} • {exp.location}</p>
-                <p className="text-gray-600 text-sm">{exp.type}</p>
-                <p className="text-gray-500 text-sm">{exp.date}</p>
-                <p className="text-gray-500 text-sm mt-1">-----------</p>
-              </div>
-            ))}
+        {experiences?.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Expériences</h2>
+            <div className="space-y-6">
+              {experiences.map((exp) => (
+                <div key={exp.id} className="border-l-4 border-green-600 pl-4">
+                  <h3 className="font-semibold text-gray-800">{exp.titre_poste}</h3>
+                  <p className="text-gray-600 text-sm">{exp.nom_entreprise} • {exp.ville}, {exp.pays}</p>
+                  <p className="text-gray-500 text-sm">{new Date(exp.date_debut).toLocaleDateString('fr-FR')} - {new Date(exp.date_fin).toLocaleDateString('fr-FR')}</p>
+                  <p className="text-gray-600 text-sm mt-2">{exp.description_taches}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Competences */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Compétences</h2>
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS',
-              'Adobe Photoshop Pro', 'Laravel', 'React JS'
-            ].map((skill, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
-                <span className="text-gray-700 text-sm">{skill}</span>
-              </div>
-            ))}
+        {skills?.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Compétences</h2>
+            <div className="flex flex-wrap gap-2">
+              {skills.map((skill) => (
+                <span key={skill.id} className="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-1 rounded-full">
+                  {skill.nom} ({skill.niveau})
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Education */}
+        {/* Education (Statique pour le moment) */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Diplômes & Formations</h2>
           <div className="space-y-6">
             {[
-              { school: 'AFDA TECH', location: 'Douala, Cameroon', title: 'Profession', date: 'Jan 2022 - Apr 2022', skills: '-----------' },
-              { school: 'SubHere.Profil', location: 'Douala, Cameroon', title: 'Profession', date: 'Jan 2022 - Apr 2022', skills: 'Photoshop, Illustrator' },
-              { school: 'AFDA TECH', location: 'Douala, Cameroon', title: 'Profession', date: 'Jan 2022 - Apr 2022', skills: '-----------' },
-              { school: 'AFDA TECH', location: 'Douala, Cameroon', title: 'Profession', date: 'Jan 2022 - Apr 2022', skills: 'Report JS' }
+              { school: 'Université de Yaoundé I', location: 'Yaoundé, Cameroun', title: 'Licence en Informatique', date: '2018 - 2021', skills: 'Algorithmique, Bases de données' },
+              { school: 'OpenClassrooms', location: 'En ligne', title: 'Développeur d\'application - PHP / Symfony', date: '2022', skills: 'PHP, Symfony, React' },
             ].map((edu, idx) => (
-              <div key={idx} className="border-l-4 border-green-600 pl-4">
-                <p className="text-gray-600 text-sm">{edu.school}</p>
-                <p className="font-semibold text-gray-800">{edu.location}</p>
-                <p className="text-gray-600 text-sm">{edu.title}</p>
+              <div key={idx} className="border-l-4 border-orange-500 pl-4">
+                <h3 className="font-semibold text-gray-800">{edu.title}</h3>
+                <p className="text-gray-600 text-sm">{edu.school} • {edu.location}</p>
                 <p className="text-gray-500 text-sm">{edu.date}</p>
-                <p className="text-gray-500 text-sm mt-1">{edu.skills}</p>
+                <p className="text-gray-600 text-sm mt-2">Compétences acquises : {edu.skills}</p>
               </div>
             ))}
           </div>
@@ -150,24 +171,32 @@ export default function ProfilCandidatByRecruteur() {
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Autres Ressources</h2>
           <div className="space-y-3">
+            {particulier?.cv_link && (
+              <div className="flex items-center gap-4">
+                <Download size={16} className="text-gray-500" />
+                <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm flex items-center gap-2">
+                  <span>Télécharger le CV</span>
+                </a>
+              </div>
+            )}
+            {/* Liens statiques pour le moment */}
             <div className="flex items-center gap-4">
-              <span className="text-gray-700 font-medium">CV :</span>
-              <a href="#" className="text-green-600 hover:underline text-sm flex items-center gap-2">
-                <span>S3_TADZONG MBIPE.pdf</span>
-                <Download size={16} />
+              <Globe size={16} className="text-gray-500" />
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
+                portfolio-candidat.com
               </a>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-700 font-medium">Site internet / Portefeuille :</span>
-              <a href="#" className="text-green-600 hover:underline text-sm">https://www.ntechfeeds.com/portfolio/abra</a>
+              <Linkedin size={16} className="text-gray-500" />
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
+                linkedin.com/in/candidat-profil
+              </a>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-gray-700 font-medium">LinkedIn :</span>
-              <a href="#" className="text-green-600 hover:underline text-sm">https://www.behance.net/abrahamtadzong</a>
-            </div>
-            <div className="flex items-center gap-4">
-              <span className="text-gray-700 font-medium">GitHub :</span>
-              <a href="#" className="text-green-600 hover:underline text-sm">https://github.com/tadzong</a>
+              <Github size={16} className="text-gray-500" />
+              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
+                github.com/candidat-profil
+              </a>
             </div>
           </div>
         </div>

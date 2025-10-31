@@ -3,9 +3,7 @@ import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
 import { ClipLoader } from "react-spinners";
-import { Upload, Trash2, Eye, Share2, Edit, X } from 'lucide-react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Upload, Trash2, Eye, Share2, Edit, X, Search } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -19,6 +17,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 // Composant de prévisualisation
 const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
@@ -112,6 +112,50 @@ const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
   );
 };
 
+// Composants de champ réutilisables inspirés de InscriptionEntreprise.jsx
+const InputField = ({ name, label, formik, type = "text", placeholder = "" }) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <input
+      id={name}
+      name={name}
+      type={type}
+      placeholder={placeholder}
+      {...formik.getFieldProps(name)}
+      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${
+        formik.touched[name] && formik.errors[name]
+          ? 'border-red-500 focus:ring-red-500'
+          : 'border-gray-300 focus:ring-orange-500'
+      }`}
+    />
+    {formik.touched[name] && formik.errors[name] ? (
+      <div className="text-red-500 text-xs mt-1">{formik.errors[name]}</div>
+    ) : null}
+  </div>
+);
+
+const TextareaField = ({ name, label, formik, rows = 4, placeholder = "" }) => (
+  <div>
+    <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <textarea
+      id={name}
+      name={name}
+      rows={rows}
+      placeholder={placeholder}
+      {...formik.getFieldProps(name)}
+      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${
+        formik.touched[name] && formik.errors[name]
+          ? 'border-red-500 focus:ring-red-500'
+          : 'border-gray-300 focus:ring-orange-500'
+      }`}
+    />
+    {formik.touched[name] && formik.errors[name] ? (
+      <div className="text-red-500 text-xs mt-1">{formik.errors[name]}</div>
+    ) : null}
+  </div>
+);
+
+
 const validationSchemas = [
   // Step 1: EMPLOYEUR
   Yup.object({
@@ -127,9 +171,8 @@ const validationSchemas = [
   Yup.object({
     categorie_id: Yup.string().required('Catégorie requise'),
     titre_poste: Yup.string().required('Titre requis'),
-    date_limite_soumission: Yup.date()
-      .typeError('Date invalide')
-      .required('Date requise'),
+    date_limite_soumission: Yup.date().required('Date requise')
+      .min(new Date(new Date().setHours(0, 0, 0, 0)), "La date limite ne peut pas être antérieure à aujourd'hui."),
     fonction: Yup.string().required('Fonction requise'),
     experience: Yup.string().required('Expérience requise'),
     description_poste: Yup.string().required("Description requise"),
@@ -138,20 +181,24 @@ const validationSchemas = [
     type_contrat: Yup.string()
       .oneOf(['cdi', 'cdd', 'stage', 'freelance'], 'Type de contrat invalide')
       .required('Type de contrat requis'),
-    remuneration_max: Yup.number()
-      .typeError('Montant invalide')
-      .required('Rémunération maximale requise')
-      .min(0, 'Doit être positif'),
     remuneration_min: Yup.number()
       .typeError('Montant invalide')
       .required('Rémunération minimale requise')
       .min(0, 'Doit être positif'),
+    remuneration_max: Yup.number()
+      .typeError('Montant invalide')
+      .required('Rémunération maximale requise')
+      .min(Yup.ref('remuneration_min'), 'Le maximum doit être supérieur ou égal au minimum'),
   }),
   // Step 3: CANDIDATURE
   Yup.object({
-    email_candidature: Yup.string().email('Email invalide').required('Email requis'),
-    url_candidature: Yup.string().url('URL invalide').nullable().required('URL requise'),
-    instructions_candidature: Yup.string().nullable().required('Instructions requises'),
+    email_candidature: Yup.string().email('Email invalide').nullable(),
+    url_candidature: Yup.string().url('URL invalide').nullable(),
+    instructions_candidature: Yup.string().when('email_candidature', {
+      is: (email) => email && email.length > 0,
+      then: (schema) => schema.required('Les instructions sont requises si un email de candidature est fourni.'),
+      otherwise: (schema) => schema.nullable(),
+    }),
     skills: Yup.array().min(1, 'Au moins une compétence requise'),
   }),
   // Step 4: PUBLIER
@@ -162,32 +209,13 @@ const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
-  const [formData, setFormData] = useState();
   const { professionnel } = useAuth();
   const [documents, setDocuments] = useState([]);
   const [newDoc, setNewDoc] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false); // Nouvel état pour la prévisualisation
   const formRef = useRef(null);
   const navigate = useNavigate();
-
-  // 🔹 Préremplissage avec les infos du profil professionnel
-  useEffect(() => {
-    if (professionnel) {
-      setFormData((prev) => ({
-        ...prev,
-        nom_entreprise: professionnel.nom_entreprise || '',
-        email_pro: professionnel.email_pro || '',
-        telephone_pro: professionnel.telephone_pro || '',
-        site_web: professionnel.site_web || '',
-        pays: professionnel.pays || '',
-        ville: professionnel.ville || '',
-        adresse: professionnel.adresse || '',
-        description_entreprise: professionnel.description_entreprise || '',
-      }));
-    }
-  }, [professionnel]);
 
   useEffect(() => {
     const fetchSkills = async () => {
@@ -220,47 +248,6 @@ const MultiStepForm = () => {
     fetchCategories();
   }, [])
 
-  const initialValues = {
-    nom_entreprise: professionnel?.nom_entreprise || '',
-    email_pro: professionnel?.email_pro || '',
-    telephone_pro: professionnel?.telephone_pro || '',
-    site_web: professionnel?.site_web || '',
-    logo: null,
-    pays: professionnel?.pays || '',
-    ville: professionnel?.ville || '',
-    adresse: professionnel?.adresse || '',
-    description_entreprise: professionnel?.description_entreprise || '',
-    categorie_id: '',
-    titre_poste: '',
-    date_limite_soumission: '',
-    fonction: '',
-    experience: '',
-    lieu_travail: '',
-    description_poste: '',
-    exigences: '',
-    responsabilites: '',
-    type_contrat: 'cdi',
-    remuneration_min: '',
-    remuneration_max: '',
-    email_candidature: '',
-    url_candidature: '',
-    instructions_candidature: '',
-    documents_requis: ['CV', 'Lettre de motivation'],
-    skills: [],
-    statut: 'active',
-  };
-
-  // Remplace addSkill et removeSkill :
-  const addSkill = (id, formik) => {
-    if (!formik.values.skills.includes(id)) {
-      formik.setFieldValue('skills', [...formik.values.skills, id]);
-    }
-  };
-
-  const removeSkill = (id, formik) => {
-    formik.setFieldValue('skills', formik.values.skills.filter(s => s !== id));
-  };
-
   const steps = [
     { number: 1, label: 'EMPLOYEUR', color: 'bg-orange-500' },
     { number: 2, label: 'OFFRE', color: 'bg-green-500' },
@@ -268,69 +255,34 @@ const MultiStepForm = () => {
     { number: 4, label: 'PUBLIER', color: 'bg-gray-500' }
   ];
 
-
-  const addDocument = () => {
-    if (newDoc && newDoc.trim() !== "") {
-      setDocuments([...documents, newDoc]);
-      setNewDoc("");
+  // Fonction de validation globale
+  const validateAllSteps = async (values) => {
+    try {
+      // Fusionne tous les schémas
+      const fullSchema = validationSchemas
+        .reduce((acc, schema) => acc.concat(schema), Yup.object({}));
+      await fullSchema.validate(values, { abortEarly: false });
+      return {};
+    } catch (err) {
+      // Transforme les erreurs Yup en objet { champ: message }
+      const errors = {};
+      if (err.inner) {
+        err.inner.forEach(e => {
+          if (!errors[e.path]) errors[e.path] = e.message;
+        });
+      }
+      return errors;
     }
-  };
-
-  const removeDocument = (index) => {
-    setDocuments(documents.filter((_, i) => i !== index));
-  };
-
-
-  // const handleInputChange = (field, value) => {
-  //   setFormData(prev => ({ ...prev, [field]: value }));
-  // };
-
-  const scrollToTop = () => {
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  // const handleNext = () => {
-  //   if (currentStep < 4) {
-  //     setCurrentStep(currentStep + 1);
-  //     scrollToTop();
-  //   }
-  // };
-
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      scrollToTop();
-    }
-  };
-
-  // const handleStepClick = async (stepNumber, formik) => {
-  //   if (stepNumber === currentStep) return;
-  //   // Validation avant de changer d'étape
-  //   const valid = await formik.validateForm();
-  //   formik.setTouched(
-  //     Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-  //   );
-  //   if (Object.keys(valid).length === 0) {
-  //     setCurrentStep(stepNumber);
-  //     scrollToTop();
-  //   }
-  // };
-
-  const handleCancel = () => {
-    setShowPreview(false);
-    navigate('/dashboard' );
   };
 
   // Fonction unique pour publier l'offre
   const publishOffer = async (values, actions) => {
-    setLoading(true);
+    actions.setSubmitting(true);
     setShowPreview(false); // Ferme la prévisualisation si elle est ouverte
     try {
       const payload = {
         ...values,
-        documents_requis: documents.length > 0 ? documents : values.documents_requis,
+        documents_requis: JSON.stringify(values.documents_requis),
         skills: values.skills,
         statut: values.statut,
         date_publication: new Date().toISOString().split('T')[0],
@@ -344,12 +296,105 @@ const MultiStepForm = () => {
         description: error.response?.data?.message || "Une erreur inattendue est survenue.",
       });
     } finally {
-      setLoading(false);
       actions.setSubmitting(false);
     }
   };
 
-  const renderStepIndicator = (formik) => (
+  const formik = useFormik({
+    initialValues: {
+      nom_entreprise: professionnel?.nom_entreprise || '',
+      email_pro: professionnel?.email_pro || '',
+      telephone_pro: professionnel?.telephone_pro || '',
+      site_web: professionnel?.site_web || '',
+      logo: null,
+      pays: professionnel?.pays || '',
+      ville: professionnel?.ville || '',
+      adresse: professionnel?.adresse || '',
+      description_entreprise: professionnel?.description_entreprise || '',
+      categorie_id: '',
+      titre_poste: '',
+      date_limite_soumission: '',
+      fonction: '',
+      experience: '',
+      lieu_travail: '',
+      description_poste: '',
+      exigences: '',
+      responsabilites: '',
+      type_contrat: 'cdi',
+      remuneration_min: '',
+      remuneration_max: '',
+      email_candidature: '',
+      url_candidature: '',
+      instructions_candidature: '',
+      documents_requis: ['CV', 'Lettre de motivation'],
+      skills: [],
+      statut: 'active',
+    },
+    validationSchema: validationSchemas[currentStep - 1],
+    onSubmit: publishOffer,
+    enableReinitialize: true,
+  });
+
+  const addDocument = () => {
+    const trimmedDoc = newDoc.trim();
+    if (trimmedDoc && !formik.values.documents_requis.includes(trimmedDoc)) {
+      formik.setFieldValue('documents_requis', [...formik.values.documents_requis, trimmedDoc]);
+      setNewDoc("");
+    }
+  };
+
+  const removeDocument = (docToRemove) => {
+    formik.setFieldValue('documents_requis', formik.values.documents_requis.filter(doc => doc !== docToRemove));
+  };
+
+  const scrollToTop = () => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNext = async () => {
+    const errors = await formik.validateForm();
+    if (Object.keys(errors).length === 0) {
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1);
+        scrollToTop();
+      }
+    } else {
+      formik.setTouched(
+        Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+      );
+      toast.error("Veuillez corriger les erreurs avant de continuer.");
+    }
+  };
+
+  const handlePrevious = (e) => {
+    e.preventDefault();
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      scrollToTop();
+      if (showPreview) {
+        setShowPreview(false);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setShowPreview(false);
+    navigate('/dashboard' );
+  };
+
+  const addSkill = (id) => {
+    if (!formik.values.skills.includes(id)) {
+      formik.setFieldValue('skills', [...formik.values.skills, id]);
+    }
+  };
+
+  const removeSkill = (id) => {
+    formik.setFieldValue('skills', formik.values.skills.filter(s => s !== id));
+  };
+
+  const renderStepIndicator = () => (
     <div className="flex items-center justify-between mb-8 max-w-4xl mx-auto px-4">
       {steps.map((step, index) => (
         <React.Fragment key={step.number}>
@@ -387,51 +432,20 @@ const MultiStepForm = () => {
   );
   <p className="bg-emerald-200 text-center w-80% font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
 
-  // Exemple d'intégration Formik pour le step 1
-  const renderEmployeurStep = (formik) => (
-    <Form className="max-w-8xl mx-auto space-y-6">
+  const renderEmployeurStep = () => (
+    <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="text-center mb-6">
         <p className="bg-emerald-200  font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise *</label>
-          <Field
-            name="nom_entreprise"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="nom_entreprise" component="div" className="text-red-500 text-xs" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Email de l'entreprise *</label>
-          <Field
-            name="email_pro"
-            type="email"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="email_pro" component="div" className="text-red-500 text-xs" />
-        </div>
+        <InputField name="nom_entreprise" label="Nom de l'entreprise *" formik={formik} />
+        <InputField name="email_pro" label="Email de l'entreprise *" formik={formik} type="email" />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone de l'entreprise *</label>
-          <Field
-            name="telephone_pro"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="telephone_pro" component="div" className="text-red-500 text-xs" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Site web de l'entreprise</label>
-          <Field
-            name="site_web"
-            type="url"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="site_web" component="div" className="text-red-500 text-xs" />
-        </div>
+        <InputField name="telephone_pro" label="Téléphone de l'entreprise *" formik={formik} />
+        <InputField name="site_web" label="Site web de l'entreprise" formik={formik} type="url" />
       </div>
 
       <div>
@@ -450,54 +464,16 @@ const MultiStepForm = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Pays *</label>
-          <Field
-            name="pays"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="pays" component="div" className="text-red-500 text-xs" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Ville *</label>
-          <Field
-            name="ville"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="ville" component="div" className="text-red-500 text-xs" />
-        </div>
+        <InputField name="pays" label="Pays *" formik={formik} />
+        <InputField name="ville" label="Ville *" formik={formik} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Code postal</label>
-          <Field
-            name="code_postal"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="code_postal" component="div" className="text-red-500 text-xs" />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Adresse locale *</label>
-          <Field
-            name="adresse"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          />
-          <ErrorMessage name="adresse" component="div" className="text-red-500 text-xs" />
-        </div>
+        <InputField name="code_postal" label="Code postal" formik={formik} />
+        <InputField name="adresse" label="Adresse locale *" formik={formik} />
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'entreprise</label>
-        <Field
-          as="textarea"
-          name="description_entreprise"
-          rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          placeholder="Décrivez votre entreprise..."
-        />
-        <ErrorMessage name="description_entreprise" component="div" className="text-red-500 text-xs" />
-      </div>
+      <TextareaField name="description_entreprise" label="Description de l'entreprise" formik={formik} placeholder="Décrivez votre entreprise..." />
 
       <div className="flex justify-between pt-6">
         <button
@@ -508,50 +484,53 @@ const MultiStepForm = () => {
           Annuler
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleNext}
           className="px-6 py-2 bg-orange-500 text-white rounded-md text-sm font-medium hover:bg-orange-600"
-          disabled={loading}
+          disabled={formik.isSubmitting}
         >
-          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </Form>
+    </form>
   );
 
-  const renderOffreStep = (formik) => (
-    <Form className="max-w-8xl mx-auto space-y-6">
+  const renderOffreStep = () => (
+    <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Titre de l'Offre</label>
-          <Field
+          <input
             name="titre_poste"
             placeholder="Titre du poste"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            {...formik.getFieldProps('titre_poste')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.titre_poste && formik.errors.titre_poste ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
           />
-          <ErrorMessage name="titre_poste" component="div" className="text-red-500 text-xs" />
+          {formik.touched.titre_poste && formik.errors.titre_poste ? <div className="text-red-500 text-xs">{formik.errors.titre_poste}</div> : null}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Date limite de soumission</label>
-          <Field
+          <input
             name="date_limite_soumission"
             type="date"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            {...formik.getFieldProps('date_limite_soumission')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.date_limite_soumission && formik.errors.date_limite_soumission ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
           />
-          <ErrorMessage name="date_limite_soumission" component="div" className="text-red-500 text-xs" />
+          {formik.touched.date_limite_soumission && formik.errors.date_limite_soumission ? <div className="text-red-500 text-xs">{formik.errors.date_limite_soumission}</div> : null}
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-        <Field as="select" name="categorie_id" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        <select name="categorie_id" {...formik.getFieldProps('categorie_id')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.categorie_id && formik.errors.categorie_id ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
           <option value="">Sélectionner une catégorie</option>
           {categoriesList.map((category) => (
             <option key={category.id} value={category.id}>
               {category.nom}
             </option>
           ))}
-        </Field>
-        <ErrorMessage name="categorie_id" component="div" className="text-red-500 text-xs" />
+        </select>
+        {formik.touched.categorie_id && formik.errors.categorie_id ? <div className="text-red-500 text-xs">{formik.errors.categorie_id}</div> : null}
       </div>
 
 
@@ -560,142 +539,149 @@ const MultiStepForm = () => {
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Fonction du poste</label>
-          <Field
+          <input
             name="fonction"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            {...formik.getFieldProps('fonction')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.fonction && formik.errors.fonction ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
           />
-          <ErrorMessage name="fonction" component="div" className="text-red-500 text-xs" />
+          {formik.touched.fonction && formik.errors.fonction ? <div className="text-red-500 text-xs">{formik.errors.fonction}</div> : null}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
-          <Field as="select" name="experience" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+          <select name="experience" {...formik.getFieldProps('experience')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.experience && formik.errors.experience ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
             <option value="">Sélectionner</option>
             <option value="debutant">Débutant</option>
             <option value="junior">Junior</option>
             <option value="senior">Senior</option>
-          </Field>
-          <ErrorMessage name="experience" component="div" className="text-red-500 text-xs" />
+          </select>
+          {formik.touched.experience && formik.errors.experience ? <div className="text-red-500 text-xs">{formik.errors.experience}</div> : null}
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'offre</label>
-        <Field
-          as="textarea"
+        <textarea
           name="description_poste"
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Décrivez l'offre d'emploi..."
+          {...formik.getFieldProps('description_poste')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.description_poste && formik.errors.description_poste ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
-        <ErrorMessage name="description_poste" component="div" className="text-red-500 text-xs" />
+        {formik.touched.description_poste && formik.errors.description_poste ? <div className="text-red-500 text-xs">{formik.errors.description_poste}</div> : null}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Responsabilités / Missions du poste</label>
-        <Field
-          as="textarea"
+        <textarea
           name="responsabilites"
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les responsabilités..."
+          {...formik.getFieldProps('responsabilites')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.responsabilites && formik.errors.responsabilites ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
-        <ErrorMessage name="responsabilites" component="div" className="text-red-500 text-xs" />
+        {formik.touched.responsabilites && formik.errors.responsabilites ? <div className="text-red-500 text-xs">{formik.errors.responsabilites}</div> : null}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Exigences du poste</label>
-        <Field
-          as="textarea"
+        <textarea
           name="exigences"
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           placeholder="Listez les exigences..."
+          {...formik.getFieldProps('exigences')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.exigences && formik.errors.exigences ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
-        <ErrorMessage name="exigences" component="div" className="text-red-500 text-xs" />
+        {formik.touched.exigences && formik.errors.exigences ? <div className="text-red-500 text-xs">{formik.errors.exigences}</div> : null}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
-        <Field as="select" name="type_contrat" className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+        <select name="type_contrat" {...formik.getFieldProps('type_contrat')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.type_contrat && formik.errors.type_contrat ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
           <option value="cdi">CDI</option>
           <option value="cdd">CDD</option>
           <option value="stage">Stage</option>
           <option value="freelance">Freelance</option>
-        </Field>
-        <ErrorMessage name="type_contrat" component="div" className="text-red-500 text-xs" />
+        </select>
+        {formik.touched.type_contrat && formik.errors.type_contrat ? <div className="text-red-500 text-xs">{formik.errors.type_contrat}</div> : null}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération maximale Souhaitée</label>
-        <Field
+        <input
           name="remuneration_max"
           type="number"
           placeholder="Chiffrer en français"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          {...formik.getFieldProps('remuneration_max')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.remuneration_max && formik.errors.remuneration_max ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
-        <ErrorMessage name="remuneration_max" component="div" className="text-red-500 text-xs" />
+        {formik.touched.remuneration_max && formik.errors.remuneration_max ? <div className="text-red-500 text-xs">{formik.errors.remuneration_max}</div> : null}
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération minimale Souhaitée </label>
-        <Field
+        <input
           name="remuneration_min"
           type="number"
           placeholder="Chiffrer en français"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          {...formik.getFieldProps('remuneration_min')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.remuneration_min && formik.errors.remuneration_min ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
-        <ErrorMessage name="remuneration_min" component="div" className="text-red-500 text-xs" />
+        {formik.touched.remuneration_min && formik.errors.remuneration_min ? <div className="text-red-500 text-xs">{formik.errors.remuneration_min}</div> : null}
       </div>
 
       <div className="flex justify-between pt-6">
         <button
+          type="button"
           onClick={handlePrevious}
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Retour
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleNext}
           className="px-6 py-2 bg-green-500 text-white rounded-md text-sm font-medium hover:bg-green-600"
-          disabled={loading}
+          disabled={formik.isSubmitting}
         >
-          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </Form>
+    </form>
   );
 
-  const renderCandidatureStep = (formik) => (
-    <Form className="max-w-8xl mx-auto space-y-6">
+  const renderCandidatureStep = () => (
+    <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature *</label>
-          <Field
+          <input
             name="email_candidature"
             type="email"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {...formik.getFieldProps('email_candidature')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.email_candidature && formik.errors.email_candidature ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
           />
-          <ErrorMessage name="email_candidature" component="div" className="text-red-500 text-xs" />
+          {formik.touched.email_candidature && formik.errors.email_candidature ? <div className="text-red-500 text-xs">{formik.errors.email_candidature}</div> : null}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">URL de candidature (site web ou autre)</label>
-          <Field
+          <input
             name="url_candidature"
             type="url"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            {...formik.getFieldProps('url_candidature')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.url_candidature && formik.errors.url_candidature ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
           />
-          <ErrorMessage name="url_candidature" component="div" className="text-red-500 text-xs" />
+          {formik.touched.url_candidature && formik.errors.url_candidature ? <div className="text-red-500 text-xs">{formik.errors.url_candidature}</div> : null}
         </div>
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Instructions de candidature (Facultatif)</label>
-        <Field
-          as="textarea"
+        <textarea
           name="instructions_candidature"
           rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          {...formik.getFieldProps('instructions_candidature')}
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.instructions_candidature && formik.errors.instructions_candidature ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'}`}
         />
-        <ErrorMessage name="instructions_candidature" component="div" className="text-red-500 text-xs" />
+        {formik.touched.instructions_candidature && formik.errors.instructions_candidature ? <div className="text-red-500 text-xs">{formik.errors.instructions_candidature}</div> : null}
       </div>
       <div className="space-y-3">
         <label className="block text-sm font-medium text-gray-700">
@@ -709,7 +695,7 @@ const MultiStepForm = () => {
             return (
               <Badge
                 key={id}
-                onClick={() => removeSkill(id, formik)}
+                onClick={() => removeSkill(id)}
                 className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white"
               >
                 {skill ? skill.nom : id} ✕
@@ -727,7 +713,7 @@ const MultiStepForm = () => {
               {skillsList.map((skill) => (
                 <CommandItem
                   key={skill.id}
-                  onSelect={() => addSkill(skill.id, formik)}
+                  onSelect={() => addSkill(skill.id)}
                 >
                   {skill.nom}
                 </CommandItem>
@@ -735,7 +721,7 @@ const MultiStepForm = () => {
             </CommandGroup>
           </CommandList>
         </Command>
-        <ErrorMessage name="skills" component="div" className="text-red-500 text-xs" />
+        {formik.touched.skills && formik.errors.skills ? <div className="text-red-500 text-xs">{formik.errors.skills}</div> : null}
       </div>
 
       <div>
@@ -789,27 +775,27 @@ const MultiStepForm = () => {
 
         {/* Liste des documents */}
         <div className="mt-4 space-y-2">
-          {documents.length > 0 ? (
-            documents.map((doc, index) => (
+          {formik.values.documents_requis.length > 0 ? (
+            formik.values.documents_requis.map((doc, index) => (
               <div
                 key={index}
                 className="flex items-center justify-between p-3 border rounded"
               >
                 <span>{doc}</span>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => removeDocument(index)}
-                >
-                  <Trash2 className="w-4 h-4 mr-1" />
-                  Retirer
-                </Button>
+                {doc !== 'CV' && (
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => removeDocument(doc)}
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    Retirer
+                  </Button>
+                )}
               </div>
             ))
-          ) : (
-            <p className="text-gray-500 text-sm">Aucun document ajouté</p>
-          )}
+          ) : null}
         </div>
 
         <p className="text-sm text-blue-600 mt-2">
@@ -819,24 +805,28 @@ const MultiStepForm = () => {
       </div>
       <div className="flex justify-between pt-6">
         <button
+          type="button"
           onClick={handlePrevious}
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           Retour
         </button>
         <button
-          type="submit"
+          type="button"
+          onClick={handleNext}
           className="px-6 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600"
-          disabled={loading}
+          disabled={formik.isSubmitting}
         >
-          {loading ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
         </button>
       </div>
-    </Form>
+    </form>
   );
 
-  const renderPublierStep = (formik) => (
-    showPreview ? <OffrePreview values={formik.values} onEdit={handlePrevious} onCancel={handleCancel} onSubmit={() => publishOffer(formik.values, formik.actions)} skillsList={skillsList} /> : <Form className="max-w-8xl mx-auto text-center space-y-6">
+  const renderPublierStep = () => (
+    showPreview 
+      ? <OffrePreview values={formik.values} onEdit={() => setShowPreview(false)} onCancel={handleCancel} onSubmit={formik.handleSubmit} skillsList={skillsList} /> 
+      : <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto text-center space-y-6">
       <div className="mb-8">
         <div className="w-64 h-48 mx-auto bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
           <div className="text-orange-500 text-6xl">✓</div>
@@ -903,85 +893,33 @@ const MultiStepForm = () => {
         </button>
       </div>
 
-    </Form>
+    </form>
   );
-
-  // Fonction de validation globale
-  const validateAllSteps = async (values) => {
-    try {
-      // Fusionne tous les schémas
-      const fullSchema = validationSchemas
-        .reduce((acc, schema) => acc.concat(schema), Yup.object({}));
-      await fullSchema.validate(values, { abortEarly: false });
-      return {};
-    } catch (err) {
-      // Transforme les erreurs Yup en objet { champ: message }
-      const errors = {};
-      if (err.inner) {
-        err.inner.forEach(e => {
-          if (!errors[e.path]) errors[e.path] = e.message;
-        });
-      }
-      return errors;
-    }
-  };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return renderEmployeurStep();
+        return renderEmployeurStep(formik);
       case 2:
-        return renderOffreStep();
+        return renderOffreStep(formik);
       case 3:
-        return renderCandidatureStep();
+        return renderCandidatureStep(formik);
       case 4:
-        return renderPublierStep();
+        return renderPublierStep(formik);
       default:
-        return renderEmployeurStep();
+        return renderEmployeurStep(formik);
     }
   };
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchemas[currentStep - 1]}
-      onSubmit={async (values, actions) => {
-        if (currentStep < 4) {
-          setCurrentStep(currentStep + 1);
-          scrollToTop();
-          actions.setSubmitting(false);
-        } else {
-          // Validation globale avant publication
-          const errors = await validateAllSteps(values);
-          if (Object.keys(errors).length > 0) {
-            actions.setErrors(errors);
-            // Affiche tous les champs comme touchés pour voir les erreurs
-            actions.setTouched(
-              Object.keys(values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
-            );
-            toast.error("Veuillez corriger les erreurs dans le formulaire.");
-            actions.setSubmitting(false);
-            return;
-          }
-          
-          publishOffer(values, actions);
-        }
-      }}
-    >
-      {(formik) => (
-        <div ref={formRef} className="min-h-screen mt-5 py-8">
-          <div className="container mx-auto px-4">
-            {renderStepIndicator(formik)}
-            <div className="bg-white p-8 max-w-6xl mx-auto">
-              {currentStep === 1 && renderEmployeurStep(formik)}
-              {currentStep === 2 && renderOffreStep(formik)}
-              {currentStep === 3 && renderCandidatureStep(formik)}
-              {currentStep === 4 && renderPublierStep(formik)}
-            </div>
-          </div>
+    <div ref={formRef} className="min-h-screen mt-5 py-8">
+      <div className="container mx-auto px-4">
+        {renderStepIndicator()}
+        <div className="bg-white p-8 max-w-6xl mx-auto">
+          {renderCurrentStep()}
         </div>
-      )}
-    </Formik>
+      </div>
+    </div>
   );
 };
 

@@ -72,4 +72,27 @@ export const validationSchema = Yup.object({
   ville: Yup.string().required("Ville requise"),
   pays: Yup.string().required("Pays requis"),
   num_contribuable: Yup.string().required("Numéro contribuable requis"),
+  logo: Yup.mixed()
+    .required("Un logo est requis")
+    .test(
+      "fileSize",
+      "Le fichier est trop volumineux (max 2MB)",
+      (value) => !value || (value && value.size <= 2 * 1024 * 1024) // 2MB
+    )
+    .test(
+      "fileFormat",
+      "Format de fichier non supporté (PNG, JPG, GIF)",
+      (value) => !value || (value && ["image/jpeg", "image/png", "image/gif"].includes(value.type))
+    ),
+  image_couverture: Yup.mixed()
+    .nullable()
+    .test(
+      "fileSize",
+      "Le fichier est trop volumineux (max 2MB)",
+      (value) => !value || (value && value.size <= 2 * 1024 * 1024) // 2MB
+    ).test(
+      "fileFormat",
+      "Format de fichier non supporté (PNG, JPG, GIF)",
+      (value) => !value || (value && ["image/jpeg", "image/png", "image/gif"].includes(value.type))
+    ),
 });

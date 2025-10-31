@@ -63,7 +63,7 @@ const JobApplicationForm = () => {
           cv_genere: true
         });
         toast.success("Votre candidature a bien été envoyée !");
-        navigate('/mesCandidatures');
+        navigate('/candidatProfil');
       } else {
         // Appel API classique avec fichiers
         const formData = new FormData();

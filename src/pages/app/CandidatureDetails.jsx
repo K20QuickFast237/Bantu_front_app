@@ -102,6 +102,7 @@ const JobApplicationDetail = () => {
   }
 
   const { particulier, offre, cv_url, cv_genere } = application;
+  console.log(particulier);
   const infos = {
       nom: particulier?.nom || 'N/A',
       prenom: particulier?.prenom || null,
@@ -191,7 +192,7 @@ const JobApplicationDetail = () => {
             <div className="flex gap-8">
                 {cv_genere ? (
                     <button
-                      onClick={() => navigate(`/profil_candidat_by_recruteur/${application.particulier_id || application.candidat_id}`)}
+                      onClick={() => navigate(`/profil_candidat_by_recruteur/${particulier?.user_id}`)}
                       className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2"
                     >
                         <User className="w-4 h-4" />

@@ -9,10 +9,10 @@ import GraffittiRedIcon from '../../assets/Grafitti.png';
 import GraffittiBlueIcon from '../../assets/graphe.png';
 import imggroupe from '../../assets/groupe.png';
 import { motion } from 'framer-motion'; 
-import { useTranslation } from 'react-i18next'; // Ajout
+import { useTranslation } from 'react-i18next';
 
 const FeatureSection = () => {
-  const { t } = useTranslation(); // Hook i18n
+  const { t } = useTranslation();
 
   return (
     <>
@@ -36,68 +36,101 @@ const FeatureSection = () => {
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-5">
               {t('features.bantuHire.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed mb-6">
+            <p className="text-gray-600 font-light max-w-sm">
               {t('features.bantuHire.description')}
             </p>
-            <ul className="text-gray-600 mb-8 space-y-2">
-              <li className="flex items-center">
-                <img src={SearchIcon} alt="Search Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuHire.features.0')}
-              </li>
-              <li className="flex items-center">
-                <img src={AmericaIcon} alt="America Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuHire.features.1')}
-              </li>
-              <li className="flex items-center">
-                <img src={ChatIcon} alt="Chat Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuHire.features.2')}
-              </li>
-            </ul>
           </div>
-          <div className='w-full sm:w-2/3'>
-            <img 
-              src={OnlineStoreIcon} 
-              alt="BantuHire Illustration" 
-              className="w-full h-64 sm:h-80 object-cover rounded-lg shadow-lg" 
-            />
+
+          <div className='w-full sm:w-1/5'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={SearchIcon} alt="Search icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.simplifiedSearch.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuHire.simplifiedSearch.description')}
+              </p>
+            </div>
+          </div>
+
+          <div className='w-full sm:w-1/4 sm:ml-5 mt-6 sm:mt-0'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={AmericaIcon} alt="America icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.networking.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuHire.networking.description')}
+              </p>
+            </div>
+          </div>
+
+          <div className='w-full sm:w-1/5 sm:ml-5 mt-6 sm:mt-0'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={ChatIcon} alt="Chat icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.directMessaging.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuHire.directMessaging.description')}
+              </p>
+            </div>
           </div>
         </div>
 
+        <img src={GraffittiRedIcon} alt="Decorative lines" className="h-12 sm:h-17 w-auto mt-[-30px] sm:mt-[-40px] mx-auto sm:ml-80" />
+
         {/* BantuMarket */}
-        <div className='flex flex-col sm:flex-row-reverse mx-4 sm:mx-11 w-full mb-12 sm:mb-20'>
+        <div className='flex flex-col sm:flex-row mx-4 sm:mx-11 w-full mt-[-10px]'>
           <div className='w-full sm:w-1/3 block mb-8 sm:mb-0'>
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-5">
               {t('features.bantuMarket.title')}
             </h3>
-            <p className="text-gray-600 leading-relaxed mb-6">
+            <p className="text-gray-600 font-light max-w-sm">
               {t('features.bantuMarket.description')}
             </p>
-            <ul className="text-gray-600 mb-8 space-y-2">
-              <li className="flex items-center">
-                <img src={SecurityLockIcon} alt="Security Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuMarket.features.0')}
-              </li>
-              <li className="flex items-center">
-                <img src={ChatIcon} alt="Chat Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuMarket.features.1')}
-              </li>
-              <li className="flex items-center">
-                <img src={SearchIcon} alt="Search Icon" className="w-5 h-5 mr-3" />
-                {t('features.bantuMarket.features.2')}
-              </li>
-            </ul>
           </div>
-          <div className='w-full sm:w-2/3'>
-            <img 
-              src={SecurityLockIcon} 
-              alt="BantuMarket Illustration" 
-              className="w-full h-64 sm:h-80 object-cover rounded-lg shadow-lg" 
-            />
+
+          <div className='w-full sm:w-1/5'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={OnlineStoreIcon} alt="Online store icon" className="w-8 sm:w-auto h- zenith-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.customShop.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuMarket.customShop.description')}
+              </p>
+            </div>
+          </div>
+
+          <div className='w-full sm:w-1/4 sm:ml-5 mt-6 sm:mt-0'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={SecurityLockIcon} alt="Security lock icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.securePayment.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuMarket.securePayment.description')}
+              </p>
+            </div>
+          </div>
+
+          <div className='w-full sm:w-1/5 sm:ml-5 mt-6 sm:mt-0'>
+            <div className="flex flex-col items-start text-left">
+              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
+                <img src={ChatIcon} alt="Chat icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
+              </div>
+              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.clientChat.title')}</h4>
+              <p className="text-gray-600 text-sm font-light">
+                {t('features.bantuMarket.clientChat.description')}
+              </p>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Section Communauté */}
-        <div className="flex flex-col lg:flex-row items-center justify-between">
+      <section className="bg-white px-4 sm:px-7 font-sans text-gray-800">
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between">
           {/* Colonne de gauche: Image du groupe et du téléphone */}
           <div className="w-full lg:w-1/2 flex justify-center mb-8 lg:mb-0">
             <img

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import api from "@/services/api";
 import { toast } from 'sonner'
@@ -14,6 +14,7 @@ import {
   Info,
   Briefcase,
   X,
+  UploadCloud,
 } from "lucide-react";
 import Header from "../../components/app/Header";
 import { ClipLoader } from "react-spinners";
@@ -76,6 +77,52 @@ const TextAreaField = ({ id, label, formik, icon: Icon }) => (
   </div>
 );
 
+const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
+  const [preview, setPreview] = useState(null);
+
+  const handleFileChange = (event) => {
+    const file = event.currentTarget.files[0];
+    if (file) {
+      formik.setFieldValue(id, file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      formik.setFieldValue(id, null);
+      setPreview(null);
+    }
+  };
+
+  return (
+    <div className="md:col-span-2">
+      <label htmlFor={id} className="block text-sm font-medium text-blue-800 mb-1">
+        {label}
+        {isRequired && <span className="text-red-500">*</span>}
+      </label>
+      <div className={`mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10 ${formik.touched[id] && formik.errors[id] ? 'border-red-500' : 'border-gray-300'}`}>
+        <div className="text-center">
+          {preview ? (
+            <img src={preview} alt="Aperçu" className="mx-auto h-24 w-auto rounded-lg object-cover" />
+          ) : (
+            <UploadCloud className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
+          )}
+          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+            <label htmlFor={id} className="relative cursor-pointer rounded-md bg-white font-semibold text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 focus-within:ring-offset-2 hover:text-green-500">
+              <span>Télécharger un fichier</span>
+              <input id={id} name={id} type="file" className="sr-only" onChange={handleFileChange} accept="image/png, image/jpeg, image/gif" />
+            </label>
+            <p className="pl-1">ou glisser-déposer</p>
+          </div>
+          <p className="text-xs leading-5 text-gray-600">{helpText}</p>
+        </div>
+      </div>
+      {formik.touched[id] && formik.errors[id] ? <div className="text-red-500 text-xs mt-1">{formik.errors[id]}</div> : null}
+    </div>
+  );
+};
+
 const CompletionEntreprise = () => {
   const navigate = useNavigate();
 
@@ -91,17 +138,29 @@ const CompletionEntreprise = () => {
       ville: "",
       pays: "",
       num_contribuable: "",
+      logo: null,
+      image_couverture: null,
     },
     validationSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
+      const formData = new FormData();
+      // Ajoute toutes les valeurs au FormData
+      Object.keys(values).forEach(key => {
+        if (values[key]) { // N'ajoute pas les champs null (comme image_couverture si non fournie)
+          formData.append(key, values[key]);
+        }
+      });
+
       try{
-        const response = await api.post('/profile/professionnel', values);
-        console.log(response.data);
+        // Laravel ne gère pas bien FormData avec PUT, on doit le "tricher" avec POST et _method
+        formData.append('_method', 'POST'); // ou 'PUT' si votre route est en PUT
+
+        const response = await api.post('/profile/professionnel', formData);
         toast.success("Profil complete avec success !", {
             duration: 3000,
         });
         resetForm();
-        navigate("/dashboardrecruteurprofil");
+        navigate("/dashboard");
       }catch(err){
         toast.error("Erreur de connexion", {
             description: `${err.response.data.message}` || "Email ou mot de passe incorrect. Veuillez réessayer.",
@@ -118,7 +177,7 @@ const CompletionEntreprise = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex flex-col pt-20">
       <Header />
       <div className="flex-grow flex flex-col lg:flex-row">
         {/* Section gauche */}
@@ -178,6 +237,8 @@ const CompletionEntreprise = () => {
             <InputField id="pays" label="Pays" formik={formik} icon={Globe} />
             <InputField id="num_contribuable" label="N° de Contribuable (NIU)" formik={formik} icon={Hash} />
             <TextAreaField id="description_entreprise" label="Description de l'entreprise" formik={formik} icon={Info} />
+            <FileField id="logo" label="Logo de l'entreprise" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." isRequired={true} />
+            <FileField id="image_couverture" label="Image de couverture (Optionnel)" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
           </div>
 
           {/* Bouton fixe en bas */}

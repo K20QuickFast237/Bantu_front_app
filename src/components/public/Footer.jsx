@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next'; // Ajout
 
 const Footer = () => {
   const { t } = useTranslation(); // Ajout
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   return (
     <>
       {/* Section Rejoignez l’écosystème (au-dessus du footer) */}
-      {token ? null : (
+      {token && user ? <></> : (
         <div className="relative z-20 -mb-15">
           <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
             <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">

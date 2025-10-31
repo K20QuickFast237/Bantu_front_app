@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Settings, LogOut, ChevronDown, MessageSquare, Globe } from 'lucide-react'; // Ajout Globe
+import { User, Settings, LogOut, ChevronDown, MessageSquare, Globe, Menu, X } from 'lucide-react'; // Ajout Globe, Menu, X
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n'; // Ajustez le chemin
@@ -12,6 +12,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
   const location = useLocation();
   const [isProfileMenuOpen, setProfileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false); // État dropdown langue
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const profileMenuRef = useRef(null);
   const { t } = useTranslation();
 
@@ -19,6 +20,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
     const handleClickOutside = (event) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target)) {
         setProfileMenuOpen(false);
+        // Ne pas fermer le menu mobile ici, il a sa propre logique
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -59,7 +61,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
   };
 
   return (
-    <header className="flex items-center justify-between py-4 px-10 bg-white shadow-md border-b border-gray-200">
+    <header className="relative flex items-center justify-between h-20 px-4 sm:px-10 bg-white shadow-md border-b border-gray-200">
       <div className="flex items-center space-x-8">
         <Link to="/candidatProfil" className="text-xl font-bold">
           <span className="text-green-500">Bantu</span><span className="text-red-500">Link</span>
@@ -70,13 +72,13 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
             <Link to="/rechercheOffre" className="hover:text-green-600 transition-colors">
               {t('header.findJob') || 'Trouver un job'} {/* Ajoutez 'findJob': 'Find a job' en EN si besoin */}
             </Link>
-            <Link to="/dashboard/candidate/jobs" className="hover:text-green-600 transition-colors">
+            <Link to="/all-companies" className="hover:text-green-600 transition-colors">
               {t('header.findCompany') || 'Trouver une entreprise'}
             </Link>
           </nav>
         )}
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-1 sm:space-x-2">
         <button
           onClick={() => navigate('/candidat_chat')}
           className="p-2 text-gray-600 hover:text-black relative transition-colors rounded-full hover:bg-gray-100"
@@ -86,7 +88,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
         </button>
 
         {/* Dropdown Langue */}
-        <div className="relative">
+        <div className="relative z-50">
           <button
             onClick={() => setIsLangOpen(!isLangOpen)}
             className="flex items-center space-x-1 p-2 rounded-full hover:bg-gray-100 transition-colors"
@@ -161,7 +163,36 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Hamburger Menu Icon */}
+        {!hideNavLinks && (
+          <div className="md:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && !hideNavLinks && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 w-full bg-white shadow-lg md:hidden z-50"
+          >
+            <nav className="flex flex-col p-4 space-y-2">
+              <Link to="/rechercheOffre" className="px-3 py-2 rounded-md hover:bg-gray-100 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t('header.findJob') || 'Trouver un job'}</Link>
+              <Link to="/all-companies" className="px-3 py-2 rounded-md hover:bg-gray-100 transition-colors" onClick={() => setMobileMenuOpen(false)}>{t('header.findCompany') || 'Trouver une entreprise'}</Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
