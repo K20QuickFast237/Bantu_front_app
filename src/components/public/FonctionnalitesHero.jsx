@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 
 const FonctionnalitesHero = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative w-full py-18 bg-[#f4f7fb] overflow-hidden">
       {/* Rectangle vert avec texte centré */}
@@ -58,7 +60,12 @@ const FonctionnalitesHero = () => {
           BantuLink is your launchpad.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="flex items-center gap-2 px-7 py-3 bg-[#1a2979] text-white font-semibold rounded-xl shadow hover:bg-[#16205c] transition">
+          <button
+            className="flex items-center gap-2 px-7 py-3 bg-[#1a2979] text-white font-semibold rounded-xl shadow hover:bg-[#16205c] transition"
+            onClick={() => {
+              navigate('/login');
+            }}
+          >
             {/* Briefcase icon with white border */}
             <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
@@ -68,7 +75,13 @@ const FonctionnalitesHero = () => {
             </span>
             Try BantuHire
           </button>
-          <button className="flex items-center gap-2 px-7 py-3 bg-[#ffb400] text-white font-semibold rounded-xl shadow hover:bg-[#e09e00] transition">
+
+          <button
+            className="flex items-center gap-2 px-7 py-3 bg-[#ffb400] text-white font-semibold rounded-xl shadow hover:bg-[#e09e00] transition"
+            onClick={() => {
+              window.location.href = import.meta.env.VITE_MARKETPLACE_URL;
+            }}
+          >
             {/* Market/cart icon with white border */}
             <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
@@ -80,6 +93,7 @@ const FonctionnalitesHero = () => {
             </span>
             Explore BantuMarket
           </button>
+
         </div>
       </div>
     </section>

@@ -79,24 +79,24 @@
     },
     "whoWeAre": {
       "title": "Who We Are?",
-      "description": "Bantulink is not just a digital platform. It's the technological revolution transforming Francophone Africa by connecting talents with opportunities and simplifying online commerce for everyone. We create digital bridges between employers and candidates, sellers and buyers."
+      "description": "Bantulink is not just a digital platform. It's the technological revolution transforming Africa by connecting talents with opportunities and simplifying online commerce for everyone. We create digital bridges between employers and candidates, sellers and buyers."
     },
     "mission": {
       "title": "Our Mission",
-      "description": "Connect talents with opportunities and simplify online commerce for all Francophone Africans. We create digital bridges between employers and candidates, sellers and buyers."
+      "description": "Connect talents with opportunities and simplify online commerce for all Africans. We create digital bridges between employers and candidates, sellers and buyers."
     },
     "vision": {
       "title": "Our Vision",
-      "description": "Become the reference super app in Francophone Africa, facilitating employment and commerce for millions of users by 2027."
+      "description": "Become the reference super app in Africa, facilitating employment and commerce for millions of users by 2027."
     },
     "values": {
       "innovation": {
         "title": "Innovation",
-        "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+        "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Africa."
       },
       "inclusion": {
         "title": "Inclusion",
-        "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of background, has equal access to opportunities."
+        "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every African, regardless of background, has equal access to opportunities."
       },
       "excellence": {
         "title": "Excellence",
@@ -394,11 +394,11 @@
     },
     "innovation": {
       "title": "Innovation",
-      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Africa."
     },
     "inclusion": {
       "title": "Inclusion",
-      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of their educational level or resources, can access digital opportunities."
+      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every African, regardless of their educational level or resources, can access digital opportunities."
     },
     "excellence": {
       "title": "Excellence",
@@ -424,7 +424,7 @@
   },
   "partners": {
     "tnkTitle": "TNK SYNERGIES LTD: the company revolutionizing digital Africa",
-    "tnkDesc": "TNK SYNERGIES LTD is not a tech company like the others. Founded in 2024 by a team of experienced African entrepreneurs, our company has set itself the mission of creating the digital solutions that Francophone Africa lacks.",
+    "tnkDesc": "TNK SYNERGIES LTD is not a tech company like the others. Founded in 2024 by a team of experienced African entrepreneurs, our company has set itself the mission of creating the digital solutions that Africa lacks.",
     "website": "Website:",
     "linkedin": "LinkedIn:",
     "facebook": "Facebook:",
@@ -461,7 +461,7 @@
     "role5": "Seller",
     "appPreview": {
       "title": "Take a look inside<br/>our SuperApp",
-      "description": "Problem aimed at solving the silos between employment, local commerce, and skill development in Francophone Africa."
+      "description": "Problem aimed at solving the silos between employment, local commerce, and skill development in Africa."
     }
   }
 }

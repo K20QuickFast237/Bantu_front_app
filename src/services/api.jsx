@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://vps-8d77be49.vps.ovh.net/api',
+  baseURL: 'https://app.bantulink.tech/api',
 });
 
 api.interceptors.request.use((config) => {

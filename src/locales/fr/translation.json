@@ -79,24 +79,24 @@
     },
     "whoWeAre": {
       "title": "Qui sommes-nous ?",
-      "description": "Bantulink n'est pas qu'une simple plateforme numérique. C'est la révolution technologique qui transforme l'Afrique francophone en connectant les talents avec les opportunités et en simplifiant le commerce en ligne pour tous. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
+      "description": "Bantulink n'est pas qu'une simple plateforme numérique. C'est la révolution technologique qui transforme l'Afrique en connectant les talents avec les opportunités et en simplifiant le commerce en ligne pour tous. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
     },
     "mission": {
       "title": "Notre Mission",
-      "description": "Connecter les talents avec les opportunités et simplifier le commerce en ligne pour tous les africains francophones. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
+      "description": "Connecter les talents avec les opportunités et simplifier le commerce en ligne pour tous les africains. Nous créons des ponts numériques entre employeurs et candidats, vendeurs et acheteurs."
     },
     "vision": {
       "title": "Notre Vision",
-      "description": "Devenir la super application de référence en Afrique francophone, facilitant l'emploi et le commerce pour des millions d'utilisateurs d'ici 2027."
+      "description": "Devenir la super application de référence en Afrique, facilitant l'emploi et le commerce pour des millions d'utilisateurs d'ici 2027."
     },
     "values": {
       "innovation": {
         "title": "Innovation",
-        "description": "L'innovation est dans notre ADN. Nous ne suivons pas seulement les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+        "description": "L'innovation est dans notre ADN. Nous ne suivons pas seulement les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique."
       },
       "inclusion": {
         "title": "Inclusion",
-        "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son parcours, a un accès égal aux opportunités."
+        "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain, quel que soit son parcours, a un accès égal aux opportunités."
       },
       "excellence": {
         "title": "Excellence",
@@ -386,11 +386,11 @@
     },
     "innovation": {
       "title": "Innovation",
-      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique."
     },
     "inclusion": {
       "title": "Inclusion",
-      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son niveau éducatif ou ses ressources, peut accéder aux opportunités numériques."
+      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain, quel que soit son niveau éducatif ou ses ressources, peut accéder aux opportunités numériques."
     },
     "excellence": {
       "title": "Excellence",
@@ -416,7 +416,7 @@
   },
   "partners": {
     "tnkTitle": "TNK SYNERGIES LTD : l'entreprise qui révolutionne l'Afrique numérique",
-    "tnkDesc": "TNK SYNERGIES LTD n'est pas une entreprise technologique comme les autres. Fondée en 2024 par une équipe d'entrepreneurs africains expérimentés, notre société s'est donnée pour mission de créer les solutions numériques qui manquent à l'Afrique francophone.",
+    "tnkDesc": "TNK SYNERGIES LTD n'est pas une entreprise technologique comme les autres. Fondée en 2024 par une équipe d'entrepreneurs africains expérimentés, notre société s'est donnée pour mission de créer les solutions numériques qui manquent à l'Afrique.",
     "website": "Site web :",
     "linkedin": "LinkedIn :",
     "facebook": "Facebook :",
@@ -461,7 +461,7 @@
     "role5": "Vendeuse",
     "appPreview": {
       "title": "Jetez un œil à l'intérieur de<br/>notre SuperApp",
-      "description": "Problème visant à résoudre le cloisonnement entre emploi, commerce local et développement de compétences en Afrique francophone."
+      "description": "Problème visant à résoudre le cloisonnement entre emploi, commerce local et développement de compétences en Afrique."
     }
   }
 }
