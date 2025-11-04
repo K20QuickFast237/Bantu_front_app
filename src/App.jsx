@@ -44,6 +44,8 @@ import Settings from "./components/app/Dash/Settings";
 import CandidatureDetails from "./pages/app/CandidatureDetails";
 import JobPostDetail from "./pages/app/JobPostDetail";
 import CandidateChat from "./pages/app/CandidateChat";
+import MesCandidatures from "./pages/app/MesCandidatures";
+import OffresFavorites from "./pages/app/OffresFavorites";
 
 const App = () => {
   return (
@@ -82,6 +84,8 @@ const App = () => {
           <Route path="/jobApplicationform/:id" element={<JobApplicationForm/>}/>
           <Route path="/candidat_chat" element={<CandidateChat />} />
           <Route path="/candidatProfil" element={<CandidatProfil/>}/>
+          <Route path="/mesCandidatures" element={<MesCandidatures/>}/>
+          <Route path="/offresFavorites" element={<OffresFavorites/>}/>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/job-application" element={<JobApplicationManagement />} />

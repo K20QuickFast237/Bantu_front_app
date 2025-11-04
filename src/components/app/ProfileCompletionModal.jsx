@@ -32,9 +32,17 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
     titre_professionnel: Yup.string().required('Le titre professionnel est requis'),
     resume_profil: Yup.string().required('Le résumé du profil est requis'),
     // La validation du CV et de la lettre est maintenant conditionnelle
-    cv_link: Yup.string().url('URL CV invalide'),
-    lettre_motivation_link: Yup.string().url('URL lettre invalide'),
-    is_visible: Yup.string().oneOf(['0', '1']).nullable(),
+    cv_file: Yup.mixed().when('$particulier', {
+      is: (particulier) => !particulier?.cv_file, // Requis seulement si aucun CV n'existe
+      then: (schema) => schema.required('Le CV est requis.'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    lettre_motivation_file: Yup.mixed().when('$particulier', {
+      is: (particulier) => !particulier?.lettre_motivation_file, // Requis seulement si aucune lettre n'existe
+      then: (schema) => schema.required('La lettre de motivation est requise.'),
+      otherwise: (schema) => schema.nullable(),
+    }),
+    is_visible: Yup.boolean(),
   });
 
   const formik = useFormik({
@@ -47,22 +55,36 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
       titre_professionnel: particulier?.titre_professionnel || '',
       resume_profil: particulier?.resume_profil || '',
       image_profil: particulier?.image_profil || '',
-      cv_link: particulier?.cv_link || '',
-      lettre_motivation_link: particulier?.lettre_motivation_link || '',
-      is_visible: particulier?.is_visible ? String(particulier.is_visible) : '0',
+      cv_file: particulier?.cv_file || '',
+      lettre_motivation_file: particulier?.lettre_motivation_file || '',
+      is_visible: particulier?.is_visible == true, // Initialisation en booléen
+    },
+    context: { // On passe l'objet 'particulier' au contexte de validation
+      particulier: particulier
     },
     validationSchema,
     enableReinitialize: true,
     onSubmit: async (values) => {
       setIsSubmitting(true);
       
+      // 1. Créer une copie des valeurs pour ne pas modifier l'état de Formik directement
+      const valuesToSubmit = { ...values };
+
+      // 2. Retirer les champs de fichiers texte s'il y a un nouveau fichier à envoyer
+      if (imageFile) delete valuesToSubmit.image_profil;
+      if (cvFile) delete valuesToSubmit.cv_file;
+      if (lettreFile) delete valuesToSubmit.lettre_motivation_file;
+
       const formData = new FormData();
-      Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+      // Convertir le booléen is_visible en 1 ou 0 pour le backend
+      valuesToSubmit.is_visible = values.is_visible ? 1 : 0;
+
+      Object.entries(valuesToSubmit).forEach(([key, value]) => formData.append(key, value));
       
+      // 3. Ajouter uniquement les nouveaux fichiers (s'ils existent)
       if (imageFile) formData.append('image_profil', imageFile);
       if (cvFile) formData.append('cv_file', cvFile);
       if (lettreFile) formData.append('lettre_motivation_file', lettreFile);
-      
       try {
         let response;
         // Si un profil 'particulier' existe déjà, on met à jour (PUT)
@@ -108,6 +130,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   const handleCvUpload = (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
+      formik.setFieldValue('cv_file', file); // Mettre à jour Formik
       setCvFile(file);
     }
   };
@@ -115,6 +138,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   const handleLettreUpload = (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
+      formik.setFieldValue('lettre_motivation_file', file); // Mettre à jour Formik
       setLettreFile(file);
     }
   };
@@ -205,8 +229,8 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
                 </div>
               )}
             </div>
-            {particulier?.cv_link && !cvFile && (
-              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={`${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>            )}
+            {particulier?.cv_file && !cvFile && (
+              <p className="text-gray-500 text-xs mt-1">CV actuel : <a href={`${particulier.cv_file}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier le remplacera.</p>            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Lettre de motivation</label>
@@ -221,12 +245,15 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
                 </div>
               )}
             </div>
-            {particulier?.lettre_motivation_link && !lettreFile && (
-              <p className="text-gray-500 text-xs mt-1">Lettre actuelle : <a href={`${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.</p>            )}
+            {particulier?.lettre_motivation_file && !lettreFile && (
+              <p className="text-gray-500 text-xs mt-1">Lettre actuelle : <a href={`${particulier.lettre_motivation_file}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">voir</a>. Uploader un nouveau fichier la remplacera.</p>            )}
           </div>
           <div>
             <label className="flex items-center space-x-2">
-              <input type="checkbox" checked={formik.values.is_visible === '1'} onChange={e => formik.setFieldValue('is_visible', e.target.checked ? '1' : '0')} className="rounded" />
+              <input type="checkbox" 
+                checked={formik.values.is_visible} 
+                onChange={e => formik.setFieldValue('is_visible', e.target.checked)} 
+                className="rounded" />
               <span className="text-sm font-medium text-gray-700">Profil visible pour les recruteurs</span>
             </label>
           </div>

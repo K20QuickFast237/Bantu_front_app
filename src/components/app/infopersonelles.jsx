@@ -4,137 +4,20 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import { toast } from 'sonner';
+import { useProfileCompletion } from '@/hooks/useProfileCompletion'; // Importer le hook
 import { Switch } from '@radix-ui/react-switch';
 
 const Infopersonelles = ({ onEditClick }) => {
-  const { user, particulier, token } = useAuth();
-  const [profileCompletion, setProfileCompletion] = useState(0);
-  const [profileData, setProfileData] = useState({
-    infosPersonnelles: 0,
-    competences: 0,
-    experiences: 0,
-    formations: 0
-  });
+  const { user, particulier } = useAuth();
+  const { profileCompletion, profileData } = useProfileCompletion(); // Utiliser le hook
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
-
-  useEffect(() => {
-    // Calcul du pourcentage de complétion pour les infos personnelles
-    const calculatePersonalInfoCompletion = () => {
-      if (!particulier) return 0;
-      
-      const requiredFields = [
-        'date_naissance',
-        'telephone',
-        'adresse',
-        'ville',
-        'pays',
-        'titre_professionnel',
-        'resume_profil',
-        'cv_link',
-        'lettre_motivation_link',
-        'image_profil',
-        'is_visible',
-      ];
-      
-      const filledFields = requiredFields.filter(field => {
-        return particulier[field] && particulier[field].toString().trim() !== '';
-      });
-      
-      return Math.round((filledFields.length / requiredFields.length) * 100);
-    };
-
-    // Récupération des compétences
-    const fetchCompetences = async () => {
-      try {
-        if (!user?.id) return;
-        const response = await api.get(`/user/${user.id}/skills`);
-        const competences = Array.isArray(response.data) ? response.data : [];
-        return competences.length > 0 ? 100 : 0;
-      } catch (error) {
-        console.error('Erreur lors du chargement des compétences:', error);
-        return 0;
-      }
-    };
-
-    // Récupération des expériences
-    const fetchExperiences = async () => {
-      try {
-        const response = await api.get('/experiences');
-        const experiences = Array.isArray(response.data) ? response.data : [];
-        return experiences.length > 0 ? 100 : 0;
-      } catch (error) {
-        console.error('Erreur lors du chargement des expériences:', error);
-        return 0;
-      }
-    };
-
-    // Récupération des formations
-    const fetchFormations = async () => {
-      try {
-        const response = await api.get('/formations');
-        const formations = Array.isArray(response.data) ? response.data : [];
-        return formations.length > 0 ? 100 : 0;
-      } catch (error) {
-        console.error('Erreur lors du chargement des formations:', error);
-        return 0;
-      }
-    };
-
-    const updateProfileCompletion = async () => {
-      const infosPersonnellesCompletion = calculatePersonalInfoCompletion();
-      const competencesCompletion = await fetchCompetences();
-      const experiencesCompletion = await fetchExperiences();
-      const formationsCompletion = await fetchFormations();
-
-      const newProfileData = {
-        infosPersonnelles: infosPersonnellesCompletion,
-        competences: competencesCompletion,
-        experiences: experiencesCompletion,
-        formations: formationsCompletion
-      };
-
-      setProfileData(newProfileData);
-
-      // Calcul du pourcentage global (moyenne des 4 sections)
-      const totalCompletion = Math.round(
-        (infosPersonnellesCompletion + competencesCompletion + experiencesCompletion + formationsCompletion) / 4
-      );
-      
-      setProfileCompletion(totalCompletion);
-    };
-
-    if (user?.id) {
-      updateProfileCompletion();
-    }
-
-    // Mettre en place un écouteur d'événements pour les mises à jour du profil
-    const profileUpdateListener = () => {
-      updateProfileCompletion();
-    };
-
-    // Écouter les événements personnalisés pour les mises à jour
-    window.addEventListener('profile-updated', profileUpdateListener);
-    window.addEventListener('competences-updated', profileUpdateListener);
-    window.addEventListener('experiences-updated', profileUpdateListener);
-    window.addEventListener('formations-updated', profileUpdateListener);
-
-    // Nettoyer les écouteurs d'événements lors du démontage
-    return () => {
-      window.removeEventListener('profile-updated', profileUpdateListener);
-      window.removeEventListener('competences-updated', profileUpdateListener);
-      window.removeEventListener('experiences-updated', profileUpdateListener);
-      window.removeEventListener('formations-updated', profileUpdateListener);
-    };
-  }, [user, particulier]);
 
   const handleVisibilityToggle = async (checked) => {
     setIsUpdatingVisibility(true);
     const newVisibility = checked ? 1 : 0;
 
     try {
-      const response = await api.put('/profile/particulier', { is_visible: newVisibility }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await api.put('/profile/particulier', { is_visible: newVisibility });
 
       // Déclenche un événement pour que la page parente (Profil.jsx) rafraîchisse les données.
       window.dispatchEvent(new CustomEvent('profile-updated'));
@@ -212,18 +95,18 @@ const Infopersonelles = ({ onEditClick }) => {
                   <Mail size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                   <span className="truncate">{particulier.resume_profil}</span>
                 </div>
-                {particulier.cv_link && (
+                {particulier.cv_file && (
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={`/storage/${particulier.cv_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <a href={`/storage/${particulier.cv_file}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir le CV
                     </a>
                   </div>
                 )}
-                {particulier.lettre_motivation_link && (
+                {particulier.lettre_motivation_file && (
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={`/storage/${particulier.lettre_motivation_link}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <a href={`/storage/${particulier.lettre_motivation_file}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir la lettre de motivation
                     </a>
                   </div>

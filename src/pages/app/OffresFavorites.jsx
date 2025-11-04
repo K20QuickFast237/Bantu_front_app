@@ -2,40 +2,33 @@ import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
 import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
-import { useNavigate } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Eye, Star } from 'lucide-react';
 import HeaderProfil from '@/components/app/HeaderProfil';
 import Footer from '@/components/public/Footer';
 
-const MesCandidatures = () => {
+const OffresFavorites = () => {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    const statusOptions = {
-        'candidature': { label: 'Envoyée', color: 'bg-gray-400' },
-        'en_revision': { label: 'En révision', color: 'bg-yellow-500' },
-        'preselectionne': { label: 'Présélectionné', color: 'bg-blue-500' },
-        'invitation_entretien': { label: 'Entretien', color: 'bg-purple-500' },
-        'rejete': { label: 'Rejeté', color: 'bg-red-500' },
-        'embauche': { label: 'Embauché', color: 'bg-green-500' },
-    };
-
     useEffect(() => {
-        const fetchApplications = async () => {
+        const fetchFavoriteOffers = async () => {
             setLoading(true);
             try {
-                const response = await api.get('/candidatures/me');
-                setApplications(response.data || []);
+                // NOTE: J'utilise la route /favoris pour récupérer les offres favorites.
+                const response = await api.get('/favoris');
+                // La réponse est une liste de favoris, chaque favori contient une offre.
+                setApplications(response.data.data || []);
             } catch (error) {
-                toast.error("Erreur lors du chargement de vos candidatures.");
-                console.error("Erreur fetch candidatures:", error);
+                toast.error("Erreur lors du chargement de vos candidatures favorites.");
+                console.error("Erreur fetch candidatures favorites:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchApplications();
+        fetchFavoriteOffers();
     }, []);
 
     return (
@@ -44,18 +37,19 @@ const MesCandidatures = () => {
             <div className="min-h-full bg-gray-50 p-6">
                 <main className="max-w-7xl mx-auto">
                     <div className="mb-8">
-                        <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                            Mes Candidatures
-                        </h1>
+                        <div className="flex items-center gap-3 mb-6">
+                            <Star className="w-8 h-8 text-yellow-500" />
+                            <h1 className="text-3xl font-bold text-gray-800">
+                                Mes Offres Favorites
+                            </h1>
+                        </div>
 
                         <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-sm">
                             <table className="w-full">
                                 <thead className="bg-gray-100">
                                     <tr className="border-b border-gray-300">
                                         <th className="px-6 py-3 text-left font-semibold text-gray-700">Poste</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Entreprise</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Date de candidature</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Statut</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Entreprise</th>                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Lieu</th>
                                         <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
@@ -67,7 +61,7 @@ const MesCandidatures = () => {
                                     <tbody>
                                         {applications.length === 0 ? (
                                             <tr>
-                                                <td colSpan="5" className="px-6 py-10 text-center text-gray-500">Vous n'avez postulé à aucune offre pour le moment.</td>
+                                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500">Vous n'avez aucune offre en favoris pour le moment.</td>
                                             </tr>
                                         ) : (
                                             applications.map((app, idx) => {
@@ -75,23 +69,17 @@ const MesCandidatures = () => {
                                                 return (
                                                     <tr key={app.id} className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}>
                                                         <td className="px-6 py-4 text-gray-800 font-medium">
-                                                            {app.offre?.titre_poste || 'N/A'}
+                                                            <Link to={`/jobOffers/${offre.id}`} className="hover:underline">{offre.titre_poste || 'N/A'}</Link>
                                                         </td>
                                                         <td className="px-6 py-4 text-gray-600">
-                                                            {app.offre?.employeur?.nom_entreprise || 'N/A'}
+                                                            {offre.employeur?.nom_entreprise || 'N/A'}
                                                         </td>
                                                         <td className="px-6 py-4 text-gray-600">
-                                                            {app.created_at ? new Date(app.created_at).toLocaleDateString('fr-FR') : 'N/A'}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <div className="flex items-center gap-2">
-                                                                <div className={`w-3 h-3 rounded-full ${statusInfo.color}`}></div>
-                                                                <span className="text-gray-700 capitalize">{statusInfo.label}</span>
-                                                            </div>
+                                                            {offre.ville || 'N/A'}, {offre.pays || 'N/A'}
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             <button
-                                                                onClick={() => navigate(`/job/${app.offre_id}`)}
+                                                                onClick={() => navigate(`/jobOffers/${offre.id}`)}
                                                                 className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
                                                                 title="Voir l'offre d'emploi"
                                                             >
@@ -115,4 +103,4 @@ const MesCandidatures = () => {
     );
 };
 
-export default MesCandidatures;
+export default OffresFavorites;

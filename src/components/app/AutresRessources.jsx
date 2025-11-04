@@ -117,12 +117,12 @@ const AutresRessources = () => {
                   <input
                     id="behance_link"
                     type="text"
-                    {...formik.getFieldProps('linkedin_link')}
+                    {...formik.getFieldProps('behance_link')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://linkedin.com/in/votre-profil"
+                    placeholder="https://behance.com/in/votre-profil"
                   />
-                  {formik.touched.linkedin_link && formik.errors.linkedin_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.linkedin_link}</p>
+                  {formik.touched.behance_link && formik.errors.behance_link ? (
+                    <p className="text-red-500 text-sm mt-1">{formik.errors.behance_link}</p>
                   ) : null}
                 </div>
                 <div>
