@@ -7,7 +7,7 @@ const FonctionnalitesBusiness = () => {
   return (
     <section className="relative w-full bg-white py-16 mb-18">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
+        {/* En-tête */}
         <div className="flex flex-col items-center mb-10">
           <span className="bg-[#F59E0B] text-white text-xs font-semibold px-4 py-1 rounded-full mb-4">
             BantuMarket
@@ -19,9 +19,9 @@ const FonctionnalitesBusiness = () => {
             {t('business.subtitle')}
           </p>
         </div>
-        {/* Grid */}
+        {/* Grille */}
         <div className="grid grid-cols-1 md:grid-cols-1 gap-10">
-          {/* Online Store */}
+          {/* Boutique en ligne */}
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-1 bg-[#F59E0B] rounded-2xl flex items-center justify-center min-h-[180px] h-48 md:h-56 mb-4 md:mb-0">
               <span className="text-white text-xl md:text-2xl font-semibold text-center">
@@ -59,7 +59,7 @@ const FonctionnalitesBusiness = () => {
               </ul>
             </div>
           </div>
-          {/* Buyer Chat */}
+          {/* Chat Acheteur */}
           <div className="flex flex-col md:flex-row-reverse gap-8">
             <div className="flex-1 bg-[#F59E0B] rounded-2xl flex items-center justify-center min-h-[180px] h-48 md:h-56 mb-4 md:mb-0">
               <span className="text-white text-xl md:text-2xl font-semibold text-center">

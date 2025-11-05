@@ -52,6 +52,16 @@
     "passwordPlaceholder": "Enter your password",
     "confirmPasswordPlaceholder": "Confirm your password"
   },
+  "featuresHero": {
+    "appMockup": "App Mockup",
+    "title1": "All-in-One Power.",
+    "title2_part1": "Two Worlds.",
+    "title2_part2": "One App.",
+    "subtitle1": "From finding jobs to launching your business,",
+    "subtitle2": "BantuLink is your launchpad.",
+    "tryBantuHire": "Try BantuHire",
+    "exploreBantuMarket": "Explore BantuMarket"
+  },
   "category": {
     "title": "Browse By Category",
     "description": "Choose a category below to find specific help topics and frequently asked questions tailored to your needs.",
@@ -106,9 +116,10 @@
   },
   "aide": {
     "hero": {
-      "title": "Need Help?",
-      "subtitle": "How can we help you today?",
-      "searchPlaceholder": "Search for topics, keywords, or questions...",
+      "supportBadge": "24/7 Support Available",
+      "title": "BantuLink Help Center",
+      "subtitle": "Find answers to your questions and get the support you need. We're here to help you succeed on your journey.",
+      "searchPlaceholder": "Search for a topic or keyword...",
       "searchButton": "Search",
       "noResults": "No results found. Try another keyword.",
       "popularSearches": "Popular searches:",
@@ -135,6 +146,9 @@
       }
     },
     "topics": {
+      "title": "Popular Help Topics",
+      "subtitle": "Quick access to the most searched help topics and solutions from our community.",
+      "views": "views",
       "resetPassword": {
         "title": "How to reset my password?",
         "category": "Account and Login"
@@ -150,6 +164,43 @@
       "reportContent": {
         "title": "Report inappropriate content",
         "category": "Disputes and customer support"
+      }
+    },
+    "testimonials": {
+      "title": "What Our Users Say",
+      "subtitle": "Real feedback from BantuLink users about their experience with our help center and support.",
+      "sarah": {
+        "name": "Sarah Johnson",
+        "role": "Freelancer",
+        "review": "The help center made it very easy to understand how to set up my profile and start getting clients. Excellent resource!"
+      },
+      "michael": {
+        "name": "Michael Chen",
+        "role": "Business Owner",
+        "review": "Quick answers to all my questions about payments and billing. The search function works perfectly."
+      },
+      "amara": {
+        "name": "Amara Okafor",
+        "role": "Job Seeker",
+        "review": "I found exactly what I needed to complete my applications. The step-by-step guides are very helpful."
+      }
+    },
+    "contact": {
+      "title": "Need Help?",
+      "subtitle": "Can't find what you're looking for? Our dedicated support team is ready to help with any questions or concerns you may have.",
+      "liveChat": "Start a live chat",
+      "emailSupport": "Email Support",
+      "fastResponse": {
+        "title": "Fast Response",
+        "desc": "Average response time under 2 hours"
+      },
+      "expertSupport": {
+        "title": "Expert Support",
+        "desc": "Skilled team ready to help"
+      },
+      "available247": {
+        "title": "Available 24/7",
+        "desc": "Round-the-clock assistance"
       }
     }
   },
@@ -207,11 +258,11 @@
     }
   },
   "faq": {
-     "form": {
-        "title": "I Have a Question For Bantulink",
-        "subtitle": "If you have questions, we will answer them.",
-        "subscribeSuccess": "Thank you for subscribing to our newsletter!"
-      },
+    "form": {
+      "title": "I Have a Question For Bantulink",
+      "subtitle": "If you have questions, we will answer them.",
+      "subscribeSuccess": "Thank you for subscribing to our newsletter!"
+    },
     "hero": {
       "title": "Maybe Your Question Has Been Answered, Check It",
       "whatIs": {
@@ -257,7 +308,7 @@
   "features": {
     "title": "FEATURES",
     "bantuHire": {
-      "title": "BantuHire — The Job Finds You",
+      "title": "BantuHire – The Job Finds You",
       "description": "The platform that connects talents and recruiters in one click.",
       "simplifiedSearch": {
         "title": "Simplified Search",
@@ -273,7 +324,7 @@
       }
     },
     "bantuMarket": {
-      "title": "BantuMarket — Commerce without borders",
+      "title": "BantuMarket – Commerce without borders",
       "description": "The platform that connects talents and recruiters in one click.",
       "customShop": {
         "title": "Custom Shop",

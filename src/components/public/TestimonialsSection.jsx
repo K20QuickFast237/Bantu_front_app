@@ -1,191 +1,121 @@
-import React, { useState } from 'react';
-import { Star } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next'; // Ajout
-import LeftArrowIcon from '../../assets/gauche.png';
-import RightArrowIcon from '../../assets/droite.png';
-import ReginaMilesImage from '../../assets/temoigne.png';
-import GraffittiRedIcon from '../../assets/Grafitti.png';
-import PhoneImage from '../../assets/telephone2.png';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout pour i18n
+
+// Icône pour les étoiles (SVG en ligne pour une flexibilité maximale et sans dépendance externe)
+const StarIcon = ({ className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="currentColor" 
+    className={className}
+  >
+    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.25l-6.18 3.25L7 14.14l-5-4.87 8.91-1.01L12 2z" />
+  </svg>
+);
+
+// Sous-composant pour chaque carte de témoignage
+const TestimonialCard = ({ initials, initialBgColor, name, role, reviewText }) => {
+  return (
+    <div className="bg-white rounded-xl border border-gray-100 p-6 flex flex-col items-start text-left 
+                  shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md h-full">
+      {/* En-tête de la carte (Avatar, Nom, Rôle) */}
+      <div className="flex items-center mb-4">
+        {/* Cercle de l'avatar avec initiales */}
+        <div 
+          className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mr-4 flex-shrink-0"
+          style={{ backgroundColor: initialBgColor }}
+        >
+          {initials}
+        </div>
+        <div>
+          <h3 className="text-base font-semibold text-gray-900 leading-tight">
+            {name}
+          </h3>
+          <p className="text-sm text-gray-600">
+            {role}
+          </p>
+        </div>
+      </div>
+
+      {/* Texte du témoignage */}
+      <p className="text-gray-700 text-sm leading-relaxed mb-4 flex-grow">
+        {reviewText}
+      </p>
+
+      {/* Étoiles d'évaluation */}
+      <div className="flex items-center space-x-0.5">
+        {[...Array(5)].map((_, i) => (
+          <StarIcon key={i} className="w-4 h-4 text-yellow-400" />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const TestimonialsSection = () => {
-  const { t } = useTranslation(); // Ajout
-  const [currentIndex, setCurrentIndex] = useState(0);
-
+  const { t } = useTranslation(); // Hook i18n
   const testimonials = [
     {
-      id: 1,
-      quote: t('testimonials.quote1'),
-      name: t('testimonials.name1'),
-      role: t('testimonials.role1'),
-      rating: 4,
+      initials: 'SJ',
+      initialBgColor: '#4A90E2', 
+      name: 'Sarah Johnson',
+      role: 'Freelancer',
+      reviewText: t('testimonials.quote1'), // Remplacement : assume clés existantes ou à ajouter si besoin ; ici statique traduit manuellement pour cohérence
     },
     {
-      id: 2,
-      quote: t('testimonials.quote2'),
-      name: t('testimonials.name2'),
-      role: t('testimonials.role2'),
-      rating: 5,
+      initials: 'MC',
+      initialBgColor: '#F5A623', 
+      name: 'Michael Chen',
+      role: 'Business Owner',
+      reviewText: t('testimonials.quote2'),
     },
     {
-      id: 3,
-      quote: t('testimonials.quote3'),
-      name: t('testimonials.name3'),
-      role: t('testimonials.role3'),
-      rating: 4,
+      initials: 'AO',
+      initialBgColor: '#7ED321', 
+      name: 'Amara Okafor',
+      role: 'Job Seeker',
+      reviewText: t('testimonials.quote3'),
     },
-    {
-      id: 4,
-      quote: t('testimonials.quote4'),
-      name: t('testimonials.name5'), // Correction: name4 -> name4 (erreur dans original ?)
-      role: t('testimonials.role4'),
-      rating: 5,
-    },
-    {
-      id: 5,
-      quote: t('testimonials.quote5'),
-      name: t('testimonials.name5'),
-      role: t('testimonials.role5'),
-      rating: 4,
-    },
-  ];
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
-
-  const visibleTestimonials = [
-    testimonials[currentIndex % testimonials.length],
-    testimonials[(currentIndex + 1) % testimonials.length],
-    testimonials[(currentIndex + 2) % testimonials.length],
   ];
 
   return (
-    <>
     <motion.section
                       initial={{ opacity: 0, y: 50 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
                       transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-      <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
-        
-        <img src={GraffittiRedIcon} alt="Decorative lines" className="h-17 w-16 mt-[-40px] ml-90" />
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-            <h2 className="text-4xl lg:text-3xl font-bold text-gray-800 text-center md:text-left leading-tight md:max-w-lg mb-8 md:mb-0"
-               dangerouslySetInnerHTML={{ __html: t('testimonials.title') }} // Pour gérer les <br/>
-            />
-            <div className="flex space-x-4">
-              <motion.button
-                className="p-3 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200"
-                onClick={handlePrev}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <img src={LeftArrowIcon} alt="Previous" className="w-6 h-6" />
-              </motion.button>
-              <motion.button
-                className="p-3 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200"
-                onClick={handleNext}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <img src={RightArrowIcon} alt="Next" className="w-6 h-6" />
-              </motion.button>
-            </div>
-          </div>
+    <section 
+      className="py-16 sm:py-16 px-4 sm:px-6 lg:px-8"
+      // Dégradé ultra-subtil du fond : léger bleu -> léger gris -> léger rouge/orange
+      style={{
+        background: 'linear-gradient(to right, #E0E7FF 0%, #F5F7FA 50%, #FFF5ED 100%)' 
+      }}
+    >
+      <div className="max-w-7xl mx-auto text-center">
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+          {t('aide.testimonials.title')} {/* Remplacement */}
+        </h2>
+        <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
+          {t('aide.testimonials.description')} {/* Remplacement */}
+        </p>
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.5, ease: 'easeInOut' }}
-            >
-              {visibleTestimonials.map((testimonial) => (
-                <motion.div
-                  key={testimonial.id}
-                  className="bg-white rounded-lg shadow-lg p-8 flex flex-col justify-between h-full"
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                  <div className="mb-6">
-                    <span className="text-6xl text-blue-600 font-serif leading-none block relative -top-4 -left-2">“</span>
-                    <p className="text-gray-700 text-lg leading-relaxed">
-                      {testimonial.quote}
-                    </p>
-                  </div>
-                  <hr className="border-gray-300 mb-1" />
-                  <div>
-                    <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-blue-600 flex-shrink-0">
-                        <img src={ReginaMilesImage} alt={testimonial.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-gray-800 text-lg">{testimonial.name}</p>
-                        <p className="text-gray-600 text-sm">{testimonial.role}</p>
-                      </div>
-                    </div>
-                    <div className="flex justify-center md:justify-start">
-                      {Array.from({ length: 5 }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {testimonials.map((testimonial, index) => (
+            <TestimonialCard
+              key={index}
+              initials={testimonial.initials}
+              initialBgColor={testimonial.initialBgColor}
+              name={testimonial.name}
+              role={testimonial.role}
+              reviewText={testimonial.reviewText}
+            />
+          ))}
         </div>
-      </section>
-
-      <section className="bg-blue-600 py-13 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-24 h-24 bg-blue-500 rounded-full opacity-30 blur-xl -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-32 h-32 bg-blue-700 rounded-full opacity-30 blur-xl translate-x-1/2 translate-y-1/2"></div>
-        <div className="absolute top-1/4 right-1/4 w-16 h-16 bg-pink-400 rounded-full opacity-40 blur-lg"></div>
-        <div className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-purple-400 rounded-full opacity-40 blur-lg"></div>
-
-        <motion.div
-          className="relative z-10 flex flex-col items-center text-white text-center"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        >
-          <h3 className="text-3xl sm:text-3xl font-medium mb-4"
-             dangerouslySetInnerHTML={{ __html: t('testimonials.appPreview.title') }} // Pour <br/>
-          >
-          </h3>
-          <p className="text-lg mb-10 max-w-2xl">
-            {t('testimonials.appPreview.description')}
-          </p>
-          <motion.div
-            className="relative w-full max-w-2xl flex justify-center items-end"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <img
-              src={PhoneImage}
-              alt="SuperApp mobile interface"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto relative z-10"
-            />
-          </motion.div>
-        </motion.div>
-      </section>
-      </motion.section>
-    </>
+      </div>
+    </section>
+    </motion.section>
   );
 };
 

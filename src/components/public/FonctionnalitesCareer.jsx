@@ -1,28 +1,32 @@
 import React from "react";
-
-const features = [
-  {
-    title: "Smart Job Search",
-    desc: "Find offers tailored to your profile with our AI-powered matching algorithm that learns your preferences.",
-  },
-  {
-    title: "Real-time chat",
-    desc: "Talk to recruiters instantly and get immediate feedback on your applications and interview requests.",
-  },
-  {
-    title: "Video Interviews",
-    desc: "Get hired from your couch with seamless video interviews integrated directly into the platform.",
-  },
-  {
-    title: "Skill Certifications",
-    desc: "Validate your skills, stand out from the crowd with verified certifications and skill assessments.",
-  },
-];
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const FonctionnalitesCareer = () => {
+  const { t } = useTranslation(); // Hook i18n
+  
+  // Définit les clés de traduction existantes à mapper
+  const careerFeatures = [
+    {
+      titleKey: "career.smartSearch.title",
+      descKey: "career.smartSearch.desc",
+    },
+    {
+      titleKey: "career.realTimeChat.title",
+      descKey: "career.realTimeChat.desc",
+    },
+    {
+      titleKey: "career.videoInterviews.title",
+      descKey: "career.videoInterviews.desc",
+    },
+    {
+      titleKey: "career.skillCertifications.title",
+      descKey: "career.skillCertifications.desc",
+    },
+  ];
+
   return (
     <section className="relative w-full bg-[#EBF4FF] py-14 overflow-hidden">
-      {/* Vague top */}
+      {/* Vague du haut */}
       <div className="absolute top-0 left-0 w-full z-0 py-4 px-10">
         <svg
           className="w-full h-[48px] md:h-[120px]"
@@ -43,34 +47,34 @@ const FonctionnalitesCareer = () => {
             BantuHire
           </span>
           <h2 className="text-2xl md:text-3xl font-extrabold text-[#1a2979] text-center mb-2">
-            Your Career Journey Starts Here
+            {t('career.title')}
           </h2>
           <p className="text-gray-500 text-center max-w-2xl">
-            Connect with opportunities, showcase your skills, and land your dream job with intelligent matching.
+            {t('career.subtitle')}
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-14">
-          {features.map((f, idx) => (
+          {careerFeatures.map((f, idx) => (
             <div
-              key={f.title}
+              key={f.titleKey} // Utilise la clé de titre comme clé unique
               className="bg-white rounded-2xl shadow-md p-8 flex flex-col items-start"
             >
               <div className="w-full mb-4">
                 <div className="bg-[#223e88] rounded-xl w-full h-48 flex items-center justify-center">
                   <span className="text-white text-xl md:text-2xl font-semibold text-center">
-                    {f.title}
+                    {t(f.titleKey)}
                   </span>
                 </div>
               </div>
               <div>
-                <h3 className="text-[#223e88] font-bold mb-1">{f.title}</h3>
-                <p className="text-gray-500 text-sm">{f.desc}</p>
+                <h3 className="text-[#223e88] font-bold mb-1">{t(f.titleKey)}</h3>
+                <p className="text-gray-500 text-sm">{t(f.descKey)}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
-      {/* Vague bottom */}
+      {/* Vague du bas */}
       <div className="absolute bottom-0 left-0 w-full z-0 pt-4 px-10">
         <svg
           className="w-full h-[48px] md:h-[80px]"

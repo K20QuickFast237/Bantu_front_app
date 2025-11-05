@@ -52,6 +52,16 @@
     "passwordPlaceholder": "Entrez votre mot de passe",
     "confirmPasswordPlaceholder": "Confirmez votre mot de passe"
   },
+  "featuresHero": {
+    "appMockup": "Maquette de l'Application",
+    "title1": "Toute la Puissance en Un.",
+    "title2_part1": "Deux Mondes.",
+    "title2_part2": "Une Seule App.",
+    "subtitle1": "De la recherche d'emploi au lancement de votre entreprise,",
+    "subtitle2": "BantuLink est votre tremplin.",
+    "tryBantuHire": "Essayer BantuHire",
+    "exploreBantuMarket": "Explorer BantuMarket"
+  },
   "category": {
     "title": "Parcourir Par Catégorie",
     "description": "Choisissez une catégorie ci-dessous pour trouver des sujets d'aide spécifiques et des questions fréquemment posées adaptées à vos besoins.",
@@ -106,9 +116,10 @@
   },
   "aide": {
     "hero": {
-      "title": "Besoin d'aide ?",
-      "subtitle": "Comment pouvons-nous vous aider aujourd'hui ?",
-      "searchPlaceholder": "Rechercher des sujets, mots-clés ou questions...",
+      "supportBadge": "Support disponible 24/7",
+      "title": "Centre d'aide BantuLink",
+      "subtitle": "Trouvez des réponses à vos questions et obtenez le soutien dont vous avez besoin. Nous sommes ici pour vous aider à réussir dans votre parcours.",
+      "searchPlaceholder": "Recherchez un sujet ou un mot-clé...",
       "searchButton": "Rechercher",
       "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé.",
       "popularSearches": "Recherches populaires :",
@@ -135,6 +146,9 @@
       }
     },
     "topics": {
+      "title": "Sujets D'aide Populaires",
+      "subtitle": "Accès rapide aux sujets d'aide et solutions les plus recherchés de notre communauté.",
+      "views": "vues",
       "resetPassword": {
         "title": "Comment réinitialiser mon mot de passe ?",
         "category": "Compte et Connexion"
@@ -150,6 +164,43 @@
       "reportContent": {
         "title": "Signaler un contenu inapproprié",
         "category": "Litiges et support client"
+      }
+    },
+    "testimonials": {
+      "title": "Ce Que Disent Nos Utilisateurs",
+      "subtitle": "Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre centre d'aide et notre support.",
+      "sarah": {
+        "name": "Sarah Johnson",
+        "role": "Freelancer",
+        "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
+      },
+      "michael": {
+        "name": "Michael Chen",
+        "role": "Business Owner",
+        "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
+      },
+      "amara": {
+        "name": "Amara Okafor",
+        "role": "Job Seeker",
+        "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
+      }
+    },
+    "contact": {
+      "title": "Besoin D'aide ?",
+      "subtitle": "Vous ne trouvez pas ce que vous cherchez ? Notre équipe de support dédiée est prête à vous aider avec toutes les questions ou préoccupations que vous pourriez avoir.",
+      "liveChat": "Démarrer un chat en direct",
+      "emailSupport": "Email Support",
+      "fastResponse": {
+        "title": "Réponse rapide",
+        "desc": "Temps de réponse moyen inférieur à 2 heures"
+      },
+      "expertSupport": {
+        "title": "Support expert",
+        "desc": "Équipe compétente prête à aider"
+      },
+      "available247": {
+        "title": "Disponible 24/7",
+        "desc": "Assistance 24 heures sur 24"
       }
     }
   },
@@ -208,9 +259,9 @@
   },
   "faq": {
     "form": {
-        "title": "J'ai Une Question Pour Bantulink",
-        "subtitle": "Si vous avez des questions, nous y répondrons.",
-        "subscribeSuccess": "Merci pour votre inscription à notre newsletter !"
+      "title": "J'ai Une Question Pour Bantulink",
+      "subtitle": "Si vous avez des questions, nous y répondrons.",
+      "subscribeSuccess": "Merci pour votre inscription à notre newsletter !"
     },
     "hero": {
       "title": "Peut-Être Que Votre Question A Reçu Une Réponse, Vérifiez-La",
@@ -257,7 +308,7 @@
   "features": {
     "title": "FONCTIONNALITÉS",
     "bantuHire": {
-      "title": "BantuHire — Le Travail Vous Trouve",
+      "title": "BantuHire – Le Travail Vous Trouve",
       "description": "La plateforme qui connecte talents et recruteurs en un clic.",
       "simplifiedSearch": {
         "title": "Recherche Simplifiée",
@@ -273,7 +324,7 @@
       }
     },
     "bantuMarket": {
-      "title": "BantuMarket — Le commerce sans frontières",
+      "title": "BantuMarket – Le commerce sans frontières",
       "description": "La plateforme qui connecte talents et recruteurs en un clic.",
       "customShop": {
         "title": "Boutique Personnalisée",
@@ -319,8 +370,8 @@
     "successAdd": "Expérience ajoutée avec succès",
     "successDelete": "Expérience supprimée avec succès",
     "errorLoad": "Erreur lors du chargement des expériences",
-    "errorSave": "Erreur lors de la sauvegarde de l’expérience",
-    "errorDelete": "Erreur lors de la suppression de l’expérience"
+    "errorSave": "Erreur lors de la sauvegarde de l'expérience",
+    "errorDelete": "Erreur lors de la suppression de l'expérience"
   },
   "footer": {
     "ecosystemTitle": "Rejoignez l'écosystème tout-en-un de BantuLink",
@@ -378,6 +429,14 @@
     },
     "copyright": "Copyright © 2025 BantuLink. Tous droits réservés."
   },
+  "hero": {
+    "title": "Une Seule App,<br/>Deux Mondes:<br/><span className=\"text-gray-900 bg-clip-text\">Recrutement & E-Commerce Réunis.</span>",
+    "subtitle": "Trouvez Un Emploi, Recrutez, Vendez Ou Achetez En Toute Sécurité Avec BantuLink.",
+    "candidate": "Je Suis Un Candidat",
+    "recruiter": "Je suis un Recruteur",
+    "seller": "Je suis un Vendeur",
+    "buyer": "Je suis un Acheteur"
+  },
   "coreValues": {
     "title": "Nos Valeurs Fondamentales",
     "security": {
@@ -427,14 +486,6 @@
       "Apple",
       "Microsoft"
     ]
-  },
-  "hero": {
-    "title": "Une Seule App,<br/>Deux Mondes:<br/><span className=\"text-gray-900 bg-clip-text\">Recrutement & E-Commerce Réunis.</span>",
-    "subtitle": "Trouvez Un Emploi, Recrutez, Vendez Ou Achetez En Toute Sécurité Avec BantuLink.",
-    "candidate": "Je Suis Un Candidat",
-    "recruiter": "Je suis un Recruteur",
-    "seller": "Je suis un Vendeur",
-    "buyer": "Je suis un Acheteur"
   },
   "stats": {
     "users": "Utilisateurs Actifs",

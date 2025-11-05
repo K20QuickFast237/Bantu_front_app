@@ -1,8 +1,11 @@
 import React from "react";
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const FonctionnalitesHero = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(); // Hook i18n
+  
   return (
     <section className="relative w-full py-18 bg-[#f4f7fb] overflow-hidden">
       {/* Rectangle vert avec texte centré */}
@@ -11,7 +14,7 @@ const FonctionnalitesHero = () => {
           className="rounded-2xl shadow-2xl w-[90vw] max-w-[420px] h-[160px] md:h-[220px] flex items-center justify-center bg-[#19b885]"
         >
           <span className="text-white text-2xl md:text-3xl font-bold select-none">
-            App Mockup
+            {t('featuresHero.appMockup')}
           </span>
         </div>
       </div>
@@ -49,15 +52,15 @@ const FonctionnalitesHero = () => {
       {/* Texte et boutons */}
       <div className="relative z-20 flex flex-col items-center mt-12 text-center">
         <h1 className="text-3xl md:text-5xl font-extrabold leading-tight mb-2 text-gray-900">
-          All-in-One Power.
+          {t('featuresHero.title1')}
         </h1>
         <h2 className="text-3xl md:text-5xl font-extrabold leading-tight mb-4">
-          <span className="text-[#19b885]">Two Worlds.</span>
-          <span className="text-[#0c1f69]">One App.</span>
+          <span className="text-[#19b885]">{t('featuresHero.title2_part1')}</span>
+          <span className="text-[#0c1f69]">{t('featuresHero.title2_part2')}</span>
         </h2>
         <p className="text-gray-500 text-base md:text-lg mb-8">
-          From finding jobs to launching your business,<br />
-          BantuLink is your launchpad.
+          {t('featuresHero.subtitle1')}<br />
+          {t('featuresHero.subtitle2')}
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
@@ -66,14 +69,14 @@ const FonctionnalitesHero = () => {
               navigate('/login');
             }}
           >
-            {/* Briefcase icon with white border */}
+            {/* Icône de mallette avec bordure blanche */}
             <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
                 <rect x="6" y="7" width="12" height="10" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
                 <path d="M9 7V5a3 3 0 0 1 6 0v2" stroke="#fff" strokeWidth="2" fill="none"/>
               </svg>
             </span>
-            Try BantuHire
+            {t('featuresHero.tryBantuHire')}
           </button>
 
           <button
@@ -82,7 +85,7 @@ const FonctionnalitesHero = () => {
               window.location.href = import.meta.env.VITE_MARKETPLACE_URL;
             }}
           >
-            {/* Market/cart icon with white border */}
+            {/* Icône de marché/panier avec bordure blanche */}
             <span className="flex items-center justify-center w-7 h-7 rounded-full border-2 border-white">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" strokeWidth="2">
                 <circle cx="9" cy="20" r="1" fill="#fff" />
@@ -91,7 +94,7 @@ const FonctionnalitesHero = () => {
                 <rect x="7" y="6" width="10" height="7" rx="2" stroke="#fff" strokeWidth="2" fill="none"/>
               </svg>
             </span>
-            Explore BantuMarket
+            {t('featuresHero.exploreBantuMarket')}
           </button>
 
         </div>
