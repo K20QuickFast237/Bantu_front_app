@@ -38,7 +38,7 @@ const JobCarousel = () => {
       try {
         const [offersRes, categoriesRes] = await Promise.all([
           api.get('/offres'),
-          api.get('offres/categories-populaires')
+          api.get('/offres-categories')
         ]);
 
         const offers = offersRes.data || [];
@@ -143,12 +143,12 @@ const JobCarousel = () => {
     <div className="mx-auto py-8 bg-white font-sans">
       {/* Section "Recherches populaires" */}
       <div className="mb-10 px-10 sm:px-6 lg:px-8">
-        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">Recherches populaires</h2>
+        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">Categories populaires</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {popularCategories.map(category => (
             <div
               key={category.id}
-              onClick={() => navigate('/recherche_offre', { state: { categoryId: category.id } })}
+              onClick={() => navigate('/rechercheOffre', { state: { categoryId: category.id } })}
               className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-lg hover:border-orange-400 transition-all duration-300 cursor-pointer flex flex-col justify-between"
             >
               <div className="flex items-center gap-3">
@@ -164,7 +164,7 @@ const JobCarousel = () => {
       </div>
 
       {/* Section "Job Offers Carousel" */}
-      <motion.div 
+      {/* <motion.div 
         className="mb-10 relative px-10 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -185,10 +185,10 @@ const JobCarousel = () => {
                   <JobCardItem job={job} />
                 </div>
               ))}
-            </div>
+            </div> */}
 
             {/* Navigation Arrows for Job Carousel */}
-            <button
+            {/* <button
               onClick={() => scrollCarousel(jobCarouselRef, 'left')}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors shadow-lg z-10"
             >
@@ -204,10 +204,10 @@ const JobCarousel = () => {
         ) : (
           <p className="text-center text-gray-500 py-8">Aucune offre populaire pour le moment.</p>
         )}
-      </motion.div>
+      </motion.div> */}
       
       {/* "Afficher plus" button below Job Carousel */}
-      {jobOffers.length > 5 && (
+      {/* {jobOffers.length > 5 && (
         <div className="px-4 sm:px-6 lg:px-8 mb-12">
           <Link to="/rechercheOffre">
             <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
@@ -215,7 +215,7 @@ const JobCarousel = () => {
             </button>
           </Link>
         </div>
-      )}
+      )} */}
 
       {/* Section "Les entreprises qui recrutent" */}
       {loading ? (

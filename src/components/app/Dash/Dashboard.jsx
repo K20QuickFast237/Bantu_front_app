@@ -103,7 +103,7 @@ const Dashboard = ({ setActiveSection }) => {
           api.get('/candidatures')
         ]);
 
-        setJobPosts(offersResponse.data.data || []);
+        setJobPosts(offersResponse.data || []);
         setRecentApplications(applicationsResponse.data || []);
 
         setStats(prevStats => [
@@ -283,7 +283,7 @@ const Dashboard = ({ setActiveSection }) => {
                         <p className="text-xs text-gray-600">{application.offre?.titre_poste || 'Poste non spécifié'}</p>
                         <p className="text-xs text-gray-500">{timeAgo}</p>
                       </div>
-                      <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.candidat_id}`)}>
+                      <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.user_id}`)}>
                         Voir
                       </Button>
                     </div>

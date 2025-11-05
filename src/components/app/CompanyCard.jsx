@@ -6,7 +6,7 @@ import { Building, MapPin } from "lucide-react";
 const CompanyCard = ({ company }) => (
   <Link to={`/company/${company.id}`} >
     <div  key={company.id} className="company-card min-w-[70%] sm:min-w-[10%] md:min-w-[10%] lg:min-w-[330px] xl:min-w-[400px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0 snap-start flex flex-col">
-      <div className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0" style={{ backgroundImage: `url(${company.photo_couverture? company.bgImage : `${CompanyBg}`})` }}></div>
+      <div className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0" style={{ backgroundImage: `url(${company.photo_couverture? company.photo_couverture : `${CompanyBg}`})` }}></div>
 
       <div className="p-4 relative flex-1 flex flex-col">
         {/* Logo d'entreprise flottant */}
@@ -28,7 +28,7 @@ const CompanyCard = ({ company }) => (
           </div>
 
           <div className="flex justify-between items-center mt-auto">
-            <p className="text-base font-semibold text-gray-800">{company.offres.length} offres</p>
+            {/* <p className="text-base font-semibold text-gray-800">{company.offres.length} offres</p> */}
             <button className="border border-orange-500 text-orange-500 py-1.5 px-4 rounded-lg text-sm font-medium hover:bg-orange-50 hover:text-orange-600 transition-colors">
               Voir
             </button>

@@ -19,21 +19,23 @@ const JobMatchingCard = () => {
         .finally(() => setLoading(false));
     }
   }, [user]);
+  console.log(jobData);
 
-  const JobCardItem = ({ title, company, location, publicationDate, contractType, workType, logo}) => (
+  const JobCardItem = ({ title, company, location, publicationDate, contractType, workType, logo, score}) => (
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
       <div className="mb-4">
         <div className="flex flex-col gap-3">
           <div className='flex '>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-                <img src={`/storage/public/${logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+                <img src={`${logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
             <div className='mt-7 ml-3 font-semibold text-xl'>{company}</div>
           </div>
-          <Link to="/jobOffers"> 
+          <Link to="/jobOffers" className='flex space-x-4 items-center'> 
             <h3 className="font-semibold underline hover:decoration-0 text-gray-900 text-lg leading-tight">
               {title}
             </h3>
+            <div className='w-fit h-5 bg-green-500 rounded-xl  flex items-center justify-center p-4'>{score}</div>
           </Link>
         </div>
       </div>
@@ -84,13 +86,13 @@ const JobMatchingCard = () => {
                 jobData.map((job, index) => (
                   <JobCardItem
                     key={job.id || index}
-                    title={job.titre_poste}
+                    title={job.titre}
                     company={job.nom_entreprise || job.company}
                     logo={job.logo}
                     location={job.lieu_travail || job.location}
                     publicationDate={job.date_publication || job.publicationDate}
                     contractType={job.type_contrat || job.contractType}
-                    workType={job.workType || "Temps plein"}
+                    score={job.score + "%"}
                   />
                 ))
               )}

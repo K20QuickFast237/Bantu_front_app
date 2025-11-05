@@ -38,7 +38,7 @@ const JobPostManagement = () => {
       try {
         const res = await api.get("/mesoffres");
         console.log(res.data.data);
-        setJobPosts(res.data.data || []);
+        setJobPosts(res.data || []);
       } catch (err) {
         toast.error("Erreur lors du chargement des données.");
       } finally {
