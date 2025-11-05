@@ -12,7 +12,7 @@ import HeaderProfil from '@/components/app/HeaderProfil';
 
 const WhatDoYouWantToDo = () => {
     const navigate = useNavigate();
-    const { professionnel } = useAuth();
+    const { professionnel, token } = useAuth();
     console.log(professionnel);
 
     // Fonction pour gérer le clic sur une carte
@@ -34,10 +34,10 @@ const WhatDoYouWantToDo = () => {
                 }
                 break;
             case 'Acheter':
-                navigate('/acheter');
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
                 break;
             case 'Vendre':
-                navigate('/vendre');
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/seller?token=${token}`;
                 break;
             default:
                 console.log('Action non reconnue');
