@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 const DiplomesFormations = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const [formations, setFormations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +36,7 @@ const DiplomesFormations = () => {
         const response = await api.get('/formations');
         setFormations(response.data);
       } catch (error) {
-        toast.error('Erreur lors du chargement des formations');
+        toast.error(t('formations.errorLoad'));
         setFormations([]);
       } finally {
         setIsLoading(false);
@@ -42,7 +44,7 @@ const DiplomesFormations = () => {
     };
 
     fetchFormations();
-  }, [token]);
+  }, [token, t]);
 
   // Gestion du formulaire
   const onSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -55,7 +57,7 @@ const DiplomesFormations = () => {
             formation.id === editingFormation.id ? { ...formation, ...values } : formation
           )
         );
-        toast.success('Formation mise à jour avec succès');
+        toast.success(t('formations.successUpdate'));
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('formations-updated'));
@@ -71,7 +73,7 @@ const DiplomesFormations = () => {
           date_fin: values.date_fin,
         }
         setFormations(prev => [...prev, newFormation]);
-        toast.success('Formation ajoutée avec succès');
+        toast.success(t('formations.successAdd'));
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('formations-updated'));
@@ -80,7 +82,7 @@ const DiplomesFormations = () => {
       resetForm(); // Nettoyer le formulaire après ajout ou update
       setEditingFormation(null);
     } catch (error) {
-      toast.error('Erreur lors de la sauvegarde de la formation');
+      toast.error(t('formations.errorSave'));
       console.error('Erreur:', error);
     } finally {
       setSubmitting(false);
@@ -127,12 +129,12 @@ const DiplomesFormations = () => {
     try {
       await api.delete(`/formations/${formationToDelete}`);
       setFormations(formations.filter((formation) => formation.id !== formationToDelete));
-      toast.success('Formation supprimée avec succès');
+      toast.success(t('formations.successDelete'));
 
       // Déclencher l'événement pour mettre à jour la barre de progression
       window.dispatchEvent(new Event('formations-updated'));
     } catch (error) {
-      toast.error('Erreur lors de la suppression de la formation');
+      toast.error(t('formations.errorDelete'));
     } finally {
       setIsDeleteModalOpen(false);
       setFormationToDelete(null);
@@ -153,7 +155,7 @@ const DiplomesFormations = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
-          <h2 className="text-xl font-semibold text-blue-800">Diplomes et Formations</h2>
+          <h2 className="text-xl font-semibold text-blue-800">{t('formations.title')}</h2>
 
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -162,14 +164,14 @@ const DiplomesFormations = () => {
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
-                Ajouter
+                {t('formations.add')}
               </button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
               <DialogHeader className="pb-4 border-b border-gray-200 relative">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
-                  {editingFormation ? 'Modifier une formation' : 'Ajouter une formation'}
+                  {editingFormation ? t('formations.modalTitleEdit') : t('formations.modalTitleAdd')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -177,7 +179,7 @@ const DiplomesFormations = () => {
                 {/* Domaine d'étude */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Domaine d'étude <span className="text-red-500">*</span>
+                    {t('formations.studyField')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -186,7 +188,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Développement web"
+                    placeholder={t('formations.studyFieldPlaceholder')}
                   />
                   {errors.domaine_etude && touched.domaine_etude && (
                     <p className="text-red-500 text-sm">{errors.domaine_etude}</p>
@@ -196,7 +198,7 @@ const DiplomesFormations = () => {
                 {/* Etablissement */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Etablissement <span className="text-red-500">*</span>
+                    {t('formations.institution')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -205,7 +207,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Université de Douala"
+                    placeholder={t('formations.institutionPlaceholder')}
                   />
                   {errors.etablissement && touched.etablissement && (
                     <p className="text-red-500 text-sm">{errors.etablissement}</p>
@@ -215,7 +217,7 @@ const DiplomesFormations = () => {
                 {/* Diplôme */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Diplôme <span className="text-red-500">*</span>
+                    {t('formations.diploma')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -224,7 +226,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Licence en informatique"
+                    placeholder={t('formations.diplomaPlaceholder')}
                   />
                   {errors.diplome && touched.diplome && (
                     <p className="text-red-500 text-sm">{errors.diplome}</p>
@@ -235,7 +237,7 @@ const DiplomesFormations = () => {
                 <div className="flex space-x-4 mb-4">
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
-                      Date de début
+                      {t('formations.startDate')}
                     </label>
                     <input
                       type="date"
@@ -248,7 +250,7 @@ const DiplomesFormations = () => {
                   </div>
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
-                      Date de fin
+                      {t('formations.endDate')}
                     </label>
                     <input
                       type="date"
@@ -269,7 +271,7 @@ const DiplomesFormations = () => {
                     className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {editingFormation ? 'Mettre à jour' : 'Enregistrer'}
+                    {editingFormation ? t('formations.update') : t('formations.save')}
                   </button>
                 </div>
               </form>
@@ -282,7 +284,7 @@ const DiplomesFormations = () => {
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
           ) : formations.length === 0 ? (
-            <p className="text-gray-600">Aucune formation enregistrée.</p>
+            <p className="text-gray-600">{t('formations.noFormations')}</p>
           ) : (
             formations.map((formation) => (
               <div
@@ -300,29 +302,29 @@ const DiplomesFormations = () => {
                   <div>
                     <div className="grid grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
                       <p>
-                        <span className="font-medium text-gray-600">Domaine d'étude</span>
+                        <span className="font-medium text-gray-600">{t('formations.studyField')}</span>
                       </p>
                       <p className="font-semibold text-gray-800">
-                        {formation.domaine_etude || 'Non spécifié'}
+                        {formation.domaine_etude || t('formations.notSpecified')}
                       </p>
 
                       <p>
-                        <span className="font-medium text-gray-600">Etablissement</span>
+                        <span className="font-medium text-gray-600">{t('formations.institution')}</span>
                       </p>
-                      <p>{formation.etablissement || 'Non spécifié'}</p>
+                      <p>{formation.etablissement || t('formations.notSpecified')}</p>
 
                       <p>
-                        <span className="font-medium text-gray-600">Date</span>
+                        <span className="font-medium text-gray-600">{t('formations.date')}</span>
                       </p>
                       <p>
-                        {`${formation.date_debut || 'N/A'} - ${formation.date_fin || 'N/A'
+                        {`${formation.date_debut || t('formations.notSpecified')} - ${formation.date_fin || t('formations.notSpecified')
                           }`}
                       </p>
 
                       <p>
-                        <span className="font-medium text-gray-600">Diplôme</span>
+                        <span className="font-medium text-gray-600">{t('formations.diploma')}</span>
                       </p>
-                      <p>{formation.diplome || 'Non spécifié'}</p>
+                      <p>{formation.diplome || t('formations.notSpecified')}</p>
                     </div>
                   </div>
                 </div>
@@ -334,7 +336,7 @@ const DiplomesFormations = () => {
                     className="flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs"
                   >
                     <Edit size={14} className="mr-1" />
-                    Modifier
+                    {t('formations.edit')}
                   </button>
                   <button
                     onClick={() => openDeleteModal(formation.id)}
@@ -354,9 +356,9 @@ const DiplomesFormations = () => {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
+            <DialogTitle>{t('formations.confirmDelete')}</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. La formation sera définitivement supprimée.
+              {t('formations.deleteDesc')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -365,7 +367,7 @@ const DiplomesFormations = () => {
                 type="button"
                 className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors"
               >
-                Annuler
+                {t('formations.cancel')}
               </button>
             </DialogClose>
             <button
@@ -374,7 +376,7 @@ const DiplomesFormations = () => {
               className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Supprimer
+              {t('formations.delete')}
             </button>
           </DialogFooter>
         </DialogContent>

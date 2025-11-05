@@ -4,6 +4,7 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import { ClipLoader } from "react-spinners";
 import { Upload, Trash2, Eye, Share2, Edit, X, Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Command,
   CommandEmpty,
@@ -21,7 +22,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // Composant de prévisualisation
-const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
+const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList, t }) => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
@@ -31,66 +32,66 @@ const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
           <h1 className="text-2xl font-bold text-gray-900">{values.titre_poste}</h1>
           <div className="flex items-center gap-2">
             <button className="text-teal-500 font-medium flex items-center gap-1">
-              Partager <Share2 className="w-4 h-4" />
+              {t('multiStepForm.share')} <Share2 className="w-4 h-4" />
             </button>
           </div>
         </div>
         
         <div className="text-sm text-gray-600 mb-6">
-          Date de publication : {new Date().toLocaleDateString('fr-FR')} • Date limite : {new Date(values.date_limite_soumission).toLocaleDateString('fr-FR')}
+          {t('multiStepForm.publicationDate')} : {new Date().toLocaleDateString('fr-FR')} • {t('multiStepForm.deadline')} : {new Date(values.date_limite_soumission).toLocaleDateString('fr-FR')}
         </div>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-6">
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Type de contrat</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.contractType')}</div>
             <div className="text-gray-700">{values.type_contrat.toUpperCase()}</div>
           </div>
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Lieu</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.location')}</div>
             <div className="text-gray-700">{values.ville}, {values.pays}</div>
           </div>
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Salaire</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.salary')}</div>
             <div className="text-gray-700">{values.remuneration_min} - {values.remuneration_max}</div>
           </div>
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Télétravail</div>
-            <div className="text-gray-700">{values.teletravail ? 'Autorisé' : 'Non autorisé'}</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.remoteWork')}</div>
+            <div className="text-gray-700">{values.teletravail ? t('multiStepForm.allowed') : t('multiStepForm.notAllowed')}</div>
           </div>
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Expérience</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.experience')}</div>
             <div className="text-gray-700">{values.experience}</div>
           </div>
           <div>
-            <div className="font-semibold text-gray-900 mb-1">Niveau d'études</div>
-            <div className="text-gray-700">{values.niveau_etudes || 'Non spécifié'}</div>
+            <div className="font-semibold text-gray-900 mb-1">{t('multiStepForm.educationLevel')}</div>
+            <div className="text-gray-700">{values.niveau_etudes || t('multiStepForm.notSpecified')}</div>
           </div>
         </div>
 
         <div className="flex gap-3">
           <button onClick={onEdit} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
             <Edit className="w-5 h-5" />
-            Modifier l'offre
+            {t('multiStepForm.editOffer')}
           </button>
           <button onClick={onSubmit} className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center transition-colors">
-            Publier
+            {t('multiStepForm.publish')}
           </button>
           <button onClick={onCancel} className="bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
             <X className="w-5 h-5" />
-            Annuler
+            {t('multiStepForm.cancel')}
           </button>
         </div>
       </div>
 
       {/* Description Card */}
       <div className="bg-white rounded-lg shadow-sm p-6">
-        <h2 className="text-xl font-bold text-orange-500 mb-4">Description de l'offre</h2>
+        <h2 className="text-xl font-bold text-orange-500 mb-4">{t('multiStepForm.offerDescription')}</h2>
         <p className="text-gray-700 mb-6 leading-relaxed whitespace-pre-line">{values.description_poste}</p>
 
-        <h3 className="text-xl font-bold text-orange-500 mb-4">Missions de l'employé</h3>
+        <h3 className="text-xl font-bold text-orange-500 mb-4">{t('multiStepForm.employeeMissions')}</h3>
         <div className="space-y-2 text-gray-700 mb-6 whitespace-pre-line">{values.responsabilites}</div>
 
-        <h3 className="text-xl font-bold text-orange-500 mb-4">Profil recherché</h3>
+        <h3 className="text-xl font-bold text-orange-500 mb-4">{t('multiStepForm.searchedProfile')}</h3>
         <div className="space-y-2 text-gray-700 whitespace-pre-line">{values.exigences}</div>
       </div>
 
@@ -98,14 +99,14 @@ const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
       <div className="bg-white rounded-lg shadow-sm p-6 flex gap-3">
         <button onClick={onEdit} className="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
           <Edit className="w-5 h-5" />
-          Modifier l'offre
+          {t('multiStepForm.editOffer')}
         </button>
         <button onClick={onSubmit} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
-          Publier l'offre
+          {t('multiStepForm.publishOffer')}
         </button>
         <button onClick={onCancel} className="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-3 px-4 rounded-md flex items-center justify-center gap-2 transition-colors">
           <X className="w-5 h-5" />
-          Annuler
+          {t('multiStepForm.cancel')}
         </button>
       </div>
     </div>
@@ -113,7 +114,7 @@ const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
 };
 
 // Composants de champ réutilisables inspirés de InscriptionEntreprise.jsx
-const InputField = ({ name, label, formik, type = "text", placeholder = "" }) => (
+const InputField = ({ name, label, formik, type = "text", placeholder = "" , t }) => (
   <div>
     <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
     <input
@@ -134,7 +135,7 @@ const InputField = ({ name, label, formik, type = "text", placeholder = "" }) =>
   </div>
 );
 
-const TextareaField = ({ name, label, formik, rows = 4, placeholder = "" }) => (
+const TextareaField = ({ name, label, formik, rows = 4, placeholder = "", t }) => (
   <div>
     <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
     <textarea
@@ -206,6 +207,7 @@ const validationSchemas = [
 ];
 
 const MultiStepForm = () => {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
@@ -223,8 +225,8 @@ const MultiStepForm = () => {
         const response = await api.get('/skills');
         setSkillsList(response.data)
       } catch (error) {
-        toast.error("erreur récupération competences", {
-          description: `${error}` || "Une erreur inattendue est survenue",
+        toast.error(t('multiStepForm.errorFetchingSkills'), {
+          description: `${error}` || t('multiStepForm.unexpectedError'),
           duration: 3000
         })
       }
@@ -239,20 +241,20 @@ const MultiStepForm = () => {
         const categories = Array.isArray(response.data) ? response.data : response.data?.data || [];
         setCategoriesList(categories);
       } catch (error) {
-        toast.error("Erreur lors de la récupération des catégories.", {
-          description: `${error.message}` || "Une erreur inattendue est survenue",
+        toast.error(t('multiStepForm.errorFetchingCategories'), {
+          description: `${error.message}` || t('multiStepForm.unexpectedError'),
           duration: 3000
         });
       }
     };
     fetchCategories();
-  }, [])
+  }, [t])
 
   const steps = [
-    { number: 1, label: 'EMPLOYEUR', color: 'bg-orange-500' },
-    { number: 2, label: 'OFFRE', color: 'bg-green-500' },
-    { number: 3, label: 'CANDIDATURE', color: 'bg-blue-500' },
-    { number: 4, label: 'PUBLIER', color: 'bg-gray-500' }
+    { number: 1, label: t('multiStepForm.employer'), color: 'bg-orange-500' },
+    { number: 2, label: t('multiStepForm.offer'), color: 'bg-green-500' },
+    { number: 3, label: t('multiStepForm.application'), color: 'bg-blue-500' },
+    { number: 4, label: t('multiStepForm.publish'), color: 'bg-gray-500' }
   ];
 
   // Fonction de validation globale
@@ -288,12 +290,12 @@ const MultiStepForm = () => {
         date_publication: new Date().toISOString().split('T')[0],
       };
       await api.post('/offres', payload);
-      toast.success("Offre publiée avec succès !");
+      toast.success(t('multiStepForm.offerPublishedSuccessfully'));
       actions.resetForm();
       navigate('/job-post');
     } catch (error) {
-      toast.error("Erreur de publication :", {
-        description: error.response?.data?.message || "Une erreur inattendue est survenue.",
+      toast.error(t('multiStepForm.errorPublishingOffer'), {
+        description: error.response?.data?.message || t('multiStepForm.unexpectedError'),
       });
     } finally {
       actions.setSubmitting(false);
@@ -326,7 +328,7 @@ const MultiStepForm = () => {
       email_candidature: '',
       url_candidature: '',
       instructions_candidature: '',
-      documents_requis: ['CV', 'Lettre de motivation'],
+      documents_requis: [t('multiStepForm.cv'), t('multiStepForm.coverLetter')],
       skills: [],
       statut: 'active',
     },
@@ -364,7 +366,7 @@ const MultiStepForm = () => {
       formik.setTouched(
         Object.keys(formik.values).reduce((acc, key) => ({ ...acc, [key]: true }), {})
       );
-      toast.error("Veuillez corriger les erreurs avant de continuer.");
+      toast.error(t('multiStepForm.fixErrorsBeforeContinuing'));
     }
   };
 
@@ -430,50 +432,49 @@ const MultiStepForm = () => {
       ))}
     </div>
   );
-  <p className="bg-emerald-200 text-center w-80% font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
 
   const renderEmployeurStep = () => (
     <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="text-center mb-6">
-        <p className="bg-emerald-200  font-medium">Veuillez saisir et/ou compléter les informations de votre entreprise</p>
+        <p className="bg-emerald-200 font-medium">{t('multiStepForm.completeCompanyInfo')}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <InputField name="nom_entreprise" label="Nom de l'entreprise *" formik={formik} />
-        <InputField name="email_pro" label="Email de l'entreprise *" formik={formik} type="email" />
+        <InputField name="nom_entreprise" label={t('multiStepForm.companyName')} formik={formik} t={t} placeholder={t('multiStepForm.companyNamePlaceholder')} />
+        <InputField name="email_pro" label={t('multiStepForm.companyEmail')} formik={formik} type="email" t={t} placeholder={t('multiStepForm.companyEmailPlaceholder')} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <InputField name="telephone_pro" label="Téléphone de l'entreprise *" formik={formik} />
-        <InputField name="site_web" label="Site web de l'entreprise" formik={formik} type="url" />
+        <InputField name="telephone_pro" label={t('multiStepForm.companyPhone')} formik={formik} t={t} placeholder={t('multiStepForm.companyPhonePlaceholder')} />
+        <InputField name="site_web" label={t('multiStepForm.companyWebsite')} formik={formik} type="url" t={t} placeholder={t('multiStepForm.companyWebsitePlaceholder')} />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Votre logo</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.yourLogo')}</label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <div className="bg-gray-200 w-24 h-16 mx-auto rounded flex items-center justify-center mb-4">
-            <span className="text-gray-500 text-sm">Rechercher</span>
+            <span className="text-gray-500 text-sm">{t('multiStepForm.search')}</span>
           </div>
           <button
             type="button"
             className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
-            Changer
+            {t('multiStepForm.change')}
           </button>
         </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <InputField name="pays" label="Pays *" formik={formik} />
-        <InputField name="ville" label="Ville *" formik={formik} />
+        <InputField name="pays" label={t('multiStepForm.country')} formik={formik} t={t} placeholder={t('multiStepForm.countryPlaceholder')} />
+        <InputField name="ville" label={t('multiStepForm.city')} formik={formik} t={t} placeholder={t('multiStepForm.cityPlaceholder')} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <InputField name="code_postal" label="Code postal" formik={formik} />
-        <InputField name="adresse" label="Adresse locale *" formik={formik} />
+        <InputField name="code_postal" label={t('multiStepForm.postalCode')} formik={formik} t={t} placeholder={t('multiStepForm.postalCodePlaceholder')} />
+        <InputField name="adresse" label={t('multiStepForm.localAddress')} formik={formik} t={t} placeholder={t('multiStepForm.localAddressPlaceholder')} />
       </div>
 
-      <TextareaField name="description_entreprise" label="Description de l'entreprise" formik={formik} placeholder="Décrivez votre entreprise..." />
+      <TextareaField name="description_entreprise" label={t('multiStepForm.companyDescription')} formik={formik} placeholder={t('multiStepForm.companyDescriptionPlaceholder')} t={t} />
 
       <div className="flex justify-between pt-6">
         <button
@@ -481,7 +482,7 @@ const MultiStepForm = () => {
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
           onClick={handleCancel}
         >
-          Annuler
+          {t('multiStepForm.cancel')}
         </button>
         <button
           type="button"
@@ -489,7 +490,7 @@ const MultiStepForm = () => {
           className="px-6 py-2 bg-orange-500 text-white rounded-md text-sm font-medium hover:bg-orange-600"
           disabled={formik.isSubmitting}
         >
-          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : t('multiStepForm.next')}
         </button>
       </div>
     </form>
@@ -499,17 +500,17 @@ const MultiStepForm = () => {
     <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Titre de l'Offre</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.jobTitle')}</label>
           <input
             name="titre_poste"
-            placeholder="Titre du poste"
+            placeholder={t('multiStepForm.jobTitlePlaceholder')}
             {...formik.getFieldProps('titre_poste')}
             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.titre_poste && formik.errors.titre_poste ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
           />
           {formik.touched.titre_poste && formik.errors.titre_poste ? <div className="text-red-500 text-xs">{formik.errors.titre_poste}</div> : null}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date limite de soumission</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.submissionDeadline')}</label>
           <input
             name="date_limite_soumission"
             type="date"
@@ -521,9 +522,9 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.category')}</label>
         <select name="categorie_id" {...formik.getFieldProps('categorie_id')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.categorie_id && formik.errors.categorie_id ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
-          <option value="">Sélectionner une catégorie</option>
+          <option value="">{t('multiStepForm.selectCategory')}</option>
           {categoriesList.map((category) => (
             <option key={category.id} value={category.id}>
               {category.nom}
@@ -533,12 +534,9 @@ const MultiStepForm = () => {
         {formik.touched.categorie_id && formik.errors.categorie_id ? <div className="text-red-500 text-xs">{formik.errors.categorie_id}</div> : null}
       </div>
 
-
-
-
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Fonction du poste</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.jobFunction')}</label>
           <input
             name="fonction"
             {...formik.getFieldProps('fonction')}
@@ -547,23 +545,23 @@ const MultiStepForm = () => {
           {formik.touched.fonction && formik.errors.fonction ? <div className="text-red-500 text-xs">{formik.errors.fonction}</div> : null}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.experience')}</label>
           <select name="experience" {...formik.getFieldProps('experience')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.experience && formik.errors.experience ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
-            <option value="">Sélectionner</option>
-            <option value="debutant">Débutant</option>
-            <option value="junior">Junior</option>
-            <option value="senior">Senior</option>
+            <option value="">{t('multiStepForm.select')}</option>
+            <option value="debutant">{t('multiStepForm.beginner')}</option>
+            <option value="junior">{t('multiStepForm.junior')}</option>
+            <option value="senior">{t('multiStepForm.senior')}</option>
           </select>
           {formik.touched.experience && formik.errors.experience ? <div className="text-red-500 text-xs">{formik.errors.experience}</div> : null}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Description de l'offre</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.offerDescription')}</label>
         <textarea
           name="description_poste"
           rows={4}
-          placeholder="Décrivez l'offre d'emploi..."
+          placeholder={t('multiStepForm.describeJobOffer')}
           {...formik.getFieldProps('description_poste')}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.description_poste && formik.errors.description_poste ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
@@ -571,11 +569,11 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Responsabilités / Missions du poste</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.jobResponsibilities')}</label>
         <textarea
           name="responsabilites"
           rows={3}
-          placeholder="Listez les responsabilités..."
+          placeholder={t('multiStepForm.listResponsibilities')}
           {...formik.getFieldProps('responsabilites')}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.responsabilites && formik.errors.responsabilites ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
@@ -583,11 +581,11 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Exigences du poste</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.jobRequirements')}</label>
         <textarea
           name="exigences"
           rows={3}
-          placeholder="Listez les exigences..."
+          placeholder={t('multiStepForm.listRequirements')}
           {...formik.getFieldProps('exigences')}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.exigences && formik.errors.exigences ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
@@ -595,33 +593,33 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.contractType')}</label>
         <select name="type_contrat" {...formik.getFieldProps('type_contrat')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.type_contrat && formik.errors.type_contrat ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
-          <option value="cdi">CDI</option>
-          <option value="cdd">CDD</option>
-          <option value="stage">Stage</option>
-          <option value="freelance">Freelance</option>
+          <option value="cdi">{t('multiStepForm.cdi')}</option>
+          <option value="cdd">{t('multiStepForm.cdd')}</option>
+          <option value="stage">{t('multiStepForm.internship')}</option>
+          <option value="freelance">{t('multiStepForm.freelance')}</option>
         </select>
         {formik.touched.type_contrat && formik.errors.type_contrat ? <div className="text-red-500 text-xs">{formik.errors.type_contrat}</div> : null}
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération maximale Souhaitée</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.maxDesiredSalary')}</label>
         <input
           name="remuneration_max"
           type="number"
-          placeholder="Chiffrer en français"
+          placeholder={t('multiStepForm.amountInFrench')}
           {...formik.getFieldProps('remuneration_max')}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.remuneration_max && formik.errors.remuneration_max ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
         {formik.touched.remuneration_max && formik.errors.remuneration_max ? <div className="text-red-500 text-xs">{formik.errors.remuneration_max}</div> : null}
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Rémunération minimale Souhaitée </label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.minDesiredSalary')}</label>
         <input
           name="remuneration_min"
           type="number"
-          placeholder="Chiffrer en français"
+          placeholder={t('multiStepForm.amountInFrench')}
           {...formik.getFieldProps('remuneration_min')}
           className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.remuneration_min && formik.errors.remuneration_min ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}
         />
@@ -634,7 +632,7 @@ const MultiStepForm = () => {
           onClick={handlePrevious}
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
-          Retour
+          {t('multiStepForm.back')}
         </button>
         <button
           type="button"
@@ -642,7 +640,7 @@ const MultiStepForm = () => {
           className="px-6 py-2 bg-green-500 text-white rounded-md text-sm font-medium hover:bg-green-600"
           disabled={formik.isSubmitting}
         >
-          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : t('multiStepForm.next')}
         </button>
       </div>
     </form>
@@ -652,7 +650,7 @@ const MultiStepForm = () => {
     <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.applicationEmail')} *</label>
           <input
             name="email_candidature"
             type="email"
@@ -662,7 +660,7 @@ const MultiStepForm = () => {
           {formik.touched.email_candidature && formik.errors.email_candidature ? <div className="text-red-500 text-xs">{formik.errors.email_candidature}</div> : null}
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">URL de candidature (site web ou autre)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.applicationUrl')}</label>
           <input
             name="url_candidature"
             type="url"
@@ -674,7 +672,7 @@ const MultiStepForm = () => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Instructions de candidature (Facultatif)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-1">{t('multiStepForm.applicationInstructions')} ({t('multiStepForm.optional')})</label>
         <textarea
           name="instructions_candidature"
           rows={4}
@@ -685,7 +683,7 @@ const MultiStepForm = () => {
       </div>
       <div className="space-y-3">
         <label className="block text-sm font-medium text-gray-700">
-          Compétences
+          {t('multiStepForm.skills')}
         </label>
 
         {/* Badges des compétences sélectionnées */}
@@ -706,10 +704,10 @@ const MultiStepForm = () => {
 
         {/* Liste des compétences avec recherche */}
         <Command className="rounded-lg border shadow-md max-h-64 overflow-y-auto">
-          <CommandInput placeholder="Rechercher une compétence..." />
+          <CommandInput placeholder={t('multiStepForm.searchSkill')} />
           <CommandList>
-            <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
+            <CommandEmpty>{t('multiStepForm.noResultsFound')}</CommandEmpty>
+            <CommandGroup heading={t('multiStepForm.suggestions')}>
               {skillsList.map((skill) => (
                 <CommandItem
                   key={skill.id}
@@ -726,7 +724,7 @@ const MultiStepForm = () => {
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Documents de candidature
+          {t('multiStepForm.applicationDocuments')}
         </label>
 
         {/*Bouton qui ouvre la modal */}
@@ -738,18 +736,18 @@ const MultiStepForm = () => {
               className="w-full flex items-center justify-center"
             >
               <Upload className="w-4 h-4 mr-2" />
-              Ajouter
+              {t('multiStepForm.add')}
             </Button>
           </DialogTrigger>
 
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Ajouter un document requis</DialogTitle>
+              <DialogTitle>{t('multiStepForm.addRequiredDocument')}</DialogTitle>
             </DialogHeader>
 
             <Input
               type="text"
-              placeholder="Nom du document..."
+              placeholder={t('multiStepForm.documentName')}
               value={newDoc}
               onChange={(e) => setNewDoc(e.target.value)}
             />
@@ -760,14 +758,14 @@ const MultiStepForm = () => {
                 onClick={() => setNewDoc("")}
                 type="button"
               >
-                Annuler
+                {t('multiStepForm.cancel')}
               </Button>
               <Button
                 type="button"
                 onClick={addDocument}
                 disabled={!newDoc.trim()}
               >
-                Ajouter
+                {t('multiStepForm.add')}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -782,7 +780,7 @@ const MultiStepForm = () => {
                 className="flex items-center justify-between p-3 border rounded"
               >
                 <span>{doc}</span>
-                {doc !== 'CV' && (
+                {doc !== t('multiStepForm.cv') && (
                   <Button
                     type="button"
                     variant="destructive"
@@ -790,7 +788,7 @@ const MultiStepForm = () => {
                     onClick={() => removeDocument(doc)}
                   >
                     <Trash2 className="w-4 h-4 mr-1" />
-                    Retirer
+                    {t('multiStepForm.remove')}
                   </Button>
                 )}
               </div>
@@ -799,8 +797,7 @@ const MultiStepForm = () => {
         </div>
 
         <p className="text-sm text-blue-600 mt-2">
-          NB : Tout document spécifique sera demandé lors de la candidature en
-          ligne
+          {t('multiStepForm.noteSpecificDocuments')}
         </p>
       </div>
       <div className="flex justify-between pt-6">
@@ -809,7 +806,7 @@ const MultiStepForm = () => {
           onClick={handlePrevious}
           className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
-          Retour
+          {t('multiStepForm.back')}
         </button>
         <button
           type="button"
@@ -817,7 +814,7 @@ const MultiStepForm = () => {
           className="px-6 py-2 bg-blue-500 text-white rounded-md text-sm font-medium hover:bg-blue-600"
           disabled={formik.isSubmitting}
         >
-          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : "Suivant"}
+          {formik.isSubmitting ? <ClipLoader size={20} color="#fff" /> : t('multiStepForm.next')}
         </button>
       </div>
     </form>
@@ -825,7 +822,7 @@ const MultiStepForm = () => {
 
   const renderPublierStep = () => (
     showPreview 
-      ? <OffrePreview values={formik.values} onEdit={() => setShowPreview(false)} onCancel={handleCancel} onSubmit={formik.handleSubmit} skillsList={skillsList} /> 
+      ? <OffrePreview values={formik.values} onEdit={() => setShowPreview(false)} onCancel={handleCancel} onSubmit={formik.handleSubmit} skillsList={skillsList} t={t} /> 
       : <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto text-center space-y-6">
       <div className="mb-8">
         <div className="w-64 h-48 mx-auto bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
@@ -835,11 +832,11 @@ const MultiStepForm = () => {
   
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900">
-          Veuillez prendre 1min pour relire les informations que vous avez entrées par rapport à l'offre. Si tout est correct, veuillez publier l'offre.
+          {t('multiStepForm.reviewOffer')}
         </h2>
   
         <p className="text-gray-700">
-          Vous pourrez suivre l'offre et ses candidatures dans votre dashboard
+          {t('multiStepForm.trackOfferInDashboard')}
         </p>
       </div>
   
@@ -852,9 +849,9 @@ const MultiStepForm = () => {
           className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500"
         />
         <label htmlFor="terms" className="text-sm">
-          Je confirme que cette offre respecte les{' '}
-          <span className="text-orange-500 underline cursor-pointer">conditions d'utilisation</span>
-          {' '}de BantuLink
+          {t('multiStepForm.confirmTerms')}{' '}
+          <span className="text-orange-500 underline cursor-pointer">{t('multiStepForm.termsOfUse')}</span>
+          {' '}{t('multiStepForm.ofBantuLink')}
         </label>
       </div>
   
@@ -864,7 +861,7 @@ const MultiStepForm = () => {
           className="px-8 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
           type="button"
         >
-          Retour
+          {t('multiStepForm.back')}
         </button>
         <button
           disabled={!termsAccepted}
@@ -879,7 +876,7 @@ const MultiStepForm = () => {
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
         >
-          <Eye className="mr-2 h-4 w-4" /> Prévisualiser
+          <Eye className="mr-2 h-4 w-4" /> {t('multiStepForm.preview')}
         </button>
         <button
           disabled={!termsAccepted}
@@ -889,7 +886,7 @@ const MultiStepForm = () => {
             : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
         >
-          Publier
+          {t('multiStepForm.publish')}
         </button>
       </div>
 
@@ -899,15 +896,15 @@ const MultiStepForm = () => {
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
-        return renderEmployeurStep(formik);
+        return renderEmployeurStep();
       case 2:
-        return renderOffreStep(formik);
+        return renderOffreStep();
       case 3:
-        return renderCandidatureStep(formik);
+        return renderCandidatureStep();
       case 4:
-        return renderPublierStep(formik);
+        return renderPublierStep();
       default:
-        return renderEmployeurStep(formik);
+        return renderEmployeurStep();
     }
   };
 

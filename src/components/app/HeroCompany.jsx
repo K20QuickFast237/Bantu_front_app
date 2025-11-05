@@ -3,17 +3,19 @@ import CompanyBg from '../../assets/assets_application/Recherche_entreprise.png'
 import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // Import de useNavigate
-import { ArrowLeft } from 'lucide-react'; // Import de l'icône de flèche
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+
 const HeroCompany = ({ companyData }) => {
-  const navigate = useNavigate(); // Initialisation du hook
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   const { professionnel } = useAuth();
 
-  // Utilise les données passées en props, ou celles du contexte par défaut
   const company = companyData || professionnel;
 
   const handleGoBack = () => {
-    navigate('/dashboardEntreprise'); // Fonction de redirection
+    navigate('/dashboardEntreprise');
   };
   return (
     <div className="relative w-full">
@@ -24,43 +26,35 @@ const HeroCompany = ({ companyData }) => {
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        {/* Main Hero Section */}
         <div className="relative w-full pt-20 pb-10 overflow-hidden">
-          {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${CompanyBg})` }}
           ></div>
 
-          {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
 
-          {/* Content */}
           <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col justify-center h-full">
-            {/* Top Text */}
             <div className="text-center text-white mb-8">
               <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
-                Créez des offres d'emplois facilement
+                {t('heroCompany.createJobsEasy')}
               </p>
               <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
-                et rapidement
+                {t('heroCompany.andQuickly')}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section - Positioned to overlap */}
         <div className="relative -mt-14 z-20 px-6 sm:px-8 md:px-10">
           <div className="flex items-center">
-            {/* Logo - Half inside, half outside */}
             <div className="bg-white p-2 shadow-lg rounded-lg mr-4 border border-gray-200">
-              <img src={`/storage/public/${company.logo}`} alt="Company Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+              <img src={company?.logo ? `/storage/public/${company.logo}` : BantulinkLogo} alt={t('heroCompany.companyLogoAlt')} className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
 
-            {/* Company Info */}
             <div className='mt-15'>
-              <p className="text-[#10B981] text-xl sm:text-2xl font-bold">{company.nom_entreprise}</p>
-              <p className="text-gray-700 text-base sm:text-lg">{company.email_pro}</p>
+              <p className="text-[#10B981] text-xl sm:text-2xl font-bold">{company?.nom_entreprise || t('heroCompany.unknownCompany')}</p>
+              <p className="text-gray-700 text-base sm:text-lg">{company?.email_pro || t('heroCompany.unknownEmail')}</p>
             </div>
           </div>
         </div>

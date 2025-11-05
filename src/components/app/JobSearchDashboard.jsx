@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const JobSearchDashboard = ({
   searchTerm,
@@ -13,15 +14,20 @@ const JobSearchDashboard = ({
   selectedEducation, setSelectedEducation,
   hideContractFilter = false,
   hideEducationFilter = false,
-  searchProfileButtonText = "Rechercher des profils",
-  title = "Rechercher parmi toutes les offres d'emploi"
+  searchProfileButtonText,
+  title
 }) => {
+  const { t } = useTranslation();
+  // Définir les valeurs par défaut ici, après t
+  searchProfileButtonText = searchProfileButtonText || t('jobSearch.searchProfiles');
+  title = title || t('jobSearch.searchAllOffers');
+  
   const [contractOpen, setContractOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
 
   // Options pour dropdowns (ajuste selon tes besoins)
-  const contractOptions = ['CDI', 'CDD', 'Stage', 'Freelance', 'Alternance'];
-  const educationOptions = ['Bac', 'Bac+2', 'Bac+3', 'Bac+5', 'Doctorat'];
+  const contractOptions = [t('jobSearch.cdi'), t('jobSearch.cdd'), t('jobSearch.internship'), t('jobSearch.freelance'), t('jobSearch.alternance')];
+  const educationOptions = [t('jobSearch.bac'), t('jobSearch.bacPlus2'), t('jobSearch.bacPlus3'), t('jobSearch.bacPlus5'), t('jobSearch.phd')];
 
   return (
     <>
@@ -35,7 +41,7 @@ const JobSearchDashboard = ({
           
           {/* Title */}
           <h2 className="text-xl md:text-3xl font-bold text-center mb-6 pt-8">
-            {allJobTitle ? "Trouvez une offre d'emploi" : title}
+            {allJobTitle ? t('jobSearch.findJobOffer') : title}
           </h2>
 
           {/* First Row - Search Bar */}
@@ -44,7 +50,7 @@ const JobSearchDashboard = ({
               <Search className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="Recherchez par titre, compétences, mots clés,…"
+                placeholder={t('jobSearch.searchByTitleSkills')}
                 className="w-full outline-none text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -56,7 +62,7 @@ const JobSearchDashboard = ({
               <MapPin className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="choisir le pays ou la ville"
+                placeholder={t('jobSearch.chooseCountryCity')}
                 className="w-full outline-none text-sm"
                 value={locationTerm}
                 onChange={(e) => setLocationTerm(e.target.value)}
@@ -74,13 +80,13 @@ const JobSearchDashboard = ({
           <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-b-xl overflow-hidden border-t border-gray-200">
             {/* Type de contrat Dropdown */}
             <motion.div
-              className="flex items-center justify-between flex-1 max-w-[40.8%] bg-white px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors relative"
+              className="flex items-center justify-between flex-1 min-w-[250px] bg-white px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors relative"
               onClick={() => setContractOpen(!contractOpen)}
               whileHover={{ scale: 1.01 }}
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedContract || 'Type de contrat'}
+                {selectedContract || t('jobSearch.contractType')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${contractOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>
@@ -119,7 +125,7 @@ const JobSearchDashboard = ({
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedEducation || 'Niveau d\'étude'}
+                {selectedEducation || t('jobSearch.educationLevel')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${educationOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>

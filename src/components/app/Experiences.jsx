@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next'; // Ajout
+import { useTranslation } from 'react-i18next';
 
 const Experiences = () => {
   const { t } = useTranslation();
@@ -169,11 +169,11 @@ const Experiences = () => {
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
               <DialogHeader className="pb-4 border-b border-gray-200 relative">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
-                  {editingExperience ? t('experiences.edit') : t('experiences.addTitle') || 'Ajouter une expérience'}
+                  {editingExperience ? t('experiences.modalTitleEdit') : t('experiences.modalTitleAdd')}
                 </DialogTitle>
               </DialogHeader>
 
-              <form onSubmit={handleSubmit} className="p-6" noValidate>
+              <form onSubmit={handleSubmit} className="p-6">
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
                     {t('experiences.jobTitle')} <span className="text-red-500">*</span>
@@ -185,13 +185,13 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder={t('experiences.jobTitlePlaceholder')}
                   />
                   {errors.titre_poste && touched.titre_poste && (
                     <p className="text-red-500 text-sm">{errors.titre_poste}</p>
                   )}
                 </div>
 
-                {/* Autres champs... (inchangés, mais labels traduits) */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
                     {t('experiences.company')} <span className="text-red-500">*</span>
@@ -203,6 +203,7 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder={t('experiences.companyPlaceholder')}
                   />
                   {errors.nom_entreprise && touched.nom_entreprise && (
                     <p className="text-red-500 text-sm">{errors.nom_entreprise}</p>
@@ -212,7 +213,7 @@ const Experiences = () => {
                 <div className="flex space-x-4 mb-4">
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
-                      {t('experiences.startDate')} <span className="text-red-500">*</span>
+                      {t('experiences.startDate')}
                     </label>
                     <input
                       type="date"
@@ -228,7 +229,7 @@ const Experiences = () => {
                   </div>
                   <div className="w-1/2">
                     <label className="block text-gray-700 font-medium mb-2">
-                      {t('experiences.endDate')} <span className="text-red-500">*</span>
+                      {t('experiences.endDate')}
                     </label>
                     <input
                       type="date"
@@ -252,14 +253,12 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={t('experiences.descriptionPlaceholder') || "Décrivez vos principales missions et responsabilités..."}
+                    placeholder={t('experiences.descriptionPlaceholder')}
                   />
                   {errors.description_taches && touched.description_taches && (
                     <p className="text-red-500 text-sm">{errors.description_taches}</p>
                   )}
                 </div>
-
-                {/* Adresse, Ville, Pays - Ajoutez des labels similaires si besoin */}
 
                 <div className="flex justify-end pt-4">
                   <button
@@ -268,7 +267,7 @@ const Experiences = () => {
                     className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {editingExperience ? t('experiences.update') || 'Mettre à jour' : t('experiences.save') || 'Enregistrer'}
+                    {editingExperience ? t('experiences.update') : t('experiences.save')}
                   </button>
                 </div>
               </form>
@@ -290,16 +289,16 @@ const Experiences = () => {
                   <div className="w-2 h-2 rounded-full mr-3 mt-2 flex-shrink-0" style={{ backgroundColor: '#10B981' }}></div>
                   <div>
                     <div className="grid grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
-                      <p><span className="font-medium text-gray-600">{t('experiences.post')}</span></p>
-                      <p className="font-semibold text-gray-800">{exp.titre_poste || 'Non spécifié'}</p>
+                      <p><span className="font-medium text-gray-600">{t('experiences.jobTitle')}</span></p>
+                      <p className="font-semibold text-gray-800">{exp.titre_poste || t('experiences.notSpecified')}</p>
                       <p><span className="font-medium text-gray-600">{t('experiences.company')}</span></p>
-                      <p>{exp.nom_entreprise || 'Non spécifié'}</p>
+                      <p>{exp.nom_entreprise || t('experiences.notSpecified')}</p>
                       <p><span className="font-medium text-gray-600">{t('experiences.location')}</span></p>
-                      <p>{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || 'Non spécifié'}</p>
+                      <p>{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || t('experiences.notSpecified')}</p>
                       <p><span className="font-medium text-gray-600">{t('experiences.date')}</span></p>
-                      <p>{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</p>
+                      <p>{`${exp.date_debut || t('experiences.notSpecified')} - ${exp.date_fin || t('experiences.notSpecified')}`}</p>
                       <p><span className="font-medium text-gray-600">{t('experiences.missions')}</span></p>
-                      <p>{exp.description_taches || 'Non spécifié'}</p>
+                      <p>{exp.description_taches || t('experiences.notSpecified')}</p>
                     </div>
                   </div>
                 </div>

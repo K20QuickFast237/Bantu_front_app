@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom';
 import CompanyCard from './CompanyCard';
 import api from '@/services/api';
 import BantulinkLoader from '../ui/BantulinkLoader';
-
+import { useTranslation } from 'react-i18next';
 
 // Imports des images
 import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 
 const JobCarousel = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('graphiste');
   const jobCarouselRef = useRef(null);
   const companyCarouselRef = useRef(null);
@@ -21,53 +22,53 @@ const JobCarousel = () => {
   const jobOffers = [
     {
       id: 1,
-      company: "ATOM TECH",
+      company: t('jobCarousel.atomTech'),
       logo: BantulinkLogo,
-      title: "Stage - Graphic & Motion Designer",
+      title: t('jobCarousel.stageGraphicMotionDesigner'),
       publishDate: "30/06/2025",
       deadline: "15/07/2025",
-      location: "Douala, akwa",
-      workType: "Temps plein"
+      location: t('jobCarousel.doualaAkwa'),
+      workType: t('jobCarousel.fullTime')
     },
     {
       id: 2,
-      company: "ATOM TECH",
+      company: t('jobCarousel.atomTech'),
       logo: BantulinkLogo,
-      title: "Stage - Graphic & Motion Designer",
+      title: t('jobCarousel.stageGraphicMotionDesigner'),
       publishDate: "30/06/2025",
       deadline: "15/07/2025",
-      location: "Douala, akwa",
-      workType: "Temps plein"
+      location: t('jobCarousel.doualaAkwa'),
+      workType: t('jobCarousel.fullTime')
     },
     {
       id: 3,
-      company: "ATOM TECH",
+      company: t('jobCarousel.atomTech'),
       logo: BantulinkLogo,
-      title: "Stage - Graphic & Motion Designer",
+      title: t('jobCarousel.stageGraphicMotionDesigner'),
       publishDate: "30/06/2025",
       deadline: "15/07/2025",
-      location: "Douala, akwa",
-      workType: "Temps plein"
+      location: t('jobCarousel.doualaAkwa'),
+      workType: t('jobCarousel.fullTime')
     },
     {
       id: 4,
-      company: "ATOM TECH",
+      company: t('jobCarousel.atomTech'),
       logo: BantulinkLogo,
-      title: "Stage - Graphic & Motion Designer",
+      title: t('jobCarousel.stageGraphicMotionDesigner'),
       publishDate: "30/06/2025",
       deadline: "15/07/2025",
-      location: "Douala, akwa",
-      workType: "Temps plein"
+      location: t('jobCarousel.doualaAkwa'),
+      workType: t('jobCarousel.fullTime')
     },
     {
       id: 5,
-      company: "ATOM TECH",
+      company: t('jobCarousel.atomTech'),
       logo: BantulinkLogo,
-      title: "Stage - Graphic & Motion Designer",
+      title: t('jobCarousel.stageGraphicMotionDesigner'),
       publishDate: "30/06/2025",
       deadline: "15/07/2025",
-      location: "Douala, akwa",
-      workType: "Temps plein"
+      location: t('jobCarousel.doualaAkwa'),
+      workType: t('jobCarousel.fullTime')
     },
   ];
 
@@ -78,21 +79,21 @@ const JobCarousel = () => {
         const response = await api.get('/entreprises/avec-offres-en-cours');
         setCompanies(response.data.data || []);
       } catch (error) {
-        console.error("Erreur lors de la récupération des entreprises:", error);
+        console.error(t('jobCarousel.errorFetchingCompanies'), error);
       } finally {
         setLoading(false);
       }
     };
     fetchCompanies();
-  }, []);
+  }, [t]);
 
   const tabs = [
-    { id: 'communication', label: 'Communication' },
-    { id: 'graphiste', label: 'Graphiste' },
-    { id: 'developpeur', label: 'Développeur PHP' },
-    { id: 'community', label: 'Community Manager' },
-    { id: 'copywriter', label: 'Copy writer' },
-    { id: 'communication2', label: 'Communication' }
+    { id: 'communication', label: t('jobCarousel.communication') },
+    { id: 'graphiste', label: t('jobCarousel.graphiste') },
+    { id: 'developpeur', label: t('jobCarousel.phpDeveloper') },
+    { id: 'community', label: t('jobCarousel.communityManager') },
+    { id: 'copywriter', label: t('jobCarousel.copyWriter') },
+    { id: 'communication2', label: t('jobCarousel.communication') }
   ];
 
   // Fonction de défilement pour le carrousel
@@ -118,7 +119,7 @@ const JobCarousel = () => {
         <div className="flex flex-col gap-3">
           <div className='flex'>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-              <img src={`/storage/public/${job.logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+              <img src={`/storage/public/${job.logo}`} alt={t('jobCarousel.companyLogoAlt')} className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
             <div className='mt-7 ml-3 font-semibold text-xl'>{job.name}</div>
           </div>
@@ -132,12 +133,12 @@ const JobCarousel = () => {
       {/* Publication date */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
         <Calendar className="w-4 h-4" />
-        <span>Date de publication : {job.publishDate}</span>
+        <span>{t('jobCarousel.publicationDate')} {job.publishDate}</span>
       </div>
 
       {/* Location */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-        <span className="font-medium">Localisation :</span>
+        <span className="font-medium">{t('jobCarousel.location')} :</span>
         <span>{job.location}</span>
       </div>
 
@@ -155,7 +156,7 @@ const JobCarousel = () => {
 
       {/* Button */}
       <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors mt-auto">
-        Afficher plus
+        {t('jobCarousel.showMore')}
       </button>
     </div>
   );
@@ -164,7 +165,7 @@ const JobCarousel = () => {
     <div className="mx-auto py-8 bg-white font-sans">
       {/* Section "Recherches populaires" */}
       <div className="mb-10 px-10 sm:px-6 lg:px-8">
-        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">Recherches populaires</h2>
+        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">{t('jobCarousel.popularSearches')}</h2>
         <div className="flex items-center overflow-x-auto whitespace-nowrap scroll-smooth pb-2 relative">
           {tabs.map((tab) => (
             <button
@@ -229,7 +230,7 @@ const JobCarousel = () => {
       {/* "Afficher plus" button below Job Carousel */}
       <div className="px-4 sm:px-6 lg:px-8 mb-12">
         <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-          Afficher plus
+          {t('jobCarousel.showMore')}
         </button>
       </div>
 
@@ -238,7 +239,7 @@ const JobCarousel = () => {
         <div className="flex justify-center p-10"><BantulinkLoader /></div>
       ) : (
         <div className="px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-xl md:text-2xl font-bold text-emerald-400 mb-6">Les entreprises qui recrutent</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-emerald-400 mb-6">{t('jobCarousel.recruitingCompanies')}</h2>
           <div
             ref={companyCarouselRef}
             className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
@@ -267,7 +268,7 @@ const JobCarousel = () => {
       <div className="px-4 sm:px-6 lg:px-8 mt-8">
         <Link to="/all-companies">
           <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-            Afficher toutes les entreprises
+            {t('jobCarousel.showAllCompanies')}
           </button>
         </Link>
       </div>
