@@ -9,8 +9,10 @@ import { resetPassword } from '../../services/auth';
 import { ClipLoader } from "react-spinners";
 import { validationResetPasswordSchema } from '../../schemas';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
 const ResetPasswordForm = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -30,13 +32,13 @@ const ResetPasswordForm = () => {
   const onSubmit = async (values) => {
     try {
       await resetPassword(values);
-      toast.success("Mot de passe reinitialise avec success !", {
+      toast.success(t('resetPassword.success'), {
         duration: 3000,
       });
       navigate('/login');
     } catch (err) {
-      toast.success("Connexion réussie !", {
-        description: `${err.response?.data?.message} || 'Erreur lors de la réinitialisation.'`,
+      toast.error(t('resetPassword.error'), {
+        description: `${err.response?.data?.message}` || t('resetPassword.errorDesc'),
         duration: 3000,
       });
     }
@@ -64,12 +66,12 @@ const ResetPasswordForm = () => {
             <div className="w-full max-w-2xl space-y-6">
               {/* Titre */}
               <h2 className="text-center text-[#10B981] font-semibold text-lg md:text-xl">
-                Réinitialisation du mot de passe
+                {t('resetPassword.title')}
               </h2>
 
               {/* Texte d'information */}
               <p className="text-center text-gray-800 text-sm">
-                Merci de saisir votre nouveau mot de passe.
+                {t('resetPassword.instruction')}
               </p>
 
               <hr className="border-t border-gray-300" />
@@ -81,7 +83,7 @@ const ResetPasswordForm = () => {
                 <div className="bg-gray-200 p-2 space-y-2 rounded-md">
                   <div className='flex flex-col gap-2'>
                     <label htmlFor="password" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                      Nouveau mot de passe :
+                      {t('resetPassword.newPassword')} :
                     </label>
                     <input
                       id="password"
@@ -105,7 +107,7 @@ const ResetPasswordForm = () => {
                     type="submit"
                     className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300"
                   >
-                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Réinitialiser le mot de passe"}
+                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : t('resetPassword.submit')}
                   </button>
                 </div>
               </form>

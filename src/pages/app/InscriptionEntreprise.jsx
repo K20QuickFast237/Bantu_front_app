@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import api from "@/services/api";
-import { toast } from 'sonner'
+import { toast } from 'sonner';
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,6 +20,7 @@ import Header from "../../components/app/Header";
 import { ClipLoader } from "react-spinners";
 import Welcome1 from "../../assets/assets_application/welcome1.png";
 import { validationSchema } from "@/schemas";
+import { useTranslation } from 'react-i18next';
 
 const InputField = ({ id, label, formik, icon: Icon, type = "text" }) => (
   <div>
@@ -78,6 +79,7 @@ const TextAreaField = ({ id, label, formik, icon: Icon }) => (
 );
 
 const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
+  const { t } = useTranslation();
   const [preview, setPreview] = useState(null);
 
   const handleFileChange = (event) => {
@@ -104,16 +106,16 @@ const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
       <div className={`mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10 ${formik.touched[id] && formik.errors[id] ? 'border-red-500' : 'border-gray-300'}`}>
         <div className="text-center">
           {preview ? (
-            <img src={preview} alt="Aperçu" className="mx-auto h-24 w-auto rounded-lg object-cover" />
+            <img src={preview} alt={t('profileCompletion.profilePhotoPreview')} className="mx-auto h-24 w-auto rounded-lg object-cover" />
           ) : (
             <UploadCloud className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
           )}
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
             <label htmlFor={id} className="relative cursor-pointer rounded-md bg-white font-semibold text-green-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-green-600 focus-within:ring-offset-2 hover:text-green-500">
-              <span>Télécharger un fichier</span>
+              <span>{t('jobApplicationForm.chooseFile')}</span>
               <input id={id} name={id} type="file" className="sr-only" onChange={handleFileChange} accept="image/png, image/jpeg, image/gif" />
             </label>
-            <p className="pl-1">ou glisser-déposer</p>
+            <p className="pl-1">{t('multiStepForm.optional')}</p>
           </div>
           <p className="text-xs leading-5 text-gray-600">{helpText}</p>
         </div>
@@ -124,6 +126,7 @@ const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
 };
 
 const CompletionEntreprise = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -144,26 +147,24 @@ const CompletionEntreprise = () => {
     validationSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       const formData = new FormData();
-      // Ajoute toutes les valeurs au FormData
       Object.keys(values).forEach(key => {
-        if (values[key]) { // N'ajoute pas les champs null (comme image_couverture si non fournie)
+        if (values[key]) {
           formData.append(key, values[key]);
         }
       });
 
       try{
-        // Laravel ne gère pas bien FormData avec PUT, on doit le "tricher" avec POST et _method
-        formData.append('_method', 'POST'); // ou 'PUT' si votre route est en PUT
+        formData.append('_method', 'POST');
 
         const response = await api.post('/profile/professionnel', formData);
-        toast.success("Profil complete avec success !", {
+        toast.success(t('companyRegistration.success'), {
             duration: 3000,
         });
         resetForm();
         navigate("/dashboard");
       }catch(err){
-        toast.error("Erreur de connexion", {
-            description: `${err.response.data.message}` || "Email ou mot de passe incorrect. Veuillez réessayer.",
+        toast.error(t('login.error'), {
+            description: `${err.response.data.message}` || t('login.invalid'),
             duration: 5000,
         });
       }finally{
@@ -185,11 +186,10 @@ const CompletionEntreprise = () => {
           className="w-full lg:w-1/2 bg-gradient-to-b from-[#0A2342] to-green-900/50 flex flex-col items-center justify-center px-6 lg:px-12 py-12 text-white relative"
         >
           <motion.h1 className="text-3xl md:text-4xl font-bold mb-6 text-center lg:text-left">
-            Complétez Votre Profil Entreprise
+            {t('profileCompletion.completeProfile')}
           </motion.h1>
           <p className="text-base text-center lg:text-left mb-8 opacity-90 max-w-lg">
-            Finalisez votre profil pour accéder à notre plateforme et recruter les meilleurs talents. 
-            Ajoutez les informations de votre entreprise pour commencer dès aujourd'hui.
+            {t('profileCompletion.completeToIncreaseVisibility')}
           </p>
           <motion.div
             className="w-full flex justify-center relative"
@@ -200,7 +200,7 @@ const CompletionEntreprise = () => {
           >
             <img
               src={Welcome1}
-              alt="Welcome Illustration"
+              alt={t('companyRegistration.welcomeImageAlt')}
               className="max-w-[80%] h-auto drop-shadow-2xl"
             />
           </motion.div>
@@ -222,23 +222,23 @@ const CompletionEntreprise = () => {
           </motion.button>
 
           <h2 className="text-2xl font-bold text-blue-800 mb-6 text-center">
-            Informations de l'entreprise
+            {t('companyRegistration.companyInfo')}
           </h2>
 
           {/* Champs scrollables */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto pb-24">
-            <InputField id="titre_professionnel" label="Titre Professionnel" formik={formik} icon={Briefcase} />
-            <InputField id="email_pro" label="Email Professionnel" formik={formik} icon={User} type="email" />
-            <InputField id="telephone_pro" label="Téléphone Professionnel" formik={formik} icon={Phone} />
-            <InputField id="nom_entreprise" label="Nom de l'entreprise" formik={formik} icon={Building} />
-            <InputField id="site_web" label="Site Web" formik={formik} icon={Globe} />
-            <InputField id="adresse" label="Adresse" formik={formik} icon={MapPin} />
-            <InputField id="ville" label="Ville" formik={formik} icon={MapPin} />
-            <InputField id="pays" label="Pays" formik={formik} icon={Globe} />
-            <InputField id="num_contribuable" label="N° de Contribuable (NIU)" formik={formik} icon={Hash} />
-            <TextAreaField id="description_entreprise" label="Description de l'entreprise" formik={formik} icon={Info} />
-            <FileField id="logo" label="Logo de l'entreprise" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." isRequired={true} />
-            <FileField id="image_couverture" label="Image de couverture (Optionnel)" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
+            <InputField id="titre_professionnel" label={t('companyRegistration.professionalTitle')} formik={formik} icon={Briefcase} />
+            <InputField id="email_pro" label={t('companyRegistration.professionalEmail')} formik={formik} icon={User} type="email" />
+            <InputField id="telephone_pro" label={t('companyRegistration.professionalPhone')} formik={formik} icon={Phone} />
+            <InputField id="nom_entreprise" label={t('companyRegistration.companyName')} formik={formik} icon={Building} />
+            <InputField id="site_web" label={t('companyRegistration.website')} formik={formik} icon={Globe} />
+            <InputField id="adresse" label={t('companyRegistration.address')} formik={formik} icon={MapPin} />
+            <InputField id="ville" label={t('companyRegistration.city')} formik={formik} icon={MapPin} />
+            <InputField id="pays" label={t('companyRegistration.country')} formik={formik} icon={Globe} />
+            <InputField id="num_contribuable" label={t('companyRegistration.taxId')} formik={formik} icon={Hash} />
+            <TextAreaField id="description_entreprise" label={t('companyRegistration.description')} formik={formik} icon={Info} />
+            <FileField id="logo" label={t('companyRegistration.logo')} formik={formik} helpText={t('companyRegistration.logoHelp')} isRequired={true} />
+            <FileField id="image_couverture" label={t('companyRegistration.coverImage')} formik={formik} helpText={t('companyRegistration.coverHelp')} />
           </div>
 
           {/* Bouton fixe en bas */}
@@ -255,7 +255,7 @@ const CompletionEntreprise = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {formik.isSubmitting  ? <ClipLoader size={22} color="#fff" /> : "Enregistrer"}
+              {formik.isSubmitting  ? <ClipLoader size={22} color="#fff" /> : t('companyRegistration.save')}
             </motion.button>
           </motion.div>
         </form>

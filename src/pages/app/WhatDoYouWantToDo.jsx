@@ -9,8 +9,10 @@ import Icon3 from '../../assets/icon3.png'; // Acheter
 import Icon4 from '../../assets/icon4.png'; // Vendre
 import { useAuth } from '@/hooks/useAuth';
 import HeaderProfil from '@/components/app/HeaderProfil';
+import { useTranslation } from 'react-i18next';
 
 const WhatDoYouWantToDo = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { professionnel, token } = useAuth();
     console.log(professionnel);
@@ -21,22 +23,22 @@ const WhatDoYouWantToDo = () => {
 
         // Redirection vers les pages appropriées selon l'action
         switch (action) {
-            case 'Postuler':
+            case t('whatToDo.apply'):
                 navigate('/CandidatProfil');
                 break;
-            case 'Recruter':
+            case t('whatToDo.recruit'):
                 if (professionnel && Object.keys(professionnel).length > 0) {
                     // S'il est défini et non vide
                     navigate('/dashboard');
                 } else {
-                    // Sinon on l’envoie s’inscrire
+                    // Sinon on l'envoie s'inscrire
                     navigate('/inscriptionEntreprise');
                 }
                 break;
-            case 'Acheter':
+            case t('whatToDo.buy'):
                 window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
                 break;
-            case 'Vendre':
+            case t('whatToDo.sell'):
                 window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/seller?token=${token}`;
                 break;
             default:
@@ -45,10 +47,10 @@ const WhatDoYouWantToDo = () => {
     };
 
     const actionCards = [
-        { icon: Icon1, text: 'Postuler', alt: 'Icône Postuler' },
-        { icon: Icon2, text: 'Recruter', alt: 'Icône Recruter' },
-        { icon: Icon3, text: 'Acheter', alt: 'Icône Acheter' },
-        { icon: Icon4, text: 'Vendre', alt: 'Icône Vendre' },
+        { icon: Icon1, text: t('whatToDo.apply'), alt: t('whatToDo.applyAlt') },
+        { icon: Icon2, text: t('whatToDo.recruit'), alt: t('whatToDo.recruitAlt') },
+        { icon: Icon3, text: t('whatToDo.buy'), alt: t('whatToDo.buyAlt') },
+        { icon: Icon4, text: t('whatToDo.sell'), alt: t('whatToDo.sellAlt') },
     ];
 
     return (
@@ -60,12 +62,12 @@ const WhatDoYouWantToDo = () => {
                     {/* Section Gauche : Titre et Image */}
                     <div className="flex flex-col items-center lg:items-start lg:w-1/2 mb-10 lg:mb-0">
                         <h1 className="text-3xl lg:text-4xl font-bold text-blue-900 leading-tight mb-8 text-center lg:text-left">
-                            Que voulez-vous faire ?
+                            {t('whatToDo.title')}
                         </h1>
                         <div className="w-full max-w-md lg:max-w-none">
                             <img
                                 src={GroupeImage}
-                                alt="Illustration de groupe de personnes interagissant via un téléphone"
+                                alt={t('whatToDo.imageAlt')}
                                 className="w-full h-auto object-contain"
                             />
                         </div>

@@ -4,8 +4,10 @@ import toast from 'react-hot-toast';
 import api from '../../services/api';
 // Assurez-vous que le chemin est correct en fonction de votre structure de projet
 import EmailSecureIcon from '../../assets/emailsecure.png'; // Renommage pour être plus descriptif
+import { useTranslation } from 'react-i18next';
 
 const EmailVerification = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const location = useLocation();
     const { email, token, signature} = location.state || {};
@@ -42,18 +44,18 @@ const EmailVerification = () => {
     const handleVerifyEmail = async () => {
         const fullCode = code.join('');
         if (fullCode.length !== 6) {
-            toast.error("Veuillez saisir le code à 6 chiffres.");
+            toast.error(t('emailVerification.enter6Digits'));
             return;
         }
         setIsLoading(true);
         try {
             await api.post(`/email/verify/${token}?signature=${signature}`, { code: fullCode });
-            toast.success("Votre email a été vérifié avec succès !");
+            toast.success(t('emailVerification.success'));
             setTimeout(() => {
                 navigate('/login');
             }, 2000);
         } catch (error) {
-            toast.error(error.response?.data?.message || "Code de vérification invalide ou expiré.");
+            toast.error(error.response?.data?.message || t('emailVerification.invalidCode'));
         } finally {
             setIsLoading(false);
         }
@@ -63,9 +65,9 @@ const EmailVerification = () => {
         setIsLoading(true);
         try {
             await api.post('/resend-verification-email', { email: email });
-            toast.success("Un nouveau code a été envoyé à votre adresse email.");
+            toast.success(t('emailVerification.resendSuccess'));
         } catch (error) {
-            toast.error(error.response?.data?.message || "Erreur lors du renvoi du code.");
+            toast.error(error.response?.data?.message || t('emailVerification.resendError'));
         } finally {
             setIsLoading(false);
         }
@@ -79,19 +81,16 @@ const EmailVerification = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-                {/* Icône de l'email sécurisé */}
-                <div className="mb-6 flex justify-center">
-                    <img src={EmailSecureIcon} alt="Email sécurisé" className="w-24 h-24 object-contain" />
+            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
+                <div className="text-center mb-8">
+                    <img src={EmailSecureIcon} alt={t('emailVerification.iconAlt')} className="mx-auto h-16 w-16 mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('emailVerification.title')}</h2>
+                    <p className="text-gray-600">{t('emailVerification.subtitle')}</p>
                 </div>
 
-                {/* Titre */}
-                <h1 className="text-2xl font-bold text-gray-800 mb-2">Vérifiez votre adresse e-mail</h1>
-
-                {/* Description avec l'adresse email */}
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                    Nous venons d'envoyer un code de confirmation
-                    à votre adresse email <span className="font-semibold">{email}</span>
+                    {t('emailVerification.sentCode')}
+                    <span className="font-semibold">{email}</span>
                 </p>
 
                 {/* Champs de saisie du code */}
@@ -109,19 +108,19 @@ const EmailVerification = () => {
                                        border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1
                                        focus:ring-green-500 outline-none transition-all duration-200
                                        bg-gray-100 placeholder-gray-400"
-                            aria-label={`Code digit ${index + 1}`}
+                            aria-label={t('emailVerification.digitLabel', { index: index + 1 })}
                         />
                     ))}
                 </div>
 
                 {/* Lien "Email incorrect ?" */}
                 <p className="text-gray-500 mb-6 text-sm">
-                    <span className="font-semibold">Email incorrect ?</span>{' '}
+                    <span className="font-semibold">{t('emailVerification.wrongEmail')} ?</span>{' '}
                     <button
                         onClick={handleChangeEmail}
                         className="text-green-600 hover:text-green-700 font-medium underline focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
-                        Changez ici
+                        {t('emailVerification.changeHere')}
                     </button>
                 </p>
 
@@ -134,7 +133,7 @@ const EmailVerification = () => {
                                focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-4
                                disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                    {isLoading ? 'Vérification...' : "Vérifier l'email"}
+                    {isLoading ? t('emailVerification.verifying') : t('emailVerification.verify')}
                 </button>
 
                 {/* Lien "Renvoyer le code" */}
@@ -144,7 +143,7 @@ const EmailVerification = () => {
                     className="text-gray-500 text-sm hover:text-gray-700 transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                 >
-                    Renvoyer le code
+                    {t('emailVerification.resend')}
                 </button>
             </div>
         </div>

@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { X, Save } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const validationSchema = Yup.object({
   telephone: Yup.string().required('Le téléphone est requis'),
@@ -17,6 +18,7 @@ const validationSchema = Yup.object({
 });
 
 const CompletionCandidatProfil = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -76,7 +78,7 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
 
   const renderField = (id, label, type = 'text', options = []) => (
     <div key={id}>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">{label}<span className="text-red-500">*</span></label>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">{t(`profileCompletion.${label.toLowerCase().replace(/[^a-z]/g, '')}`)}<span className="text-red-500">*</span></label>
       {type === 'select' ? (
         <select
           id={id}
@@ -115,7 +117,7 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
         >
           <motion.div className="bg-white w-full max-w-2xl rounded-2xl shadow-2xl relative overflow-hidden">
             <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-gray-800">Compléter votre profil</h2>
+              <h2 className="text-xl font-bold text-gray-800">{t('profileCompletion.completeYourProfile')}</h2>
               <motion.button
                 onClick={onClose}
                 className="text-gray-500 hover:text-gray-800"
@@ -128,11 +130,11 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
             <form onSubmit={formik.handleSubmit}>
               <div className="p-6 max-h-[70vh] overflow-y-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {renderField('telephone', 'Téléphone', 'tel')}
-                  {renderField('anniversaire', 'Anniversaire', 'date')}
+                  {renderField('telephone', t('profileCompletion.telephone'), 'tel')}
+                  {renderField('anniversaire', t('profileCompletion.anniversaire'), 'date')}
                   
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Sexe<span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">{t('profileCompletion.sexe')}<span className="text-red-500">*</span></label>
                     <div className="flex items-center space-x-6">
                       {['Homme', 'Femme'].map((g) => (
                         <label key={g} className="flex items-center cursor-pointer">
@@ -153,10 +155,10 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
                     ) : null}
                   </div>
 
-                  {renderField('pays', 'Pays', 'select', ['Cameroon', 'France', 'Nigeria'])}
-                  {renderField('region', 'Région / Province / État', 'select', ['Littoral', 'Centre', 'Ouest'])}
-                  {renderField('ville', 'Ville')}
-                  {renderField('adresse', 'Adresse (Ex: Makepe)')}
+                  {renderField('pays', t('profileCompletion.pays'), 'select', ['Cameroon', 'France', 'Nigeria'])}
+                  {renderField('region', t('profileCompletion.region'), 'select', ['Littoral', 'Centre', 'Ouest'])}
+                  {renderField('ville', t('profileCompletion.ville'))}
+                  {renderField('adresse', t('profileCompletion.adresse'))}
                 </div>
               </div>
 
@@ -167,7 +169,7 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
                   className="px-6 py-2 rounded-lg bg-gray-200 text-gray-700 font-semibold hover:bg-gray-300 transition-colors"
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 >
-                  Annuler
+                  {t('profileCompletion.cancel')}
                 </motion.button>
                 <motion.button
                   type="submit"
@@ -176,7 +178,7 @@ const CompletionCandidatProfil = ({ isOpen, onClose }) => {
                   whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                 >
                   <Save size={16} />
-                  Sauvegarder
+                  {t('profileCompletion.save')}
                 </motion.button>
               </div>
             </form>

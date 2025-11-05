@@ -8,8 +8,10 @@ import Footer from '../../components/public/Footer';
 import PageWrapper from '../../components/public/PageWrapper';
 import { sendPasswordResetLink } from '../../services/auth';
 import { validationForgotPasswordSchema } from '../../schemas';
+import { useTranslation } from 'react-i18next';
 
 const ForgotPasswordForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const onSubmit = async (values, actions) => {
@@ -54,13 +56,12 @@ const ForgotPasswordForm = () => {
               <div className="w-full max-w-2xl space-y-6">
                 {/* Titre */}
                 <h2 className="text-center text-[#10B981] font-semibold text-lg md:text-xl">
-                Vous avez oublié votre mot de passe
+                {t('forgotPasswordForm.title')}
                 </h2>
 
                 {/* Texte d'information */}
                 <p className="text-center text-gray-800 text-sm">
-                Si vous avez oublié votre mot de passe, merci de saisir l’adresse e-mail associée à votre compte.
-                Nous vous enverrons un mail à cette adresse contenant un lien vous permettant d’en créer un nouveau.
+                {t('forgotPasswordForm.infoText')}
                 </p>
 
                 <hr className="border-t border-gray-300" />
@@ -71,7 +72,7 @@ const ForgotPasswordForm = () => {
                   <div className="bg-gray-200 p-2 rounded-md">
                     <div className="flex items-center gap-2">
                         <label htmlFor="email" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                        Adresse email * :
+                        {t('forgotPasswordForm.emailLabel')} * :
                         </label>
                         <input
                         id="email"
@@ -95,7 +96,7 @@ const ForgotPasswordForm = () => {
                       disabled={isSubmitting}
                       className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300 disabled:bg-gray-400"
                       >
-                      Continuer
+                      {t('forgotPasswordForm.continue')}
                       </button>
                   </div>
                 </form>
@@ -105,6 +106,7 @@ const ForgotPasswordForm = () => {
           <Footer />
       </PageWrapper>
     </>
-  )};
+  );
+};
 
 export default ForgotPasswordForm;

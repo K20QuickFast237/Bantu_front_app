@@ -6,8 +6,10 @@ import Footer from '@/components/public/Footer';
 import HeroCompany from '@/components/app/HeroCompany'; // On réutilise le Hero
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import CompanyJobCard from '@/components/app/CompanyJobCard'; // <-- On importe notre nouveau composant
+import { useTranslation } from 'react-i18next';
 
 function CompanyProfilePage() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -49,7 +51,7 @@ function CompanyProfilePage() {
           {/* On passe les données de l'entreprise au Hero */}
           <HeroCompany companyData={company} />
           <div className="py-8">
-            <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Offres d'emploi chez {company.nom_entreprise}</h2>
+            <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">{t('companyProfile.jobOffersAt')} {company.nom_entreprise}</h2>
             <CompanyJobCard jobs={company.offres} />
           </div>
         </>

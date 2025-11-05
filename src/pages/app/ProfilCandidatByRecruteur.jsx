@@ -5,8 +5,10 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
+import { useTranslation } from 'react-i18next';
 
 export default function ProfilCandidatByRecruteur() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [candidat, setCandidat] = useState(null);
@@ -20,7 +22,7 @@ export default function ProfilCandidatByRecruteur() {
         const response = await api.get(`/user/${id}`);
         setCandidat(response.data);
       } catch (error) {
-        toast.error("Erreur lors du chargement du profil du candidat.");
+        toast.error(t('candidateProfile.errorLoading'));
         console.error(error);
       } finally {
         setLoading(false);
@@ -28,7 +30,7 @@ export default function ProfilCandidatByRecruteur() {
     };
 
     fetchCandidat();
-  }, [id, navigate]);
+  }, [id, navigate, t]);
 
   if (loading) {
     return (
@@ -41,8 +43,8 @@ export default function ProfilCandidatByRecruteur() {
   if (!candidat) {
     return (
       <div className="text-center py-10">
-        <p>Candidat non trouvé.</p>
-        <Button onClick={() => navigate(-1)} className="mt-4" variant="outline">Retour</Button>
+        <p>{t('candidateProfile.notFound')}</p>
+        <Button onClick={() => navigate(-1)} className="mt-4" variant="outline">{t('candidateProfile.back')}</Button>
       </div>
     );
   }
@@ -56,20 +58,20 @@ export default function ProfilCandidatByRecruteur() {
         <div className="mb-8">
           <Button onClick={() => navigate(-1)} variant="ghost" className="mb-4">
             <ChevronLeft size={20} className="mr-2" />
-            Retour
+            {t('candidateProfile.back')}
           </Button>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Profil de {candidat.prenom} {candidat.nom}</h1>
-          <p className="text-gray-600 text-sm">Membre depuis {new Date(candidat.created_at).toLocaleDateString('fr-FR')}</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{t('candidateProfile.profileOf')} {candidat.prenom} {candidat.nom}</h1>
+          <p className="text-gray-600 text-sm">{t('candidateProfile.memberSince')} {new Date(candidat.created_at).toLocaleDateString('fr-FR')}</p>
         </div>
 
         {/* Personal Info Section */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-300 p-6 mb-6">
-          <h2 className="text-2xl font-bold text-blue-900 mb-6">Informations Personnelles</h2>
+          <h2 className="text-2xl font-bold text-blue-900 mb-6">{t('applicationDetails.personalInfo')}</h2>
           <div className="flex flex-col md:flex-row gap-8">
             {/* Photo */}
             <div className="flex-shrink-0">
               {particulier?.image_profil ? (
-                <img src={particulier.image_profil} alt="Profil" className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-md" />
+                <img src={particulier.image_profil} alt={t('personalInfo.profilePhotoAlt')} className="w-40 h-40 rounded-full object-cover border-4 border-white shadow-md" />
               ) : (
                 <div className="w-40 h-40 bg-gray-300 rounded-full flex items-center justify-center">
                   <User className="w-20 h-20 text-gray-500" />
@@ -101,9 +103,9 @@ export default function ProfilCandidatByRecruteur() {
             {/* Right Info */}
             <div className="flex-1 space-y-4">
               <div className="space-y-2 text-sm">
-                <p className="text-green-600 font-semibold">Visibilité :</p>
+                <p className="text-green-600 font-semibold">{t('candidateProfile.visibility')} :</p>
                 <span className={`px-3 py-1 text-xs font-medium rounded-full ${particulier?.is_visible ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                  {particulier?.is_visible ? 'Visible par les recruteurs' : 'Non visible'}
+                  {particulier?.is_visible ? t('candidateProfile.visibleToRecruiters') : t('candidateProfile.notVisible')}
                 </span>
               </div>
             </div>
@@ -113,7 +115,7 @@ export default function ProfilCandidatByRecruteur() {
         {/* Profile Summary */}
         {particulier?.resume_profil && (
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Résumé Du Profil</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('candidateProfile.profileSummary')}</h2>
             <p className="text-gray-700 text-sm leading-relaxed">{particulier.resume_profil}</p>
           </div>
         )}
@@ -121,7 +123,7 @@ export default function ProfilCandidatByRecruteur() {
         {/* Experiences */}
         {experiences?.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Expériences</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('experiences.title')}</h2>
             <div className="space-y-6">
               {experiences.map((exp) => (
                 <div key={exp.id} className="border-l-4 border-green-600 pl-4">
@@ -138,7 +140,7 @@ export default function ProfilCandidatByRecruteur() {
         {/* Competences */}
         {skills?.length > 0 && (
           <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">Compétences</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('skills.title')}</h2>
             <div className="flex flex-wrap gap-2">
               {skills.map((skill) => (
                 <span key={skill.id} className="bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-1 rounded-full">
@@ -151,7 +153,7 @@ export default function ProfilCandidatByRecruteur() {
 
         {/* Education (Statique pour le moment) */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Diplômes & Formations</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('formations.title')}</h2>
           <div className="space-y-6">
             {[
               { school: 'Université de Yaoundé I', location: 'Yaoundé, Cameroun', title: 'Licence en Informatique', date: '2018 - 2021', skills: 'Algorithmique, Bases de données' },
@@ -161,7 +163,7 @@ export default function ProfilCandidatByRecruteur() {
                 <h3 className="font-semibold text-gray-800">{edu.title}</h3>
                 <p className="text-gray-600 text-sm">{edu.school} • {edu.location}</p>
                 <p className="text-gray-500 text-sm">{edu.date}</p>
-                <p className="text-gray-600 text-sm mt-2">Compétences acquises : {edu.skills}</p>
+                <p className="text-gray-600 text-sm mt-2">{t('candidateProfile.skillsAcquired')} : {edu.skills}</p>
               </div>
             ))}
           </div>
@@ -169,13 +171,13 @@ export default function ProfilCandidatByRecruteur() {
 
         {/* Other Resources */}
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Autres Ressources</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">{t('resources.title')}</h2>
           <div className="space-y-3">
             {particulier?.cv_link && (
               <div className="flex items-center gap-4">
                 <Download size={16} className="text-gray-500" />
                 <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm flex items-center gap-2">
-                  <span>Télécharger le CV</span>
+                  <span>{t('candidateProfile.downloadCv')}</span>
                 </a>
               </div>
             )}

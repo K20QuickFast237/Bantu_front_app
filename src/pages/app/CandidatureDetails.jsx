@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, Download, User, Eye, Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 const JobApplicationDetail = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [application, setApplication] = useState(null);
@@ -33,14 +35,14 @@ const JobApplicationDetail = () => {
         const response = await api.get(`/candidatures/${id}`);
         setApplication(response.data);
       } catch (error) {
-        toast.error(error.message || "Erreur lors du chargement de la candidature.");
+        toast.error(error.message || t('applicationDetails.errorLoadingApplication'));
         navigate('/job-application');
       } finally {
         setLoading(false);
       }
     };
     fetchApplication();
-  }, [id, navigate]);
+  }, [id, navigate, t]);
 
   const handleStatusChange = async (newStatus) => {
     if (!application) return;
@@ -54,11 +56,11 @@ const JobApplicationDetail = () => {
         note_ia: application.note_ia || 0
       });
 
-      toast.success(`Candidature ${newStatus === 'preselectionne' ? 'présélectionnée' : 'rejetée'} avec succès.`);
+      toast.success(`${t('applicationDetails.application')} ${newStatus === 'preselectionne' ? t('applicationDetails.preselected') : t('applicationDetails.rejected')} ${t('applicationDetails.successfully')}`);
       setApplication(prev => ({ ...prev, statut: newStatus }));
 
     } catch (error) {
-      toast.error(error.message || "Erreur lors de la mise à jour du statut.");
+      toast.error(error.message || t('applicationDetails.errorUpdatingStatus'));
     } finally {
       setStatusChangeLoading(prev => ({ ...prev, [loadingKey]: false }));
     }
@@ -66,19 +68,20 @@ const JobApplicationDetail = () => {
 
   const handleSendInvitation = async () => {
     if (!interviewDate) {
-      toast.error("Veuillez sélectionner une date pour l'entretien.");
+      toast.error(t('applicationDetails.selectDateAndTime'));
       return;
     }
+
     setInviteLoading(true);
     try {
-      await api.post(`/candidatures/${id}/inviter`, {
-        date_entretien: interviewDate,
+      await api.post(`/candidatures/${application.id}/invite`, {
+        date_entretien: interviewDate
       });
-      toast.success("Invitation à l'entretien envoyée avec succès !");
+      toast.success(t('applicationDetails.invitationSent'));
       setIsInviteModalOpen(false);
       setInterviewDate('');
     } catch (error) {
-      toast.error(error.response?.data?.message || "Erreur lors de l'envoi de l'invitation.");
+      toast.error(error.response?.data?.message || t('applicationDetails.errorSendingInvitation'));
     } finally {
       setInviteLoading(false);
     }
@@ -95,8 +98,8 @@ const JobApplicationDetail = () => {
   if (!application) {
     return (
       <div className="text-center py-10">
-        <p>Candidature non trouvée.</p>
-        <Button onClick={() => navigate('/job-application')} className="mt-4" variant="outline">Retour à la liste</Button>
+        <p>{t('applicationDetails.applicationNotFound')}</p>
+        <Button onClick={() => navigate('/job-application')} className="mt-4" variant="outline">{t('applicationDetails.backToList')}</Button>
       </div>
     );
   }
@@ -104,13 +107,17 @@ const JobApplicationDetail = () => {
   const { particulier, offre, cv_url, cv_genere } = application;
   console.log(particulier);
   const infos = {
-      nom: particulier?.nom || 'N/A',
+      nom: particulier?.nom || t('applicationDetails.notProvided'),
       prenom: particulier?.prenom || null,
-      email: particulier?.email || 'N/A',
-      telephone: particulier?.telephone ||'N/A',
-      adresse: particulier?.adresse ||'N/A',
+      email: particulier?.email || t('applicationDetails.notProvided'),
+      telephone: particulier?.telephone || t('applicationDetails.notProvided'),
+      adresse: particulier?.adresse || t('applicationDetails.notProvided'),
   };
   const nomComplet = infos.prenom ? `${infos.nom} ${infos.prenom}` : infos.nom;
+
+  const candidateStatut = application.statut === 'preselectionne' ? t('applicationDetails.preselected') : application.statut === 'rejete' ? t('applicationDetails.rejected') : t('applicationDetails.pending');
+
+  const formattedDate = application.created_at ? application.created_at.slice(0, 10).split('-').reverse().join('/') : '';
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8">
@@ -120,75 +127,82 @@ const JobApplicationDetail = () => {
                     <button
                         onClick={() => navigate('/job-application')}
                         className="p-2 text-gray-600 hover:text-gray-800 transition-colors"
-                        aria-label="Retour à la liste"
+                        aria-label={t('applicationDetails.backToList')}
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
                     <div>
                         <h1 className="text-3xl font-bold text-green-600 mb-2">
-                            Candidature | {offre?.titre_poste || ''} | {nomComplet}
+                            {t('applicationDetails.application')} | {offre?.titre_poste || ''} | {nomComplet}
                         </h1>
                         <p className="text-gray-700">
-                            Date de candidature : {application.created_at ? application.created_at.slice(0, 10).split('-').reverse().join('/') : ''}
+                            {t('applicationDetails.applicationDate')} : {formattedDate}
                         </p>
+                        <div className="flex items-center gap-2 mt-2">
+                            <span>{t('applicationDetails.status')} :</span>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${application.statut === 'preselectionne' ? 'bg-green-100 text-green-800' : application.statut === 'rejete' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                              {candidateStatut}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-3">
                     <Button
                         variant="outline"
                         onClick={() => setIsInviteModalOpen(true)}
+                        disabled={application.statut !== 'preselectionne'}
                     >
                         <Calendar className="w-4 h-4 mr-2" />
-                        Inviter à un entretien
+                        {t('applicationDetails.inviteInterview')}
                     </Button>
                     <Button
                         className="bg-orange-500 hover:bg-orange-600"
                         onClick={() => handleStatusChange("preselectionne")}
                         disabled={statusChangeLoading.preselect || application.statut === 'preselectionne'}
                     >
-                        {statusChangeLoading.preselect ? 'Chargement...' : 'Présélectionner'}
+                        {statusChangeLoading.preselect ? t('applicationDetails.loading') : t('applicationDetails.preselect')}
                     </Button>
                     <Button
                         variant="destructive"
                         onClick={() => handleStatusChange("rejete")}
                         disabled={statusChangeLoading.reject || application.statut === 'rejete'}
                     >
-                        {statusChangeLoading.reject ? 'Chargement...' : 'Rejeter'}
+                        {statusChangeLoading.reject ? t('applicationDetails.loading') : t('applicationDetails.reject')}
                     </Button>
                 </div>
             </div>
         </div>
 
         <div className="bg-white border border-gray-300 rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Informations personnelles</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">{t('applicationDetails.personalInfo')}</h2>
             <div className="space-y-4">
                 <div>
-                    <span className="font-bold text-gray-900">Nom : </span>
+                    <span className="font-bold text-gray-900">{t('applicationDetails.name')} : </span>
                     <span className="text-gray-700">{infos.nom}</span>
                 </div>
-                {infos.prenom && infos.prenom !== 'N/A' && (
+                {infos.prenom && infos.prenom !== t('applicationDetails.notProvided') && (
                     <div>
-                        <span className="font-bold text-gray-900">Prénom : </span>
+                        <span className="font-bold text-gray-900">{t('applicationDetails.firstname')} : </span>
                         <span className="text-gray-700">{infos.prenom}</span>
                     </div>
                 )}
                 <div>
-                    <span className="font-bold text-gray-900">Adresse : </span>
+                    <span className="font-bold text-gray-900">{t('applicationDetails.address')} : </span>
                     <span className="text-gray-700">{infos.adresse}</span>
                 </div>
                 <div>
-                    <span className="font-bold text-gray-900">Email : </span>
+                    <span className="font-bold text-gray-900">{t('applicationDetails.email')} : </span>
                     <span className="text-gray-700">{infos.email}</span>
                 </div>
                 <div>
-                    <span className="font-bold text-gray-900">Téléphone : </span>
+                    <span className="font-bold text-gray-900">{t('applicationDetails.phone')} : </span>
                     <span className="text-gray-700">{infos.telephone}</span>
                 </div>
             </div>
         </div>
 
         <div className="bg-white border border-gray-300 rounded-lg p-6 mb-12">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Profil candidat</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">{t('applicationDetails.cvSection')}</h2>
             <div className="flex gap-8">
                 {cv_genere ? (
                     <button
@@ -196,20 +210,20 @@ const JobApplicationDetail = () => {
                       className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2"
                     >
                         <User className="w-4 h-4" />
-                        Voir le profil du candidat
+                        {t('applicationDetails.viewCandidateProfile')}
                     </button>
                 ) : cv_url ? (
                     <>
                         <a href={`/storage/${cv_url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 font-medium underline flex items-center gap-2">
                             <Eye className="w-4 h-4" />
-                            Prévisualiser le CV
+                            {t('applicationDetails.previewCv')}
                         </a>
                         <a href={`/storage/${cv_url}`} download className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2">
                             <Download className="w-4 h-4" />
-                            Télécharger le CV
+                            {t('applicationDetails.downloadCv')}
                         </a>
                     </>
-                ) : <p className="text-gray-500">Aucun CV ou profil BantuLink fourni.</p>}
+                ) : <p className="text-gray-500">{t('applicationDetails.noCvOrProfile')}</p>}
             </div>
         </div>
 
@@ -217,14 +231,14 @@ const JobApplicationDetail = () => {
         <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
           <DialogContent>
               <DialogHeader>
-                  <DialogTitle>Inviter à un entretien</DialogTitle>
+                  <DialogTitle>{t('applicationDetails.inviteToInterview')}</DialogTitle>
                   <DialogDescription>
-                      Sélectionnez une date et une heure pour l'entretien avec <strong>{nomComplet}</strong>.
+                      {t('applicationDetails.selectDateTimeForInterview')} <strong>{nomComplet}</strong>.
                   </DialogDescription>
               </DialogHeader>
               <div className="py-4">
                   <label htmlFor="interviewDate" className="block text-sm font-medium text-gray-700 mb-2">
-                      Date et heure de l'entretien
+                      {t('applicationDetails.interviewDateTime')}
                   </label>
                   <Input
                       id="interviewDate"
@@ -234,8 +248,8 @@ const JobApplicationDetail = () => {
                   />
               </div>
               <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsInviteModalOpen(false)}>Annuler</Button>
-                  <Button onClick={handleSendInvitation} disabled={inviteLoading}>{inviteLoading ? 'Envoi...' : 'Confirmer l\'invitation'}</Button>
+                  <Button variant="outline" onClick={() => setIsInviteModalOpen(false)}>{t('applicationDetails.cancel')}</Button>
+                  <Button onClick={handleSendInvitation} disabled={inviteLoading}>{inviteLoading ? t('applicationDetails.sending') : t('applicationDetails.confirmInvitation')}</Button>
               </DialogFooter>
           </DialogContent>
         </Dialog>

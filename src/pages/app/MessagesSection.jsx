@@ -6,6 +6,7 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // Composants UI
 const Avatar = ({ fallback, color, online, size = 'default' }) => {
@@ -34,9 +35,9 @@ const SearchInput = ({ placeholder, value, onChange }) => (
 );
 
 const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
-  // Trouver l'autre participant dans la conversation
+  const { t } = useTranslation();
   const otherParticipant = conv.participants?.find(p => p.id !== currentUser?.id);
-  const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+  const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : t('messagesSection.unknownUser');
   const lastMessage = conv.messages?.[conv.messages.length - 1];
 
   return (
@@ -51,7 +52,7 @@ const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
           <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{lastMessage ? new Date(lastMessage.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''}</p>
         </div>
         <div className="flex justify-between items-start mt-1">
-          <p className="text-xs text-gray-500 truncate pr-4">{lastMessage?.content || 'Pas de messages'}</p>
+          <p className="text-xs text-gray-500 truncate pr-4">{lastMessage?.content || t('messagesSection.noMessage')}</p>
           {conv.unread_count > 0 && (
             <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0">
               {conv.unread_count}
@@ -64,6 +65,7 @@ const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
 };
 
 const ConversationList = ({ conversations, onSelect, selectedId, loading, currentUser }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const filteredConversations = conversations.filter(c => {
     if (!currentUser) return false;
@@ -77,7 +79,7 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
     return (
       <div className="w-full h-full flex flex-col bg-white border-r border-gray-200 items-center justify-center" style={{ flexShrink: 0 }}>
         <Loader2 className="w-8 h-8 animate-spin text-[#009739]" />
-        <p className="mt-2 text-gray-600">Chargement...</p>
+        <p className="mt-2 text-gray-600">{t('companies.loading')}</p>
       </div>
     );
   }
@@ -86,19 +88,19 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
       <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
         <div className="p-4 border-b border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('header.support')}</h2>
             <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#009739]">
               <Plus className="w-5 h-5" />
             </button>
           </div>
           <SearchInput
-            placeholder="Rechercher une conversation..."
+            placeholder={t('jobSearch.searchByTitleSkills')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <p className="w-full h-full flex flex-col bg-white items-center justify-center">
-          Aucune conversation pour l'instant.
+          {t('messagesSection.noConversation')}
         </p>
       </div>
     );
@@ -108,13 +110,13 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
     <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
       <div className="p-4 border-b border-gray-200">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('header.support')}</h2>
           <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#009739]">
             <Plus className="w-5 h-5" />
           </button>
         </div>
         <SearchInput
-          placeholder="Rechercher une conversation..."
+          placeholder={t('jobSearch.searchByTitleSkills')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -135,6 +137,7 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
 };
 
 const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessageSent, onMessageDeleted }) => {
+  const { t } = useTranslation();
   const [newMessage, setNewMessage] = useState('');
   const [attachments, setAttachments] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -142,33 +145,25 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
-  const textareaRef = useRef(null); // Added textareaRef for auto-resizing
+  const textareaRef = useRef(null);
 
-  // 👇 Real-time integration
   useEffect(() => {
-    if (!conversation?.id || !user) { // Ensure conversation and user are available
+    if (!conversation?.id || !user) {
       return;
     }
 
-    // Subscribe to the private channel for this conversation
-    // The channel name should match your Laravel backend's broadcasting setup
-    const channelName = `private-chat.${conversation.id}`; // Assuming private channels for chat
+    const channelName = `private-chat.${conversation.id}`;
     const channel = echo.private(channelName);
 
-    // Listen for the 'MessageSent' event (adjust event name if different in Laravel)
-    channel.listen('MessageSent', (e) => { // Assuming 'MessageSent' is the event name
-      // Check if the message is not from the current user to avoid duplicates
-      // (messages sent by the current user are optimistically added)
+    channel.listen('MessageSent', (e) => {
       if (e.message.user_id !== user.id) {
         setMessages(prevMessages => [...prevMessages, e.message]);
       }
-      onMessageSent(); // To refresh the conversation list in the sidebar (e.g., last message, unread count)
+      onMessageSent();
     });
 
-    // Cleanup function: unsubscribe from the channel when component unmounts
-    // or when the selected conversation changes
     return () => { echo.leave(channelName); };
-  }, [conversation?.id, user, onMessageSent]); // Re-run effect if conversation or user changes
+  }, [conversation?.id, user, onMessageSent]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -178,20 +173,19 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         const response = await api.get(`/conversations/${conversation.id}`);
         setMessages(response.data.messages || []);
       } catch (error) {
-        toast.error("Erreur lors du chargement des messages.");
+        toast.error(t('applicationDetails.errorLoadingApplication'));
         setMessages([]);
       } finally {
         setLoading(false);
       }
     };
     fetchMessages();
-  }, [conversation?.id]);
+  }, [conversation?.id, t]);
 
-  // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto'; // Reset height
+      textarea.style.height = 'auto';
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   }, [newMessage]);
@@ -203,9 +197,8 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
   const handleSend = async () => {
     if ((newMessage.trim() || attachments.length > 0) && conversation?.id) {
       const tempId = Date.now();
-      // Ensure user.id is available for optimistic update
       if (!user?.id) {
-        toast.error("Erreur: Utilisateur non identifié pour l'envoi du message.");
+        toast.error(t('applicationDetails.errorLoadingApplication'));
         return;
       }
 
@@ -213,10 +206,10 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         id: tempId,
         content: newMessage,
         user_id: user.id,
-        attachments: attachments.map(file => ({ name: file.name, url: URL.createObjectURL(file) })), // Preview
+        attachments: attachments.map(file => ({ name: file.name, url: URL.createObjectURL(file) })),
         created_at_time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         isSending: true,
-      }; // Optimistic update
+      };
       setMessages(prev => [...prev, sentMessage]);
       setNewMessage('');
 
@@ -228,11 +221,11 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         });
 
         const response = await api.post(`/messages/${conversation.id}`, formData);
-        setAttachments([]); // Clear attachments after sending
+        setAttachments([]);
         setMessages(prev => prev.map(msg => msg.id === tempId ? { ...response.data, isSending: false } : msg));
-        onMessageSent(); // Pour rafraîchir la liste des conversations
+        onMessageSent();
       } catch (error) {
-        toast.error("Échec de l'envoi du message.");
+        toast.error(t('jobApplicationForm.submitError'));
         setMessages(prev => prev.filter(msg => msg.id !== tempId));
       }
     }
@@ -244,10 +237,10 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
 
     try {
       await api.delete(`/messages/${messageId}`);
-      toast.success("Message supprimé.");
-      onMessageDeleted(); // Rafraîchir la liste des conversations
+      toast.success(t('formations.successDelete'));
+      onMessageDeleted();
     } catch (error) {
-      toast.error("Erreur lors de la suppression.");
+      toast.error(t('formations.errorDelete'));
       setMessages(originalMessages);
     }
   };
@@ -285,7 +278,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         <div className="ml-4">
           <p className="font-bold text-gray-900">{conversation.participant?.name}</p>
           <p className={`text-xs ${conversation.participant?.online ? 'text-green-600' : 'text-gray-500'}`}>
-            {conversation.participant?.online ? 'En ligne' : 'Hors ligne'}
+            {conversation.participant?.online ? t('profileHero.yes') : t('profileHero.no')}
           </p>
         </div>
         <div className="ml-auto">
@@ -316,13 +309,12 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
                   {msg.created_at_time}
                 </p>
               </div>
-              {/* Affichage des pièces jointes */}
               {msg.attachments && msg.attachments.length > 0 && (
                 <div className="mt-2 space-y-2">
                   {msg.attachments.map((att, index) => (
                     <a key={index} href={att.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-sm text-blue-600 hover:underline">
                       <File size={16} />
-                      <span>{att.name || 'Pièce jointe'}</span>
+                      <span>{att.name || t('jobApplicationForm.requiredDocuments')}</span>
                     </a>
                   ))}
                 </div>
@@ -335,7 +327,6 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
 
       {/* Input */}
       <div className="p-4 bg-white border-t border-gray-200 flex-shrink-0">
-        {/* Prévisualisation des pièces jointes */}
         {attachments.length > 0 && (
           <div className="mb-2 p-2 border rounded-lg bg-gray-50 max-h-32 overflow-y-auto">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -359,7 +350,6 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
             onChange={handleFileSelect}
             className="hidden"
           />
-          {/* Added textareaRef to the textarea */}
           <button onClick={() => fileInputRef.current.click()} className="p-2 text-gray-500 hover:text-gray-800 flex-shrink-0">
             <Paperclip className="w-5 h-5" />
           </button>
@@ -367,15 +357,14 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyPress={(e) => {
-              // Auto-resize textarea logic
               if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
                 handleSend();
               }
             }}
-            placeholder="Écrivez votre message..."
+            placeholder={t('jobApplicationForm.motivationPlaceholder')}
             rows="1"
-            ref={textareaRef} // Assign ref here
+            ref={textareaRef}
             className="flex-grow px-4 py-2.5 border border-gray-200 rounded-full bg-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-[#009739] transition-all"
             style={{ maxHeight: '120px' }}
           />
@@ -393,12 +382,13 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
 };
 
 const MessagesSection = () => {
+  const { t } = useTranslation();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isListVisible, setIsListVisible] = useState(true);
   const { state: locationState } = useLocation();
-  const { user } = useAuth(); // Get user here for conversation processing
+  const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const fetchConversations = async () => {
@@ -409,13 +399,13 @@ const MessagesSection = () => {
 
       const processedConversations = rawConversations.map(conv => {
         const otherParticipant = user ? conv.participants.find(p => p.id !== user.id) : null;
-        const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+        const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : t('messagesSection.unknownUser');
         const colors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-orange-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
         const color = colors[((otherParticipant?.id || 0) % colors.length)];
 
         return {
           ...conv,
-          participant: otherParticipant ? { id: otherParticipant.id, name: participantName, online: otherParticipant.is_active } : { name: 'Utilisateur inconnu' },
+          participant: otherParticipant ? { id: otherParticipant.id, name: participantName, online: otherParticipant.is_active } : { name: t('messagesSection.unknownUser') },
           color: color
         };
       });
@@ -423,7 +413,7 @@ const MessagesSection = () => {
       setConversations(processedConversations);
       return processedConversations;
     } catch (error) {
-      toast.error("Erreur lors du chargement des conversations.");
+      toast.error(t('applicationDetails.errorLoadingApplication'));
       setConversations([]);
       return [];
     } finally {
@@ -452,8 +442,8 @@ const MessagesSection = () => {
         }
       }
     };
-    init(); // Call init only once user is available
-  }, [locationState?.conversationId, user]); // Depend on user
+    init();
+  }, [locationState?.conversationId, user]);
 
   const handleSelectConversation = (conv) => {
     setSelectedConversation(conv);
@@ -510,7 +500,7 @@ const MessagesSection = () => {
         {isListVisible && (
           <motion.div
             className="w-full md:w-1/3 lg:w-1/4 h-full"
-            style={{ flexShrink: 0 }} // Empêche la sidebar d'être compressée par le flex-grow du chat
+            style={{ flexShrink: 0 }}
             initial={{ x: '-100%' }}
             animate={{ x: '0%' }}
             exit={{ x: '-100%' }}
@@ -539,7 +529,7 @@ const MessagesSection = () => {
           />
         ) : (
           <div className="flex flex-grow flex-col items-center justify-center bg-gray-50 text-center p-8 h-full">
-            {/* Placeholder content */}
+            <p>{t('messagesSection.noConversation')}</p>
           </div>
         )}
       </div>
