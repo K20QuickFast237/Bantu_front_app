@@ -193,7 +193,7 @@ const JobOfferPage = () => {
                   </div>
 
                   {/* Right Column */}
-                  <div className="lg:w-1/3">
+                  <div className="lg:w-full">
                     <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-8">
                       <h3 className="text-lg font-bold text-gray-900 mb-4">{t('jobOfferPage.aboutCompany')}</h3>
 
