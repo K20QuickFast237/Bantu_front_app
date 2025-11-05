@@ -1049,6 +1049,78 @@
     "sell": "Vendre",
     "sellAlt": "Icône Vendre"
   },
+  "coreValues": {
+    "title": "Nos valeurs fondamentales",
+    "decorationAlt": "Décoration Demi-cercle",
+    "security": {
+      "title": "Sécurité",
+      "description": "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son niveau éducatif, ses ressources, peut accéder aux opportunités numériques."
+    }
+  },
+  "pricing": {
+    "hero": {
+      "title": "Choisissez la solution qui va accompagner votre croissance",
+      "button": "voir nos plans",
+      "stats": {
+        "users": "Utilisateurs Actifs",
+        "providers": "Prestataires certifiés",
+        "companies": "Entreprise Inscrites",
+        "satisfaction": "De satisfaction client"
+      }
+    },
+    "plans": {
+      "title": "Plans Flexibles Pour Chaque Utilisateur",
+      "subtitle": "Que vous soyez recruteur, freelance, vendeur ou acheteur, choisissez le plan qui correspond à vos besoins.",
+      "basic": {
+        "title": "Basique",
+        "price": "Gratuit",
+        "description": "Parfait pour commencer avec les fonctionnalités de base en matière de mise en réseau.",
+        "features": {
+          "connections": "Jusqu'à 50 connexions",
+          "profile": "Fonctionnalités de profil de base",
+          "community": "Accès communautaire",
+          "support": "Support par e-mail"
+        },
+        "button": "Commencer"
+      },
+      "pro": {
+        "popular": "Le plus populaire",
+        "title": "Pro",
+        "price": "$9.99",
+        "month": "/mois",
+        "description": "Idéal pour les professionnels et les entreprises en croissance",
+        "features": {
+          "connections": "Connexions illimitées",
+          "profile": "Fonctionnalités avancées du profil",
+          "matching": "Correspondance prioritaire",
+          "analytics": "Tableau de bord analytique",
+          "support": "Support prioritaire"
+        },
+        "button": "S'abonner"
+      },
+      "enterprise": {
+        "title": "Entreprise",
+        "price": "Personnalisé",
+        "description": "Solutions sur mesure pour les grandes organisations et les équipes",
+        "features": {
+          "allIncluded": "Tout dans Pro",
+          "team": "Gestion d'équipe",
+          "integrations": "Intégrations personnalisées",
+          "support": "Support dédié",
+          "sla": "Garantie SLA"
+        },
+        "button": "Contactez les ventes"
+      }
+    }
+  },
     "allJobOffers": {
     "searchOffers": "Rechercher des offres",
     "searchAllJobOffers": "Rechercher parmi toutes les offres d'emploi"

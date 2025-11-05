@@ -1060,6 +1060,79 @@
     "sell": "Sell",
     "sellAlt": "Sell Icon"
   },
+  "coreValues": {
+    "title": "Our Core Values",
+    "decorationAlt": "Semicircle Decoration",
+    "security": {
+      "title": "Security",
+      "description": "Security is not an option at BantuLink, it's our absolute priority. In a digital environment where trust is fragile, we have chosen to invest massively in the most advanced security technologies."
+    },
+    "innovation": {
+      "title": "Innovation",
+      "description": "Innovation is in our DNA. We don't just follow global technological trends: we anticipate them and adapt them to the specific needs of Francophone Africa."
+    },
+    "inclusion": {
+      "title": "Inclusion",
+      "description": "Inclusion is not a marketing concept at BantuLink: We build a platform where every Francophone African, regardless of their educational level or resources, can access digital opportunities."
+    }
+  }
+,
+ "pricing": {
+    "hero": {
+      "title": "Choose the solution that will support your growth",
+      "button": "view our plans",
+      "stats": {
+        "users": "Active Users",
+        "providers": "Certified Providers",
+        "companies": "Registered Companies",
+        "satisfaction": "Customer Satisfaction"
+      }
+    },
+    "plans": {
+      "title": "Flexible Plans For Every User",
+      "subtitle": "Whether you're a recruiter, freelancer, seller or buyer, choose the plan that fits your needs.",
+      "basic": {
+        "title": "Basic",
+        "price": "Free",
+        "description": "Perfect for getting started with basic networking features.",
+        "features": {
+          "connections": "Up to 50 connections",
+          "profile": "Basic profile features",
+          "community": "Community access",
+          "support": "Email support"
+        },
+        "button": "Get Started"
+      },
+      "pro": {
+        "popular": "Most Popular",
+        "title": "Pro",
+        "price": "$9.99",
+        "month": "/month",
+        "description": "Ideal for professionals and growing businesses",
+        "features": {
+          "connections": "Unlimited connections",
+          "profile": "Advanced profile features",
+          "matching": "Priority matching",
+          "analytics": "Analytics dashboard",
+          "support": "Priority support"
+        },
+        "button": "Subscribe"
+      },
+      "enterprise": {
+        "title": "Enterprise",
+        "price": "Custom",
+        "description": "Custom solutions for large organizations and teams",
+        "features": {
+          "allIncluded": "Everything in Pro",
+          "team": "Team management",
+          "integrations": "Custom integrations",
+          "support": "Dedicated support",
+          "sla": "SLA guarantee"
+        },
+        "button": "Contact Sales"
+      }
+    }
+  },
   "candidateJobs": {
     "jobOffers": "Job Offers",
     "searchAndFilterThousands": "Search and filter among thousands of job offers.",

@@ -5,14 +5,17 @@ import v3Image from '../../assets/v3.png';
 import v4Image from '../../assets/v4.png'; // Icône Sécurité 2
 import demicercleImage from '../../assets/demicercle.png'; // Image du demi-cercle
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const CoreValuesSection = () => {
+  const { t } = useTranslation();
+
   // Ajustement des couleurs pour qu'elles correspondent précisément à la maquette
   const valeurs = [
     {
       id: 1,
-      title: "Sécurité",
-      description: "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées.",
+      title: t('coreValues.security.title'),
+      description: t('coreValues.security.description'),
       image: v1Image, // Utilisation de l'import d'image
       // Couleurs spécifiques pour le fond des hexagones pour 'Sécurité' (bleu clair/blanc)
       bgColor: "bg-[#E0F7FA]", // Couleur de fond extérieure plus claire
@@ -20,8 +23,8 @@ const CoreValuesSection = () => {
     },
     {
       id: 2,
-      title: "Innovation",
-      description: "L'innovation est dans notre ADN. Nous ne nous contentons pas de suivre les tendances technologiques mondiales : nous les anticipons et les adaptons aux besoins spécifiques de l'Afrique francophone.",
+      title: t('coreValues.innovation.title'),
+      description: t('coreValues.innovation.description'),
       image: v2Image, // Utilisation de l'import d'image
       // Couleurs spécifiques pour le fond des hexagones pour 'Innovation' (vert très clair/blanc)
       bgColor: "bg-[#E8F5E9]", // Couleur de fond extérieure plus claire
@@ -29,8 +32,8 @@ const CoreValuesSection = () => {
     },
     {
       id: 3,
-      title: "Inclusion",
-      description: "L'inclusion n'est pas un concept marketing chez BantuLink : Nous construisons une plateforme où chaque Africain francophone, quel que soit son niveau éducatif, ses ressources, peut accéder aux opportunités numériques.",
+      title: t('coreValues.inclusion.title'),
+      description: t('coreValues.inclusion.description'),
       image: v3Image, // Utilisation de l'import d'image
       // Couleurs spécifiques pour le fond des hexagones pour 'Inclusion' (jaune très clair/blanc)
       bgColor: "bg-[#FFFDE7]", // Couleur de fond extérieure plus claire
@@ -38,8 +41,8 @@ const CoreValuesSection = () => {
     },
     {
       id: 4,
-      title: "Sécurité", // Titre répété comme sur la maquette
-      description: "La sécurité n'est pas une option chez BantuLink, c'est notre priorité absolue. Dans un environnement numérique où la confiance est fragile, nous avons choisi d'investir massivement dans les technologies de sécurité les plus avancées.",
+      title: t('coreValues.security.title'), // Titre répété comme sur la maquette
+      description: t('coreValues.security.description'),
       image: v4Image, // Utilisation de l'import d'image
       // Couleurs spécifiques pour le fond des hexagones pour la deuxième 'Sécurité' (rose très clair/blanc)
       bgColor: "bg-[#FCE4EC]", // Couleur de fond extérieure plus claire
@@ -66,7 +69,7 @@ const CoreValuesSection = () => {
       >
         <img 
           src={demicercleImage} 
-          alt="Décoration Demi-cercle" 
+          alt={t('coreValues.decorationAlt')} 
           className="w-full h-full object-contain" // Utilisation de l'image
         />
       </div>
@@ -76,7 +79,7 @@ const CoreValuesSection = () => {
         <div className="flex items-center justify-center mb-16">
           <hr className="w-16 h-1 bg-red-600 border-0 rounded-full mx-4" /> {/* Ligne gauche */}
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-800 text-center whitespace-nowrap">
-            Nos valeurs fondamentales
+            {t('coreValues.title')}
           </h2>
           <hr className="w-16 h-1 bg-red-600 border-0 rounded-full mx-4" /> {/* Ligne droite */}
         </div>
