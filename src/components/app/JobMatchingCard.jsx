@@ -6,7 +6,7 @@ import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
 import BantulinkLoader from '../ui/BantulinkLoader';
 
-const JobCard = () => {
+const JobMatchingCard = () => {
   const { user } = useAuth();
   const [jobData, setJobData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -95,13 +95,15 @@ const JobCard = () => {
                 ))
               )}
             </div>
-            <div className="flex justify-start">
-              <Link to={"/rechercheOffre"}>
-                <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                  Afficher plus
-                </button>
-              </Link>
-            </div>
+            {jobData.length > 0 && (
+              <div className="flex justify-start">
+                <Link to={"/rechercheOffre"}>
+                  <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                    Afficher plus
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </motion.section>
@@ -109,4 +111,4 @@ const JobCard = () => {
   );
 };
 
-export default JobCard;
+export default JobMatchingCard;

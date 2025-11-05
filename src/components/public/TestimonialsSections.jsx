@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
-// Icône pour les étoiles (SVG en ligne pour une flexibilité maximale et sans dépendance externe)
+// Icône pour les étoiles
 const StarIcon = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -18,9 +19,7 @@ const TestimonialCard = ({ initials, initialBgColor, name, role, reviewText }) =
   return (
     <div className="bg-white rounded-xl border border-gray-100 p-6 flex flex-col items-start text-left 
                   shadow-sm transition-shadow duration-300 ease-in-out hover:shadow-md h-full">
-      {/* En-tête de la carte (Avatar, Nom, Rôle) */}
       <div className="flex items-center mb-4">
-        {/* Cercle de l'avatar avec initiales */}
         <div 
           className="w-12 h-12 rounded-full flex items-center justify-center text-white text-lg font-bold mr-4 flex-shrink-0"
           style={{ backgroundColor: initialBgColor }}
@@ -37,12 +36,10 @@ const TestimonialCard = ({ initials, initialBgColor, name, role, reviewText }) =
         </div>
       </div>
 
-      {/* Texte du témoignage */}
       <p className="text-gray-700 text-sm leading-relaxed mb-4 flex-grow">
         {reviewText}
       </p>
 
-      {/* Étoiles d'évaluation */}
       <div className="flex items-center space-x-0.5">
         {[...Array(5)].map((_, i) => (
           <StarIcon key={i} className="w-4 h-4 text-yellow-400" />
@@ -53,51 +50,28 @@ const TestimonialCard = ({ initials, initialBgColor, name, role, reviewText }) =
 };
 
 const TestimonialsSection = () => {
-  const testimonials = [
-    {
-      initials: 'SJ',
-      initialBgColor: '#4A90E2', 
-      name: 'Sarah Johnson',
-      role: 'Freelancer',
-      reviewText: 'Le centre d\'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!',
-    },
-    {
-      initials: 'MC',
-      initialBgColor: '#F5A623', 
-      name: 'Michael Chen',
-      role: 'Business Owner',
-      reviewText: 'Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement.',
-    },
-    {
-      initials: 'AO',
-      initialBgColor: '#7ED321', 
-      name: 'Amara Okafor',
-      role: 'Job Seeker',
-      reviewText: 'J\'ai exactement trouvé ce dont j\'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles.',
-    },
-  ];
+  const { t } = useTranslation(); // Hook i18n
+  const testimonials = t('help.testimonials.users', { returnObjects: true });
 
   return (
     <motion.section
                       initial={{ opacity: 0, y: 50 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+                      viewport={{ once: true, amount: 0.1 }}
                       transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
     <section 
       className="py-16 sm:py-16 px-4 sm:px-6 lg:px-8"
-      // Dégradé ultra-subtil du fond : léger bleu -> léger gris -> léger rouge/orange
       style={{
         background: 'linear-gradient(to right, #E0E7FF 0%, #F5F7FA 50%, #FFF5ED 100%)' 
       }}
     >
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-          Ce Que Disent Nos Utilisateurs
+          {t('help.testimonials.title')}
         </h2>
         <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
-          Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre
-          centre d'aide et notre support.
+          {t('help.testimonials.subtitle')}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -105,10 +79,10 @@ const TestimonialsSection = () => {
             <TestimonialCard
               key={index}
               initials={testimonial.initials}
-              initialBgColor={testimonial.initialBgColor}
+              initialBgColor={index === 0 ? '#4A90E2' : index === 1 ? '#F5A623' : '#7ED321'}
               name={testimonial.name}
               role={testimonial.role}
-              reviewText={testimonial.reviewText}
+              reviewText={testimonial.review}
             />
           ))}
         </div>

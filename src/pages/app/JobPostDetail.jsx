@@ -30,6 +30,7 @@ const JobPostDetail = () => {
             try {
                 setLoading(true);
                 const res = await api.get(`/offres/${id}`);
+                console.log(res.data);
                 setJob(res.data);
             } catch (err) {
                 toast.error("Erreur lors du chargement de l'offre.");
@@ -133,7 +134,7 @@ const JobPostDetail = () => {
             </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                 <h2 className="text-2xl font-bold text-orange-500 mb-4">Profil recherché</h2>
-                <div className="text-gray-700 leading-relaxed prose" dangerouslySetInnerHTML={{ __html: job.exigences_poste || "Aucun profil spécifié." }} />
+                <div className="text-gray-700 leading-relaxed prose" dangerouslySetInnerHTML={{ __html: job.exigences || "Aucun profil spécifié." }} />
             </div>
         </div>
 

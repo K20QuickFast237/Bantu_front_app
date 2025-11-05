@@ -11,10 +11,6 @@ const HeroCompany = ({ companyData }) => {
 
   // Utilise les données passées en props, ou celles du contexte par défaut
   const company = companyData || professionnel;
-
-  const handleGoBack = () => {
-    navigate('/dashboardEntreprise'); // Fonction de redirection
-  };
   return (
     <div className="relative w-full">
 
@@ -29,7 +25,7 @@ const HeroCompany = ({ companyData }) => {
           {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${CompanyBg})` }}
+            style={{ backgroundImage: `url(${company.photo_couverture})` }}
           ></div>
 
           {/* Overlay for text readability */}
@@ -54,7 +50,7 @@ const HeroCompany = ({ companyData }) => {
           <div className="flex items-center">
             {/* Logo - Half inside, half outside */}
             <div className="bg-white p-2 shadow-lg rounded-lg mr-4 border border-gray-200">
-              <img src={`/storage/public/${company.logo}`} alt="Company Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+              <img src={`${company.logo}`} alt="Company Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
             </div>
 
             {/* Company Info */}

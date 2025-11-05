@@ -112,7 +112,7 @@ const JobApplicationForm = () => {
           <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center mr-3 text-sm font-semibold text-gray-800 rounded">
-                {job?.employeur?.nom_entreprise?.charAt(0) || "?"}
+                {job?.employeur?.logo ? <img src={job?.employeur?.logo} alt="Logo" className="w-full h-full object-contain" /> : job?.employeur?.nom_entreprise?.charAt(0) || "?"}
               </div>
               <h1 className="text-2xl font-bold text-gray-900">{job?.employeur?.nom_entreprise}</h1>
             </div>

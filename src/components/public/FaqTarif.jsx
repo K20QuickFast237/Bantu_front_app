@@ -2,32 +2,26 @@ import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react'; 
 import FaqImage from '../../assets/faq2.png'; 
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next'; // Ajout
-
-
+import { useTranslation } from 'react-i18next';
 
 const FaqTarif = () => {
-  const { t } = useTranslation(); // Hook i18n
+  const { t } = useTranslation();
   const faqs = [
-  {
-    question: t('tarif.faq.paymentMethods.question'),
-    answer: t('tarif.faq.paymentMethods.answer')
-  },
-  {
-    question: t('tarif.faq.changePlan.question'),
-    answer: t('tarif.faq.changePlan.answer')
-  },
-  {
-    question: t('tarif.faq.freeTrial.question'),
-    answer: t('tarif.faq.freeTrial.answer')
-  },
-  {
-    question: t('tarif.faq.cancelSubscription.question'),
-    answer: t('tarif.faq.cancelSubscription.answer')
-  }
-];
-  // État pour gérer quel élément de la FAQ est ouvert
-  // Un tableau vide signifie qu'aucun n'est ouvert par défaut
+    {
+      question: t('tarif.faq.paymentMethods.question'),
+      answer: t('tarif.faq.paymentMethods.answer')
+    },
+    {
+      question: t('tarif.faq.changePlan.question'),
+      answer: t('tarif.faq.changePlan.answer')
+    },
+    {
+      question: t('tarif.faq.freeTrial.question'),
+      answer: t('tarif.faq.freeTrial.answer')
+    }
+    // Retirer la 4ème FAQ qui n'existe pas
+  ];
+
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggleFaq = (index) => {
@@ -39,7 +33,7 @@ const FaqTarif = () => {
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
+        viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
       <div className="text-center mb-16">
@@ -49,8 +43,6 @@ const FaqTarif = () => {
       </div>
 
       <div className="flex flex-col lg:flex-row justify-center items-center lg:items-start max-w-6xl mx-auto gap-12 lg:gap-16">
-
-        {/* Section Image */}
         <div className="flex-shrink-0 lg:w-1/2 flex justify-center items-center ">
           <img
             src={FaqImage}
@@ -59,7 +51,6 @@ const FaqTarif = () => {
           />
         </div>
 
-        {/* Section FAQ Accordion */}
         <div className="w-full lg:w-1/2 space-y-6">
           {faqs.map((faq, index) => (
             <div

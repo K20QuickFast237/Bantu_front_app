@@ -91,7 +91,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
   const sidebarItems = [
     { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, to: '/dashboard' },
     { id: 'job-posts', label: 'Mes offres d\'emploi', icon: Briefcase, to: '/job-post' },
-    { id: 'applications', label: 'Candidatures', icon: FileText, badge: 3, to: '/job-application' }, // Le badge est codé en dur comme dans l'original
+    { id: 'applications', label: 'Candidatures', icon: FileText, to: '/job-application' }, // Le badge est codé en dur comme dans l'original
     { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/chat' },
     { id: 'analytics', label: 'Statistiques', icon: BarChart3, to: '/analytics' },
     { id: 'settings', label: 'Paramètres', icon: Settings, to: '/settings' },
@@ -127,9 +127,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
         {/* Infos de l'entreprise */}
         <div className="p-4 border-b border-gray-200">
           <div className={`flex items-center ${!sidebarOpen && 'justify-center'}`}>
-            <Avatar className="w-10 h-10 flex-shrink-0">
+            {professionnel.logo? <img src={professionnel.logo} alt="Logo" className="w-10 h-10 rounded-full flex-shrink-0" /> : <Avatar className="w-10 h-10 flex-shrink-0">
               <AvatarFallback className="bg-[#0A2342] text-white text-base">{professionnel?.nom_entreprise?.substring(0, 2).toUpperCase() || 'N/A'}</AvatarFallback>
-            </Avatar>
+            </Avatar>}
             {sidebarOpen && (
               <div className="ml-3 overflow-hidden">
                 <p className="font-semibold text-gray-900 text-sm truncate">{professionnel?.nom_entreprise}</p>

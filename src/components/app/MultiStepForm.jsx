@@ -21,7 +21,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 // Composant de prévisualisation
-const OffrePreview = ({ values, onEdit, onCancel, onSubmit, skillsList }) => {
+const OffrePreview = ({ values, onEdit, onCancel, onSubmit }) => {
 
   return (
     <div className="max-w-5xl mx-auto space-y-4">
@@ -174,12 +174,11 @@ const validationSchemas = [
     date_limite_soumission: Yup.date().required('Date requise')
       .min(new Date(new Date().setHours(0, 0, 0, 0)), "La date limite ne peut pas être antérieure à aujourd'hui."),
     fonction: Yup.string().required('Fonction requise'),
-    experience: Yup.string().required('Expérience requise'),
+    experience_requise: Yup.string().required('Expérience requise'),
     description_poste: Yup.string().required("Description requise"),
     responsabilites: Yup.string().required("Responsabilités requises"),
     exigences: Yup.string().required("Exigences requises"),
     type_contrat: Yup.string()
-      .oneOf(['cdi', 'cdd', 'stage', 'freelance'], 'Type de contrat invalide')
       .required('Type de contrat requis'),
     remuneration_min: Yup.number()
       .typeError('Montant invalide')
@@ -209,8 +208,9 @@ const MultiStepForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [skillsList, setSkillsList] = useState([]);
   const [categoriesList, setCategoriesList] = useState([]);
+  const [experiences, setExperiences] = useState([]);
+  const [contractType, setContractType] = useState([]);
   const { professionnel } = useAuth();
-  const [documents, setDocuments] = useState([]);
   const [newDoc, setNewDoc] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [showPreview, setShowPreview] = useState(false); // Nouvel état pour la prévisualisation
@@ -234,8 +234,6 @@ const MultiStepForm = () => {
     const fetchCategories = async () => {
       try {
         const response = await api.get('/offres-categories');
-        console.log(response);
-        // Assurer que nous avons bien un tableau. L'API peut retourner { data: [...] }
         const categories = Array.isArray(response.data) ? response.data : response.data?.data || [];
         setCategoriesList(categories);
       } catch (error) {
@@ -246,6 +244,46 @@ const MultiStepForm = () => {
       }
     };
     fetchCategories();
+
+    const fetchExperience = async () => {
+      try {
+        const response = await api.get('/offres/niveaux');
+        const experienceObject = response.data; // { junior: "<1an", ... }
+
+        // Vérifier si la réponse est bien un objet et non un tableau
+        if (typeof experienceObject === 'object' && experienceObject !== null && !Array.isArray(experienceObject)) {
+          // Transformer l'objet en tableau de { id, nom }
+          const formattedExperiences = Object.entries(experienceObject).map(([key, value]) => ({
+            id: key, // "junior"
+            nom: value.replace(/&lt;/g, '<').replace(/&gt;/g, '>') // "<1an"
+          }));
+          setExperiences(formattedExperiences);
+        } else {
+          // Fallback si l'API renvoie un autre format
+          setExperiences(Array.isArray(experienceObject) ? experienceObject : []);
+        }
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des niveaux d'expérience.", {
+          description: `${error.message}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        });
+      }
+    };
+    fetchExperience();
+
+    const fetchTypeContract = async () => {
+      try {
+        const response = await api.get('/types-contrat'); // Réponse: { types_contrat: ["CDI", ...] }
+        const contractType = response.data?.types_contrat || []; // On extrait le tableau
+        setContractType(contractType);
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des types de contrat.", {
+          description: `${error.message}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        });
+      }
+    };
+    fetchTypeContract();
   }, [])
 
   const steps = [
@@ -255,26 +293,6 @@ const MultiStepForm = () => {
     { number: 4, label: 'PUBLIER', color: 'bg-gray-500' }
   ];
 
-  // Fonction de validation globale
-  const validateAllSteps = async (values) => {
-    try {
-      // Fusionne tous les schémas
-      const fullSchema = validationSchemas
-        .reduce((acc, schema) => acc.concat(schema), Yup.object({}));
-      await fullSchema.validate(values, { abortEarly: false });
-      return {};
-    } catch (err) {
-      // Transforme les erreurs Yup en objet { champ: message }
-      const errors = {};
-      if (err.inner) {
-        err.inner.forEach(e => {
-          if (!errors[e.path]) errors[e.path] = e.message;
-        });
-      }
-      return errors;
-    }
-  };
-
   // Fonction unique pour publier l'offre
   const publishOffer = async (values, actions) => {
     actions.setSubmitting(true);
@@ -282,7 +300,7 @@ const MultiStepForm = () => {
     try {
       const payload = {
         ...values,
-        documents_requis: JSON.stringify(values.documents_requis),
+        documents_requis: values.documents_requis,
         skills: values.skills,
         statut: values.statut,
         date_publication: new Date().toISOString().split('T')[0],
@@ -306,21 +324,22 @@ const MultiStepForm = () => {
       email_pro: professionnel?.email_pro || '',
       telephone_pro: professionnel?.telephone_pro || '',
       site_web: professionnel?.site_web || '',
-      logo: null,
+      logo: professionnel?.logo || '',
       pays: professionnel?.pays || '',
       ville: professionnel?.ville || '',
       adresse: professionnel?.adresse || '',
+      num_contribuable: professionnel?.num_contribuable || '',
       description_entreprise: professionnel?.description_entreprise || '',
       categorie_id: '',
       titre_poste: '',
       date_limite_soumission: '',
       fonction: '',
-      experience: '',
+      experience_requise: '',
       lieu_travail: '',
       description_poste: '',
       exigences: '',
       responsabilites: '',
-      type_contrat: 'cdi',
+      type_contrat: '',
       remuneration_min: '',
       remuneration_max: '',
       email_candidature: '',
@@ -451,15 +470,9 @@ const MultiStepForm = () => {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Votre logo</label>
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-          <div className="bg-gray-200 w-24 h-16 mx-auto rounded flex items-center justify-center mb-4">
-            <span className="text-gray-500 text-sm">Rechercher</span>
+          <div className="bg-gray-200 w-fit mx-auto rounded flex items-center justify-center mb-4">
+            <img src={formik.values.logo} alt="logo"  />
           </div>
-          <button
-            type="button"
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
-            Changer
-          </button>
         </div>
       </div>
 
@@ -469,7 +482,7 @@ const MultiStepForm = () => {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <InputField name="code_postal" label="Code postal" formik={formik} />
+        <InputField name="num_contribuable" label="Numéro de contribuable *" formik={formik} />
         <InputField name="adresse" label="Adresse locale *" formik={formik} />
       </div>
 
@@ -533,9 +546,6 @@ const MultiStepForm = () => {
         {formik.touched.categorie_id && formik.errors.categorie_id ? <div className="text-red-500 text-xs">{formik.errors.categorie_id}</div> : null}
       </div>
 
-
-
-
       <div className="grid grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Fonction du poste</label>
@@ -548,13 +558,15 @@ const MultiStepForm = () => {
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Experience</label>
-          <select name="experience" {...formik.getFieldProps('experience')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.experience && formik.errors.experience ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
-            <option value="">Sélectionner</option>
-            <option value="debutant">Débutant</option>
-            <option value="junior">Junior</option>
-            <option value="senior">Senior</option>
+          <select name="experience" {...formik.getFieldProps('experience_requise')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.experience_requise && formik.errors.experience_requise ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
+            <option value="">Sélectionner l'experience</option>
+            {experiences.map((experience) => (
+              <option key={experience.id} value={experience.nom}>
+                {experience.nom}
+              </option>
+            ))}
           </select>
-          {formik.touched.experience && formik.errors.experience ? <div className="text-red-500 text-xs">{formik.errors.experience}</div> : null}
+          {formik.touched.experience_requise && formik.errors.experience_requise ? <div className="text-red-500 text-xs">{formik.errors.experience_requise}</div> : null}
         </div>
       </div>
 
@@ -597,10 +609,12 @@ const MultiStepForm = () => {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Type de contrat</label>
         <select name="type_contrat" {...formik.getFieldProps('type_contrat')} className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:border-transparent ${formik.touched.type_contrat && formik.errors.type_contrat ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}`}>
-          <option value="cdi">CDI</option>
-          <option value="cdd">CDD</option>
-          <option value="stage">Stage</option>
-          <option value="freelance">Freelance</option>
+          <option value="">Sélectionner le type de contrat</option>
+          {contractType.map((contract) => (
+            <option key={contract} value={contract}>
+              {contract}
+            </option>
+          ))}
         </select>
         {formik.touched.type_contrat && formik.errors.type_contrat ? <div className="text-red-500 text-xs">{formik.errors.type_contrat}</div> : null}
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -11,16 +11,31 @@ const JobSearchDashboard = ({
   selectedContract,
   setSelectedContract,
   selectedEducation, setSelectedEducation,
-  hideContractFilter = false,
-  hideEducationFilter = false,
+  hideContractFilter = true,
+  hideEducationFilter = true,
   searchProfileButtonText = "Rechercher des profils",
   title = "Rechercher parmi toutes les offres d'emploi"
 }) => {
   const [contractOpen, setContractOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
+  const [contractOptions, setContractOptions] = useState([]);
 
-  // Options pour dropdowns (ajuste selon tes besoins)
-  const contractOptions = ['CDI', 'CDD', 'Stage', 'Freelance', 'Alternance'];
+  useEffect(() => {
+    const fetchContract = async () => {
+      try {
+        const response = await api.get('/types-contrat');
+        const contracts = Array.isArray(response.data) ? response.data : response.data?.data || [];
+        setContractOptions(contracts);
+      } catch (error) {
+        toast.error("Erreur lors de la récupération des types de contrat.", {
+          description: `${error.message}` || "Une erreur inattendue est survenue",
+          duration: 3000
+        });
+      }
+    };
+    fetchContract();
+  }, [])
+
   const educationOptions = ['Bac', 'Bac+2', 'Bac+3', 'Bac+5', 'Doctorat'];
 
   return (
@@ -39,7 +54,7 @@ const JobSearchDashboard = ({
           </h2>
 
           {/* First Row - Search Bar */}
-          <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-t-xl overflow-hidden">
+          <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-t-xl">
             <div className="flex items-center flex-1 min-w-[250px] border-r border-gray-200 bg-white px-4 py-3">
               <Search className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
@@ -71,7 +86,7 @@ const JobSearchDashboard = ({
 
           {/* Second Row - Filters */}
           {(!hideContractFilter || !hideEducationFilter) && (
-          <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-b-xl overflow-hidden border-t border-gray-200">
+          <div className="flex flex-wrap items-center justify-center max-w-5xl mx-auto shadow-md rounded-b-xl border-t border-gray-200">
             {/* Type de contrat Dropdown */}
             <motion.div
               className="flex items-center justify-between flex-1 max-w-[40.8%] bg-white px-4 py-3 border-r border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors relative"

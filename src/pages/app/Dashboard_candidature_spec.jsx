@@ -21,7 +21,6 @@ export default function DashboardCandidatureSpec() {
         setLoading(true);
         api.get(`/offres/${id}/candidatures`)
             .then(response => {
-                console.log('Réponse brute candidatures:', response.data); // Debug
                 const data = response.data || [];
                 setCandidates(data);
                 setFilteredCandidates(data);

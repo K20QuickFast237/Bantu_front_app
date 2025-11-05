@@ -1,6 +1,6 @@
 import { useState } from "react";
 import HeaderProfil from "@/components/app/HeaderProfil"
-import JobCard from "@/components/app/JobMatchingCard"
+import JobMatchingCard from "@/components/app/JobMatchingCard"
 import JobSearchHero from "@/components/app/JobSearchHero"
 import Footer from "@/components/public/Footer"
 import PageWrapper from "@/components/public/PageWrapper"
@@ -15,16 +15,16 @@ function CandidatProfil(){
 
     return(
         <>
-        <PageWrapper>
-           <HeaderProfil/>
-           <JobSearchHero onOpenProfileModal={() => setIsModalOpen(true)} />
-           <JobCard/>
-           <Footer/>
-        </PageWrapper>
-        <ProfileCompletionModal
-            isOpen={isModalOpen}
-            onClose={handleModalClose}
-        />
+            <PageWrapper>
+            <HeaderProfil/>
+            <JobSearchHero onOpenProfileModal={() => setIsModalOpen(true)} />
+            <JobMatchingCard/>
+            <Footer/>
+            </PageWrapper>
+            <ProfileCompletionModal
+                isOpen={isModalOpen}
+                onClose={handleModalClose}
+            />
         </>
     )
 }

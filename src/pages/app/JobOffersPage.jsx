@@ -186,7 +186,7 @@ const JobOfferPage = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">Experience</p>
-                    <p>{job.experience}</p>
+                    <p>{job.experience_requise}</p>
                   </div>
                 </div>
 

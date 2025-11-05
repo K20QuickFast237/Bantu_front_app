@@ -1,7 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next'; // Ajout
 
 const TarifHero = () => {
+  const { t } = useTranslation(); // Hook i18n
+
   return (
     <section className="flex justify-center items-center pt-30  sm:px-6 ">
       
@@ -9,10 +12,10 @@ const TarifHero = () => {
         {/* Main content - Centered text and button */}
         <div className="flex flex-col items-center justify-center flex-grow text-center  mb-16 px-4 sm:px-8 max-w-4xl">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium leading-tight tracking-tight mb-10">
-            Choisissez la solution qui va accompagner votre croissance
+            {t('pricing.hero.title')}
           </h1>
           <button className="bg-black text-white text-base font-semibold py-3.5 px-9 rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
-            voir nos plans
+            {t('pricing.hero.button')}
           </button>
         </div>
 
@@ -28,19 +31,19 @@ const TarifHero = () => {
         <div className="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-20 w-full px-4 sm:px-8 lg:px-12 pb-10">
           <div className="flex flex-col items-center text-center">
             <span className="text-3xl sm:text-4xl font-light mb-1">10K+</span>
-            <span className="text-sm sm:text-base font-normal opacity-90">Utilisateurs Actifs</span>
+            <span className="text-sm sm:text-base font-normal opacity-90">{t('pricing.stats.users')}</span>
           </div>
           <div className="flex flex-col items-center text-center">
             <span className="text-3xl sm:text-4xl font-light mb-1">2K+</span>
-            <span className="text-sm sm:text-base font-normal opacity-90">Prestataires certifiés</span>
+            <span className="text-sm sm:text-base font-normal opacity-90">{t('pricing.stats.providers')}</span>
           </div>
           <div className="flex flex-col items-center text-center">
             <span className="text-3xl sm:text-4xl font-light mb-1">1.5K+</span>
-            <span className="text-sm sm:text-base font-normal opacity-90">Entreprise Inscrites</span>
+            <span className="text-sm sm:text-base font-normal opacity-90">{t('pricing.stats.companies')}</span>
           </div>
           <div className="flex flex-col items-center text-center">
             <span className="text-3xl sm:text-4xl font-light mb-1">4.0</span>
-            <span className="text-sm sm:text-base font-normal opacity-90">De satisfaction client</span>
+            <span className="text-sm sm:text-base font-normal opacity-90">{t('pricing.stats.satisfaction')}</span>
           </div>
         </div>
       </div>

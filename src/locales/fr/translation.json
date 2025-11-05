@@ -378,6 +378,415 @@
     },
     "copyright": "Copyright © 2025 BantuLink. Tous droits réservés."
   },
+  "pricing": {
+  "hero": {
+    "title": "Choisissez la solution qui va accompagner votre croissance",
+    "button": "voir nos plans"
+  },
+  "plans": {
+    "title": "Plans Flexibles Pour Chaque Utilisateur",
+    "subtitle": "Que vous soyez recruteur, freelance, vendeur ou acheteur, choisissez le plan qui correspond à vos besoins.",
+    "basic": {
+      "name": "Basique",
+      "price": "Gratuit",
+      "description": "Parfait pour commencer avec les fonctionnalités de base en matière de mise en réseau.",
+      "features": [
+        "Jusqu'à 50 connexions",
+        "Fonctionnalités de profil de base",
+        "Accès communautaire",
+        "Support par e-mail"
+      ],
+      "button": "Commencer"
+    },
+    "pro": {
+      "name": "Pro",
+      "price": "$9.99",
+      "period": "/mois",
+      "description": "Idéal pour les professionnels et les entreprises en croissance",
+      "popular": "Le plus populaire",
+      "features": [
+        "Connexions illimitées",
+        "Fonctionnalités avancées du profil",
+        "Correspondance prioritaire",
+        "Tableau de bord analytique",
+        "Support prioritaire"
+      ],
+      "button": "S'abonner"
+    },
+    "enterprise": {
+      "name": "Entreprise",
+      "price": "Personnalisé",
+      "description": "Solutions sur mesure pour les grandes organisations et les équipes",
+      "features": [
+        "Tout dans Pro",
+        "Gestion d'équipe",
+        "Intégrations personnalisées",
+        "Support dédié",
+        "Garantie SLA"
+      ],
+      "button": "Contactez les ventes"
+    }
+  },
+  "stats": {
+    "users": "Utilisateurs Actifs",
+    "providers": "Prestataires certifiés",
+    "companies": "Entreprise Inscrites",
+    "satisfaction": "De satisfaction client"
+  }
+},
+"help": {
+  "hero": {
+    "title": "Centre d'aide BantuLink",
+    "subtitle": "Trouvez des réponses à vos questions et obtenez le soutien dont vous avez besoin. Nous sommes ici pour vous aider à réussir dans votre parcours.",
+    "searchPlaceholder": "Recherchez un sujet ou un mot-clé...",
+    "searchButton": "Rechercher",
+    "supportBadge": "Support disponible 24/7",
+    "popularSearches": "Recherches populaires :",
+    "popular1": "Réinitialisation du mot de passe",
+    "popular2": "Problèmes de paiement",
+    "popular3": "Candidatures",
+    "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé."
+  },
+  "contact": {
+    "title": "Besoin D'aide ?",
+    "subtitle": "Vous ne trouvez pas ce que vous cherchez ? Notre équipe de support dédiée est prête à vous aider avec toutes les questions ou préoccupations que vous pourriez avoir.",
+    "liveChat": "Démarrer un chat en direct",
+    "emailSupport": "Email Support",
+    "quickResponse": "Réponse rapide",
+    "quickResponseDesc": "Temps de réponse moyen inférieur à 2 heures",
+    "expertSupport": "Support expert",
+    "expertSupportDesc": "Équipe compétente prête à aider",
+    "available247": "Disponible 24/7",
+    "available247Desc": "Assistance 24 heures sur 24"
+  },
+  "testimonials": {
+    "title": "Ce Que Disent Nos Utilisateurs",
+    "subtitle": "Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre centre d'aide et notre support.",
+    "users": [
+      {
+        "initials": "SJ",
+        "name": "Sarah Johnson",
+        "role": "Freelancer",
+        "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
+      },
+      {
+        "initials": "MC",
+        "name": "Michael Chen",
+        "role": "Business Owner",
+        "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
+      },
+      {
+        "initials": "AO",
+        "name": "Amara Okafor",
+        "role": "Job Seeker",
+        "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
+      }
+    ]
+  },
+  "topics": {
+    "title": "Sujets D'aide Populaires",
+    "subtitle": "Accès rapide aux sujets d'aide et solutions les plus recherchés de notre communauté.",
+    "items": [
+      {
+        "title": "Comment réinitialiser mon mot de passe ?",
+        "category": "Compte et Connexion",
+        "views": "2.3k vues"
+      },
+      {
+        "title": "Méthodes de paiement acceptées",
+        "category": "Commandes et paiements",
+        "views": "1.8k vues"
+      },
+      {
+        "title": "Comment postuler pour des emplois",
+        "category": "Emplois et candidatures",
+        "views": "3.1k vues"
+      },
+      {
+        "title": "Signaler du contenu inapproprié",
+        "category": "Litiges et support client",
+        "views": "1.2k vues"
+      },
+      {
+        "title": "Processus de vérification de compte",
+        "category": "Compte et Connexion",
+        "views": "2.7k vues"
+      },
+      {
+        "title": "Politique et processus de remboursement",
+        "category": "Commandes et paiements",
+        "views": "1.9k vues"
+      }
+    ]
+  }
+},
+"profile": {
+  "otherResources": {
+    "title": "Autres Ressources",
+    "website": "Site internet / Portofolio",
+    "linkedin": "LinkedIn",
+    "behance": "Behance",
+    "github": "GitHub",
+    "notProvided": "Non renseigné"
+  },
+  "skills": {
+    "title": "Compétences",
+    "add": "Ajouter",
+    "addSkill": "Ajouter une compétence",
+    "selectSkill": "Sélectionner une compétence",
+    "selectLevel": "Sélectionner le niveau",
+    "beginner": "Débutant",
+    "intermediate": "Intermédiaire",
+    "advanced": "Avancé",
+    "save": "Enregistrer",
+    "noSkills": "Aucune compétence enregistrée.",
+    "level": "Niveau",
+    "uses": "utilisations",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+    "deleteDescription": "Cette action est irréversible. La compétence sera définitivement supprimée.",
+    "noDescription": "Pas de description",
+    "alreadyAdded": "Cette compétence est déjà ajoutée.",
+    "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau"
+  },
+  "education": {
+    "title": "Diplomes et Formations",
+    "add": "Ajouter",
+    "addEducation": "Ajouter une formation",
+    "editEducation": "Modifier une formation",
+    "fieldOfStudy": "Domaine d'étude",
+    "institution": "Etablissement",
+    "diploma": "Diplôme",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "noEducation": "Aucune formation enregistrée.",
+    "notSpecified": "Non spécifié",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+    "deleteDescription": "Cette action est irréversible. La formation sera définitivement supprimée."
+  },
+  "company": {
+    "view": "Voir",
+    "offers": "offres",
+    "noOffers": "Cette entreprise n'a aucune offre d'emploi pour le moment.",
+    "noCompanies": "Aucune entreprise trouvée pour ces critères.",
+    "page": "Page",
+    "of": "sur"
+  }
+},
+  "jobCard": {
+    "publicationDate": "Date de publication :",
+    "location": "Localisation :",
+    "notSpecified": "Non spécifié",
+    "availableJobs": "Offres d'emploi disponibles",
+    "noJobsFound": "Aucune offre trouvée",
+    "showMore": "Afficher plus"
+  },
+  "jobCarousel": {
+    "popularSearches": "Recherches populaires",
+    "hiringCompanies": "Les entreprises qui recrutent",
+    "showAllCompanies": "Afficher toutes les entreprises"
+  },
+  "personalInfo": {
+    "title": "Informations Personnelles",
+    "age": "Âge : {{age}} ans",
+    "profileVisibility": "Profil {{status}} des recruteurs",
+    "visible": "visible",
+    "hidden": "caché",
+    "viewCV": "Voir le CV",
+    "viewMotivationLetter": "Voir la lettre de motivation",
+    "profileStrength": "Force de votre profil",
+    "personalInfo": "Infos personnelles",
+    "skills": "Compétences",
+    "experiences": "Expériences",
+    "education": "Formations",
+    "incompleteProfile": "Votre profil est incomplet. Complétez les sections manquantes pour augmenter votre visibilité.",
+    "progressingProfile": "Votre profil progresse bien. Continuez à ajouter des informations pour le rendre plus attractif.",
+    "excellentProfile": "Excellent ! Votre profil est bien rempli et attrayant pour les recruteurs."
+  },
+  "jobSearch": {
+    "findJobOffer": "Trouvez une offre d'emploi",
+    "searchPlaceholder": "Recherchez par titre, compétences, mots clés,…",
+    "locationPlaceholder": "choisir le pays ou la ville",
+    "contractType": "Type de contrat",
+    "educationLevel": "Niveau d'étude",
+    "soughtPositions": "Poste.s recherché.s",
+    "representativeJobs": "Les Métiers Les Plus Représentatifs De Votre Poste",
+    "searchLocations": "Les Lieux Où Vous Recherchez Un Poste",
+    "experienceLevel": "Niveau D'expérience",
+    "graphicDesigner": "Graphiste",
+    "fullStackDeveloper": "Développeur web full stack",
+    "douala": "Douala",
+    "freelance": "Freelance",
+    "years": "Ans"
+  },
+  "dashboard": {
+    "welcome": "Bienvenue",
+    "user": "Utilisateur",
+    "yourStatistics": "Vos statistiques",
+    "applicationsInProgress": "Candidatures en cours",
+    "opportunitiesReceived": "Opportunités reçues",
+    "savedApplications": "Candidatures sauvegardées",
+    "seeMore": "Voir plus",
+    "profileVisible": "Votre profil est visible par les recruteurs.",
+    "makeProfileVisible": "Rendre mon profil visible des recruteurs",
+    "receiveJobRecommendations": "Recevoir des recommandations d'offres d'emploi",
+    "yes": "Oui",
+    "no": "Non",
+    "jobTitle": "Concepteur Développeur d'Applications",
+    "viewMyProfile": "Voir mon profil",
+    "profileCompleted": "Profil complété à",
+    "jobSuggestions": "Suggestions de jobs en fonction de votre profil"
+  },
+  "multiStepForm": {
+    "share": "Partager",
+    "publicationDate": "Date de publication :",
+    "deadline": "Date limite :",
+    "contractType": "Type de contrat",
+    "location": "Lieu",
+    "salary": "Salaire",
+    "remoteWork": "Télétravail",
+    "allowed": "Autorisé",
+    "notAllowed": "Non autorisé",
+    "experience": "Expérience",
+    "educationLevel": "Niveau d'études",
+    "notSpecified": "Non spécifié",
+    "editOffer": "Modifier l'offre",
+    "publish": "Publier",
+    "publishOffer": "Publier l'offre",
+    "cancel": "Annuler",
+    "offerDescription": "Description de l'offre",
+    "employeeMissions": "Missions de l'employé",
+    "requiredProfile": "Profil recherché",
+    "companyNameRequired": "Nom requis",
+    "invalidEmail": "Email invalide",
+    "emailRequired": "Email requis",
+    "phoneRequired": "Téléphone requis",
+    "countryRequired": "Pays requis",
+    "cityRequired": "Ville requise",
+    "addressRequired": "Adresse requise",
+    "categoryRequired": "Catégorie requise",
+    "titleRequired": "Titre requis",
+    "invalidDate": "Date invalide",
+    "dateRequired": "Date requise",
+    "functionRequired": "Fonction requise",
+    "experienceRequired": "Expérience requise",
+    "descriptionRequired": "Description requise",
+    "responsibilitiesRequired": "Responsabilités requises",
+    "requirementsRequired": "Exigences requises",
+    "invalidContractType": "Type de contrat invalide",
+    "contractTypeRequired": "Type de contrat requis",
+    "invalidAmount": "Montant invalide",
+    "maxSalaryRequired": "Rémunération maximale requise",
+    "minSalaryRequired": "Rémunération minimale requise",
+    "mustBePositive": "Doit être positif",
+    "invalidUrl": "URL invalide",
+    "urlRequired": "URL requise",
+    "instructionsRequired": "Instructions requises",
+    "atLeastOneSkill": "Au moins une compétence requise",
+    "skillsError": "Erreur de récupération des compétences",
+    "unexpectedError": "Une erreur inattendue est survenue",
+    "categoriesError": "Erreur lors de la récupération des catégories",
+    "cv": "CV",
+    "motivationLetter": "Lettre de motivation",
+    "employer": "EMPLOYEUR",
+    "offer": "OFFRE",
+    "application": "CANDIDATURE",
+    "publish1": "PUBLIER",
+    "completeCompanyInfo": "Veuillez saisir et/ou compléter les informations de votre entreprise",
+    "companyName": "Nom de l'entreprise",
+    "companyEmail": "Email de l'entreprise",
+    "companyPhone": "Téléphone de l'entreprise",
+    "companyWebsite": "Site web de l'entreprise",
+    "yourLogo": "Votre logo",
+    "search": "Rechercher",
+    "change": "Changer",
+    "country": "Pays",
+    "city": "Ville",
+    "postalCode": "Code postal",
+    "localAddress": "Adresse locale",
+    "companyDescription": "Description de l'entreprise",
+    "describeCompany": "Décrivez votre entreprise...",
+    "next": "Suivant",
+    "offerTitle": "Titre de l'Offre",
+    "jobTitle": "Titre du poste",
+    "submissionDeadline": "Date limite de soumission",
+    "category": "Catégorie",
+    "selectCategory": "Sélectionner une catégorie",
+    "jobFunction": "Fonction du poste",
+    "select": "Sélectionner",
+    "beginner": "Débutant",
+    "junior": "Junior",
+    "senior": "Senior",
+    "describeOffer": "Décrivez l'offre d'emploi...",
+    "responsibilities": "Responsabilités / Missions du poste",
+    "listResponsibilities": "Listez les responsabilités...",
+    "jobRequirements": "Exigences du poste",
+    "listRequirements": "Listez les exigences...",
+    "internship": "Stage",
+    "freelance": "Freelance",
+    "maxSalary": "Rémunération maximale Souhaitée",
+    "minSalary": "Rémunération minimale Souhaitée",
+    "amountInFrench": "Chiffrer en français",
+    "back": "Retour",
+    "applicationEmail": "Adresse mail de candidature",
+    "applicationUrl": "URL de candidature (site web ou autre)",
+    "applicationInstructions": "Instructions de candidature (Facultatif)",
+    "skills": "Compétences",
+    "searchSkill": "Rechercher une compétence...",
+    "noResults": "Aucun résultat trouvé.",
+    "suggestions": "Suggestions",
+    "applicationDocuments": "Documents de candidature",
+    "add": "Ajouter",
+    "addRequiredDocument": "Ajouter un document requis",
+    "documentName": "Nom du document...",
+    "remove": "Retirer",
+    "noDocuments": "Aucun document ajouté",
+    "noteDocuments": "NB : Tout document spécifique sera demandé lors de la candidature en ligne",
+    "reviewInfo": "Veuillez prendre 1min pour relire les informations que vous avez entrées par rapport à l'offre. Si tout est correct, veuillez publier l'offre.",
+    "trackOffer": "Vous pourrez suivre l'offre et ses candidatures dans votre dashboard",
+    "confirmTerms": "Je confirme que cette offre respecte les",
+    "termsOfUse": "conditions d'utilisation",
+    "ofBantuLink": "de BantuLink",
+    "preview": "Prévisualiser",
+    "offerPublished": "Offre publiée avec succès !",
+    "publicationError": "Erreur de publication :",
+    "correctErrors": "Veuillez corriger les erreurs dans le formulaire."
+  },
+  "profileModal": {
+    "completeProfile": "Compléter votre profil",
+    "completeProfileDesc": "Remplissez les informations pour compléter votre profil et augmenter votre visibilité.",
+    "birthDateRequired": "La date de naissance est requise",
+    "phoneRequired": "Le téléphone est requis",
+    "addressRequired": "L'adresse est requise",
+    "cityRequired": "La ville est requise",
+    "countryRequired": "Le pays est requis",
+    "jobTitleRequired": "Le titre professionnel est requis",
+    "profileSummaryRequired": "Le résumé du profil est requis",
+    "invalidCVUrl": "URL CV invalide",
+    "invalidLetterUrl": "URL lettre invalide",
+    "birthDate": "Date de naissance",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "city": "Ville",
+    "country": "Pays",
+    "jobTitle": "Titre professionnel",
+    "profileSummary": "Résumé profil",
+    "profileImage": "Image de profil",
+    "preview": "Aperçu",
+    "cv": "CV",
+    "motivationLetter": "Lettre de motivation",
+    "currentCV": "CV actuel :",
+    "currentLetter": "Lettre actuelle :",
+    "view": "voir",
+    "uploadNewReplace": "Uploader un nouveau fichier le remplacera.",
+    "profileVisibleRecruiters": "Profil visible pour les recruteurs",
+    "profileUpdated": "Profil mis à jour avec succès !",
+    "updateError": "Erreur lors de la mise à jour du profil.",
+    "save": "Enregistrer"
+  },
+"cancelSubscription": {
+  "question": "Puis-je annuler mon abonnement à tout moment ?",
+  "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Lorsque vous annulez, vous conservez l'accès à vos fonctionnalités payantes jusqu'à la fin de votre période de facturation en cours."
+},
   "coreValues": {
     "title": "Nos Valeurs Fondamentales",
     "security": {
@@ -395,7 +804,8 @@
     "excellence": {
       "title": "Excellence",
       "description": "L'excellence motive tout ce que nous faisons. De l'expérience utilisateur au service client, nous nous efforçons de dépasser les attentes à chaque point de contact."
-    }
+    },
+    "alt": "Décoration Demi-cercle"
   },
   "history": {
     "title": "Notre Histoire",

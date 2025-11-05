@@ -11,7 +11,6 @@ import BantulinkLoader from '../ui/BantulinkLoader';
 import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 
 const JobCarousel = () => {
-  const [activeTab, setActiveTab] = useState('graphiste');
   const navigate = useNavigate();
   const jobCarouselRef = useRef(null);
   const companyCarouselRef = useRef(null);
@@ -39,10 +38,10 @@ const JobCarousel = () => {
       try {
         const [offersRes, categoriesRes] = await Promise.all([
           api.get('/offres'),
-          api.get('/offres-categories')
+          api.get('offres/categories-populaires')
         ]);
 
-        const offers = offersRes.data.data || [];
+        const offers = offersRes.data || [];
         const categories = categoriesRes.data.data || [];
         
         setJobOffers(offers);
@@ -130,11 +129,13 @@ const JobCarousel = () => {
       </div>
 
       {/* Button */}
+      {job.length > 5 && (
       <Link to={`/job-offers/${job.id}`} className="block w-full">
         <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors mt-auto">
           Afficher plus
         </button>
       </Link>
+      )}
     </div>
   );
 
@@ -206,11 +207,15 @@ const JobCarousel = () => {
       </motion.div>
       
       {/* "Afficher plus" button below Job Carousel */}
-      <div className="px-4 sm:px-6 lg:px-8 mb-12">
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-          Afficher plus
-        </button>
-      </div>
+      {jobOffers.length > 5 && (
+        <div className="px-4 sm:px-6 lg:px-8 mb-12">
+          <Link to="/rechercheOffre">
+            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+              Afficher plus
+            </button>
+          </Link>
+        </div>
+      )}
 
       {/* Section "Les entreprises qui recrutent" */}
       {loading ? (
@@ -249,13 +254,15 @@ const JobCarousel = () => {
       )}
 
       {/* "Afficher toutes les entreprises" button */}
-      <div className="px-4 sm:px-6 lg:px-8 mt-8">
-        <Link to="/all-companies">
-          <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-            Afficher toutes les entreprises
-          </button>
-        </Link>
-      </div>
+      {companies.length > 5 && (
+        <div className="px-4 sm:px-6 lg:px-8 mt-8">
+          <Link to="/all-companies">
+            <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
+              Afficher toutes les entreprises
+            </button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

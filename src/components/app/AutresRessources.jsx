@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { Edit, Loader2, Linkedin, Globe, Github } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Edit, Loader2, Globe, Trash2, PlusCircle, Save } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import api from '@/services/api';
 import { toast } from 'sonner';
 import {
@@ -14,50 +12,93 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-const validationSchema = Yup.object({
-  portfolio_link: Yup.string().url('URL du portfolio invalide').nullable(),
-  linkedin_link: Yup.string().url('URL LinkedIn invalide').nullable(),
-  github_link: Yup.string().url('URL GitHub invalide').nullable(),
-  behance_link: Yup.string().url('URL Behance invalide').nullable(),
-});
-
 const AutresRessources = () => {
   const { particulier } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ressources, setRessources] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [portfolioLink, setPortfolioLink] = useState('');
+  const [nouveauNom, setNouveauNom] = useState('');
+  const [nouveauLien, setNouveauLien] = useState('');
 
-  const formik = useFormik({
-    initialValues: {
-      portfolio_link: particulier?.portfolio_link || '',
-      linkedin_link: particulier?.linkedin_link || '',
-      github_link: particulier?.github_link || '',
-      behance_link: particulier?.behance_link || '',
-    },
-    validationSchema,
-    enableReinitialize: true,
-    onSubmit: async (values, { setSubmitting }) => {
+  useEffect(() => {
+    if (particulier?.ressources) {
       try {
-        const response = await api.put('/profile/particulier', values);
-
-        toast.success('Ressources mises à jour avec succès !');
-        setIsModalOpen(false);
+        const parsedRessources = JSON.parse(particulier.ressources);
+        if (Array.isArray(parsedRessources)) {
+          setRessources(parsedRessources);
+        }
       } catch (error) {
-        console.error("Update error:", error.response?.data || error.message);
-        toast.error('Erreur lors de la mise à jour des ressources.');
-      } finally {
-        setSubmitting(false);
+        console.error("Erreur lors de l'analyse des ressources:", error);
+        setRessources([]);
       }
-    },
-  });
+    } else {
+      setRessources([]);
+    }
+    setPortfolioLink(particulier?.portfolio_link || '');
+  }, [particulier]);
 
-  const renderLink = (url, Icon, label) => {
-    if (!url) return null;
-    return (
-      <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
-        <Icon size={16} />
-        <span className="truncate">{url}</span>
-      </a>
-    );
+  const handleAjouterRessource = () => {
+    if (nouveauNom && nouveauLien) {
+      // Basic URL validation
+      try {
+        new URL(nouveauLien);
+        setRessources([...ressources, { nom: nouveauNom, lien: nouveauLien }]);
+        setNouveauNom('');
+        setNouveauLien('');
+      } catch (_) {
+        toast.error("Veuillez entrer une URL valide.");
+      }
+    } else {
+      toast.error("Veuillez remplir le nom et le lien.");
+    }
   };
+
+  const handleSupprimerRessource = (index) => {
+    const nouvellesRessources = [...ressources];
+    nouvellesRessources.splice(index, 1);
+    setRessources(nouvellesRessources);
+  };
+
+  const handleUpdateRessource = (index, field, value) => {
+    const nouvellesRessources = [...ressources];
+    nouvellesRessources[index] = { ...nouvellesRessources[index], [field]: value };
+    setRessources(nouvellesRessources);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await api.put('/profile/particulier', {
+        ressources: JSON.stringify(ressources),
+        portfolio_link: portfolioLink
+      });
+      toast.success('Ressources mises à jour avec succès !');
+      window.dispatchEvent(new CustomEvent('profile-updated'));
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour des ressources.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const renderRessourceLinks = () => (
+    <div className="space-y-4 text-sm text-gray-700">
+      {portfolioLink && (
+        <div className="flex items-center gap-4">
+          <p className="w-40 text-gray-700 font-medium capitalize">Portfolio</p>
+          <a href={portfolioLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
+            <Globe size={16} />
+            <span className="truncate">{portfolioLink}</span>
+          </a>
+        </div>
+      )}
+    </div>
+  );
+
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
@@ -70,81 +111,107 @@ const AutresRessources = () => {
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-400">
           <h2 className="text-xl font-semibold text-blue-800">Autres Ressources</h2>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
+           <DialogTrigger asChild>
               <button
-                onClick={() => setIsModalOpen(true)}
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <Edit size={16} className="mr-1" />
                 Modifier
               </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-lg bg-white rounded-lg shadow-md p-0">
+            <DialogContent className="sm:max-w-2xl bg-white rounded-lg shadow-md p-0 max-h-[90vh] overflow-y-auto">
               <DialogHeader className="pb-4 border-b border-gray-200">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
                   Modifier les ressources
                 </DialogTitle>
               </DialogHeader>
-              <form onSubmit={formik.handleSubmit} className="p-6 space-y-4">
-                <div>
-                  <label htmlFor="portfolio_link" className="block text-gray-700 font-medium mb-2">Site internet / Portfolio</label>
+              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <div className="space-y-2">
+                  <label htmlFor="portfolio_link" className="block text-sm font-medium text-gray-700">Site internet / Portfolio</label>
                   <input
                     id="portfolio_link"
                     type="text"
-                    {...formik.getFieldProps('portfolio_link')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="https://mon-portfolio.com"
+                    value={portfolioLink}
+                    onChange={(e) => setPortfolioLink(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
                   />
-                  {formik.touched.portfolio_link && formik.errors.portfolio_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.portfolio_link}</p>
-                  ) : null}
                 </div>
-                <div>
-                  <label htmlFor="linkedin_link" className="block text-gray-700 font-medium mb-2">LinkedIn</label>
-                  <input
-                    id="linkedin_link"
-                    type="text"
-                    {...formik.getFieldProps('linkedin_link')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://linkedin.com/in/votre-profil"
-                  />
-                  {formik.touched.linkedin_link && formik.errors.linkedin_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.linkedin_link}</p>
-                  ) : null}
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">Ressources actuelles</label>
+                  {ressources.length > 0 ? (
+                    ressources.map((ressource, index) => (editingIndex === index ? (
+                      <div key={index} className="flex items-center gap-2 p-2 bg-blue-50 rounded-md">
+                        <input type="text" value={ressource.nom} onChange={(e) => handleUpdateRessource(index, 'nom', e.target.value)} className="flex-1 px-2 py-1 border border-gray-300 rounded-md text-sm" />
+                        <input type="text" value={ressource.lien} onChange={(e) => handleUpdateRessource(index, 'lien', e.target.value)} className="flex-1 px-2 py-1 border border-gray-300 rounded-md text-sm" />
+                        <button type="button" onClick={() => setEditingIndex(null)} className="p-2 text-green-600 hover:text-green-800">
+                          <Save size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <div key={index} className="flex items-center justify-between p-2 bg-gray-100 rounded-md group">
+                        <div className="truncate">
+                          <strong className="capitalize">{ressource.nom}:</strong>
+                          <a href={ressource.lien} target="_blank" rel="noopener noreferrer" className="ml-2 text-blue-600 hover:underline">{ressource.lien}</a>
+                        </div>
+                        <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            type="button"
+                            onClick={() => setEditingIndex(index)}
+                            className="p-2 text-blue-600 hover:text-blue-800"
+                          >
+                            <Edit size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleSupprimerRessource(index)}
+                            className="p-2 text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )) : (
+                    <p className="text-sm text-gray-500">Aucune ressource ajoutée.</p>
+                  )}
                 </div>
-                <div>
-                  <label htmlFor="behance_link" className="block text-gray-700 font-medium mb-2">Behance</label>
-                  <input
-                    id="behance_link"
-                    type="text"
-                    {...formik.getFieldProps('behance_link')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://behance.com/in/votre-profil"
-                  />
-                  {formik.touched.behance_link && formik.errors.behance_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.behance_link}</p>
-                  ) : null}
+
+                <div className="space-y-2 pt-4 border-t">
+                   <label className="block text-sm font-medium text-gray-700">Ajouter une nouvelle ressource</label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      placeholder="Nom (ex: LinkedIn)"
+                      value={nouveauNom}
+                      onChange={(e) => setNouveauNom(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Lien (URL complète)"
+                      value={nouveauLien}
+                      onChange={(e) => setNouveauLien(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAjouterRessource}
+                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center justify-center"
+                    >
+                      <PlusCircle size={16} className="mr-1" /> Ajouter
+                    </button>
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="github_link" className="block text-gray-700 font-medium mb-2">GitHub</label>
-                  <input
-                    id="github_link"
-                    type="text"
-                    {...formik.getFieldProps('github_link')}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="https://github.com/votre-profil"
-                  />
-                  {formik.touched.github_link && formik.errors.github_link ? (
-                    <p className="text-red-500 text-sm mt-1">{formik.errors.github_link}</p>
-                  ) : null}
-                </div>
+
                 <div className="flex justify-end pt-4">
                   <button
                     type="submit"
-                    disabled={formik.isSubmitting}
+                    disabled={isSubmitting}
                     className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
-                    {formik.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Enregistrer
                   </button>
                 </div>
@@ -153,26 +220,33 @@ const AutresRessources = () => {
           </Dialog>
         </div>
 
-        <div className="space-y-4 text-sm text-gray-700">
-          <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">Site internet / Portfolio</p>
-            {renderLink(particulier?.portfolio_link, Globe, 'Portfolio') || <span className="text-gray-500">Non renseigné</span>}
+        {ressources.length > 0 || portfolioLink ? (
+          <div className="space-y-4 text-sm text-gray-700">
+            {portfolioLink && (
+              <div className="flex items-center gap-4">
+                <p className="w-40 text-gray-700 font-medium capitalize">Portfolio</p>
+                <a href={portfolioLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
+                  <Globe size={16} />
+                  <span className="truncate">{portfolioLink}</span>
+                </a>
+              </div>
+            )}
+            {ressources.map((ressource, index) => (
+              <div key={index} className="flex items-center gap-4">
+                <p className="w-40 text-gray-700 font-medium capitalize">{ressource.nom}</p>
+                <a href={ressource.lien} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
+                  <Globe size={16} />
+                  <span className="truncate">{ressource.lien}</span>
+                </a>
+              </div>
+            ))}
           </div>
-          <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">LinkedIn</p>
-            {renderLink(particulier?.linkedin_link, Linkedin, 'LinkedIn') || <span className="text-gray-500">Non renseigné</span>}
-          </div>
-          <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">Behance</p>
-            {renderLink(particulier?.behance_link, Globe, 'Behance') || <span className="text-gray-500">Non renseigné</span>}
-          </div>
-          <div className="flex items-center gap-4">
-            <p className="w-40 text-gray-700 font-medium">GitHub</p>
-            {renderLink(particulier?.github_link, Github, 'GitHub') || <span className="text-gray-500">Non renseigné</span>}
-          </div>
-        </div>
+        ) : (
+          <p className="text-gray-500">Aucune ressource externe n'a été ajoutée.</p>
+        )}
       </motion.section>
     </div>
+
   );
 };
 

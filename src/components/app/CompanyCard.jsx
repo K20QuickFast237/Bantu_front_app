@@ -6,12 +6,12 @@ import { Building, MapPin } from "lucide-react";
 const CompanyCard = ({ company }) => (
   <Link to={`/company/${company.id}`} >
     <div  key={company.id} className="company-card min-w-[70%] sm:min-w-[10%] md:min-w-[10%] lg:min-w-[330px] xl:min-w-[400px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0 snap-start flex flex-col">
-      <div className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0" style={{ backgroundImage: `url(${company.bgImage? company.bgImage : `${CompanyBg}`})` }}></div>
+      <div className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0" style={{ backgroundImage: `url(${company.photo_couverture? company.bgImage : `${CompanyBg}`})` }}></div>
 
       <div className="p-4 relative flex-1 flex flex-col">
         {/* Logo d'entreprise flottant */}
         <div className="absolute -top-10 left-4 w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border-2 border-white shadow-md">
-          <img src={`/storage/public/${company.logo}`} alt={company.nom_entreprise} className="w-full h-full object-contain p-2" />
+          <img src={`${company.logo}`} alt={company.nom_entreprise} className="w-full h-full object-contain p-2" />
         </div>
 
         <div className="mt-12 flex-1 flex flex-col">

@@ -9,7 +9,7 @@ import ConfirmationDialog from '../ConfirmationDialog';
 
 
 const Header = ({ collapsed, setCollapsed }) => {
-  const { user, logout } = useAuth();
+  const { user, logout, particulier } = useAuth();
   const navigate = useNavigate();
   const [isNotifOpen, setNotifOpen] = useState(false);
   const [isProfileOpen, setProfileOpen] = useState(false);
@@ -172,9 +172,9 @@ const Header = ({ collapsed, setCollapsed }) => {
                 onClick={() => setProfileOpen(!isProfileOpen)}
                 className="flex items-center focus:outline-none"
               >
-                <Avatar className="w-8 h-8 md:w-9 md:h-9 hover:scale-110 transition-transform cursor-pointer border-2 border-transparent hover:border-green-400">
+                {particulier.image_profil? <img src={particulier.image_profil} alt="profil" className="w-8 h-8 rounded-full md:w-9 md:h-9 hover:scale-110 transition-transform cursor-pointer border-2 border-transparent hover:border-green-400" /> : <Avatar className="w-8 h-8 md:w-9 md:h-9 hover:scale-110 transition-transform cursor-pointer border-2 border-transparent hover:border-green-400">
                   <AvatarFallback className="text-white bg-gray-700 text-sm">{user?.nom?.substring(0, 2).toUpperCase() || 'U'}</AvatarFallback>
-                </Avatar>
+                </Avatar>}
                 <ChevronDown size={16} className="hidden md:block ml-2 text-gray-500" />
               </button>
               <AnimatePresence>
@@ -188,9 +188,9 @@ const Header = ({ collapsed, setCollapsed }) => {
                   >
                     <div className="px-4 py-3 border-b border-gray-100">
                       <div className="flex items-center space-x-3">
-                        <Avatar className="w-12 h-12">
+                        {particulier.image_profil? <img src={particulier.image_profil} alt="profil" className="w-12 h-12 rounded-full" /> : <Avatar className="w-12 h-12">
                           <AvatarFallback className="text-white bg-gray-700">{user?.nom?.substring(0, 2).toUpperCase() || 'U'}</AvatarFallback>
-                        </Avatar>
+                        </Avatar>}
                         <div className="min-w-0">
                           <p className="font-medium text-gray-800 truncate">{user?.nom}</p>
                           <p className="text-sm text-gray-500 truncate">{user?.email}</p>

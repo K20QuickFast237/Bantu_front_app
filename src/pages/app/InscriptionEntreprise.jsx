@@ -139,7 +139,7 @@ const CompletionEntreprise = () => {
       pays: "",
       num_contribuable: "",
       logo: null,
-      image_couverture: null,
+      photo_couverture: null,
     },
     validationSchema,
     onSubmit: async (values, { resetForm, setSubmitting }) => {
@@ -164,7 +164,7 @@ const CompletionEntreprise = () => {
       }catch(err){
         toast.error("Erreur de connexion", {
             description: `${err.response.data.message}` || "Email ou mot de passe incorrect. Veuillez réessayer.",
-            duration: 5000,
+            duration: 3000,
         });
       }finally{
         setSubmitting(false);
@@ -176,8 +176,9 @@ const CompletionEntreprise = () => {
     navigate(-1);
   };
 
+
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col pt-20">
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <Header />
       <div className="flex-grow flex flex-col lg:flex-row">
         {/* Section gauche */}
@@ -237,8 +238,8 @@ const CompletionEntreprise = () => {
             <InputField id="pays" label="Pays" formik={formik} icon={Globe} />
             <InputField id="num_contribuable" label="N° de Contribuable (NIU)" formik={formik} icon={Hash} />
             <TextAreaField id="description_entreprise" label="Description de l'entreprise" formik={formik} icon={Info} />
-            <FileField id="logo" label="Logo de l'entreprise" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." isRequired={true} />
-            <FileField id="image_couverture" label="Image de couverture (Optionnel)" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
+            <FileField id="logo" label="Logo de l'entreprise" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
+            <FileField id="photo_couverture" label="Image de couverture (Optionnel)" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
           </div>
 
           {/* Bouton fixe en bas */}

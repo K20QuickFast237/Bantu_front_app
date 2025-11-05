@@ -95,18 +95,18 @@ const Infopersonelles = ({ onEditClick }) => {
                   <Mail size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                   <span className="truncate">{particulier.resume_profil}</span>
                 </div>
-                {particulier.cv_file && (
+                {particulier.cv_link && (
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={`/storage/${particulier.cv_file}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir le CV
                     </a>
                   </div>
                 )}
-                {particulier.lettre_motivation_file && (
+                {particulier.lettre_motivation_link && (
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                    <a href={`/storage/${particulier.lettre_motivation_file}`} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
+                    <a href={particulier.lettre_motivation_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
                       Voir la lettre de motivation
                     </a>
                   </div>

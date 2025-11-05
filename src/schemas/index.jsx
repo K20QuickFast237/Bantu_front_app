@@ -73,7 +73,7 @@ export const validationSchema = Yup.object({
   pays: Yup.string().required("Pays requis"),
   num_contribuable: Yup.string().required("Numéro contribuable requis"),
   logo: Yup.mixed()
-    .required("Un logo est requis")
+    .nullable()
     .test(
       "fileSize",
       "Le fichier est trop volumineux (max 2MB)",
