@@ -38,6 +38,7 @@ const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
   const otherParticipant = conv.participants?.find(p => p.id !== currentUser?.id);
   const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
   const lastMessage = conv.messages?.[conv.messages.length - 1];
+  console.log(conv);
 
   return (
     <div
@@ -72,6 +73,8 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
     const participantName = [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ');
     return participantName.toLowerCase().includes(searchTerm.toLowerCase());
   });
+
+  console.log(filteredConversations);
 
   if (loading) {
     return (
@@ -152,14 +155,14 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
 
     // Subscribe to the private channel for this conversation
     // The channel name should match your Laravel backend's broadcasting setup
-    const channelName = `private-chat.${conversation.id}`; // Assuming private channels for chat
+    const channelName = `conversations.${conversation.id}`; // Assuming private channels for chat
     const channel = echo.private(channelName);
 
     // Listen for the 'MessageSent' event (adjust event name if different in Laravel)
-    channel.listen('MessageSent', (e) => { // Assuming 'MessageSent' is the event name
+    channel.listen('.message.sent', (e) => { // Assuming 'MessageSent' is the event name
       // Check if the message is not from the current user to avoid duplicates
       // (messages sent by the current user are optimistically added)
-      if (e.message.user_id !== user.id) {
+      if (e.message.sender_id !== user.id) {
         setMessages(prevMessages => [...prevMessages, e.message]);
       }
       onMessageSent(); // To refresh the conversation list in the sidebar (e.g., last message, unread count)
@@ -212,7 +215,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
       const sentMessage = {
         id: tempId,
         content: newMessage,
-        user_id: user.id,
+        sender_id: user.id,
         attachments: attachments.map(file => ({ name: file.name, url: URL.createObjectURL(file) })), // Preview
         created_at_time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
         isSending: true,
@@ -299,25 +302,26 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
       <div className="flex-grow overflow-y-auto p-4">
         <div className="space-y-4">
           {messages.map((msg) => (
-            <div key={msg.id} className={`group flex items-end gap-2 ${msg.user_id === user.id ? 'justify-end' : 'justify-start'}`}>
-              {msg.user_id === user.id && (
+            <div key={msg.id} className={`group flex items-end gap-2 ${msg.sender_id === user.id ? 'justify-end' : 'justify-start'}`}>
+              {msg.sender_id === user.id && (
                 <button onClick={() => handleDelete(msg.id)} className="opacity-0 group-hover:opacity-100 text-red-500 p-1">
                   <Trash2 size={14} />
                 </button>
               )}
               <div
-                className={`max-w-xs md:max-w-md p-3 rounded-2xl break-words ${msg.user_id === user.id
+                className={`max-w-xs md:max-w-md p-3 rounded-2xl break-words ${msg.sender_id === user.id
                     ? 'bg-[#009739] text-white rounded-br-none'
                     : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none'
                   } ${msg.isSending ? 'opacity-50' : ''}`}
               >
                 <p className="text-sm">{msg.content}</p>
-                <p className={`text-xs mt-1 ${msg.user_id === user.id ? 'text-green-100' : 'text-gray-400'}`}>
+                <p className={`text-xs mt-1 ${msg.sender_id === user.id ? 'text-green-100' : 'text-gray-400'}`}>
                   {msg.created_at_time}
                 </p>
               </div>
               {/* Affichage des pièces jointes */}
               {msg.attachments && msg.attachments.length > 0 && (
+                console.log(msg.attachments),
                 <div className="mt-2 space-y-2">
                   {msg.attachments.map((att, index) => (
                     <a key={index} href={att.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-gray-100 p-2 rounded-lg text-sm text-blue-600 hover:underline">
@@ -399,7 +403,7 @@ const MessagesSection = () => {
   const [isListVisible, setIsListVisible] = useState(true);
   const { state: locationState } = useLocation();
   const { user } = useAuth(); // Get user here for conversation processing
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // eslint-disable-line no-unused-vars
 
   const fetchConversations = async () => {
     setLoading(true);
@@ -431,6 +435,11 @@ const MessagesSection = () => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const memoizedFetchConversations = React.useCallback(() => {
+    fetchConversations();
+  }, []);
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -442,7 +451,7 @@ const MessagesSection = () => {
   useEffect(() => {
     if (!user) return;
     const init = async () => {
-      const convs = await fetchConversations();
+      const convs = await memoizedFetchConversations();
       const conversationIdFromState = locationState?.conversationId;
 
       if (conversationIdFromState && convs.length > 0) {
@@ -453,7 +462,7 @@ const MessagesSection = () => {
       }
     };
     init(); // Call init only once user is available
-  }, [locationState?.conversationId, user]); // Depend on user
+  }, [locationState?.conversationId, user, memoizedFetchConversations]); // Depend on user
 
   const handleSelectConversation = (conv) => {
     setSelectedConversation(conv);
@@ -477,8 +486,8 @@ const MessagesSection = () => {
                 onBack={() => setSelectedConversation(null)}
                 onToggleList={() => { }}
                 isListVisible={false}
-                onMessageSent={fetchConversations}
-                onMessageDeleted={fetchConversations}
+                onMessageSent={memoizedFetchConversations}
+                onMessageDeleted={memoizedFetchConversations}
               />
             </motion.div>
           ) : (
@@ -534,8 +543,8 @@ const MessagesSection = () => {
             onBack={() => setSelectedConversation(null)}
             onToggleList={() => setIsListVisible(!isListVisible)}
             isListVisible={isListVisible}
-            onMessageSent={fetchConversations}
-            onMessageDeleted={fetchConversations}
+            onMessageSent={memoizedFetchConversations}
+            onMessageDeleted={memoizedFetchConversations}
           />
         ) : (
           <div className="flex flex-grow flex-col items-center justify-center bg-gray-50 text-center p-8 h-full">

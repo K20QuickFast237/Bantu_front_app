@@ -20,14 +20,16 @@ import Footer from '../../components/public/Footer';
 const Login = () => {
   const { t } = useTranslation(); // Hook i18n
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, refreshAuth } = useAuth();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/WhatDoYouWantToDo';
 
-  const handleLoginSuccess = (apiUser, token, formActions = null) => {
+  const handleLoginSuccess = async (apiUser, token, formActions = null) => {
     toast.success(t('login.success') || "Connexion réussie !", { duration: 3000 });
-    setTimeout(() => {
-      login(apiUser, token);
+    // On stocke le token et on rafraîchit immédiatement le contexte
+    sessionStorage.setItem('token', token);
+    await refreshAuth();
+    setTimeout(() => {      
       if (formActions) formActions.resetForm();
       navigate(from, { replace: true });
     }, 1000);
@@ -37,7 +39,7 @@ const Login = () => {
     try {
       const response = await api.post('/login', values);
       const { user: apiUser, token } = response.data;
-      handleLoginSuccess(apiUser, token, actions);
+      await handleLoginSuccess(apiUser, token, actions);
     } catch (err) {
       toast.error(t('login.error') || "Erreur de connexion", {
         description: `${err.response.data.message}` || t('login.invalid') || "Email ou mot de passe incorrect. Veuillez réessayer.",
@@ -65,7 +67,7 @@ const Login = () => {
     try {
       const response = await api.post('/google-login', { JWT_ID_Token: idToken });
       const { user: apiUser, token } = response.data;
-      handleLoginSuccess(apiUser, token);
+      await handleLoginSuccess(apiUser, token);
     } catch (error) {
       toast.error(t('login.error'), {
         description: `${error.response?.data?.message}` || t('login.googleError') || "Une erreur est survenue lors de la connexion avec Google.",

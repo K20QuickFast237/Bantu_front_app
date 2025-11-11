@@ -64,7 +64,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
     <header className="relative flex items-center justify-between h-20 px-4 sm:px-10 bg-white shadow-md border-b border-gray-200">
       <div className="flex items-center space-x-8">
         <Link to="/candidatProfil" className="text-xl font-bold">
-          <span className="text-green-500">Bantu</span><span className="text-red-500">Link</span>
+          <img src="/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
         </Link>
 
         {!hideNavLinks && (

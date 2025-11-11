@@ -40,7 +40,7 @@ const JobApplicationManagement = () => {
         setApplications(appsData);
         setFilteredApplications(appsData);
 
-        const offersData = offersResponse.data?.data || [];
+        const offersData = offersResponse?.data || [];
         setOffersList(offersData.map(o => ({
           id: o.id,
           titre_poste: o.titre_poste

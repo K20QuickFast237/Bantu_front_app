@@ -8,7 +8,7 @@ import { useProfileCompletion } from '@/hooks/useProfileCompletion'; // Importer
 import { Switch } from '@radix-ui/react-switch';
 
 const Infopersonelles = ({ onEditClick }) => {
-  const { user, particulier } = useAuth();
+  const { user, particulier, refreshAuth } = useAuth();
   const { profileCompletion, profileData } = useProfileCompletion(); // Utiliser le hook
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
 
@@ -19,6 +19,7 @@ const Infopersonelles = ({ onEditClick }) => {
     try {
       const response = await api.put('/profile/particulier', { is_visible: newVisibility });
 
+      await refreshAuth();
       // Déclenche un événement pour que la page parente (Profil.jsx) rafraîchisse les données.
       window.dispatchEvent(new CustomEvent('profile-updated'));
       toast.success(`Votre profil est maintenant ${newVisibility === 1 ? 'visible' : 'caché'}.`);

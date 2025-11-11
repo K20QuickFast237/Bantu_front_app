@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, PlusCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../../services/api';
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 import { validationFormationSchema } from '../../schemas';
 import {
   Dialog,
@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 import { useFormik } from 'formik';
 
 const DiplomesFormations = () => {
-  const { token } = useAuth();
+  const { token, refreshAuth } = useAuth();
   const [formations, setFormations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingFormation, setEditingFormation] = useState(null);
@@ -56,6 +56,7 @@ const DiplomesFormations = () => {
           )
         );
         toast.success('Formation mise à jour avec succès');
+        await refreshAuth();
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('formations-updated'));
@@ -72,6 +73,7 @@ const DiplomesFormations = () => {
         }
         setFormations(prev => [...prev, newFormation]);
         toast.success('Formation ajoutée avec succès');
+        await refreshAuth();
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('formations-updated'));
@@ -128,6 +130,7 @@ const DiplomesFormations = () => {
       await api.delete(`/formations/${formationToDelete}`);
       setFormations(formations.filter((formation) => formation.id !== formationToDelete));
       toast.success('Formation supprimée avec succès');
+      await refreshAuth();
 
       // Déclencher l'événement pour mettre à jour la barre de progression
       window.dispatchEvent(new Event('formations-updated'));

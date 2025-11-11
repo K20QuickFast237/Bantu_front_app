@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Mail, Phone, MapPin, Download, Share2, User, Briefcase, Linkedin, Github, Globe, ChevronLeft } from 'lucide-react';
+import { Mail, Phone, MapPin, Download, Linkedin, Github, Globe, ChevronLeft } from 'lucide-react';
 import api from '@/services/api';
-import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
 
@@ -20,7 +19,6 @@ export default function ProfilCandidatByRecruteur() {
         const response = await api.get(`/user/${id}`);
         setCandidat(response.data);
       } catch (error) {
-        toast.error("Erreur lors du chargement du profil du candidat.");
         console.error(error);
       } finally {
         setLoading(false);
@@ -38,6 +36,8 @@ export default function ProfilCandidatByRecruteur() {
     );
   }
 
+  console.log(candidat);
+
   if (!candidat) {
     return (
       <div className="text-center py-10">
@@ -47,7 +47,7 @@ export default function ProfilCandidatByRecruteur() {
     );
   }
 
-  const { particulier, experiences, skills } = candidat;
+  const { particulier, experiences, skills, formations } = candidat;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -59,7 +59,7 @@ export default function ProfilCandidatByRecruteur() {
             Retour
           </Button>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">Profil de {candidat.prenom} {candidat.nom}</h1>
-          <p className="text-gray-600 text-sm">Membre depuis {new Date(candidat.created_at).toLocaleDateString('fr-FR')}</p>
+          <p className="text-gray-600 text-sm">Membre depuis {new Date(candidat.email_verified_at).toLocaleDateString('fr-FR')}</p>
         </div>
 
         {/* Personal Info Section */}
@@ -149,55 +149,55 @@ export default function ProfilCandidatByRecruteur() {
           </div>
         )}
 
-        {/* Education (Statique pour le moment) */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Diplômes & Formations</h2>
-          <div className="space-y-6">
-            {[
-              { school: 'Université de Yaoundé I', location: 'Yaoundé, Cameroun', title: 'Licence en Informatique', date: '2018 - 2021', skills: 'Algorithmique, Bases de données' },
-              { school: 'OpenClassrooms', location: 'En ligne', title: 'Développeur d\'application - PHP / Symfony', date: '2022', skills: 'PHP, Symfony, React' },
-            ].map((edu, idx) => (
-              <div key={idx} className="border-l-4 border-orange-500 pl-4">
-                <h3 className="font-semibold text-gray-800">{edu.title}</h3>
-                <p className="text-gray-600 text-sm">{edu.school} • {edu.location}</p>
-                <p className="text-gray-500 text-sm">{edu.date}</p>
-                <p className="text-gray-600 text-sm mt-2">Compétences acquises : {edu.skills}</p>
-              </div>
-            ))}
+        {/* Education */}
+        {formations?.length > 0 && (
+          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">Diplômes & Formations</h2>
+            <div className="space-y-6">
+              {formations.map((formation) => (
+                <div key={formation.id} className="border-l-4 border-orange-500 pl-4">
+                  <h3 className="font-semibold text-gray-800">{formation.diplome}</h3>
+                  <p className="text-gray-600 text-sm">{formation.etablissement}</p>
+                  <p className="text-gray-500 text-sm">{new Date(formation.date_debut).toLocaleDateString('fr-FR')} - {new Date(formation.date_fin).toLocaleDateString('fr-FR')}</p>
+                  <p className="text-gray-600 text-sm mt-2">Domaine d'étude : {formation.domaine_etude}</p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Other Resources */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-4">Autres Ressources</h2>
           <div className="space-y-3">
             {particulier?.cv_link && (
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 text-sm">
                 <Download size={16} className="text-gray-500" />
                 <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm flex items-center gap-2">
                   <span>Télécharger le CV</span>
                 </a>
               </div>
             )}
-            {/* Liens statiques pour le moment */}
-            <div className="flex items-center gap-4">
-              <Globe size={16} className="text-gray-500" />
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
-                portfolio-candidat.com
-              </a>
-            </div>
-            <div className="flex items-center gap-4">
-              <Linkedin size={16} className="text-gray-500" />
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
-                linkedin.com/in/candidat-profil
-              </a>
-            </div>
-            <div className="flex items-center gap-4">
-              <Github size={16} className="text-gray-500" />
-              <a href="#" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline text-sm">
-                github.com/candidat-profil
-              </a>
-            </div>
+             {particulier?.ressources &&
+                JSON.parse(particulier.ressources).map((ressource, index) => (
+                  <div key={index} className="flex items-center gap-4 text-sm">
+                    {ressource.nom.toLowerCase().includes('linkedin') ? (
+                      <Linkedin size={16} className="text-gray-500" />
+                    ) : ressource.nom.toLowerCase().includes('github') ? (
+                      <Github size={16} className="text-gray-500" />
+                    ) : (
+                      <Globe size={16} className="text-gray-500" />
+                    )}
+                    <a
+                      href={ressource.lien}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-600 hover:underline text-sm"
+                    >
+                      {ressource.nom}
+                    </a>
+                  </div>
+                ))}
           </div>
         </div>
       </div>

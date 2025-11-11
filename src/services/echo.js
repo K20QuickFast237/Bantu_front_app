@@ -4,26 +4,19 @@ import api from './api'; // Pour l'authentification des canaux privés
 
 window.Pusher = Pusher;
 
-const appKey = String(import.meta.env.VITE_REVERB_APP_KEY || '');
-
-if (!appKey) {
-    console.error('VITE_REVERB_APP_KEY is not set in your environment variables.');
-}
-
 const options = {
-    broadcaster: "reverb",
-    key: appKey,
+    broadcaster: import.meta.env.VITE_BROADCAST_CONNECTION,
+    key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT,
-    wssPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
+    forceTLS: false,
     enabledTransports: ['ws', 'wss'],
     // Point d'authentification pour les canaux privés
     disableStats: true,
     authorizer: (channel, options) => {
         return {
             authorize: (socketId, callback) => {
-                api.post('/api/broadcasting/auth', {
+                api.post('/broadcasting/auth', {
                     socket_id: socketId,
                     channel_name: channel.name,
                 })

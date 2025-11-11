@@ -71,7 +71,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
 
   const handleLogoClick = () => {
-    navigate('/dashboardEntreprise');
+    navigate('/dashboard');
   };
 
     // Create backdrop for mobile
@@ -113,15 +113,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
         <div className={`flex items-center p-3 border-b border-gray-200 h-14 ${sidebarOpen || !isMobile ? 'justify-between' : 'justify-center'}`}>
           {(sidebarOpen || !isMobile) && (
             <button onClick={handleLogoClick} className="flex items-center space-x-2 text-xl font-bold text-gray-700 hover:text-[#0A2342] transition-colors">
-              <span className="text-green-500">Bantu</span><span className="text-red-500">Link</span>
+              <img src="/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
             </button>
           )}
-          {/* <button 
-            onClick={() => setSidebarOpen(!sidebarOpen)} 
-            className="p-1 rounded-md hover:bg-gray-100"
-          >
-            {isMobile && sidebarOpen ? <X size={20} /> : <ChevronLeft size={20} />}
-          </button> */}
         </div>
         
         {/* Infos de l'entreprise */}
