@@ -125,6 +125,7 @@ const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
 
 const CompletionEntreprise = () => {
   const navigate = useNavigate();
+  const { refreshAuth } = useAuth();
 
   const formik = useFormik({
     initialValues: {
@@ -160,6 +161,7 @@ const CompletionEntreprise = () => {
             duration: 3000,
         });
         resetForm();
+        await refreshAuth();
         navigate("/dashboard");
       }catch(err){
         toast.error("Erreur de connexion", {

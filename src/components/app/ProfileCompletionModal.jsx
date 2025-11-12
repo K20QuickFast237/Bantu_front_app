@@ -16,7 +16,7 @@ import {
 import { Loader2, Trash2 } from 'lucide-react';
 
 const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
-  const { user, particulier } = useAuth();
+  const { user, particulier, refreshAuth } = useAuth();
   const [imageFile, setImageFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(particulier?.image_profil ? `${particulier.image_profil}` : '');
   const [cvFile, setCvFile] = useState(null);
@@ -114,6 +114,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
 
         setPreviewImage(updatedParticulier.image_profil ? `${updatedParticulier.image_profil}` : '');
         // Dispatch event to update profile completion bar
+        await refreshAuth();
         window.dispatchEvent(new CustomEvent('profile-updated'));
 
         toast.success('Profil mis à jour avec succès !');

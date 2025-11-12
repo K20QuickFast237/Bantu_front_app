@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 const AutresRessources = () => {
-  const { particulier } = useAuth();
+  const { particulier, refreshAuth } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ressources, setRessources] = useState([]);
@@ -75,6 +75,7 @@ const AutresRessources = () => {
         ressources: JSON.stringify(ressources),
         portfolio_link: portfolioLink
       });
+      await refreshAuth();
       toast.success('Ressources mises à jour avec succès !');
       window.dispatchEvent(new CustomEvent('profile-updated'));
       setIsModalOpen(false);
