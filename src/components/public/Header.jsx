@@ -55,7 +55,7 @@ const Header = () => {
         {/* Logo Section */}
         <div className="flex items-center">
           <NavLink to="/home" className="flex items-center" aria-label="Accueil">
-            <img src="/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+            <img src="assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
           </NavLink>
         </div>
 
@@ -152,12 +152,12 @@ const Header = () => {
               >
                 {t('header.login')}
               </NavLink>
-              <NavLink
+              {/* <NavLink
                 to="/register"
                 className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
               >
                 {t('header.register')}
-              </NavLink>
+              </NavLink> */}
             </>
           )}
         </div>
