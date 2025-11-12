@@ -45,15 +45,13 @@ const Footer = () => {
 
             {/* Logo */}
             <div className="mb-12">
-              <div className="flex items-center gap-2">
-                <div className="flex gap-1">
-                  <div className="w-2 h-6 bg-orange-500 rounded-sm"></div>
-                  <div className="w-2 h-6 bg-emerald-500 rounded-sm"></div>
-                  <div className="w-2 h-6 bg-red-500 rounded-sm"></div>
-                </div>
-                <span className="text-white text-xl font-semibold">{t('footer.logo')}</span>
-              </div>
+              <img 
+                src="src/assets/logobantulink.png" 
+                alt="Logo Bantuhire" 
+                className="h-10 w-auto object-contain"
+              />
             </div>
+
 
             {/* Grille des colonnes */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
@@ -67,7 +65,7 @@ const Footer = () => {
               <FooterColumn title={t('footer.columns.company.title')} items={t('footer.columns.company.items', { returnObjects: true })} />
 
               {/* Réseaux sociaux */}
-              <div>
+              {/* <div>
                 <h3 className="text-white font-semibold text-lg mb-6">{t('footer.columns.social.title')}</h3>
                 <div className="flex gap-3">
                   {[Facebook, Linkedin, Twitter, Instagram].map((Icon, i) => (
@@ -76,7 +74,44 @@ const Footer = () => {
                     </a>
                   ))}
                 </div>
+              </div> */}
+
+              <div className="flex items-center gap-3 mt-6">
+                {[
+                  {
+                    Icon: Facebook,
+                    url: "https://www.facebook.com/share/1AhPm1QpV7/?mibextid=wwXIfr", // ton lien Facebook
+                    label: "Facebook",
+                  },
+                  {
+                    Icon: Linkedin,
+                    url: "https://www.linkedin.com/company/bantulink", // ton lien LinkedIn
+                    label: "LinkedIn",
+                  },
+                  {
+                    Icon: Twitter,
+                    url: "https://x.com/TNK_SYNERGIES", // ton lien X/Twitter
+                    label: "Twitter",
+                  },
+                  {
+                    Icon: Instagram,
+                    url: "https://www.instagram.com/tnk_synergies?igsh=dDkzd2t2NjdlN3Jt", // ton lien Instagram
+                    label: "Instagram",
+                  },
+                ].map(({ Icon, url, label }, i) => (
+                  <a
+                    key={i}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="p-2 rounded hover:bg-gray-600 transition-colors"
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </a>
+                ))}
               </div>
+
             </div>
 
             {/* Copyright */}
