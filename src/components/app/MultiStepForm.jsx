@@ -666,7 +666,7 @@ const MultiStepForm = () => {
     <form onSubmit={formik.handleSubmit} className="max-w-8xl mx-auto space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature *</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Adresse mail de candidature</label>
           <input
             name="email_candidature"
             type="email"
