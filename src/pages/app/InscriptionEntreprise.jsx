@@ -20,6 +20,7 @@ import Header from "../../components/app/Header";
 import { ClipLoader } from "react-spinners";
 import Welcome1 from "../../assets/assets_application/welcome1.png";
 import { validationSchema } from "@/schemas";
+import { useAuth } from "@/hooks/useAuth";
 
 const InputField = ({ id, label, formik, icon: Icon, type = "text" }) => (
   <div>

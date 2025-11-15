@@ -254,7 +254,7 @@ const JobCarousel = () => {
       )}
 
       {/* "Afficher toutes les entreprises" button */}
-      {companies.length > 5 && (
+      {companies.length >= 5 && (
         <div className="px-4 sm:px-6 lg:px-8 mt-8">
           <Link to="/all-companies">
             <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
