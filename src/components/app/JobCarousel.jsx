@@ -140,6 +140,19 @@ const JobCarousel = () => {
   );
 
   return (
+    <>
+      {/* Ajout du style pour cacher la barre de défilement */}
+      <style>
+        {`
+          .no-scrollbar::-webkit-scrollbar {
+              display: none;
+          }
+          .no-scrollbar {
+              -ms-overflow-style: none;  /* IE and Edge */
+              scrollbar-width: none;  /* Firefox */
+          }
+        `}
+      </style>
     <div className="mx-auto py-8 bg-white font-sans">
       {/* Section "Recherches populaires" */}
       <div className="mb-10 px-10 sm:px-6 lg:px-8">
@@ -163,60 +176,6 @@ const JobCarousel = () => {
         </div>
       </div>
 
-      {/* Section "Job Offers Carousel" */}
-      {/* <motion.div 
-        className="mb-10 relative px-10 sm:px-6 lg:px-8"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      >
-        {jobOffers.length > 0 ? (
-          <>
-            <div
-              ref={jobCarouselRef}
-              className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
-            >
-              {jobOffers.slice(0, 5).map((job) => (
-                <div
-                  key={job.id}
-                  className="job-card min-w-[300px] md:min-w-[350px] lg:min-w-[400px] flex-shrink-0 snap-start"
-                >
-                  <JobCardItem job={job} />
-                </div>
-              ))}
-            </div> */}
-
-            {/* Navigation Arrows for Job Carousel */}
-            {/* <button
-              onClick={() => scrollCarousel(jobCarouselRef, 'left')}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors shadow-lg z-10"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => scrollCarousel(jobCarouselRef, 'right')}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors shadow-lg z-10"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </>
-        ) : (
-          <p className="text-center text-gray-500 py-8">Aucune offre populaire pour le moment.</p>
-        )}
-      </motion.div> */}
-      
-      {/* "Afficher plus" button below Job Carousel */}
-      {/* {jobOffers.length > 5 && (
-        <div className="px-4 sm:px-6 lg:px-8 mb-12">
-          <Link to="/rechercheOffre">
-            <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-              Afficher plus
-            </button>
-          </Link>
-        </div>
-      )} */}
-
       {/* Section "Les entreprises qui recrutent" */}
       {loading ? (
         <div className="flex justify-center p-10"><BantulinkLoader /></div>
@@ -227,7 +186,7 @@ const JobCarousel = () => {
             <>
               <div
                 ref={companyCarouselRef}
-                className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4"
+                className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4 no-scrollbar"
               >
                 {companies.slice(0, 5).map((company) => (
                   <CompanyCard key={company.id} company={company} />
@@ -264,6 +223,7 @@ const JobCarousel = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 

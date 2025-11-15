@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         // Fetch /user pour données fraîches
         const response = await api.get('/user');
         const apiUser = response.data.data || response.data;
-        setUser(apiUser);
+        console.log(apiUser)
         setIsAuthenticated(true);
       } catch (error) {
         // En cas d'erreur (ex: token invalide), on déconnecte

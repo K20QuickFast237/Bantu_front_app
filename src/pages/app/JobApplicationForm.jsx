@@ -50,47 +50,64 @@ const JobApplicationForm = () => {
   const handleSubmitApplication = async () => {
     if (!particulier) {
       toast.error("Veuillez completer votre profil avant d'envoyer une candidature.");
-      // navigate('/connexion');
       return;
     }
     setLoading(true);
+    const formData = new FormData();
+    formData.append('offre_id', job.id);
+
     try {
       if (applicationMethod === 'bantuHire') {
-        // Appel API spécifique BantuHire
-        await api.post('/candidatures', {
-          offre_id: job.id,
-          motivation_text: coverLetter,
-          cv_genere: true
-        });
-        toast.success("Votre candidature a bien été envoyée !");
-        navigate('/candidatProfil');
-      } else {
-        // Appel API classique avec fichiers
-        const formData = new FormData();
-        formData.append('offre_id', job.id);
+        formData.append('cv_genere', 'true');
+        formData.append('motivation_text', coverLetter);
 
-        // On ajoute toujours les fichiers si présents, sans vérifier documents_requis
-        if (uploadedDocs['cv']) {
-          formData.append('cv_url', uploadedDocs['cv']);
+        // Gestion des autres documents (hors CV et lettre de motivation)
+        let docIndex = 1;
+        job.documents_requis?.forEach(docName => {
+          if (docName.toLowerCase() !== 'cv' && docName.toLowerCase() !== 'lettre de motivation') {
+            if (uploadedDocs[docName]) {
+              formData.append(`doc_titre${docIndex}`, docName);
+              formData.append(`doc${docIndex}`, uploadedDocs[docName]);
+              docIndex++;
+            } else {
+              toast.error(`Veuillez joindre le document : ${docName}`);
+              throw new Error(`Document manquant: ${docName}`);
+            }
+          }
+        });
+      } else {
+        // Méthode "mon CV"
+        if (uploadedDocs['CV']) {
+          formData.append('cv_file', uploadedDocs['CV']);
         } else {
           toast.error("Veuillez joindre votre CV.");
-          setLoading(false);
-          return;
-        }
-        if (uploadedDocs['lettre de motivation']) {
-          formData.append('motivation_url', uploadedDocs['lettre de motivation']);
-        } else {
-          toast.error("Veuillez joindre votre lettre de motivation.");
-          setLoading(false);
-          return;
+          throw new Error("CV manquant");
         }
 
-        await api.post('/candidatures', formData);
-        toast.success("Votre candidature a bien été envoyée !");
-        navigate('/CandidatProfil');
+        // Gestion des autres documents requis
+        let docIndex = 1;
+        job.documents_requis?.forEach(docName => {
+          // Le CV est déjà géré, on ignore
+          if (docName.toLowerCase() === 'cv') return;
+
+          if (uploadedDocs[docName]) {
+            formData.append(`doc_titre${docIndex}`, docName);
+            formData.append(`doc${docIndex}`, uploadedDocs[docName]);
+            docIndex++;
+          } else {
+            toast.error(`Veuillez joindre le document : ${docName}`);
+            throw new Error(`Document manquant: ${docName}`);
+          }
+        });
       }
+
+      await api.post('/candidatures', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+      toast.success("Votre candidature a bien été envoyée !");
+      navigate('/mesCandidatures');
     } catch (error) {
-      toast.error(`${error?.message} `||"Erreur lors de l'envoi de la candidature.");
+      if (!error.message.startsWith("Document manquant") && !error.message.startsWith("CV manquant")) {
+        toast.error(error.response?.data?.message || "Erreur lors de l'envoi de la candidature.");
+      }
     }
     setLoading(false);
   };
@@ -193,7 +210,7 @@ const JobApplicationForm = () => {
             </div>
           ) : (
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm mb-8">
-              <h3 className="text-orange-500 text-xl font-bold mb-4">Ma candidature</h3>
+              <h3 className="text-orange-500 text-xl font-bold mb-4"></h3>
               <div className="space-y-4">
                 {Array.isArray(job.documents_requis) && job.documents_requis.length > 0 ? (
                   job.documents_requis.map((docName, idx) => (

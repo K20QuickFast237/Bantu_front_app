@@ -35,13 +35,11 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
     // La validation du CV et de la lettre est maintenant conditionnelle
     cv_file: Yup.mixed().when('cv_link', {
       is: (cv_link) => !cv_link, // Requis seulement si aucun lien de CV n'existe
-      then: (schema) => schema.required('Le CV est requis.'),
-      otherwise: (schema) => schema.nullable(),
+      then: (schema) => schema.nullable(),
     }),
     lettre_motivation_file: Yup.mixed().when('lettre_motivation_link', {
       is: (lettre_motivation_link) => !lettre_motivation_link, // Requis seulement si aucun lien de lettre n'existe
-      then: (schema) => schema.required('La lettre de motivation est requise.'),
-      otherwise: (schema) => schema.nullable(),
+      then: (schema) => schema.nullable(),
     }),
     cv_link: Yup.string().url('Le lien du CV doit être une URL valide').nullable(),
     lettre_motivation_link: Yup.string().url('Le lien de la lettre de motivation doit être une URL valide').nullable(),

@@ -234,13 +234,13 @@ const JobPostManagement = () => {
                 <td className="px-6 py-4 text-gray-700">{job.date_limite_soumission ? new Date(job.date_limite_soumission).toLocaleDateString('fr-FR') : 'N/A'}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <div className={`w-3 h-3 rounded-full ${job.statut === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                    <div className={`w-3 h-3 rounded-full ${job.statut === 'Active' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                     <span className="text-gray-700 capitalize">{job.statut || 'N/A'}</span>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-gray-700 font-medium cursor-pointer hover:text-blue-500">
                   <Link to={`/dashboard_candidature_spec/${job.id}`}>
-                    {job.candidatures || '0'} candidatures
+                    {job.candidatures_count || '0'} candidatures
                   </Link>
                 </td>
                 <td className="px-6 py-4 flex items-center gap-2">

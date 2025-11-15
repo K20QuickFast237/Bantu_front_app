@@ -59,13 +59,15 @@ const MesCandidatures = () => {
                                         <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
-                                {loading ? (
-                                    <div className="flex justify-center items-center h-full min-h-[500px]">
-                                        <BantulinkLoader />
-                                    </div>
-                                ) : (
-                                    <tbody>
-                                        {applications.length === 0 ? (
+                                <tbody>
+                                    {loading ? (
+                                        <tr>
+                                            <td colSpan="5" className="text-center py-20">
+                                                <BantulinkLoader />
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        applications.length === 0 ? (
                                             <tr>
                                                 <td colSpan="5" className="px-6 py-10 text-center text-gray-500">Vous n'avez postulé à aucune offre pour le moment.</td>
                                             </tr>
@@ -102,9 +104,8 @@ const MesCandidatures = () => {
                                                     </tr>
                                                 );
                                             })
-                                        )}
-                                    </tbody>
-                                )}
+                                        ))}
+                                </tbody>
                             </table>
                         </div>
                     </div>
