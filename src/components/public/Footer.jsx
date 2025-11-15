@@ -46,7 +46,7 @@ const Footer = () => {
             {/* Logo */}
             <div className="mb-12">
               <img 
-                src="assets/logobantulink.png" 
+                src="src/assets/logobantulink.png" 
                 alt="Logo Bantuhire" 
                 className="h-10 w-auto object-contain"
               />
