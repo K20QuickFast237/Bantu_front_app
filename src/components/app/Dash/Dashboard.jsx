@@ -259,6 +259,7 @@ const Dashboard = ({ setActiveSection }) => {
               </CardHeader>
               <CardContent className="space-y-3">
                 {recentApplications.slice(0, 4).map((application) => {
+                  console.log(application);
                   const applicationDate = new Date(application.created_at);
                   const today = new Date();
                   const diffTime = Math.abs(today - applicationDate);
@@ -275,15 +276,15 @@ const Dashboard = ({ setActiveSection }) => {
                     >
                       <Avatar className="w-8 h-8">
                         <AvatarFallback className={`${randomColor} text-white text-xs`}>
-                          {application.candidat?.nom?.substring(0, 2).toUpperCase() || 'N/A'}
+                          {application.particulier?.user?.nom?.substring(0, 2).toUpperCase() || 'N/A'}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-gray-900 truncate">{application.candidat?.nom || 'Candidat Anonyme'}</p>
+                        <p className="font-medium text-sm text-gray-900 truncate">{application.particulier?.user?.nom || 'Candidat Anonyme'}</p>
                         <p className="text-xs text-gray-600">{application.offre?.titre_poste || 'Poste non spécifié'}</p>
                         <p className="text-xs text-gray-500">{timeAgo}</p>
                       </div>
-                      <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.user_id}`)}>
+                      <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.particulier.user_id}`)}>
                         Voir
                       </Button>
                     </div>

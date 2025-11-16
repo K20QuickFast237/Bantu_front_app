@@ -84,7 +84,7 @@ const App = ({ onOpenProfileModal }) => {
                   <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center ">
                 <User className="w-6 h-6 text-gray-900" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">15</div>
+                  <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
               </div>
               <div className="text-lg text-gray-800 mt-2 mb-2">Candidatures en cours</div>
               <button className="text-lg text-[#10B981] underline">Voir plus →</button>
@@ -98,7 +98,7 @@ const App = ({ onOpenProfileModal }) => {
                 <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
               <Download className="w-6 h-6 text-gray-900" />
             </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">01</div>
+            <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
             </div>
             <div className="text-lg text-gray-800 mt-2 mb-2">Opportunités reçues</div>
             <button className="text-lg text-[#10B981] underline">Voir plus →</button>
@@ -111,7 +111,7 @@ const App = ({ onOpenProfileModal }) => {
                   <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
                 <Bookmark className="w-6 h-6 text-gray-900" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">05</div>
+              <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
               </div>
               <div className="text-lg text-gray-800 mt-2 mb-2">Offres sauvegardées</div>
               <button className="text-lg text-[#10B981] underline">Voir plus →</button>

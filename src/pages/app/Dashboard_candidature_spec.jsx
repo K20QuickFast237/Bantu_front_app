@@ -143,7 +143,7 @@ export default function DashboardCandidatureSpec() {
                                             <tr key={realId} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                                 <td className="px-6 py-4 text-gray-700 font-medium">{idx + 1}</td>
                                                 <td className="px-6 py-4 text-green-600 font-medium">
-                                                    {candidate.particulier?.nom}
+                                                    {candidate.particulier?.user?.nom} {candidate.particulier?.user?.prenom}
                                                 </td>
                                                 <td className="px-6 py-4 text-gray-700">
                                                     {candidate.offre?.titre_poste || ''}

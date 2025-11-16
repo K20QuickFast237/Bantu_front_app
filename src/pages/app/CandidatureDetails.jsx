@@ -104,9 +104,9 @@ const JobApplicationDetail = () => {
   const { particulier, offre, cv_url, cv_genere } = application;
   console.log(particulier);
   const infos = {
-      nom: particulier?.nom || 'N/A',
-      prenom: particulier?.prenom || null,
-      email: particulier?.email || 'N/A',
+      nom: particulier?.user?.nom || 'N/A',
+      prenom: particulier?.user?.prenom || null,
+      email: particulier?.user?.email || 'N/A',
       telephone: particulier?.telephone ||'N/A',
       adresse: particulier?.adresse ||'N/A',
   };
@@ -200,11 +200,11 @@ const JobApplicationDetail = () => {
                     </button>
                 ) : cv_url ? (
                     <>
-                        <a href={`/storage/${cv_url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 font-medium underline flex items-center gap-2">
+                        <a href={`${cv_url}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 font-medium underline flex items-center gap-2">
                             <Eye className="w-4 h-4" />
                             Prévisualiser le CV
                         </a>
-                        <a href={`/storage/${cv_url}`} download className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2">
+                        <a href={`${cv_url}`} download className="text-green-600 hover:text-green-700 font-medium underline flex items-center gap-2">
                             <Download className="w-4 h-4" />
                             Télécharger le CV
                         </a>

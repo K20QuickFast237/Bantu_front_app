@@ -71,10 +71,14 @@ const AutresRessources = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await api.put('/profile/particulier', {
-        ressources: JSON.stringify(ressources),
-        portfolio_link: portfolioLink
-      });
+      const formData = new FormData();
+      formData.append('ressources', JSON.stringify(ressources));
+      formData.append('portfolio_link', portfolioLink);
+      // Laravel ne gère pas bien FormData avec PUT, on doit le "tricher" avec POST et _method
+      formData.append('_method', 'PUT');
+
+      await api.post('/profile/particulier', formData);
+
       await refreshAuth();
       toast.success('Ressources mises à jour avec succès !');
       window.dispatchEvent(new CustomEvent('profile-updated'));
@@ -85,20 +89,6 @@ const AutresRessources = () => {
       setIsSubmitting(false);
     }
   };
-
-  const renderRessourceLinks = () => (
-    <div className="space-y-4 text-sm text-gray-700">
-      {portfolioLink && (
-        <div className="flex items-center gap-4">
-          <p className="w-40 text-gray-700 font-medium capitalize">Portfolio</p>
-          <a href={portfolioLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
-            <Globe size={16} />
-            <span className="truncate">{portfolioLink}</span>
-          </a>
-        </div>
-      )}
-    </div>
-  );
 
 
   return (
