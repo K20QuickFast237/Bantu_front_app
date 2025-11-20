@@ -2,9 +2,10 @@ import React from "react";
 import CompanyBg from "../../assets/assets_application/Recherche_entreprise.png";
 import { Link } from "react-router-dom";
 import { Building, MapPin } from "lucide-react";
+import { encodeId } from "@/obfuscate";
 
 const CompanyCard = ({ company }) => (
-  <Link to={`/company/${company.id}`} >
+  <Link to={`/company/${encodeId(company.id)}`} >
     <div  key={company.id} className="company-card min-w-[70%] sm:min-w-[10%] md:min-w-[10%] lg:min-w-[330px] xl:min-w-[400px] bg-white border border-gray-200 rounded-lg shadow-sm flex-shrink-0 snap-start flex flex-col">
       <div className="w-full h-32 bg-cover bg-center rounded-t-lg flex-shrink-0" style={{ backgroundImage: `url(${company.photo_couverture? company.photo_couverture : `${CompanyBg}`})` }}></div>
 

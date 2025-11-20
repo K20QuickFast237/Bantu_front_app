@@ -1,135 +1,148 @@
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
-import SearchIcon from '../../assets/Search.png';
-import AmericaIcon from '../../assets/America.png';
-import ChatIcon from '../../assets/Chat.png';
-import OnlineStoreIcon from '../../assets/Online Store.png';
-import SecurityLockIcon from '../../assets/Security Lock.png';
-import GraffittiRedIcon from '../../assets/Grafitti.png';
-import GraffittiBlueIcon from '../../assets/graphe.png';
-import imggroupe from '../../assets/groupe.png';
-import { motion } from 'framer-motion'; 
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Briefcase, Store, Search, MessageSquare, Video, BadgeCheck, Megaphone, MessagesSquare } from 'lucide-react';
+import imggroupe from '../../assets/groupe.png';
+import GraffittiRedIcon from '../../assets/graphe.png';
 
 const FeatureSection = () => {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState('hire'); // 'hire' ou 'market'
+
+  const featuresData = {
+    hire: [
+      {
+        icon: Search,
+        title: t('career.smartSearch.title'),
+        desc: t('career.smartSearch.desc'),
+      },
+      {
+        icon: MessageSquare,
+        title: t('career.realTimeChat.title'),
+        desc: t('career.realTimeChat.desc'),
+      },
+      {
+        icon: Video,
+        title: t('career.videoInterviews.title'),
+        desc: t('career.videoInterviews.desc'),
+      },
+      {
+        icon: BadgeCheck,
+        title: t('career.skillCertifications.title'),
+        desc: t('career.skillCertifications.desc'),
+      },
+    ],
+    market: [
+      {
+        icon: Store,
+        title: t('business.onlineStore.title'),
+        desc: t('business.onlineStore.description'),
+      },
+      {
+        icon: Megaphone,
+        title: t('business.promotion.title'),
+        desc: t('business.promotion.description'),
+      },
+      {
+        icon: MessagesSquare,
+        title: t('business.chat.title'),
+        desc: t('business.chat.description'),
+      },
+      {
+        icon: MessagesSquare,
+        title: t('business.chat.title'),
+        desc: t('business.chat.description'),
+      },
+    ],
+  };
+
+  const FeatureCard = ({ icon: Icon, title, desc, index }) => (
+    <motion.div
+      className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col items-start"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+    >
+      <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-4">
+        <Icon className="w-6 h-6 text-blue-600" />
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
+    </motion.div>
+  );
 
   return (
     <>
-    <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      >
-      <section className='bg-gradient-to-br w-full h-auto from-purple-300 via-white to-white py-12 sm:py-16 px-4 sm:px-13 font-sans text-gray-800'>
-        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-16 sm:mb-30 text-gray-900">
-          {t('features.title')}
-          <div className="w-10 h-1 bg-blue-500 mx-auto mt-3 rounded"></div>
-        </h2>
+    <section className="bg-gray-50 py-16 sm:py-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* En-tête de la section */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+            Une plateforme, des possibilités infinies
+          </h2>
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            Découvrez les outils conçus pour votre carrière et votre business, accessibles en un clic.
+          </p>
+        </div>
 
-        <img src={GraffittiBlueIcon} alt="Decorative lines" className="h-12 sm:h-17 w-auto mt-[-80px] sm:mt-[-100px] " />
-
-        {/* BantuHire */}
-        <div className='flex flex-col sm:flex-row mx-4 sm:mx-11 w-full mb-12 sm:mb-20'>
-          <div className='w-full sm:w-1/3 block mb-8 sm:mb-0'>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-5">
-              {t('features.bantuHire.title')}
-            </h3>
-            <p className="text-gray-600 font-light max-w-sm">
-              {t('features.bantuHire.description')}
-            </p>
-          </div>
-
-          <div className='w-full sm:w-1/5'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={SearchIcon} alt="Search icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.simplifiedSearch.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuHire.simplifiedSearch.description')}
-              </p>
-            </div>
-          </div>
-
-          <div className='w-full sm:w-1/4 sm:ml-5 mt-6 sm:mt-0'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={AmericaIcon} alt="America icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.networking.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuHire.networking.description')}
-              </p>
-            </div>
-          </div>
-
-          <div className='w-full sm:w-1/5 sm:ml-5 mt-6 sm:mt-0'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={ChatIcon} alt="Chat icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuHire.directMessaging.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuHire.directMessaging.description')}
-              </p>
-            </div>
+        {/* Sélecteur d'onglets */}
+        <div className="flex justify-center mb-12">
+          <div className="flex items-center bg-gray-100 p-1 rounded-xl space-x-1">
+            <button
+              onClick={() => setActiveTab('hire')}
+              className="relative px-6 py-2.5 text-sm font-semibold rounded-lg"
+            >
+              <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${activeTab === 'hire' ? 'text-white' : 'text-gray-600'}`}>
+                <Briefcase className="w-5 h-5" />
+                BantuHire
+              </span>
+              {activeTab === 'hire' && (
+                <motion.div
+                  className="absolute inset-0 bg-blue-600 rounded-lg"
+                  layoutId="active-pill"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('market')}
+              className="relative px-6 py-2.5 text-sm font-semibold rounded-lg"
+            >
+              <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${activeTab === 'market' ? 'text-white' : 'text-gray-600'}`}>
+                <Store className="w-5 h-5" />
+                BantuMarket
+              </span>
+              {activeTab === 'market' && (
+                <motion.div
+                  className="absolute inset-0 bg-blue-600 rounded-lg"
+                  layoutId="active-pill"
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                />
+              )}
+            </button>
           </div>
         </div>
 
-        <img src={GraffittiRedIcon} alt="Decorative lines" className="h-12 sm:h-17 w-auto mt-[-30px] sm:mt-[-40px] mx-auto sm:ml-80" />
+        {/* Grille des fonctionnalités */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+          >
+            {featuresData[activeTab].map((feature, index) => (
+              <FeatureCard key={feature.title} {...feature} index={index} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </section>
 
-        {/* BantuMarket */}
-        <div className='flex flex-col sm:flex-row mx-4 sm:mx-11 w-full mt-[-10px]'>
-          <div className='w-full sm:w-1/3 block mb-8 sm:mb-0'>
-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-5">
-              {t('features.bantuMarket.title')}
-            </h3>
-            <p className="text-gray-600 font-light max-w-sm">
-              {t('features.bantuMarket.description')}
-            </p>
-          </div>
-
-          <div className='w-full sm:w-1/5'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={OnlineStoreIcon} alt="Online store icon" className="w-8 sm:w-auto h- zenith-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.customShop.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuMarket.customShop.description')}
-              </p>
-            </div>
-          </div>
-
-          <div className='w-full sm:w-1/4 sm:ml-5 mt-6 sm:mt-0'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={SecurityLockIcon} alt="Security lock icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.securePayment.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuMarket.securePayment.description')}
-              </p>
-            </div>
-          </div>
-
-          <div className='w-full sm:w-1/5 sm:ml-5 mt-6 sm:mt-0'>
-            <div className="flex flex-col items-start text-left">
-              <div className="w-12 sm:w-16 h-12 sm:h-16 mb-4 flex items-center justify-center">
-                <img src={ChatIcon} alt="Chat icon" className="w-8 sm:w-auto h-8 sm:h-auto" />
-              </div>
-              <h4 className="text-base sm:text-lg font-bold mb-2 text-gray-900">{t('features.bantuMarket.clientChat.title')}</h4>
-              <p className="text-gray-600 text-sm font-light">
-                {t('features.bantuMarket.clientChat.description')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 sm:px-7 font-sans text-gray-800">
+    <section className="bg-gray-50 px-4 sm:px-7 font-sans text-gray-800 pb-16 sm:pb-24">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between">
           {/* Colonne de gauche: Image du groupe et du téléphone */}
           <div className="w-full lg:w-1/2 flex justify-center mb-8 lg:mb-0">
@@ -161,8 +174,7 @@ const FeatureSection = () => {
             </Link>
           </div>
         </div>
-      </section>
-      </motion.section>
+    </section>
     </>
   );
 };

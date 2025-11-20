@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 // Importation de motion et ArrowLeft nécessaire pour la flèche animée
 import { motion } from 'framer-motion';
 import { ArrowLeft, Loader2 } from "lucide-react"; 
+import { decodeId } from '@/obfuscate';
 
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
@@ -26,6 +27,7 @@ const JobOfferPage = () => {
   const { id } = useParams();
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
+  const decodedId = decodeId(id);
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
   const { particulier, user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
@@ -34,7 +36,7 @@ const JobOfferPage = () => {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const response = await api.get(`/offres/${id}`); // ✅ API dynamique
+        const response = await api.get(`/offres/${decodedId}`); // ✅ API dynamique
         console.log(response.data);
         setJob(response.data);
       } catch (error) {
@@ -44,7 +46,7 @@ const JobOfferPage = () => {
       }
     };
     fetchJob();
-  }, [id]);
+  }, [decodedId]);
 
   const handleApplyClick = () => {
     // Vérifie si l'objet 'particulier' existe et n'est pas vide.

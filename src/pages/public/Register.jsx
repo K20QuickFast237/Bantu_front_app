@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User as UserIcon, Mail, Lock } from 'lucide-react';
+import { User as UserIcon, Mail, Lock, Eye, EyeOff } from 'lucide-react'; // Ajout de Eye et EyeOff
 import { useFormik } from 'formik';
 import { validationRegisterSchema } from '../../schemas';
 import PageWrapper from '../../components/public/PageWrapper';
@@ -11,16 +11,17 @@ import api from '@/services/api';
 import { useTranslation } from 'react-i18next'; // Ajout
 
 import Header from '../../components/public/Header';
-import Footer from '../../components/public/Footer';
 
 import personnesImage from '../../assets/personnes.png';
-import googleLogo from '../../assets/google.png';      
-import appleLogo from '../../assets/apple.png';        
-import facebookLogo from '../../assets/facebook.png';      
+// import googleLogo from '../../assets/google.png';      
+// import appleLogo from '../../assets/apple.png';        
+// import facebookLogo from '../../assets/facebook.png';      
 
 const Register = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false); // État pour le mot de passe
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // État pour la confirmation
 
   const onSubmit = async (values, actions) => {
     try {
@@ -56,7 +57,7 @@ const Register = () => {
   return (
     <PageWrapper>
       <Header />
-      <div className="min-h-screen flex bg-gray-50 font-sans py-20 md:pt-24">
+      <div className="min-h-screen flex bg-gray-50 font-sans">
         <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white px-8"> 
           <img
             src={personnesImage}
@@ -77,11 +78,9 @@ const Register = () => {
                   <label htmlFor="nom" className="block text-sm font-medium text-gray-300">
                     {t('register.name')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <UserIcon className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <UserIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
                     <input
                       id="nom"
@@ -91,7 +90,7 @@ const Register = () => {
                       type="text"
                       autoComplete="family-name"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.nom && touched.nom ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.nom && touched.nom ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('register.namePlaceholder') || "Entrez votre nom"}
                       onBlur={handleBlur}
                     />
@@ -103,11 +102,9 @@ const Register = () => {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                     {t('register.email')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <Mail className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
                     <input
                       id="email"
@@ -117,7 +114,7 @@ const Register = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.email && touched.email ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('register.emailPlaceholder') || "Entrez votre adresse email"}
                       onBlur={handleBlur}
                     />
@@ -129,24 +126,29 @@ const Register = () => {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                     {t('register.password')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <Lock className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       id="password"
                       name="password"
                       value={values.password}
                       onChange={handleChange}
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.password && touched.password ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('register.passwordPlaceholder') || "Entrez votre mot de passe"}
                       onBlur={handleBlur}
                     />
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
                   </div>
                   {errors.password && touched.password && <div className="text-red-500">{errors.password}</div>}
                 </div>
@@ -155,24 +157,29 @@ const Register = () => {
                   <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-300">
                     {t('register.confirmPassword')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <Lock className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"> {/* Icône Lock */}
+                      <Lock className="h-5 w-5 text-gray-400" />
                     </div>
                     <input
                       id="password_confirmation"
                       name="password_confirmation"
                       value={values.password_confirmation}
                       onChange={handleChange}
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       autoComplete="new-password"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password_confirmation && touched.password_confirmation ? ' border-red-500 focus:ring-red-500 focus:border-red-500 ' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.password_confirmation && touched.password_confirmation ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('register.confirmPasswordPlaceholder') || "Confirmez votre mot de passe"}
                       onBlur={handleBlur}
                     />
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                      {showConfirmPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
                   </div>
                   {errors.password_confirmation && touched.password_confirmation && <div className="text-red-500">{errors.password_confirmation}</div>}
                 </div>
@@ -181,7 +188,7 @@ const Register = () => {
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-orange-500 transition-colors duration-200"
                   >
                     {isSubmitting ? <ClipLoader size={22} color="#fff" /> : t('register.register')}
                   </button>
@@ -199,7 +206,7 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {/* <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <button className="w-full inline-flex justify-center items-center py-2 px-4 border border-gray-200 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200">
                     <img src={googleLogo} alt="Google logo" className="h-5 w-5 mr-3" />
@@ -218,7 +225,7 @@ const Register = () => {
                     Facebook
                   </button>
                 </div>
-              </div>
+              </div> */}
 
               <p className="mt-6 text-center text-sm text-gray-400">
                 {t('register.alreadyRegistered')} {' '}
@@ -230,7 +237,6 @@ const Register = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </PageWrapper>
   );
 };

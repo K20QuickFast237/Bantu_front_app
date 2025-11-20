@@ -1,7 +1,7 @@
 import React from 'react';
 import Hero from "../../components/public/Herosection";
 import PageWrapper from '../../components/public/PageWrapper';
-import StatsSection from '../../components/public/StatsSection';
+import StatsSection from '../../components/public/StatsSection'; // Gardé
 import FeatureSection from '../../components/public/FeatureSection';
 import TestimonialsSection from '../../components/public/TestimonialsSection';
 import FAQ from '../../components/public/FAQ';
@@ -13,12 +13,12 @@ function Home() {
     <>
       <PageWrapper>
         <Header />
-          <Hero />
-          <StatsSection />
-          <FeatureSection />
-          <TestimonialsSection />
-          <FAQ />
-          <Footer />
+        <Hero />
+        <StatsSection />
+        <FeatureSection /> {/* Remplacement effectif ici */}
+        <TestimonialsSection />
+        <FAQ />
+        <Footer />
       </PageWrapper>
     </>
   );

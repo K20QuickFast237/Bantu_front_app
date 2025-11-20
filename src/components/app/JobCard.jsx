@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api'; 
 import BantulinkLoader from '../ui/BantulinkLoader';
+import { encodeId } from '@/obfuscate';
 
 const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation, paginationEnabled = false, limit = 6 }) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -91,7 +92,7 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
-      <Link to={`/jobOffers/${job.id}`}>
+      <Link to={`/jobOffers/${encodeId(job.id)}`}>
         <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
           
           {/* Header with logo and company */}

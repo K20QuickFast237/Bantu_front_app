@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; // Import de useState
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react'; // Ajout de Eye et EyeOff
 import { useFormik } from 'formik';
 import { validationLoginSchema } from '../../schemas';
 import { GoogleLogin } from '@react-oauth/google';
@@ -21,6 +21,7 @@ const Login = () => {
   const { t } = useTranslation(); // Hook i18n
   const navigate = useNavigate();
   const { login, refreshAuth } = useAuth();
+  const [showPassword, setShowPassword] = useState(false); // État pour le mot de passe
   const location = useLocation();
   const from = location.state?.from?.pathname || '/WhatDoYouWantToDo';
 
@@ -83,7 +84,7 @@ const Login = () => {
   return (
     <PageWrapper>
       <Header />
-      <div className="min-h-screen flex bg-gray-50 font-sans py-20 md:pt-24">
+      <div className="min-h-screen flex bg-gray-50 font-sans">
         <div className="hidden lg:flex lg:w-1/2 items-center justify-center bg-white p-8 relative">
           <img src={personnesImage} alt="Illustration de personnes travaillant ensemble" className="max-w-full h-auto object-contain" />
         </div>
@@ -100,11 +101,9 @@ const Login = () => {
                   <label htmlFor="email" className="block text-sm font-medium text-gray-300">
                     {t('login.email')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <Mail className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
                     <input
                       id="email"
@@ -114,7 +113,7 @@ const Login = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.email && touched.email ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('login.emailPlaceholder') || "Entrez votre adresse email"}
                       onBlur={handleBlur}
                     />
@@ -126,24 +125,29 @@ const Login = () => {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-300">
                     {t('login.password')}
                   </label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <div className="absolute inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
-                      <div className="bg-orange-500 rounded-md p-1.5 flex items-center justify-center">
-                        <Lock className="h-4 w-4 text-white" aria-hidden="true" />
-                      </div>
+                  <div className="mt-1 relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Lock className="h-5 w-5 text-gray-400" aria-hidden="true" />
                     </div>
                     <input
                       id="password"
                       name="password"
                       value={values.password}
                       onChange={handleChange}
-                      type="password"
+                      type={showPassword ? "text" : "password"} // Type dynamique
                       autoComplete="current-password"
                       required
-                      className={"block w-full pl-12 pr-3 py-2 border border-gray-200 rounded-md shadow-sm placeholder-gray-400 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white" + (errors.password && touched.password ? ' border-red-500 focus:ring-red-500 focus:border-red-500' : '')}
+                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.password && touched.password ? 'border-red-500' : 'border-gray-300'}`}
                       placeholder={t('login.passwordPlaceholder') || "Entrez votre mot de passe"}
                       onBlur={handleBlur}
                     />
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5 text-gray-400" />
+                      ) : (
+                        <Eye className="h-5 w-5 text-gray-400" />
+                      )}
+                    </div>
                   </div>
                   {errors.password && touched.password && <div className="text-red-500">{errors.password}</div>}
                 </div>
@@ -173,7 +177,7 @@ const Login = () => {
                   <button
                     disabled={isSubmitting}
                     type="submit"
-                    className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400 transition-colors duration-200"
+                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-orange-500 transition-colors duration-200"
                   >
                     {isSubmitting ? <ClipLoader size={22} color="#fff" /> : t('login.connect')}
                   </button>
@@ -191,22 +195,22 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-6 grid grid-cols-1 gap-3">
                 <GoogleLogin
                   onSuccess={handleGoogleSuccess}
                   onError={handleGoogleError}
                 />
-                <button onClick={handleLinkedInLogin} className="w-full inline-flex justify-center cursor-pointer items-center py-2 px-4 border border-blue-600 rounded-md shadow-sm bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 transition-colors duration-200">
+                <button onClick={handleLinkedInLogin} className="w-full inline-flex justify-center cursor-pointer items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm bg-[#0077B5] text-sm font-medium text-white hover:bg-[#00669c] transition-colors duration-200">
                   <svg className="h-5 w-5 mr-3" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.761 0-.971.784-1.76 1.75-1.76s1.75.789 1.75 1.76c0 .971-.784 1.761-1.75 1.761zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.767 7 2.476v6.759z" />
                   </svg>
                   LinkedIn
                 </button>
 
-                <button className="w-full inline-flex justify-center items-center py-2 px-4 border border-blue-700 rounded-md shadow-sm bg-blue-700 text-sm font-medium text-white hover:bg-blue-800 transition-colors duration-200">
+                {/* <button className="w-full inline-flex justify-center items-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm bg-[#1877F2] text-sm font-medium text-white hover:bg-[#166fe5] transition-colors duration-200">
                   <img src={facebookLogo} alt="Facebook logo" className="h-5 w-5 mr-3" />
                   Facebook
-                </button>
+                </button> */}
               </div>
 
               <p className="mt-6 text-center text-sm text-gray-400">
@@ -219,7 +223,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </PageWrapper>
   );
 };

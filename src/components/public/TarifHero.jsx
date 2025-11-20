@@ -3,18 +3,25 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Ajout
 
 const TarifHero = () => {
-  const { t } = useTranslation(); // Hook i18n
+  const { t } = useTranslation();
+
+  const scrollToPlans = () => {
+    const plansSection = document.getElementById('pricing-plans');
+    if (plansSection) {
+      plansSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
-    <section className="flex justify-center items-center pt-30  sm:px-6 ">
+    <section className="pt-16"> {/* Ajout de pt-16 pour l'espace du header */}
       
-      <div className="relative bg-[#36D18C] rounded-3xl w-full max-w-6xl h-[620px] sm:h-[650px] flex flex-col justify-between items-center text-white overflow-hidden shadow-xl">
+      <div className="relative bg-[#36D18C] w-full h-[620px] sm:h-[650px] flex flex-col justify-between items-center text-white overflow-hidden">
         {/* Main content - Centered text and button */}
         <div className="flex flex-col items-center justify-center flex-grow text-center  mb-16 px-4 sm:px-8 max-w-4xl">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-medium leading-tight tracking-tight mb-10">
             {t('pricing.hero.title')}
           </h1>
-          <button className="bg-black text-white text-base font-semibold py-3.5 px-9 rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
+          <button onClick={scrollToPlans} className="bg-black text-white text-base font-semibold py-3.5 px-9 rounded-full shadow-lg transition duration-300 ease-in-out hover:scale-105 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black">
             {t('pricing.hero.button')}
           </button>
         </div>

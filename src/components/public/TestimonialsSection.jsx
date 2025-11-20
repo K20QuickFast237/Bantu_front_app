@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+import { Star, ArrowLeft, ArrowRight } from 'lucide-react'; // Icônes mises à jour
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Ajout
-import LeftArrowIcon from '../../assets/gauche.png';
-import RightArrowIcon from '../../assets/droite.png';
-import ReginaMilesImage from '../../assets/temoigne.png';
-import GraffittiRedIcon from '../../assets/Grafitti.png';
+import ReginaMilesImage from '../../assets/temoigne.png'; // Gardé pour l'exemple
 import PhoneImage from '../../assets/telephone2.png';
+import appleIcon from '../../assets/appleIcon.svg';
+import googleIcon from '../../assets/googleIcon.svg';
 
 const TestimonialsSection = () => {
   const { t } = useTranslation(); // Ajout
@@ -72,30 +71,30 @@ const TestimonialsSection = () => {
                       viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
                       transition={{ duration: 0.8, ease: 'easeOut' }}
                     >
-      <section className="bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
         
-        <img src={GraffittiRedIcon} alt="Decorative lines" className="h-17 w-16 mt-[-40px] ml-90" />
+        {/* <img src={GraffittiRedIcon} alt="Decorative lines" className="h-17 w-16 mt-[-40px] ml-90" /> */}
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-            <h2 className="text-4xl lg:text-3xl font-bold text-gray-800 text-center md:text-left leading-tight md:max-w-lg mb-8 md:mb-0"
+            <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 text-center md:text-left leading-tight md:max-w-lg mb-8 md:mb-0"
                dangerouslySetInnerHTML={{ __html: t('testimonials.title') }} // Pour gérer les <br/>
             />
             <div className="flex space-x-4">
               <motion.button
-                className="p-3 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200"
+                className="p-3 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
                 onClick={handlePrev}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <img src={LeftArrowIcon} alt="Previous" className="w-6 h-6" />
+                <ArrowLeft className="w-5 h-5" />
               </motion.button>
               <motion.button
-                className="p-3 rounded-full bg-white shadow-md hover:bg-gray-100 transition-colors duration-200"
+                className="p-3 rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-200"
                 onClick={handleNext}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <img src={RightArrowIcon} alt="Next" className="w-6 h-6" />
+                <ArrowRight className="w-5 h-5" />
               </motion.button>
             </div>
           </div>
@@ -112,7 +111,7 @@ const TestimonialsSection = () => {
               {visibleTestimonials.map((testimonial) => (
                 <motion.div
                   key={testimonial.id}
-                  className="bg-white rounded-lg shadow-lg p-8 flex flex-col justify-between h-full"
+                  className="bg-gray-50 rounded-xl p-8 flex flex-col justify-between h-full border border-gray-100"
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
@@ -123,10 +122,9 @@ const TestimonialsSection = () => {
                       {testimonial.quote}
                     </p>
                   </div>
-                  <hr className="border-gray-300 mb-1" />
                   <div>
                     <div className="flex items-center mb-4">
-                      <div className="w-16 h-16 rounded-full overflow-hidden mr-4 border-2 border-blue-600 flex-shrink-0">
+                      <div className="w-14 h-14 rounded-full overflow-hidden mr-4 border-2 border-blue-200 flex-shrink-0">
                         <img src={ReginaMilesImage} alt={testimonial.name} className="w-full h-full object-cover" />
                       </div>
                       <div>
@@ -138,7 +136,7 @@ const TestimonialsSection = () => {
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                          className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`}
                         />
                       ))}
                     </div>
@@ -169,18 +167,37 @@ const TestimonialsSection = () => {
           <p className="text-lg mb-10 max-w-2xl">
             {t('testimonials.appPreview.description')}
           </p>
+          {/* Conteneur principal pour l'image et les boutons */}
           <motion.div
-            className="relative w-full max-w-2xl flex justify-center items-end"
+            className="relative w-full max-w-4xl flex justify-center items-center gap-4 sm:gap-8"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-            whileHover={{ scale: 1.05 }}
           >
+            {/* Bouton App Store */}
+            <a href="#" className="bg-black text-white rounded-lg px-4 py-2 flex items-center gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105">
+              <img src={appleIcon} alt="Apple logo" className="h-7 w-7 text-white" />
+              <div className="text-left">
+                <span className="text-xs block leading-tight">Télécharger sur</span>
+                <span className="text-lg font-semibold block leading-tight">l'App Store</span>
+              </div>
+            </a>
+
+            {/* Image du téléphone */}
             <img
               src={PhoneImage}
               alt="SuperApp mobile interface"
-              className="w-full max-w-xs sm:max-w-sm md:max-w-md h-auto relative z-10"
+              className="w-full max-w-[180px] sm:max-w-xs h-auto relative z-10 transform transition-transform hover:scale-105"
             />
+
+            {/* Bouton Play Store */}
+            <a href="#" className="bg-black text-white rounded-lg px-4 py-2 flex items-center gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105">
+              <img src={googleIcon} alt="Google Play logo" className="h-7 w-7" />
+              <div className="text-left">
+                <span className="text-xs block leading-tight">DISPONIBLE SUR</span>
+                <span className="text-lg font-semibold block leading-tight">Google Play</span>
+              </div>
+            </a>
           </motion.div>
         </motion.div>
       </section>

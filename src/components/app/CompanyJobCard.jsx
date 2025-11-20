@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
+import { encodeId } from '@/obfuscate';
 
 const JobItem = ({ job }) => (
   <motion.div
@@ -11,7 +12,7 @@ const JobItem = ({ job }) => (
     exit={{ opacity: 0, y: -20 }}
     transition={{ duration: 0.3, ease: "easeInOut" }}
   >
-    <Link to={`/jobOffers/${job.id}`} className="block h-full">
+    <Link to={`/jobOffers/${encodeId(job.id)}`} className="block h-full">
       <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 h-full flex flex-col">
         <div className="flex-grow">
           <h3 className="font-semibold text-gray-900 text-lg leading-tight mb-2">
