@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Clock, Calendar } from 'lucide-react';
+import { MapPin, Calendar, FileText, Award, ChevronLeft, ChevronRight } from 'lucide-react'; // Icônes mises à jour
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom'; 
 import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
 import BantulinkLoader from '../ui/BantulinkLoader';
+import MatchingScoreCircle from './MatchingScoreCircle'; // Import du nouveau composant
+import { encodeId } from '@/obfuscate';
 
 const JobMatchingCard = () => {
   const { user } = useAuth();
   const [jobData, setJobData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const JOBS_PER_PAGE = 9;
 
   useEffect(() => {
     if (user?.id) {
@@ -19,49 +23,64 @@ const JobMatchingCard = () => {
         .finally(() => setLoading(false));
     }
   }, [user]);
-  console.log(jobData);
 
-  const JobCardItem = ({ title, company, location, publicationDate, contractType, workType, logo, score}) => (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200">
-      <div className="mb-4">
-        <div className="flex flex-col gap-3">
-          <div className='flex '>
-            <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
-                <img src={`${logo}`} alt="Bantulink Logo" className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
+  // Calculs pour la pagination
+  const totalPages = Math.ceil(jobData.length / JOBS_PER_PAGE);
+  const paginatedJobs = jobData.slice(
+    (currentPage - 1) * JOBS_PER_PAGE,
+    currentPage * JOBS_PER_PAGE
+  );
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+
+  const JobCardItem = ({ job }) => (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
+      <Link to={`/jobOffers/${encodeId(job.offre_id || job.id)}`} className="block h-full">
+        <div className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-lg hover:border-orange-300 transition-all duration-300 h-full flex flex-col">
+          {/* En-tête de la carte */}
+          <div className="flex justify-between items-start mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-14 h-14 bg-gray-100 rounded-md flex items-center justify-center flex-shrink-0">
+                <img src={job.logo} alt={`${job.nom_entreprise} logo`} className="w-full h-full object-contain p-1" />
+              </div>
+              <div>
+                <h4 className="font-bold text-gray-800 text-md leading-tight">{job.nom_entreprise}</h4>
+                <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+                  <Calendar className="w-3 h-3" />
+                  Publié le: {new Date(job.date_publication).toLocaleDateString('fr-FR')}
+                </p>
+              </div>
             </div>
-            <div className='mt-7 ml-3 font-semibold text-xl'>{company}</div>
+            <MatchingScoreCircle score={parseFloat(job.score)} size={48} />
           </div>
-          <Link to="/jobOffers" className='flex space-x-4 items-center'> 
-            <h3 className="font-semibold underline hover:decoration-0 text-gray-900 text-lg leading-tight">
-              {title}
-            </h3>
-            <div className='w-fit h-5 bg-green-500 rounded-xl  flex items-center justify-center p-4'>{score}</div>
-          </Link>
+
+          {/* Titre du poste */}
+          <h3 className="font-semibold text-lg text-gray-900 my-2 hover:text-orange-600 transition-colors">
+            {job.titre}
+          </h3>
+
+          {/* Détails sous forme de badges */}
+          <div className="flex flex-wrap gap-2 text-xs mt-auto pt-4">
+            <span className="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full"><MapPin size={12} /> {job.lieu_travail}</span>
+            <span className="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full"><FileText size={12} /> {job.type_contrat}</span>
+            <span className="flex items-center gap-1.5 bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full"><Award size={12} /> {job.experience_requise}</span>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-        <Calendar className="w-4 h-4" />
-        <span>Date de publication : {publicationDate}</span>
-      </div>
-      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-        <span className="font-medium">Localisation :</span>
-        <span>{location}</span>
-      </div>
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <MapPin className="w-4 h-4" />
-          <span>{location}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          <span>{contractType}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Clock className="w-4 h-4" />
-          <span>{workType}</span>
-        </div>
-      </div>
-    </div>
+      </Link>
+    </motion.div>
   );
 
   return (
@@ -72,38 +91,39 @@ const JobMatchingCard = () => {
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <div className="min-h-screen ">
+        <div className="mb-4">
           <div className="bg-white border-b border-gray-200">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"></div>
+            <div className="mx-auto px-4 sm:px-6 lg:px-8"></div>
           </div>
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {loading ? (
                 <div className="col-span-3 text-center text-gray-500"><BantulinkLoader/></div>
               ) : jobData.length === 0 ? (
                 <div className="col-span-3 text-center text-gray-500">Aucune offre trouvée.</div>
               ) : (
-                jobData.map((job, index) => (
-                  <JobCardItem
-                    key={job.id || index}
-                    title={job.titre}
-                    company={job.nom_entreprise || job.company}
-                    logo={job.logo}
-                    location={job.lieu_travail || job.location}
-                    publicationDate={job.date_publication || job.publicationDate}
-                    contractType={job.type_contrat || job.contractType}
-                    score={job.score + "%"}
-                  />
-                ))
+                paginatedJobs.map((job) => <JobCardItem key={job.offre_id || job.id} job={job} />)
               )}
             </div>
-            {jobData.length > 0 && (
-              <div className="flex justify-start">
-                <Link to={"/rechercheOffre"}>
-                  <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200">
-                    Afficher plus
-                  </button>
-                </Link>
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center space-x-4 mt-8">
+                <button
+                  onClick={handlePrevPage}
+                  disabled={currentPage === 1}
+                  className="p-2 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <span className="text-gray-700 font-medium">
+                  Page {currentPage} sur {totalPages}
+                </span>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="p-2 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
               </div>
             )}
           </div>

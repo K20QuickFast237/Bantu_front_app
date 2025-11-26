@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import HeaderProfil from '@/components/app/HeaderProfil';
 import Footer from '@/components/public/Footer';
+import { encodeId } from '@/obfuscate';
 
 const MesCandidatures = () => {
     const [applications, setApplications] = useState([]);
@@ -93,7 +94,7 @@ const MesCandidatures = () => {
                                                         </td>
                                                         <td className="px-6 py-4">
                                                             <button
-                                                                onClick={() => navigate(`/job/${app.offre_id}`)}
+                                                                onClick={() => navigate(`/jobOffers/${encodeId(app.offre_id)}`)}
                                                                 className="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
                                                                 title="Voir l'offre d'emploi"
                                                             >

@@ -23,6 +23,9 @@ const JobApplicationDetail = () => {
   const [statusChangeLoading, setStatusChangeLoading] = useState({ preselect: false, reject: false });
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [interviewDate, setInterviewDate] = useState('');
+  const [interviewMode, setInterviewMode] = useState('presentiel'); // 'presentiel' ou 'visio'
+  const [interviewLocation, setInterviewLocation] = useState('');
+  const [interviewLink, setInterviewLink] = useState('');
   const [inviteLoading, setInviteLoading] = useState(false);
 
   useEffect(() => {
@@ -69,14 +72,30 @@ const JobApplicationDetail = () => {
       toast.error("Veuillez sélectionner une date pour l'entretien.");
       return;
     }
+    if (interviewMode === 'presentiel' && !interviewLocation.trim()) {
+      toast.error("Veuillez préciser le lieu de l'entretien.");
+      return;
+    }
+    if (interviewMode === 'visio' && !interviewLink.trim()) {
+      toast.error("Veuillez fournir le lien pour la visioconférence.");
+      return;
+    }
+
     setInviteLoading(true);
     try {
       await api.post(`/candidatures/${id}/inviter`, {
         date_entretien: interviewDate,
+        mode_entretien: interviewMode,
+        lieu_entretien: interviewMode === 'presentiel' ? interviewLocation : null,
+        lien_visio: interviewMode === 'visio' ? interviewLink : null,
       });
       toast.success("Invitation à l'entretien envoyée avec succès !");
       setIsInviteModalOpen(false);
+      // Réinitialiser les champs
       setInterviewDate('');
+      setInterviewMode('presentiel');
+      setInterviewLocation('');
+      setInterviewLink('');
     } catch (error) {
       toast.error(error.response?.data?.message || "Erreur lors de l'envoi de l'invitation.");
     } finally {
@@ -215,23 +234,57 @@ const JobApplicationDetail = () => {
 
         {/* Modal d'invitation à l'entretien */}
         <Dialog open={isInviteModalOpen} onOpenChange={setIsInviteModalOpen}>
-          <DialogContent>
+          <DialogContent className="sm:max-w-lg">
               <DialogHeader>
                   <DialogTitle>Inviter à un entretien</DialogTitle>
                   <DialogDescription>
-                      Sélectionnez une date et une heure pour l'entretien avec <strong>{nomComplet}</strong>.
+                      Planifiez un entretien avec <strong>{nomComplet}</strong>.
                   </DialogDescription>
               </DialogHeader>
-              <div className="py-4">
-                  <label htmlFor="interviewDate" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="grid gap-4 py-4">
+                  {/* Mode d'entretien */}
+                  <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Mode de l'entretien</label>
+                      <div className="flex gap-4">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="interviewMode" value="presentiel" checked={interviewMode === 'presentiel'} onChange={(e) => setInterviewMode(e.target.value)} className="form-radio text-orange-500" />
+                              <span>Présentiel</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="radio" name="interviewMode" value="visio" checked={interviewMode === 'visio'} onChange={(e) => setInterviewMode(e.target.value)} className="form-radio text-orange-500" />
+                              <span>Visioconférence</span>
+                          </label>
+                      </div>
+                  </div>
+
+                  {/* Champ conditionnel pour le lieu */}
+                  {interviewMode === 'presentiel' && (
+                      <div>
+                          <label htmlFor="interviewLocation" className="block text-sm font-medium text-gray-700 mb-1">Lieu de l'entretien</label>
+                          <Input id="interviewLocation" placeholder="Ex: Nos bureaux à Douala" value={interviewLocation} onChange={(e) => setInterviewLocation(e.target.value)} />
+                      </div>
+                  )}
+
+                  {/* Champ conditionnel pour le lien visio */}
+                  {interviewMode === 'visio' && (
+                      <div>
+                          <label htmlFor="interviewLink" className="block text-sm font-medium text-gray-700 mb-1">Lien de la visioconférence</label>
+                          <Input id="interviewLink" placeholder="https://meet.google.com/..." value={interviewLink} onChange={(e) => setInterviewLink(e.target.value)} />
+                      </div>
+                  )}
+
+                  {/* Date et heure */}
+                  <div>
+                      <label htmlFor="interviewDate" className="block text-sm font-medium text-gray-700 mb-1">
                       Date et heure de l'entretien
-                  </label>
-                  <Input
-                      id="interviewDate"
-                      type="datetime-local"
-                      value={interviewDate}
-                      onChange={(e) => setInterviewDate(e.target.value)}
-                  />
+                      </label>
+                      <Input
+                          id="interviewDate"
+                          type="datetime-local"
+                          value={interviewDate}
+                          onChange={(e) => setInterviewDate(e.target.value)}
+                      />
+                  </div>
               </div>
               <DialogFooter>
                   <Button variant="outline" onClick={() => setIsInviteModalOpen(false)}>Annuler</Button>
