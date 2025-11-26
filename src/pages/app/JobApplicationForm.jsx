@@ -13,11 +13,13 @@ import {
   CheckCircle2,
   Loader2
 } from "lucide-react";
+import { decodeId } from '@/obfuscate';
 
 const JobApplicationForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { particulier } = useAuth();
+  const decodedId = decodeId(id);
   const [job, setJob] = useState(null);
   const [applicationMethod, setApplicationMethod] = useState('bantuHire');
   const [coverLetter, setCoverLetter] = useState('');
@@ -34,7 +36,7 @@ const JobApplicationForm = () => {
     const fetchJob = async () => {
       setLoading(true);
       try {
-        const res = await api.get(`/offres/${id}`);
+        const res = await api.get(`/offres/${decodedId}`);
         let jobData = res.data;
         if (
           typeof jobData.documents_requis === "string" &&
@@ -55,7 +57,7 @@ const JobApplicationForm = () => {
     };
 
     fetchJob();
-  }, [id]);
+  }, [decodedId]);
 
   const handleFileChange = (docName, file) => {
     setUploadedDocs(prev => ({

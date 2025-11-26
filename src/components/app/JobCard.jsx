@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
+import { MapPin, Clock, Calendar, ChevronLeft, ChevronRight, Briefcase } from 'lucide-react';
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api'; 
@@ -130,7 +130,7 @@ const JobCard = ({ searchTerm, locationTerm, selectedContract, selectedEducation
               <span>{job.type_contrat}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Clock className="w-4 h-4" />
+              <Briefcase className="w-4 h-4" />
               <span>{job.experience_requise || "Non spécifié"}</span>
             </div>
           </div>
