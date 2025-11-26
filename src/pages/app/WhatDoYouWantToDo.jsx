@@ -7,8 +7,9 @@ import Icon1 from '../../assets/icon1.png'; // Postuler
 import Icon2 from '../../assets/icon2.png'; // Recruter
 import Icon3 from '../../assets/icon3.png'; // Acheter
 import Icon4 from '../../assets/icon4.png'; // Vendre
+import Icon5 from '../../assets/icon5.png'; // Freelancer
 import { useAuth } from '@/hooks/useAuth';
-import HeaderProfil from '@/components/app/HeaderProfil';
+import HeaderProfils from '@/components/app/HeaderProfils';
 
 const WhatDoYouWantToDo = () => {
     const navigate = useNavigate();
@@ -33,6 +34,9 @@ const WhatDoYouWantToDo = () => {
                     navigate('/inscriptionEntreprise');
                 }
                 break;
+            case 'Freelancer':
+                window.location.href = `${import.meta.env.VITE_FREELANCE_URL}/dashboard?token=${token}`;
+                break;
             case 'Acheter':
                 window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
                 break;
@@ -47,6 +51,7 @@ const WhatDoYouWantToDo = () => {
     const actionCards = [
         { icon: Icon1, text: 'Postuler', alt: 'Icône Postuler' },
         { icon: Icon2, text: 'Recruter', alt: 'Icône Recruter' },
+        { icon: Icon5, text: 'Freelancer', alt: 'Icône Freelancer' },
         { icon: Icon3, text: 'Acheter', alt: 'Icône Acheter' },
         { icon: Icon4, text: 'Vendre', alt: 'Icône Vendre' },
     ];
@@ -54,7 +59,7 @@ const WhatDoYouWantToDo = () => {
     return (
 
         <>
-            <HeaderProfil />
+            <HeaderProfils />
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
                 <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center  justify-between p-8">
                     {/* Section Gauche : Titre et Image */}

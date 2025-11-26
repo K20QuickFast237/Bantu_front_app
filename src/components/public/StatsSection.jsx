@@ -19,67 +19,49 @@ const StatsSection = () => {
   };
 
   return (
-    // Section principale avec fond bleu, padding adaptatif et police Inter
-    <section className="bg-[#2196F3] py-12 px-4 sm:px-6 md:px-8 lg:px-11 font-['Inter'] text-white">
-      {/* Conteneur principal centré, avec une grille responsive */}
-      <motion.section
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, amount: 0.1 }} // Anime une seule fois lorsque 30% de l'élément est visible
-                        transition={{ duration: 0.8, ease: 'easeOut' }}
-                      >
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-8 md:gap-x-8 text-center">
-
-        {/* Utilisateurs Actifs */}
+    <section className="bg-gradient-to-b from-gray-50 to-white py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="max-w-7xl mx-auto"
+      >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Stat 1 */}
+          <motion.div
+            className="text-center"
+            variants={statItemVariants}
+          >
+            <p className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-2">10K+</p>
+            <p className="text-base text-gray-600">{t('stats.users')}</p>
+          </motion.div>
+          {/* Stat 2 */}
+          <motion.div
+            className="text-center"
+            variants={statItemVariants}
+          >
+            <p className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-2">2K+</p>
+            <p className="text-base text-gray-600">{t('stats.providers')}</p>
+          </motion.div>
+          {/* Stat 3 */}
+          <motion.div
+            className="text-center"
+            variants={statItemVariants}
+          >
+            <p className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-2">1,5K+</p>
+            <p className="text-base text-gray-600">{t('stats.companies')}</p>
+          </motion.div>
+          {/* Stat 4 */}
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center border-b pb-4 sm:border-b-0 sm:pb-0 md:border-l md:border-opacity-30 border-white" // Ajout de bordure bottom sur mobile, border-left sur md+
-          initial="hidden"
-          animate="visible"
-          variants={statItemVariants}
-          transition={{ delay: 0.1 }}
-        >
-          <span className="text-4xl md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">10K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.users')}</span>
-        </motion.div>
-
-        {/* Prestataires Certifiés */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center border-b pb-4 sm:border-b-0 sm:pb-0 md:border-l md:border-opacity-30 border-white" // Bordure sur mobile et desktop
-          initial="hidden"
-          animate="visible"
-          variants={statItemVariants}
-          transition={{ delay: 0.2 }}
-        >
-          <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">2K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-2 font-light">{t('stats.providers')}</span>
-        </motion.div>
-
-        {/* Entreprises Inscrites */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center border-b pb-4 sm:border-b-0 sm:pb-0 md:border-l md:border-opacity-30 border-white" // Bordure sur mobile et desktop
-          initial="hidden"
-          animate="visible"
-          variants={statItemVariants}
-          transition={{ delay: 0.3 }}
-        >
-          <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">1,5K+</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.companies')}</span>
-        </motion.div>
-
-        {/* Satisfaction Client */}
-        <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center md:border-l md:border-opacity-30 border-white" // Pas de bordure bottom ici
-          initial="hidden"
-          animate="visible"
-          variants={statItemVariants}
-          transition={{ delay: 0.4 }}
-        >
-          <span className="text-4xl sm:ml-2 md:text-5xl font-bold mb-1 sm:mb-0 sm:mr-1">98%</span>
-          <span className="text-lg text-center sm:text-left sm:ml-1 font-light">{t('stats.satisfaction')}</span>
-        </motion.div>
-
-      </div>
-      </motion.section>
+            className="text-center"
+            variants={statItemVariants}
+          >
+            <p className="text-4xl md:text-5xl font-extrabold text-blue-600 mb-2">98%</p>
+            <p className="text-base text-gray-600">{t('stats.satisfaction')}</p>
+          </motion.div>
+        </div>
+      </motion.div>
     </section>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AideBg from '../../assets/aide1.png';
+import { Search } from 'lucide-react'; // Ajout de l'icône
 import { Link } from 'react-router-dom'; 
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Ajout
@@ -145,10 +146,9 @@ const AideHero = ({ categoryRef, topicRef, testimonialRef, contactRef }) => {
   }, []);
 
   return (
-    <section className="flex justify-center items-center pt-20">
+    <section className="pt-16">
       <div
-        className="relative rounded-3xl w-full max-w-6xl h-[550px] sm:h-[600px] 
-        flex flex-col items-center justify-center text-center overflow-hidden shadow-xl mx-9"
+        className="relative w-full h-[550px] sm:h-[600px] flex flex-col items-center justify-center text-center overflow-hidden"
         style={{
           backgroundImage: `url(${AideBg})`,
           backgroundSize: 'cover',
@@ -176,9 +176,10 @@ const AideHero = ({ categoryRef, topicRef, testimonialRef, contactRef }) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="absolute inset-y-0 top-2 bottom-2 right-2 bg-blue-600 text-white font-semibold 
-                               py-2 px-4 sm:px-8 rounded-2xl transition duration-300 ease-in-out 
-                               hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600">
+            <button className="absolute inset-y-0 top-2 bottom-2 right-2 bg-blue-600 text-white font-semibold flex items-center gap-2
+                               py-2 px-4 sm:px-6 rounded-xl transition duration-300 ease-in-out 
+                               hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              <Search className="w-4 h-4 hidden sm:block" />
               {t('help.hero.searchButton')}
             </button>
           </div>
@@ -188,7 +189,7 @@ const AideHero = ({ categoryRef, topicRef, testimonialRef, contactRef }) => {
                 searchResults.map((result, index) => (
                   <div
                     key={index}
-                    className="px-6 py-3 text-gray-800 hover:bg-gray-100 cursor-pointer"
+                    className="px-6 py-3 text-gray-800 hover:bg-gray-100 cursor-pointer transition-colors"
                     onClick={() => handleResultClick(result.ref)}
                   >
                     <p className="font-semibold">{result.title}</p>
@@ -205,11 +206,11 @@ const AideHero = ({ categoryRef, topicRef, testimonialRef, contactRef }) => {
               )}
             </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white opacity-90 px-4">
+          <div className="flex flex-wrap justify-center items-center gap-x-4 gap-y-2 text-sm px-4 mt-4">
             <span className="font-medium text-gray-600">{t('help.hero.popularSearches')}</span>
-            <a href="#" className="underline font-medium text-xs text-blue-500 hover:text-blue-800 transition-colors">{t('help.hero.popular1')}</a>
-            <a href="#" className="underline font-medium text-xs text-blue-500 hover:text-blue-800 transition-colors">{t('help.hero.popular2')}</a>
-            <a href="#" className="underline font-medium text-xs text-blue-500 hover:text-blue-800 transition-colors">{t('help.hero.popular3')}</a>
+            <a href="#" className="bg-gray-200/50 text-gray-700 text-xs font-medium px-3 py-1 rounded-full hover:bg-gray-200/80 transition-colors">{t('help.hero.popular1')}</a>
+            <a href="#" className="bg-gray-200/50 text-gray-700 text-xs font-medium px-3 py-1 rounded-full hover:bg-gray-200/80 transition-colors">{t('help.hero.popular2')}</a>
+            <a href="#" className="bg-gray-200/50 text-gray-700 text-xs font-medium px-3 py-1 rounded-full hover:bg-gray-200/80 transition-colors">{t('help.hero.popular3')}</a>
           </div>
         </div>
       </div>

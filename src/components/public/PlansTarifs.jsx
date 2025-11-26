@@ -274,7 +274,7 @@ const PlansTarifs = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div id="pricing-plans" className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         
         {/* En-tête */}
@@ -505,29 +505,6 @@ const PlansTarifs = () => {
             </div>
           </motion.div>
         )}
-
-        {/* CTA final */}
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-2xl p-12 text-center text-white"
-        >
-          <h2 className="text-3xl font-bold mb-4">
-            Prêt à commencer votre aventure sur BantuLink ?
-          </h2>
-          <p className="text-lg mb-8 opacity-90">
-            Rejoignez des milliers d'utilisateurs qui font confiance à notre plateforme
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-600 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition shadow-lg">
-              Commencer gratuitement
-            </button>
-            <button className="border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-blue-600 transition">
-              Nous contacter
-            </button>
-          </div>
-        </motion.div> */}
 
       </div>
     </div>

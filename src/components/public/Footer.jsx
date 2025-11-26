@@ -2,82 +2,59 @@ import React from 'react';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-import { useTranslation } from 'react-i18next'; // Ajout
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
   const { t } = useTranslation(); // Ajout
   const { token, user } = useAuth();
+  const navigate = useNavigate();
 
   return (
-    <>
-      {/* Section Rejoignez l’écosystème (au-dessus du footer) */}
-      {!token || !user ? (
-        <div className="relative z-20 -mb-15">
-          <div className="bg-gradient-to-r mx-10 rounded-lg from-emerald-500  to-red-500 px-6 py-8 shadow-lg">
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-              <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-8">
-                <h2 className="text-white text-lg lg:text-xl font-semibold">
-                  {t('footer.ecosystemTitle')}
-                </h2>
-              </div>
-              <button className="bg-black text-white px-6 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors mt-3 whitespace-nowrap">
-                → {t('footer.createAccount')}
-              </button>
-            </div>
-
-            {/* Tags */}
-            <div className="flex  flex-wrap items-center gap-4 lg:gap-6 text-white text-sm mt-4">
-              {t('footer.tags', { returnObjects: true }).map((item, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-white rounded-full"></div>
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
+    <footer className="bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Section CTA (si non connecté) */}
+        {!token && !user && (
+          <div className="bg-blue-600 rounded-2xl p-8 sm:p-12 mb-16 text-center shadow-lg">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+              {t('footer.ecosystemTitle')}
+            </h2>
+            <p className="text-blue-100 max-w-xl mx-auto mb-8">
+              Accédez à un monde d'opportunités professionnelles et commerciales.
+            </p>
+            <button onClick={() => navigate('/register')} className="bg-white text-blue-600 font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+              {t('footer.createAccount')}
+            </button>
           </div>
-        </div>
-      ) : null}
+        )}
 
-      {/* 🔵 Footer principal */}
-      <footer className="w-full bg-blue-800 pt-20">
-        <div className="px-8 py-12">
-          <div className="max-w-7xl mx-auto">
-
-            {/* Logo */}
-            <div className="mb-12">
-              <img 
-                src="assets/logobantulink.png" 
-                alt="Logo Bantuhire" 
-                className="h-10 w-auto object-contain"
-              />
+        {/* Contenu principal du footer */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mb-8">
+          {/* Logo et description */}
+          <div className="col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
             </div>
+            <p className="text-gray-600 text-sm max-w-xs">
+              La super-application pour l'emploi et le commerce en Afrique.
+            </p>
+          </div>
 
+          {/* Colonnes de liens */}
+          <FooterColumn title={t('footer.columns.product.title')} items={t('footer.columns.product.items', { returnObjects: true })} />
+          <FooterColumn title={t('footer.columns.useCases.title')} items={t('footer.columns.useCases.items', { returnObjects: true })} />
+          <FooterColumn title={t('footer.columns.resources.title')} items={t('footer.columns.resources.items', { returnObjects: true })} />
+          <FooterColumn title={t('footer.columns.company.title')} items={t('footer.columns.company.items', { returnObjects: true })} />
+        </div>
 
-            {/* Grille des colonnes */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-              {/* Produit */}
-              <FooterColumn title={t('footer.columns.product.title')} items={t('footer.columns.product.items', { returnObjects: true })} />
-              {/* Cas d’usage */}
-              <FooterColumn title={t('footer.columns.useCases.title')} items={t('footer.columns.useCases.items', { returnObjects: true })} />
-              {/* Ressources */}
-              <FooterColumn title={t('footer.columns.resources.title')} items={t('footer.columns.resources.items', { returnObjects: true })} />
-              {/* Entreprise */}
-              <FooterColumn title={t('footer.columns.company.title')} items={t('footer.columns.company.items', { returnObjects: true })} />
-
-              {/* Réseaux sociaux */}
-              {/* <div>
-                <h3 className="text-white font-semibold text-lg mb-6">{t('footer.columns.social.title')}</h3>
-                <div className="flex gap-3">
-                  {[Facebook, Linkedin, Twitter, Instagram].map((Icon, i) => (
-                    <a key={i} href="#" className="p-2 rounded hover:bg-gray-600 transition-colors">
-                      <Icon className="w-5 h-5 text-white" />
-                    </a>
-                  ))}
-                </div>
-              </div> */}
-
-              <div className="flex items-center gap-3 mt-6">
-                {[
+        {/* Ligne de séparation, copyright et réseaux sociaux */}
+        <div className="pt-8 border-t border-gray-200 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-gray-500 text-sm mb-4 sm:mb-0">
+            {t('footer.copyright')}
+          </p>
+              
+          <div className="flex gap-4">
+            {[
                   {
                     Icon: Facebook,
                     url: "https://www.facebook.com/share/1AhPm1QpV7/?mibextid=wwXIfr", // ton lien Facebook
@@ -107,35 +84,24 @@ const Footer = () => {
                     aria-label={label}
                     className="p-2 rounded hover:bg-gray-600 transition-colors"
                   >
-                    <Icon className="w-5 h-5 text-white" />
+                    <Icon className="w-5 h-5 text-gray" />
                   </a>
                 ))}
-              </div>
-
-            </div>
-
-            {/* Copyright */}
-            <div className="pt-8 border-t border-white">
-              <p className="text-gray-400 text-sm text-center">
-                {t('footer.copyright')}
-              </p>
-            </div>
-
           </div>
         </div>
-      </footer>
-    </>
+      </div>
+    </footer>
   );
 };
 
 // Sous-composant pour simplifier les colonnes
 const FooterColumn = ({ title, items }) => (
   <div>
-    <h3 className="text-white font-semibold text-lg mb-6">{title}</h3>
+    <h3 className="text-gray-900 font-semibold mb-4">{title}</h3>
     <ul className="space-y-3">
       {items.map((item, i) => (
         <li key={i}>
-          <a href="#" className="text-gray-300 text-sm hover:text-white transition-colors">{item}</a>
+          <a href="#" className="text-gray-600 text-sm hover:text-gray-900 transition-colors">{item}</a>
         </li>
       ))}
     </ul>

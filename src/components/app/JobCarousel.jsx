@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import CompanyCard from './CompanyCard';
 import api from '@/services/api';
 import BantulinkLoader from '../ui/BantulinkLoader';
+import { encodeId } from '@/obfuscate';
 
 
 // Imports des images
@@ -130,7 +131,7 @@ const JobCarousel = () => {
 
       {/* Button */}
       {job.length > 5 && (
-      <Link to={`/job-offers/${job.id}`} className="block w-full">
+      <Link to={`/job-offers/${encodeId(job.id)}`} className="block w-full">
         <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors mt-auto">
           Afficher plus
         </button>

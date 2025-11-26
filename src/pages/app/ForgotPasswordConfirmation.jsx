@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import Header from '../../components/app/Header';
+import Header from '../../components/public/Header';
 import Footer from '../../components/public/Footer';
 import PageWrapper from '../../components/public/PageWrapper';
 
@@ -30,7 +30,7 @@ const ForgotPasswordConfirmation = () => {
               {/* Message d'information */}
               <p className="text-gray-800 text-sm leading-relaxed">
                 Un email va vous être envoyé à l’adresse suivante 
-                <span className="font-semibold">{userEmail}</span> <br />
+                <span className="font-semibold">  {userEmail}</span> <br />
                 pour vous permettre de réinitialiser le mot de passe de votre compte.
               </p>
 
@@ -49,7 +49,7 @@ const ForgotPasswordConfirmation = () => {
           </div>
         </motion.section>
 
-        <Footer />
+        {/* <Footer /> */}
       </PageWrapper>
     </>
   );

@@ -28,10 +28,10 @@ const Header = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `relative pb-1 font-light transition-colors duration-200 ${
+    `relative px-3 py-2 text-sm font-medium transition-colors duration-300 rounded-lg ${
       isActive
-        ? 'text-blue-500 font-semibold after:absolute after:bottom-0 after:left-4 after:w-1/3 after:h-1 after:rounded-full after:bg-blue-500'
-        : 'text-gray-900 hover:text-blue-500'
+        ? 'bg-gray-100 text-blue-600'
+        : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
     }`;
 
   const changeLanguage = (lng) => {
@@ -48,14 +48,14 @@ const Header = () => {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 px-10 sm:px-6 lg:px-8 ${
-        scrolled ? 'bg-white shadow-md border-b border-gray-200' : 'bg-transparent'
+        scrolled ? 'shadow-md border-b border-gray-200 backdrop-blur supports-[backdrop-filter]:bg-background/60' : 'bg-white'
       }`}
     >
-      <div className="px-10 py-4 flex items-center justify-between">
+      <div className="px-10 h-16 flex items-center justify-between">
         {/* Logo Section */}
         <div className="flex items-center">
           <NavLink to="/home" className="flex items-center" aria-label="Accueil">
-            <img src="assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+            <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
           </NavLink>
         </div>
 
@@ -86,8 +86,8 @@ const Header = () => {
         <div className="hidden md:flex items-center space-x-8">
           <nav className="flex items-center space-x-8">
             <NavLink to="/home" className={navLinkClass}>{t('header.home')}</NavLink>
-            <NavLink to="/about" className={navLinkClass}>{t('header.about')}</NavLink>
-            <NavLink to="/features" className={navLinkClass}>{t('header.features')}</NavLink>
+            {/* <NavLink to="/about" className={navLinkClass}>{t('header.about')}</NavLink> */}
+            {/* <NavLink to="/features" className={navLinkClass}>{t('header.features')}</NavLink> */}
             <NavLink to="/pricing" className={navLinkClass}>{t('header.pricing')}</NavLink>
             <NavLink to="/support" className={navLinkClass}>{t('header.support')}</NavLink>
           </nav>
@@ -99,7 +99,7 @@ const Header = () => {
               className="flex items-center space-x-1 p-2 rounded-md hover:bg-gray-100 transition-colors"
             >
               <Globe className="w-4 h-4" />
-              <span className="text-sm font-medium">{t('header.language')}</span>
+              {/* <span className="text-sm font-medium">{t('header.language')}</span> */}
               <ChevronDown className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
             </button>
             <AnimatePresence>
@@ -133,13 +133,13 @@ const Header = () => {
             <>
               <NavLink
                 to="/profil"
-                className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                className="px-5 py-2 text-sm text-emerald-700 border border-emerald-400 rounded-lg font-semibold hover:bg-emerald-50 transition-all duration-300"
               >
                 {t('header.myAccount')}
               </NavLink>
               <button
                 onClick={handleLogout}
-                className="px-6 py-2 text-white bg-red-600 rounded-full font-medium hover:bg-red-700 transition-colors"
+                className="px-5 py-2 text-sm text-white bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300"
               >
                 {t('header.logout')}
               </button>
@@ -148,13 +148,13 @@ const Header = () => {
             <>
               <NavLink
                 to="/login"
-                className="px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
+                className="px-5 py-2 text-sm text-white bg-emerald-600 rounded-lg font-semibold hover:bg-emerald-700 transition-all duration-300"
               >
                 {t('header.login')}
               </NavLink>
               {/* <NavLink
                 to="/register"
-                className="px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                className="px-5 py-2 text-sm text-emerald-700 border border-emerald-400 rounded-lg font-semibold hover:bg-emerald-50 transition-all duration-300"
               >
                 {t('header.register')}
               </NavLink> */}
@@ -171,8 +171,8 @@ const Header = () => {
       >
         <div className="flex flex-col items-center py-6 space-y-4">
           <NavLink to="/home" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.home')}</NavLink>
-          <NavLink to="/about" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.about')}</NavLink>
-          <NavLink to="/features" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.features')}</NavLink>
+          {/* <NavLink to="/about" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.about')}</NavLink> */}
+          {/* <NavLink to="/features" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.features')}</NavLink> */}
           <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.pricing')}</NavLink>
           <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.support')}</NavLink>
           <div className="w-full max-w-xs px-4 mt-6 space-y-4">
@@ -180,14 +180,14 @@ const Header = () => {
               <>
                 <NavLink
                   to="/profil"
-                  className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                  className="block w-full text-center px-6 py-2.5 text-emerald-700 border border-emerald-400 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('header.myAccount')}
                 </NavLink>
                 <button
                   onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-                  className="block w-full text-center px-6 py-2 text-white bg-red-600 rounded-full font-medium hover:bg-red-700 transition-colors"
+                  className="block w-full text-center px-6 py-2.5 text-white bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition-colors"
                 >
                   {t('header.logout')}
                 </button>
@@ -196,14 +196,14 @@ const Header = () => {
               <>
                 <NavLink
                   to="/login"
-                  className="block w-full text-center px-6 py-2 text-white bg-emerald-600 rounded-full font-medium hover:bg-gray-900 transition-colors"
+                  className="block w-full text-center px-6 py-2.5 text-white bg-emerald-600 rounded-lg font-semibold hover:bg-emerald-700 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('header.login')}
                 </NavLink>
                 <NavLink
                   to="/register"
-                  className="block w-full text-center px-6 py-2 text-emerald-700 border-2 border-emerald-400 rounded-full font-medium hover:bg-gray-50 transition-colors"
+                  className="block w-full text-center px-6 py-2.5 text-emerald-700 border border-emerald-400 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('header.register')}

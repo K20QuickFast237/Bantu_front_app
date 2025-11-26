@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n'; // Ajustez le chemin
 
-const HeaderProfil = ({ onOpenProfileModal }) => {
+const HeaderProfils = ({ onOpenProfileModal }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -64,7 +64,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
     <header className="relative flex items-center justify-between h-20 px-4 sm:px-10 bg-white shadow-md border-b border-gray-200">
       <div className="flex items-center space-x-8">
         <Link to="/candidatProfil" className="text-xl font-bold">
-          <img src="src/assets/logobantuhire.png" alt="BantuHire Logo" className="h-7" />
+          <img src="src/assets/logobantulink.png" alt="BantuHire Logo" className="h-7" />
         </Link>
 
         {!hideNavLinks && (
@@ -197,4 +197,4 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
   );
 };
 
-export default HeaderProfil;
+export default HeaderProfils;

@@ -48,7 +48,6 @@ const App = ({ onOpenProfileModal }) => {
   const { profileCompletion } = useProfileCompletion(); // Utiliser le hook
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
 
-
   const handleVisibilityToggle = async (checked) => {
     setIsUpdatingVisibility(true);
     const newVisibility = checked ? 1 : 0;
@@ -71,7 +70,7 @@ const App = ({ onOpenProfileModal }) => {
     <div className="w-full mx-auto py-6 px-10 space-y-8 bg-background font-sans text-gray-800">
       {/* Welcome Header - Nom dynamique avec fix ultime */}
       <div>
-        <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {user.nom} {user.prenom}</h1>
+        <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {user?.nom} {user?.prenom}</h1>
         <p className="text-sm font-semibold">Vos statistiques</p>
       </div>
 
@@ -185,7 +184,7 @@ const App = ({ onOpenProfileModal }) => {
         </div>
         
         <div className="flex-1">
-          <h3 className="font-bold text-xl ">{particulier?.name || user.nom}</h3>
+          <h3 className="font-bold text-xl ">{particulier?.name || user?.nom}</h3>
           <p className="text-sm text-gray-900 mb-3">{particulier?.titre_professionnel || 'Veillez completer votre profil'}</p>
           {particulier && Object.keys(particulier).length > 0 ? (
           <Link to={"/profil"}>
