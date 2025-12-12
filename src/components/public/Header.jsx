@@ -55,7 +55,7 @@ const Header = () => {
         {/* Logo Section */}
         <div className="flex items-center">
           <NavLink to="/home" className="flex items-center" aria-label="Accueil">
-            <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+            <img src="assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
           </NavLink>
         </div>
 

@@ -33,7 +33,7 @@ const Footer = () => {
           {/* Logo et description */}
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+              <img src="assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
             </div>
             <p className="text-gray-600 text-sm max-w-xs">
               La super-application pour l'emploi et le commerce en Afrique.

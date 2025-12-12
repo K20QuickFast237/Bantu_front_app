@@ -3,6 +3,9 @@ import { Star, ArrowLeft, ArrowRight } from 'lucide-react'; // Icônes mises à 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Ajout
 import ReginaMilesImage from '../../assets/temoigne.png'; // Gardé pour l'exemple
+import Tem1 from '../../assets/tem1.png';
+import Tem2 from '../../assets/tem2.png';
+import Tem3 from '../../assets/tem3.png';
 import PhoneImage from '../../assets/telephone2.png';
 import appleIcon from '../../assets/appleIcon.svg';
 import googleIcon from '../../assets/googleIcon.svg';
@@ -18,6 +21,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name1'),
       role: t('testimonials.role1'),
       rating: 4,
+      image: ReginaMilesImage,
     },
     {
       id: 2,
@@ -25,6 +29,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name2'),
       role: t('testimonials.role2'),
       rating: 5,
+      image: Tem1,
     },
     {
       id: 3,
@@ -32,6 +37,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name3'),
       role: t('testimonials.role3'),
       rating: 4,
+      image: Tem2,
     },
     {
       id: 4,
@@ -39,6 +45,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name5'), // Correction: name4 -> name4 (erreur dans original ?)
       role: t('testimonials.role4'),
       rating: 5,
+      image: Tem3,
     },
     {
       id: 5,
@@ -46,6 +53,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name5'),
       role: t('testimonials.role5'),
       rating: 4,
+      image: Tem1,
     },
   ];
 
@@ -125,7 +133,7 @@ const TestimonialsSection = () => {
                   <div>
                     <div className="flex items-center mb-4">
                       <div className="w-14 h-14 rounded-full overflow-hidden mr-4 border-2 border-blue-200 flex-shrink-0">
-                        <img src={ReginaMilesImage} alt={testimonial.name} className="w-full h-full object-cover" />
+                        <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
                       </div>
                       <div>
                         <p className="font-bold text-gray-800 text-lg">{testimonial.name}</p>
