@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Mail, Phone, MapPin, Download, Linkedin, Github, Globe, ChevronLeft } from 'lucide-react';
+import { Mail, Phone, MapPin, Download, Linkedin, Github, Globe, ChevronLeft, User } from 'lucide-react';
 import api from '@/services/api';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
@@ -17,9 +17,9 @@ export default function ProfilCandidatByRecruteur() {
       setLoading(true);
       try {
         const response = await api.get(`/user/${id}`);
-        setCandidat(response.data);
+        setCandidat(response.data.data);
       } catch (error) {
-        console.error(error);
+        console.error('Error fetching candidate:', error);
       } finally {
         setLoading(false);
       }

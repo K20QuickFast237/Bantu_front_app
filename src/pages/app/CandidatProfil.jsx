@@ -16,10 +16,10 @@ function CandidatProfil(){
     return(
         <>
             <PageWrapper>
-            <HeaderProfil/>
-            <JobSearchHero onOpenProfileModal={() => setIsModalOpen(true)} />
-            <JobMatchingCard/>
-            <Footer/>
+                <HeaderProfil/>
+                <JobSearchHero onOpenProfileModal={() => setIsModalOpen(true)} />
+                <JobMatchingCard/>
+                <Footer/>
             </PageWrapper>
             <ProfileCompletionModal
                 isOpen={isModalOpen}

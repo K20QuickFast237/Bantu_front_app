@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Loader2 } from "lucide-react"; 
 import { decodeId } from '@/obfuscate';
+import { encodeId } from '@/obfuscate';
 
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
@@ -54,7 +55,7 @@ const JobOfferPage = () => {
       toast.info("Veuillez compléter votre profil pour postuler.");
       setProfileModalOpen(true);
     } else {
-      navigate(`/jobApplicationform/${job.id}`);
+      navigate(`/jobApplicationform/${encodeId(job.id)}`);
     }
   };
 
