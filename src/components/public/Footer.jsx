@@ -3,12 +3,45 @@ import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import logo from '@/assets/logobantulink.png';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Footer = () => {
   const { t } = useTranslation(); // Ajout
   const { token, user } = useAuth();
   const navigate = useNavigate();
+
+  // Définir les items avec clés de traduction + liens
+  const productItems = [
+    { key: 'footer.columns.product.items.0', to: '/home' },
+    { key: 'footer.columns.product.items.1', to: '/mk' },
+    { key: 'footer.columns.product.items.2', to: '/formations' },
+    { key: 'footer.columns.product.items.3', to: '/pricing' },
+    { key: 'footer.columns.product.items.4', to: '/mobile' },
+  ];
+
+  const useCasesItems = [
+    { key: 'footer.columns.useCases.items.0', to: '/profil' },
+    { key: 'footer.columns.useCases.items.1', to: '/dashboard' },
+    { key: 'footer.columns.useCases.items.2', to: '/sellers' },
+    { key: 'footer.columns.useCases.items.3', to: '/buyers' },
+    { key: 'footer.columns.useCases.items.4', to: '/freelancers' },
+  ];
+
+  const resourcesItems = [
+    { key: 'footer.columns.resources.items.0', to: '/help' },
+    { key: 'footer.columns.resources.items.1', to: '/faq' },
+    { key: 'footer.columns.resources.items.2', to: '/tutorials' },
+    { key: 'footer.columns.resources.items.3', to: '/blog' },
+    { key: 'footer.columns.resources.items.4', to: '/support' },
+  ];
+
+  const companyItems = [
+    { key: 'footer.columns.company.items.0', to: '/about' },
+    { key: 'footer.columns.company.items.1', to: '/team' },
+    { key: 'footer.columns.company.items.2', to: '/terms' },
+    { key: 'footer.columns.company.items.3', to: '/privacy' },
+    { key: 'footer.columns.company.items.4', to: '/contact' },
+  ];
 
   return (
     <footer className="bg-gray-50">
@@ -41,10 +74,10 @@ const Footer = () => {
           </div>
 
           {/* Colonnes de liens */}
-          <FooterColumn title={t('footer.columns.product.title')} items={t('footer.columns.product.items', { returnObjects: true })} />
-          <FooterColumn title={t('footer.columns.useCases.title')} items={t('footer.columns.useCases.items', { returnObjects: true })} />
-          <FooterColumn title={t('footer.columns.resources.title')} items={t('footer.columns.resources.items', { returnObjects: true })} />
-          <FooterColumn title={t('footer.columns.company.title')} items={t('footer.columns.company.items', { returnObjects: true })} />
+          <FooterColumn title={t('footer.columns.product.title')} items={productItems} />
+          <FooterColumn title={t('footer.columns.useCases.title')} items={useCasesItems} />
+          <FooterColumn title={t('footer.columns.resources.title')} items={resourcesItems} />
+          <FooterColumn title={t('footer.columns.company.title')} items={companyItems} />
         </div>
 
         {/* Ligne de séparation, copyright et réseaux sociaux */}
@@ -66,18 +99,36 @@ const Footer = () => {
 };
 
 // Sous-composant pour simplifier les colonnes
-const FooterColumn = ({ title, items }) => (
-  <div>
-    <h3 className="text-gray-900 font-semibold mb-4">{title}</h3>
-    <ul className="space-y-3">
-      {items.map((item, i) => (
-        <li key={i}>
-          <a href="#" className="text-gray-600 text-sm hover:text-gray-900 transition-colors">{item}</a>
-        </li>
-      ))}
-    </ul>
-  </div>
-  
-);
+const FooterColumn = ({ title, items = [] }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <h3 className="text-gray-900 font-semibold mb-4">{title}</h3>
+      <ul className="space-y-3">
+        {items.map((item, i) => {
+          // item can be a string or an object { key, label, to } or { key, label, href }
+          const isString = typeof item === 'string';
+          const label = isString ? item : (item.label ? item.label : (item.key ? t(item.key) : ''));
+          const href = isString ? null : (item.to || item.href || item.link);
+
+          return (
+            <li key={i}>
+              {href ? (
+                href.startsWith('/') ? (
+                  <Link to={href} className="text-gray-600 text-sm hover:text-gray-900 transition-colors">{label}</Link>
+                ) : (
+                  <a href={href} target="_blank" rel="noopener noreferrer" className="text-gray-600 text-sm hover:text-gray-900 transition-colors">{label}</a>
+                )
+              ) : (
+                <span className="text-gray-600 text-sm">{label}</span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+};
 
 export default Footer;
