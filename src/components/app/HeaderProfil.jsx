@@ -4,7 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { User, Settings, LogOut, ChevronDown, MessageSquare, Globe, Menu, X } from 'lucide-react'; // Ajout Globe, Menu, X
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
-import i18n from '@/i18n'; // Ajustez le chemin
+import i18n from '@/i18n';
+import logo from '@/assets/logobantulink.png';
 
 const HeaderProfil = ({ onOpenProfileModal }) => {
   const { user, logout } = useAuth();
@@ -61,10 +62,10 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
   };
 
   return (
-    <header className="relative flex items-center justify-between h-20 px-4 sm:px-10 bg-white shadow-md border-b border-gray-200">
-      <div className="flex items-center space-x-8">
+    <header className="relative flex items-center justify-between h-16 sm:h-20 px-3 sm:px-10 bg-white shadow-md border-b border-gray-200">
+      <div className="flex items-center space-x-4 sm:space-x-8">
         <Link to="/candidatProfil" className="text-xl font-bold">
-          <img src="/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+          <img src={logo} alt="BantuLink Logo" className="h-6 sm:h-7" />
         </Link>
 
         {!hideNavLinks && (
@@ -126,7 +127,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
             className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 transition-colors group"
           >
             <User className="w-5 h-5 text-gray-600" />
-            <span className="font-semibold text-gray-800 text-sm">{user?.nom || t('header.myAccount')}</span>
+            <span className="hidden sm:inline-block font-semibold text-gray-800 text-sm truncate max-w-[110px]">{user?.nom || t('header.myAccount')}</span>
             <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isProfileMenuOpen ? 'rotate-180' : ''}`} />
           </button>
           <AnimatePresence>
@@ -137,7 +138,7 @@ const HeaderProfil = ({ onOpenProfileModal }) => {
                 animate="visible"
                 exit="exit"
                 transition={{ duration: 0.15, ease: 'easeOut' }}
-                className="absolute top-full right-0 mt-2 w-60 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-10"
+                className="absolute top-full right-0 mt-2 w-56 sm:w-60 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden z-10"
               >
                 <div className="p-2">
                   {userProfileItems.map((item) => (

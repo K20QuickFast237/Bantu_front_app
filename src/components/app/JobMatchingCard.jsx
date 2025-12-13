@@ -49,26 +49,28 @@ const JobMatchingCard = () => {
       transition={{ duration: 0.3, ease: "easeInOut" }}
     >
       <Link to={`/jobOffers/${encodeId(job.offre_id || job.id)}`} className="block h-full">
-        <div className="bg-white rounded-lg border border-gray-200 p-5 hover:shadow-lg hover:border-orange-300 transition-all duration-300 h-full flex flex-col">
+        <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-5 hover:shadow-lg hover:border-orange-300 transition-all duration-300 h-full flex flex-col">
           {/* En-tête de la carte */}
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-gray-100 rounded-md flex items-center justify-center flex-shrink-0">
+              <div className="w-12 sm:w-14 h-12 sm:h-14 bg-gray-100 rounded-md flex items-center justify-center flex-shrink-0">
                 <img src={job.logo} alt={`${job.nom_entreprise} logo`} className="w-full h-full object-contain p-1" />
               </div>
-              <div>
-                <h4 className="font-bold text-gray-800 text-md leading-tight">{job.nom_entreprise}</h4>
+              <div className="flex-1">
+                <h4 className="font-bold text-gray-800 text-sm sm:text-md leading-tight">{job.nom_entreprise}</h4>
                 <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
                   <Calendar className="w-3 h-3" />
                   Publié le: {new Date(job.date_publication).toLocaleDateString('fr-FR')}
                 </p>
               </div>
             </div>
-            <MatchingScoreCircle score={parseFloat(job.score)} size={48} />
+            <div className="ml-auto">
+              <MatchingScoreCircle score={parseFloat(job.score)} size={48} />
+            </div>
           </div>
 
           {/* Titre du poste */}
-          <h3 className="font-semibold text-lg text-gray-900 my-2 hover:text-orange-600 transition-colors">
+          <h3 className="font-semibold text-base sm:text-lg text-gray-900 my-2 hover:text-orange-600 transition-colors">
             {job.titre}
           </h3>
 
@@ -96,7 +98,7 @@ const JobMatchingCard = () => {
             <div className="mx-auto px-4 sm:px-6 lg:px-8"></div>
           </div>
           <div className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
               {loading ? (
                 <div className="col-span-3 text-center text-gray-500"><BantulinkLoader/></div>
               ) : jobData.length === 0 ? (

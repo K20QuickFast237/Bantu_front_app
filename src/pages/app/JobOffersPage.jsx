@@ -8,7 +8,7 @@ import { encodeId } from '@/obfuscate';
 import HeaderProfil from "../../components/app/HeaderProfil";
 import Footer from '@/components/public/Footer';
 import PageWrapper from '@/components/public/PageWrapper';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -20,7 +20,6 @@ import {
   Globe,
   Building2,
   FileText,
-  Users
 } from "lucide-react";
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 

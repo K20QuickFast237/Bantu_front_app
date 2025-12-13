@@ -1,6 +1,6 @@
 import React from 'react';
 import { Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
-import { motion } from 'framer-motion';
+import logo from '@/assets/logobantulink.png';
 import { useAuth } from '@/hooks/useAuth';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -33,9 +33,9 @@ const Footer = () => {
           {/* Logo et description */}
           <div className="col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <img src="src/assets/logobantulink.png" alt="BantuLink Logo" className="h-7" />
+              <img src={logo} alt="BantuLink Logo" className="h-7" />
             </div>
-            <p className="text-gray-600 text-sm max-w-xs">
+            <p className="text-gray-600 text-sm max-w-full sm:max-w-xs">
               La super-application pour l'emploi et le commerce en Afrique.
             </p>
           </div>

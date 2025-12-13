@@ -53,13 +53,15 @@ const OffresFavorites = () => {
                                         <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
                                     </tr>
                                 </thead>
-                                {loading ? (
-                                    <div className="flex justify-center items-center h-full min-h-[500px]">
-                                        <BantulinkLoader />
-                                    </div>
-                                ) : (
                                     <tbody>
-                                        {applications.length === 0 ? (
+                                         {loading ? (
+                                        <tr>
+                                            <td colSpan="5" className="text-center py-20">
+                                                <BantulinkLoader />
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        applications.length === 0 ? (
                                             <tr>
                                                 <td colSpan="4" className="px-6 py-10 text-center text-gray-500">Vous n'avez aucune offre en favoris pour le moment.</td>
                                             </tr>
@@ -90,9 +92,8 @@ const OffresFavorites = () => {
                                                     </tr>
                                                 );
                                             })
-                                        )}
+                                        ))}
                                     </tbody>
-                                )}
                             </table>
                         </div>
                     </div>

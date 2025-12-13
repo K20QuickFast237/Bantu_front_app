@@ -21,7 +21,7 @@ const HeroCompany = ({ companyData }) => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         {/* Main Hero Section */}
-        <div className="relative w-full pt-20 pb-10 overflow-hidden">
+        <div className="relative w-full h-[300px] pt-20 pb-10 overflow-hidden">
           {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center"
@@ -30,19 +30,6 @@ const HeroCompany = ({ companyData }) => {
 
           {/* Overlay for text readability */}
           <div className="absolute inset-0 bg-black opacity-50"></div>
-
-          {/* Content */}
-          <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col justify-center h-full">
-            {/* Top Text */}
-            <div className="text-center text-white mb-8">
-              <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
-                Créez des offres d'emplois facilement
-              </p>
-              <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
-                et rapidement
-              </p>
-            </div>
-          </div>
         </div>
 
         {/* Bottom Section - Positioned to overlap */}

@@ -10,6 +10,7 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false); // État dropdown langue
+  const [isMobileLangOpen, setIsMobileLangOpen] = useState(false);
   const { user, token, logout } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -176,6 +177,45 @@ const Header = () => {
           <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.pricing')}</NavLink>
           <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.support')}</NavLink>
           <div className="w-full max-w-xs px-4 mt-6 space-y-4">
+            {/* Mobile language dropdown (keeps same behaviour as desktop) */}
+            <div className="relative w-full flex items-center justify-center">
+              <button
+                onClick={() => setIsMobileLangOpen(!isMobileLangOpen)}
+                className="flex items-center space-x-2 px-4 py-2 rounded-md hover:bg-gray-100 transition-colors"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-sm font-medium">{t('header.language')}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform ${isMobileLangOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <AnimatePresence>
+                {isMobileLangOpen && (
+                  <motion.ul
+                    variants={dropdownVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    className="absolute top-full mt-2 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-50"
+                  >
+                    <li>
+                      <button
+                        onClick={() => { changeLanguage('fr'); setIsMobileLangOpen(false); setMobileMenuOpen(false); }}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        {t('header.fr')}
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => { changeLanguage('en'); setIsMobileLangOpen(false); setMobileMenuOpen(false); }}
+                        className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                      >
+                        {t('header.en')}
+                      </button>
+                    </li>
+                  </motion.ul>
+                )}
+              </AnimatePresence>
+            </div>
             {user && token ? (
               <>
                 <NavLink
