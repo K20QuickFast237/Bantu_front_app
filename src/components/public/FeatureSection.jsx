@@ -79,10 +79,10 @@ const FeatureSection = () => {
         {/* En-tête de la section */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900">
-            Une plateforme, des possibilités infinies
+            {t('features.header.title')}
           </h2>
           <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-            Découvrez les outils conçus pour votre carrière et votre business, accessibles en un clic.
+            {t('features.header.subtitle')}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ const FeatureSection = () => {
             >
               <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${activeTab === 'hire' ? 'text-white' : 'text-gray-600'}`}>
                 <Briefcase className="w-5 h-5" />
-                BantuHire
+                {t('features.tabs.hire')}
               </span>
               {activeTab === 'hire' && (
                 <motion.div
@@ -111,7 +111,7 @@ const FeatureSection = () => {
             >
               <span className={`relative z-10 flex items-center gap-2 transition-colors duration-300 ${activeTab === 'market' ? 'text-white' : 'text-gray-600'}`}>
                 <Store className="w-5 h-5" />
-                BantuMarket
+                {t('features.tabs.market')}
               </span>
               {activeTab === 'market' && (
                 <motion.div
@@ -148,7 +148,7 @@ const FeatureSection = () => {
           <div className="w-full lg:w-1/2 flex justify-center mb-8 lg:mb-0">
             <img
               src={imggroupe}
-              alt="Community services illustration"
+              alt={t('features.community.imageAlt')}
               className="w-full max-w-md sm:max-w-lg h-auto object-contain"
             />
           </div>
@@ -156,7 +156,7 @@ const FeatureSection = () => {
           {/* Colonne de droite: Texte et bouton */}
           <div className="w-full lg:w-1/2 flex flex-col items-start lg:pl-16 relative">
             <div className="absolute top-0 right-0 transform -translate-y-1/2 translate-x-1/2 lg:translate-x-0">
-              <img src={GraffittiRedIcon} alt="Decorative lines" className="h-8 sm:h-10 w-auto rotate-90" />
+              <img src={GraffittiRedIcon} alt={t('features.community.decorAlt')} className="h-8 sm:h-10 w-auto rotate-90" />
             </div>
 
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight mb-6">

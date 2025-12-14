@@ -35,11 +35,11 @@ const FAQ = () => {
       toast.success(t('faq.form.subscribeSuccess'));
       setEmail(''); // Réinitialiser le champ après succès
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Une erreur est survenue lors de l'inscription.";
-      toast.error("Erreur d'inscription", {
+      const errorMessage = error.response?.data?.message || t('faq.form.subscribeErrorDesc');
+      toast.error(t('faq.form.subscribeError'), {
         description: errorMessage,
       });
-      console.error("Newsletter subscription error:", error);
+      console.error('Newsletter subscription error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -69,7 +69,7 @@ const FAQ = () => {
             {/* Correction de la position et taille de l'icône GraffitiRedIcon pour la responsivité */}
             <motion.img
               src={GraffitiRedIcon}
-              alt="Decorative graffiti lines"
+              alt={t('faq.form.graffitiAlt')}
               className="absolute top-[-20px] sm:top-[-30px] lg:top-[-40px] right-4 sm:right-8 md:right-24 lg:right-44 w-12 sm:w-16 h-auto rotate-12"
               initial={{ opacity: 0, rotate: 0 }}
               animate={{ opacity: 1, rotate: 12 }}

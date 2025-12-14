@@ -78,13 +78,13 @@ const HeroSection = () => {
         {/* Nouveaux boutons */}
         <div className="flex flex-col sm:flex-row gap-4">
           <motion.button
-            onClick={() => navigate('/rechercheOffre')}
+            onClick={() => navigate('/hirehome')}
             className="flex items-center justify-center gap-3 px-8 py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-lg border border-blue-400 hover:bg-blue-700 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Briefcase className="w-5 h-5" />
-            Aller sur BantuHire
+            {t('hero.hireButton')}
           </motion.button>
           <motion.button
             onClick={() => window.location.href = import.meta.env.VITE_MARKETPLACE_URL}
@@ -93,7 +93,7 @@ const HeroSection = () => {
             whileTap={{ scale: 0.95 }}
           >
             <ShoppingCart className="w-5 h-5" />
-            Aller sur BantuMarket
+            {t('hero.marketButton')}
           </motion.button>
         </div>
       </motion.div>

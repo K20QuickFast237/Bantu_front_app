@@ -13,6 +13,7 @@ import Register from "./pages/public/Register";
 import Login from "./pages/public/Login";
 import EmailVerification from "./pages/app/EmailVerification";
 import LinkedInCallback from "./pages/app/LinkedInCallback";
+import HireHome from "./pages/public/HireHome";
 
 
 
@@ -56,6 +57,7 @@ const App = () => {
         {/* Routes publiques */}
         <Route element={<PublicRoutes />}>
           <Route path="/" element={<Home />} />
+          <Route path="/hirehome" element={<HireHome />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/features" element={<Fonctionnalites />} />
