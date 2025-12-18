@@ -35,12 +35,12 @@ const HeroCompany = ({ companyData }) => {
           <div className="relative z-10 p-6 sm:p-8 md:p-10 flex flex-col justify-center h-full">
             {/* Top Text */}
             <div className="text-center text-white mb-8">
-              <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
+              {/* <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
                 Créez des offres d'emplois facilement
               </p>
               <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
                 et rapidement
-              </p>
+              </p> */}
             </div>
           </div>
         </div>

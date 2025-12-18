@@ -75,7 +75,51 @@ const App = ({ onOpenProfileModal }) => {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
+        <Link to="/mesCandidatures">
+          <Card className="border border-gray-200 shadow-sm h-full"> {/* h-full assure une hauteur uniforme */}
+            <CardContent className="p-4 sm:p-6 lg:p-8"> {/* Simplification du padding pour la responsivité */}
+              <div className='flex items-center'> {/* Ajout d'items-center pour alignement vertical */}
+                  <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center ">
+                <User className="w-6 h-6 text-gray-900" />
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
+              </div>
+              <div className="text-lg text-gray-800 mt-4 mb-2">Candidatures en cours</div>
+              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Card className="border border-gray-200 shadow-sm h-full">
+          <CardContent className="p-4 sm:p-6 lg:p-8">
+            <div className='flex items-center'>
+                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
+              <Download className="w-6 h-6 text-gray-900" />
+            </div>
+            <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
+            </div>
+            <div className="text-lg text-gray-800 mt-4 mb-2">Opportunités reçues</div>
+            <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+          </CardContent>
+        </Card>
+
+        <Link to="/offresFavorites">
+          <Card className="border border-gray-200 shadow-sm h-full">
+            <CardContent className="p-4 sm:p-6 lg:p-8">
+              <div className='flex items-center'>
+                  <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
+                <Bookmark className="w-6 h-6 text-gray-900" />
+              </div>
+              <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
+              </div>
+              <div className="text-lg text-gray-800 mt-4 mb-2">Offres sauvegardées</div>
+              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+            </CardContent>
+          </Card>
+        </Link>
+      </div>
+      {/* <div className="grid grid-cols-3 gap-4">
         <Link to="/mesCandidatures">
           <Card className="border border-gray-200 shadow-sm">
             <CardContent className="mt-8 ml-8">
@@ -117,7 +161,7 @@ const App = ({ onOpenProfileModal }) => {
             </CardContent>
           </Card>
         </Link>
-      </div>
+      </div> */}
 
       {/* Profile Visibility Section */}
       {particulier && Object.keys(particulier).length > 0 && (

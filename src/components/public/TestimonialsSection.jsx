@@ -168,39 +168,46 @@ const TestimonialsSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
-          <h3 className="text-3xl sm:text-3xl font-medium mb-4"
-             dangerouslySetInnerHTML={{ __html: t('testimonials.appPreview.title') }} // Pour <br/>
+          <h3 className="text-3xl sm:text-4xl font-extrabold mb-4"
+            dangerouslySetInnerHTML={{ __html: t('testimonials.appPreview.title') }}
           >
           </h3>
-          <p className="text-lg mb-10 max-w-2xl">
+          <p className="text-base sm:text-xl mb-10 max-w-2xl px-2">
             {t('testimonials.appPreview.description')}
           </p>
-          {/* Conteneur principal pour l'image et les boutons */}
+
+          {/* Conteneur principal MODIFIÉ pour l'image et les boutons */}
           <motion.div
-            className="relative w-full max-w-4xl flex justify-center items-center gap-4 sm:gap-8"
+            className="relative w-full max-w-4xl flex flex-col items-center gap-6 md:flex-row md:justify-center md:items-end md:gap-8" // Changé: flex-col par défaut, md:flex-row à partir de 'md'
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
           >
-            {/* Bouton App Store */}
-            <a href="#" className="bg-black text-white rounded-lg px-4 py-2 flex items-center gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105">
-              <img src={appleIcon} alt="Apple logo" className="h-7 w-7 text-white" />
-              <div className="text-left">
+          {/* Bouton App Store */}
+          <a 
+              href="#" 
+              className="w-full max-w-[250px] md:w-auto bg-black text-white rounded-lg px-4 py-3 flex items-center justify-center md:justify-start gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105" // Changé: w-full et max-w pour mobile
+          >
+            <img src={appleIcon} alt="Apple logo" className="h-7 w-7 text-white" />
+            <div className="text-left">
                 <span className="text-xs block leading-tight">Télécharger sur</span>
                 <span className="text-lg font-semibold block leading-tight">l'App Store</span>
-              </div>
-            </a>
+            </div>
+          </a>
 
-            {/* Image du téléphone */}
+          {/* Image du téléphone - Position inchangée, mais le conteneur parent gère le positionnement */}
             <img
               src={PhoneImage}
               alt="SuperApp mobile interface"
-              className="w-full max-w-[180px] sm:max-w-xs h-auto relative z-10 transform transition-transform hover:scale-105"
-            />
+              className="w-full max-w-[180px] sm:max-w-[200px] md:max-w-xs h-auto relative z-10 transform transition-transform hover:scale-105" // Légère augmentation de la taille sur sm
+           />
 
-            {/* Bouton Play Store */}
-            <a href="#" className="bg-black text-white rounded-lg px-4 py-2 flex items-center gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105">
-              <img src={googleIcon} alt="Google Play logo" className="h-7 w-7" />
+          {/* Bouton Play Store */}
+            <a 
+              href="#" 
+              className="w-full max-w-[250px] md:w-auto bg-black text-white rounded-lg px-4 py-3 flex items-center justify-center md:justify-start gap-3 hover:bg-gray-800 transition-transform transform hover:scale-105" // Changé: w-full et max-w pour mobile
+            >
+             <img src={googleIcon} alt="Google Play logo" className="h-7 w-7" />
               <div className="text-left">
                 <span className="text-xs block leading-tight">DISPONIBLE SUR</span>
                 <span className="text-lg font-semibold block leading-tight">Google Play</span>
