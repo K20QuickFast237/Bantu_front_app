@@ -67,11 +67,11 @@ const App = ({ onOpenProfileModal }) => {
   };
 
   return (
-    <div className="w-full mx-auto py-6 px-10 space-y-8 bg-background font-sans text-gray-800">
+    <div className="w-full mx-auto py-6 px-4 sm:px-6 lg:px-10 space-y-6 sm:space-y-8 bg-background font-sans text-gray-800">
       {/* Welcome Header - Nom dynamique avec fix ultime */}
       <div>
-        <h1 className="text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {user?.nom} {user?.prenom}</h1>
-        <p className="text-sm font-semibold">Vos statistiques</p>
+        <h1 className="text-xl sm:text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {user?.nom} {user?.prenom}</h1>
+        <p className="text-xs sm:text-sm font-semibold">Vos statistiques</p>
       </div>
 
       {/* Statistics Cards */}
@@ -122,42 +122,42 @@ const App = ({ onOpenProfileModal }) => {
       {/* <div className="grid grid-cols-3 gap-4">
         <Link to="/mesCandidatures">
           <Card className="border border-gray-200 shadow-sm">
-            <CardContent className="mt-8 ml-8">
-              <div className='flex'>
-                  <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center ">
+            <CardContent className="mt-6 sm:mt-8 ml-4 sm:ml-8">
+              <div className='flex items-center'>
+                  <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0">
                 <User className="w-6 h-6 text-gray-900" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
+                  <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 ml-3 mt-2">00</div>
               </div>
-              <div className="text-lg text-gray-800 mt-2 mb-2">Candidatures en cours</div>
-              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+              <div className="text-base sm:text-lg text-gray-800 mt-2 mb-2">Candidatures en cours</div>
+              <button className="text-base sm:text-lg text-[#10B981] underline">Voir plus →</button>
             </CardContent>
           </Card>
         </Link>
 
         <Card className="border border-gray-200 shadow-sm">
-          <CardContent className="mt-8 ml-8">
-            <div className='flex'>
-                <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
+          <CardContent className="mt-6 sm:mt-8 ml-4 sm:ml-8">
+            <div className='flex items-center'>
+                <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0">
               <Download className="w-6 h-6 text-gray-900" />
             </div>
-            <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
+            <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 ml-3 mt-2">00</div>
             </div>
-            <div className="text-lg text-gray-800 mt-2 mb-2">Opportunités reçues</div>
-            <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+            <div className="text-base sm:text-lg text-gray-800 mt-2 mb-2">Opportunités reçues</div>
+            <button className="text-base sm:text-lg text-[#10B981] underline">Voir plus →</button>
           </CardContent>
         </Card>
         <Link to="/offresFavorites">
           <Card className="border border-gray-200 shadow-sm">
-            <CardContent className="mt-8 ml-8">
-              <div className='flex'>
-                  <div className="w-12 h-12 rounded-2xl  bg-gray-200 flex items-center justify-center ">
+            <CardContent className="mt-6 sm:mt-8 ml-4 sm:ml-8">
+              <div className='flex items-center'>
+                  <div className="w-12 h-12 rounded-2xl bg-gray-200 flex items-center justify-center flex-shrink-0">
                 <Bookmark className="w-6 h-6 text-gray-900" />
               </div>
-              <div className="text-2xl font-bold text-gray-900 mb-1  ml-3 mt-2">00</div>
+              <div className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 ml-3 mt-2">00</div>
               </div>
-              <div className="text-lg text-gray-800 mt-2 mb-2">Offres sauvegardées</div>
-              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+              <div className="text-base sm:text-lg text-gray-800 mt-2 mb-2">Offres sauvegardées</div>
+              <button className="text-base sm:text-lg text-[#10B981] underline">Voir plus →</button>
             </CardContent>
           </Card>
         </Link>
@@ -165,14 +165,14 @@ const App = ({ onOpenProfileModal }) => {
 
       {/* Profile Visibility Section */}
       {particulier && Object.keys(particulier).length > 0 && (
-        <div className="space-y-4 p-3 rounded-2xl border-2 border-solid ">
-          <h2 className={`text-lg font-semibold ${particulier?.is_visible ? 'text-green-600' : 'text-red-500'}`}>
+        <div className="space-y-4 p-4 sm:p-6 rounded-2xl border-2 border-solid ">
+          <h2 className={`text-base sm:text-lg font-semibold ${particulier?.is_visible ? 'text-green-600' : 'text-red-500'}`}>
             {particulier?.is_visible ? "Votre profil est visible par les recruteurs." : "Votre profil est actuellement caché des recruteurs."}
           </h2>
           
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className=" font-bold text-gray-900">Rendre mon profil visible des recruteurs</span>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+              <span className="font-bold text-gray-900 text-sm sm:text-base">Rendre mon profil visible des recruteurs</span>
               {particulier?.is_visible ? (
                 // Si le profil est visible, afficher un seul bouton pour le cacher
                 <Button
@@ -219,40 +219,61 @@ const App = ({ onOpenProfileModal }) => {
       )}
 
       {/* Profile Section - Nom dynamique avec fix ultime */}
-      <section className='flex flex-col items-center justify-center space-y-4 border-2 border-solid p-4 rounded-2xl'>
-      <div className="flex items-center space-x-4">
-        <div className="w-20 h-20 rounded-full bg-yellow-400 overflow-hidden border-4 border-yellow-200">
-          <div className="w-full h-full bg-yellow-400 flex items-center justify-center">
-            <User className="w-12 h-12 text-white" />
-          </div>
-        </div>
-        
-        <div className="flex-1">
-          <h3 className="font-bold text-xl ">{particulier?.name || user?.nom}</h3>
-          <p className="text-sm text-gray-900 mb-3">{particulier?.titre_professionnel || 'Veillez completer votre profil'}</p>
-          {particulier && Object.keys(particulier).length > 0 ? (
-          <Link to={"/profil"}>
-             <Button className="bg-[#10B981] text-white px-6 py-2 text-sm">
-            Voir mon profil
-          </Button>
-          </Link>
-          ) : (
-          <Button onClick={onOpenProfileModal} className="bg-[#10B981] text-white px-6 py-2 text-sm">
-            Compléter mon profil
-          </Button>
-          )}
+      <section className="w-full flex item-center border-2 border-solid p-4 sm:p-6 rounded-2xl">
+        <div className="max-w-xl mx-auto">
           
-          <div className="mt-2">
-            <span className="text-lg font-semibold text-gray-900">Profil complété à </span>
-            <span className="text-3xl font-bold text-orange-500">{profileCompletion}%</span>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            
+            {/* Avatar */}
+            <div className="w-20 h-20 rounded-full bg-yellow-400 overflow-hidden border-4 border-yellow-200 flex-shrink-0 mx-auto sm:mx-0">
+              <div className="w-full h-full flex items-center justify-center">
+                <User className="w-12 h-12 text-white" />
+              </div>
+            </div>
+
+            {/* Infos */}
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="font-bold text-lg sm:text-xl">
+                {particulier?.name || user?.nom}
+              </h3>
+
+              <p className="text-xs sm:text-sm text-gray-900 mb-3">
+                {particulier?.titre_professionnel || 'Veuillez compléter votre profil'}
+              </p>
+
+              {particulier && Object.keys(particulier).length > 0 ? (
+                <Link to="/profil">
+                  <Button className="bg-[#10B981] text-white px-6 py-2 text-sm">
+                    Voir mon profil
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  onClick={onOpenProfileModal}
+                  className="bg-[#10B981] text-white px-6 py-2 text-sm"
+                >
+                  Compléter mon profil
+                </Button>
+              )}
+
+              {/* Progression */}
+              <div className="mt-3">
+                <span className="text-sm sm:text-base font-semibold text-gray-900">
+                  Profil complété à{" "}
+                </span>
+                <span className="text-2xl sm:text-3xl font-bold text-orange-500">
+                  {profileCompletion}%
+                </span>
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
       </section>
 
       {/* Job Suggestions */}
       <div>
-        <h2 className="text-xl font-bold text-[#10B981]">Suggestions de jobs en fonction de votre profil</h2>
+        <h2 className="text-lg sm:text-xl font-bold text-[#10B981]">Suggestions de jobs en fonction de votre profil</h2>
       </div>
     </div>
   );

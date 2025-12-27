@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'; // Ajout
 import Header from '../../components/public/Header';
 
 import personnesImage from '../../assets/personnes.png';
+import RegisterForm from '../../components/public/RegisterForm';
 // import googleLogo from '../../assets/google.png';      
 // import appleLogo from '../../assets/apple.png';        
 // import facebookLogo from '../../assets/facebook.png';      
@@ -69,131 +70,12 @@ const Register = () => {
         <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:w-1/2 lg:py-24 lg:px-16 bg-blue-950">
           <div className="mx-auto w-full max-w-md">
             <div className="">
-              <h2 className="text-3xl font-extrabold text-white mb-8 text-center">
-                {t('register.title')}
-              </h2>
-
-              <form className="space-y-6" onSubmit={handleSubmit} noValidate autoComplete='off'>
-                <div>
-                  <label htmlFor="nom" className="block text-sm font-medium text-gray-300">
-                    {t('register.name')}
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <UserIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </div>
-                    <input
-                      id="nom"
-                      name="nom"
-                      value={values.nom}
-                      onChange={handleChange}
-                      type="text"
-                      autoComplete="family-name"
-                      required
-                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.nom && touched.nom ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder={t('register.namePlaceholder') || "Entrez votre nom"}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                  {errors.nom && touched.nom && <div className="text-red-500">{errors.nom}</div>}
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300">
-                    {t('register.email')}
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Mail className="h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </div>
-                    <input
-                      id="email"
-                      name="email"
-                      value={values.email}
-                      onChange={handleChange}
-                      type="email"
-                      autoComplete="email"
-                      required
-                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder={t('register.emailPlaceholder') || "Entrez votre adresse email"}
-                      onBlur={handleBlur}
-                    />
-                  </div>
-                  {errors.email && touched.email && <div className="text-red-500">{errors.email}</div>}
-                </div>
-
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-300">
-                    {t('register.password')}
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Lock className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="password"
-                      name="password"
-                      value={values.password}
-                      onChange={handleChange}
-                      type={showPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      required
-                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.password && touched.password ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder={t('register.passwordPlaceholder') || "Entrez votre mot de passe"}
-                      onBlur={handleBlur}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-gray-400" />
-                      ) : (
-                        <Eye className="h-5 w-5 text-gray-400" />
-                      )}
-                    </div>
-                  </div>
-                  {errors.password && touched.password && <div className="text-red-500">{errors.password}</div>}
-                </div>
-
-                <div>
-                  <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-300">
-                    {t('register.confirmPassword')}
-                  </label>
-                  <div className="mt-1 relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"> {/* Icône Lock */}
-                      <Lock className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      id="password_confirmation"
-                      name="password_confirmation"
-                      value={values.password_confirmation}
-                      onChange={handleChange}
-                      type={showConfirmPassword ? "text" : "password"}
-                      autoComplete="new-password"
-                      required
-                      className={`block w-full pl-10 pr-3 py-2.5 border bg-white text-gray-900 placeholder-gray-400 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-blue-500 sm:text-sm ${errors.password_confirmation && touched.password_confirmation ? 'border-red-500' : 'border-gray-300'}`}
-                      placeholder={t('register.confirmPasswordPlaceholder') || "Confirmez votre mot de passe"}
-                      onBlur={handleBlur}
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-5 w-5 text-gray-400" />
-                      ) : (
-                        <Eye className="h-5 w-5 text-gray-400" />
-                      )}
-                    </div>
-                  </div>
-                  {errors.password_confirmation && touched.password_confirmation && <div className="text-red-500">{errors.password_confirmation}</div>}
-                </div>
-
-                <div>
-                  <button
-                    disabled={isSubmitting}
-                    type="submit"
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-blue-950 focus:ring-orange-500 transition-colors duration-200"
-                  >
-                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : t('register.register')}
-                  </button>
-                </div>
-              </form>
+              <RegisterForm textColor="white" onSuccess={(values, data) => {
+                // navigate to email verification after successful registration
+                setTimeout(() => {
+                  navigate('/EmailVerification', { state: { email: values.email, token: data.token, signature: data.signature } });
+                }, 300);
+              }} />
 
               <div className="mt-6 relative">
                 <div className="absolute inset-0 flex items-center" aria-hidden="true">

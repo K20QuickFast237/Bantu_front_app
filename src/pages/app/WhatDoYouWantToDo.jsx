@@ -1,100 +1,179 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import Header from '../../components/app/Header';
-import GroupeImage from '../../assets/groupe.png';
-import Icon1 from '../../assets/icon1.png'; // Postuler
-import Icon2 from '../../assets/icon2.png'; // Recruter
-import Icon3 from '../../assets/icon3.png'; // Acheter
-import Icon4 from '../../assets/icon4.png'; // Vendre
-import Icon5 from '../../assets/icon5.png'; // Freelancer
+import { useTranslation } from 'react-i18next'; // Importé
 import { useAuth } from '@/hooks/useAuth';
+import api from '@/services/api';
+import { toast } from 'sonner';
+
+import GroupeImage from '../../assets/groupe.png';
+import Icon1 from '../../assets/icon1.png'; 
+import Icon2 from '../../assets/icon2.png'; 
+import Icon3 from '../../assets/icon3.png'; 
+import Icon4 from '../../assets/icon4.png'; 
+import Icon5 from '../../assets/icon5.png'; 
 import HeaderProfils from '@/components/app/HeaderProfils';
 
 const WhatDoYouWantToDo = () => {
+    const { t } = useTranslation(); // Hook de traduction
     const navigate = useNavigate();
-    const { professionnel, token } = useAuth();
-    console.log(professionnel);
+    const { professionnel, token, user } = useAuth();
+    const [showSellerForm, setShowSellerForm] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // Fonction pour gérer le clic sur une carte
-    const handleActionClick = (action) => {
-        console.log(`Action sélectionnée : ${action}`);
-
-        // Redirection vers les pages appropriées selon l'action
-        switch (action) {
-            case 'Postuler':
+    const handleActionClick = async (actionId) => {
+        // La logique utilise maintenant l'ID constant, pas le texte traduit
+        switch (actionId) {
+            case 'apply':
                 navigate('/CandidatProfil');
                 break;
-            case 'Recruter':
+            case 'recruit':
                 if (professionnel && Object.keys(professionnel).length > 0) {
-                    // S'il est défini et non vide
                     navigate('/dashboard');
                 } else {
-                    // Sinon on l’envoie s’inscrire
                     navigate('/inscriptionEntreprise');
                 }
                 break;
-            case 'Freelancer':
+            case 'freelance':
                 window.location.href = `${import.meta.env.VITE_FREELANCE_URL}/dashboard?token=${token}`;
                 break;
-            case 'Acheter':
-                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
-                break;
-            case 'Vendre':
-                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/seller?token=${token}`;
+            case 'buy':
+                await handleBuyClick();
+            case 'sell':
+                await handleSellerClick();
                 break;
             default:
                 console.log('Action non reconnue');
         }
     };
 
+    const handleBuyClick = async () => {
+        try {
+            setIsLoading(true);
+            
+            if (!user?.id) {
+                toast.error(t('errors.no_user_id') || 'Utilisateur non identifié');
+                return;
+            }
+
+            // 1. Récupérer les rôles actuels
+            // Dans handleBuyClick et handleSellerClick
+            const response = await api.get(`/user/${user.id}/roles`);
+
+            // Vérifie si response.data est un tableau, sinon utilise un tableau vide
+            const roles = Array.isArray(response.data) ? response.data : [];
+
+            // Maintenant .some() ne plantera plus jamais
+            const hasRole = roles.some((r) => {
+                const name = (r?.name || '').toString().toLowerCase();
+                return name === 'acheteur' || name === 'buyer';
+            });
+            if (hasRole) {
+                // Si déjà acheteur, redirection directe
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
+            } else {
+                // 2. Assigner le rôle si manquant (Appel API vers votre backend)
+                // Note: Adaptez l'URL '/user/assign-role' selon votre API réelle
+                await api.post(`/profile/acheteur`, { 
+                    id: user.id, 
+                    role: 'Acheteur' 
+                });
+                
+                toast.success(t('actions.role_assigned') || 'Profil acheteur activé');
+                
+                // 3. Rediriger vers le dashboard acheteur
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/buyer?token=${token}`;
+            }
+        } catch (error) {
+            console.error('Erreur lors du traitement achat:', error);
+            toast.error(t('errors.action_failed') || 'Impossible d’accéder à l’espace achat');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const handleSellerClick = async () => {
+        try {
+            setIsLoading(true);
+            
+            // Vérifier que l'utilisateur est identifié
+            if (!user?.id) {
+                toast.error(t('errors.no_user_id') || 'Utilisateur non identifié');
+                setIsLoading(false);
+                return;
+            }
+
+            // Récupérer les rôles de l'utilisateur côté backend
+            const response = await api.get(`/user/${user.id}/roles`);
+            const roles = response.data || [];
+            // Rechercher le rôle "Vendeur" (insensible à la casse). Accepte aussi "seller".
+            const hasVendeur = roles.some((r) => {
+                const name = (r?.name || '').toString().toLowerCase();
+                return name === 'vendeur' || name === 'seller';
+            });
+            
+            if (hasVendeur) {
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/dashboard/seller?token=${token}`;
+            } else {
+                window.location.href = `${import.meta.env.VITE_MARKETPLACE_URL}/auth?token=${token}`;
+            }
+        } catch (error) {
+            console.error('Erreur lors de la vérification du rôle:', error);
+            toast.error(t('errors.role_check_failed') || 'Erreur lors de la vérification de votre rôle');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // On utilise un "id" pour la logique et une clé "label" pour la traduction
     const actionCards = [
-        { icon: Icon1, text: 'Postuler', alt: 'Icône Postuler' },
-        { icon: Icon2, text: 'Recruter', alt: 'Icône Recruter' },
-        { icon: Icon5, text: 'Freelancer', alt: 'Icône Freelancer' },
-        { icon: Icon3, text: 'Acheter', alt: 'Icône Acheter' },
-        { icon: Icon4, text: 'Vendre', alt: 'Icône Vendre' },
+        { id: 'apply', icon: Icon1, label: 'actions.apply' },
+        { id: 'recruit', icon: Icon2, label: 'actions.recruit' },
+        { id: 'freelance', icon: Icon5, label: 'actions.freelance' },
+        { id: 'buy', icon: Icon3, label: 'actions.buy' },
+        { id: 'sell', icon: Icon4, label: 'actions.sell' },
     ];
 
     return (
-
         <>
             <HeaderProfils />
             <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-yellow-50 to-blue-50">
-                <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center  justify-between p-8">
-                    {/* Section Gauche : Titre et Image */}
+                <div className="w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between p-8">
+                    
+                    {/* Section Gauche */}
                     <div className="flex flex-col items-center lg:items-start lg:w-1/2 mb-10 lg:mb-0">
                         <h1 className="text-3xl lg:text-4xl font-bold text-blue-900 leading-tight mb-8 text-center lg:text-left">
-                            Que voulez-vous faire ?
+                            {t('actions.title')}
                         </h1>
                         <div className="w-full max-w-md lg:max-w-none">
                             <img
                                 src={GroupeImage}
-                                alt="Illustration de groupe de personnes interagissant via un téléphone"
+                                alt={t('actions.illustration_alt')}
                                 className="w-full h-auto object-contain"
                             />
                         </div>
                     </div>
 
-                    {/* Section Droite : Cartes d'actions */}
+                    {/* Section Droite */}
                     <div className="lg:w-1/2 grid grid-cols-2 gap-4 sm:gap-6 justify-items-center">
-                        {actionCards.map((card, index) => (
+                        {actionCards.map((card) => (
                             <button
-                                key={index}
-                                onClick={() => handleActionClick(card.text)}
+                                key={card.id}
+                                onClick={() => handleActionClick(card.id)}
+                                disabled={isLoading && card.id === 'sell'}
                                 className="bg-gray-100 rounded-xl shadow-md flex flex-col items-center justify-center
-                                       p-6 sm:p-8 w-full h-40 sm:h-48 cursor-pointer
-                                       hover:bg-gray-200 hover:shadow-lg transition-all duration-200
-                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                                aria-label={`Action: ${card.text}`}
+                                         p-6 sm:p-8 w-full h-40 sm:h-48 cursor-pointer
+                                         hover:bg-gray-200 hover:shadow-lg transition-all duration-200
+                                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                                         disabled:opacity-50 disabled:cursor-not-allowed"
+                                aria-label={t('actions.alt_icon', { name: t(card.label) })}
                             >
                                 <img
                                     src={card.icon}
-                                    alt={card.alt}
+                                    alt="" // Alt géré par l'aria-label du bouton
                                     className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-4"
                                 />
                                 <span className="text-gray-800 text-lg sm:text-xl font-semibold">
-                                    {card.text}
+                                    {isLoading && card.id === 'sell' ? t('common.loading') : t(card.label)}
                                 </span>
                             </button>
                         ))}
@@ -102,6 +181,7 @@ const WhatDoYouWantToDo = () => {
                 </div>
             </div>
 
+            
         </>
     );
 };

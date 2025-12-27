@@ -145,7 +145,7 @@ const Competences = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -176,10 +176,10 @@ const Competences = () => {
               </DialogHeader>
 
               <form onSubmit={handleSubmit} className="p-6">
-                {/* Sélection compétence et niveau */}
-                <div className="mb-4 flex gap-2">
+                {/* Sélection compétence et niveau (stack mobile) */}
+                <div className="mb-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <select
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="sm:col-span-2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={selectedCompetence}
                     onChange={(e) => setSelectedCompetence(e.target.value)}
                   >
@@ -190,7 +190,7 @@ const Competences = () => {
                   </select>
 
                   <select
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     value={selectedLevel}
                     onChange={(e) => setSelectedLevel(e.target.value)}
                   >
@@ -203,7 +203,7 @@ const Competences = () => {
                   <button
                     type="button"
                     onClick={handleAddSkill}
-                    className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                    className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                   >
                     Ajouter
                   </button>
@@ -229,11 +229,11 @@ const Competences = () => {
                 </div>
 
                 {/* Bouton Enregistrer */}
-                <div className="flex justify-end pt-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end pt-4 gap-2">
                   <button
                     type="submit"
                     disabled={isSubmitting || newSkills.length === 0}
-                    className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
+                    className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Enregistrer
@@ -252,28 +252,28 @@ const Competences = () => {
             competences.map((c) => (
               <div
                 key={c.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors gap-3"
               >
-                <div className="flex items-center gap-4 flex-grow">
+                <div className="flex items-start gap-4 flex-grow">
                   <DynamicFontAwesomeIcon
                     iconName={c.icon}
                     className="text-2xl text-orange-500 w-8 text-center"
                   />
                   <div className="flex-grow">
-                    <h3 className="font-semibold text-gray-800 text-lg">{c.nom}</h3>
+                    <h3 className="font-semibold text-gray-800 text-base md:text-lg">{c.nom}</h3>
                     <p className="text-sm text-gray-500">{c.description || 'Pas de description'}</p>
                     <p className="text-xs text-gray-400">{c.niveau ? `Niveau: ${c.niveau}` : ''}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-6 flex-shrink-0 ml-4">
-                  <div className="text-center bg-blue-50 px-3 py-2 rounded-lg">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6 mt-2 md:mt-0 ml-0 md:ml-4 flex-shrink-0 w-full md:w-auto">
+                  <div className="text-center bg-blue-50 px-3 py-2 rounded-lg w-full md:w-auto">
                     <p className="font-bold text-lg text-blue-600">{c.nbr_usage}</p>
                     <p className="text-xs text-gray-500">utilisations</p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="w-full md:w-auto flex md:inline-flex">
                     <button
                       onClick={() => openDeleteModal(c.id)}
-                      className="flex items-center px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs"
+                      className="w-full md:w-auto flex items-center px-3 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs justify-center"
                     >
                       <Trash2 size={14} />
                     </button>

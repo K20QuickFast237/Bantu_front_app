@@ -67,7 +67,7 @@ const Infopersonelles = ({ onEditClick }) => {
                 {user?.prenom} {user?.nom}
               </h3>
               <p className="text-sm text-gray-600 mb-4">{particulier.titre_professionnel}</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 gap-x-6 text-gray-700 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-6 text-gray-700 text-sm">
                 <div className="flex items-center">
                   <Phone size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                   <span>{particulier.telephone}</span>
@@ -81,18 +81,18 @@ const Infopersonelles = ({ onEditClick }) => {
                   <span>Âge : {new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear()} ans</span>
                 </div>
                  {/* Indication de visibilité du profil */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full">
                   <Eye size={16} className="text-gray-500 min-w-[16px]" />
-                  <label htmlFor="visibility-switch" className="text-gray-700 cursor-pointer text-sm">
-                    Profil {particulier.is_visible === false ? 'caché' : 'visible'} des recruteurs
-                  </label>
+                  <span className="text-gray-700 text-sm min-w-0 flex-1 truncate">Profil {particulier.is_visible === false ? 'caché' : 'visible'} des recruteurs</span>
                   {isUpdatingVisibility ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin ml-2" />
                   ) : (
-                    <Switch id="visibility-switch" checked={particulier.is_visible === true} onCheckedChange={handleVisibilityToggle} />
+                    <div className="ml-2">
+                      <Switch id="visibility-switch" checked={particulier.is_visible === true} onCheckedChange={handleVisibilityToggle} />
+                    </div>
                   )}
                 </div>
-                <div className="flex items-center col-span-2">
+                <div className="flex items-center md:col-span-2">
                   <Mail size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                   <span className="truncate">{particulier.resume_profil}</span>
                 </div>

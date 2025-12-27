@@ -148,7 +148,7 @@ const DiplomesFormations = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -234,12 +234,10 @@ const DiplomesFormations = () => {
                   )}
                 </div>
 
-                {/* Dates */}
-                <div className="flex space-x-4 mb-4">
-                  <div className="w-1/2">
-                    <label className="block text-gray-700 font-medium mb-2">
-                      Date de début
-                    </label>
+                {/* Dates (stack on mobile) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-2">Date de début</label>
                     <input
                       type="date"
                       name="date_debut"
@@ -249,10 +247,8 @@ const DiplomesFormations = () => {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="w-1/2">
-                    <label className="block text-gray-700 font-medium mb-2">
-                      Date de fin
-                    </label>
+                  <div>
+                    <label className="block text-gray-700 font-medium mb-2">Date de fin</label>
                     <input
                       type="date"
                       name="date_fin"
@@ -265,11 +261,11 @@ const DiplomesFormations = () => {
                 </div>
 
                 {/* Bouton */}
-                <div className="flex justify-end pt-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end pt-4 gap-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
+                    className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {editingFormation ? 'Mettre à jour' : 'Enregistrer'}
@@ -301,31 +297,26 @@ const DiplomesFormations = () => {
 
                   {/* Contenu avec grille */}
                   <div>
-                    <div className="grid grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
-                      <p>
-                        <span className="font-medium text-gray-600">Domaine d'étude</span>
-                      </p>
-                      <p className="font-semibold text-gray-800">
-                        {formation.domaine_etude || 'Non spécifié'}
-                      </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-3 gap-x-4 text-sm text-gray-700">
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Domaine d'étude</span>
+                        <span className="mt-1 font-semibold text-gray-800">{formation.domaine_etude || 'Non spécifié'}</span>
+                      </div>
 
-                      <p>
-                        <span className="font-medium text-gray-600">Etablissement</span>
-                      </p>
-                      <p>{formation.etablissement || 'Non spécifié'}</p>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Etablissement</span>
+                        <span className="mt-1">{formation.etablissement || 'Non spécifié'}</span>
+                      </div>
 
-                      <p>
-                        <span className="font-medium text-gray-600">Date</span>
-                      </p>
-                      <p>
-                        {`${formation.date_debut || 'N/A'} - ${formation.date_fin || 'N/A'
-                          }`}
-                      </p>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Date</span>
+                        <span className="mt-1">{`${formation.date_debut || 'N/A'} - ${formation.date_fin || 'N/A'}`}</span>
+                      </div>
 
-                      <p>
-                        <span className="font-medium text-gray-600">Diplôme</span>
-                      </p>
-                      <p>{formation.diplome || 'Non spécifié'}</p>
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Diplôme</span>
+                        <span className="mt-1">{formation.diplome || 'Non spécifié'}</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { Check, Users, Briefcase, ShoppingBag, UserCircle, TrendingUp, Zap, Star } from 'lucide-react';
+import { Check, Users, Briefcase, ShoppingBag, UserCircle, TrendingUp, Zap, Rocket, BarChart3, Crown, Star, Plus } from 'lucide-react';
+// import { Rocket, BarChart3, Crown, Check, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const PlansTarifs = () => {
+  const { t } = useTranslation();
   const [userType, setUserType] = useState('jobseeker'); // jobseeker, seller, freelancer, employer
   const [billingPeriod, setBillingPeriod] = useState('annual'); // monthly, quarterly, annual
   const [visibilityBillingPeriod, setVisibilityBillingPeriod] = useState('3days'); // 3days, weekly, monthly
@@ -10,214 +13,67 @@ const PlansTarifs = () => {
   // Données de tarification complètes
   const pricingData = {
     jobseeker: {
-      title: "Demandeurs d'Emploi",
       icon: UserCircle,
-      description: "Trouvez l'emploi de vos rêves",
       periods: ['quarterly', 'annual'],
       plans: [
         {
-          name: "Basique",
+          id: "basic", // AJOUTÉ : Doit matcher la clé dans fr.json
           price: { quarterly: 0, annual: 0 },
           popular: false,
           color: "orange",
-          description: "Parfait pour commencer votre recherche",
-          features: [
-            "Inscription et profil complet",
-            "Téléchargement de CV",
-            "Postuler à 3 emplois par mois",
-            "Accès aux offres publiques",
-            "Support communautaire"
-          ]
         },
         {
-          name: "Standard",
+          id: "standard", // AJOUTÉ
           price: { quarterly: 2950, annual: 8850 },
           popular: true,
           color: "blue",
-          description: "Optimisez vos candidatures",
-          features: [
-            "Mise en forme CV professionnel",
-            "Lettre de motivation professionnelle",
-            "Mise en avant du CV",
-            "Score Matching",
-            "Probabilité d'obtenir un entretien",
-            "Candidatures illimitées",
-            "Badge de compétence",
-            "Alertes emploi"
-          ]
         },
         {
-          name: "Premium",
+          id: "premium", // AJOUTÉ
           price: { quarterly: 4950, annual: 16850 },
           popular: false,
           color: "purple",
-          description: "Accès VIP aux meilleures opportunités",
-          features: [
-            "Tout du plan Standard",
-            "Boost CV prioritaire",
-            "IA de mise en relation",
-            "Offres cachées en avant-première",
-            "1 session coaching RH/trimestre",
-            "Certification de compétences",
-            "Rapport mensuel personnalisé",
-            "Support dédié"
-          ]
         }
       ],
       addons: [
-        { name: "CV + Lettre de motivation pro", price: 1000, period: "mois" },
-        { name: "Traduction EN/FR", price: 1000, period: "mois" }
+        { id: "cv_letter", price: 1000 },
+        { id: "translation", price: 1000 }
       ]
     },
     seller: {
-      title: "Vendeurs de Produits",
       icon: ShoppingBag,
-      description: "Créez votre boutique en ligne",
       periods: ['monthly', 'quarterly', 'annual'],
       plans: [
         {
-          name: "Boutique en Ligne",
+          id: "shop", // AJOUTÉ
           price: { monthly: 2000, quarterly: 5000, annual: 19250 },
           popular: true,
           color: "green",
-          description: "Votre e-commerce clé en main",
-          features: [
-            "Catalogue produits illimité",
-            "Panier et paiement sécurisé",
-            "Gestion des commandes",
-            "Espace client",
-            "Outils marketing de base",
-            "Support client 24/7"
-          ]
         }
       ],
+      // Même logique pour visibility
       visibility: [
-        {
-          name: "Starter",
-          description: "Visibilité naturelle",
-          price: { '3days': 500, weekly: 1000, monthly: 3750 },
-          features: ["SEO référencement naturel"]
-        },
-        {
-          name: "Pro",
-          description: "Boostez vos ventes",
-          price: { '3days': 1000, weekly: 2000, monthly: 7750 },
-          features: [
-            "Tableau de bord analytique",
-            "Support marketing",
-            "SEO + Publicité Facebook/Instagram"
-          ]
-        },
-        {
-          name: "Business+",
-          description: "Dominez votre marché",
-          price: { '3days': 2000, weekly: 4000, monthly: 15500 },
-          features: [
-            "Image de marque complète",
-            "Priorité maximale",
-            "SEO + Facebook/Instagram + Google Ads"
-          ]
-        }
+        { id: "starter", price: { '3days': 500, weekly: 1000, monthly: 3750 } },
+        { id: "pro", price: { '3days': 1000, weekly: 2000, monthly: 7750 } },
+        { id: "business", price: { '3days': 2000, weekly: 4000, monthly: 15500 } }
       ]
     },
     freelancer: {
-      title: "Prestataires de Services",
       icon: Briefcase,
-      description: "Développez votre activité freelance",
       periods: ['monthly', 'quarterly', 'annual'],
       plans: [
-        {
-          name: "Basique",
-          price: { monthly: 1000, quarterly: 2850, annual: 10000 },
-          popular: false,
-          color: "orange",
-          description: "Démarrez votre activité",
-          features: [
-            "Listage de services",
-            "Jusqu'à 3 propositions/mois",
-            "Profil professionnel",
-            "Mention vérifiée"
-          ]
-        },
-        {
-          name: "Croissance",
-          price: { monthly: 3000, quarterly: 8750, annual: 32500 },
-          popular: true,
-          color: "blue",
-          description: "Accélérez votre croissance",
-          features: [
-            "Propositions illimitées",
-            "Portfolio professionnel",
-            "Analyse de performance",
-            "Support prioritaire",
-            "Badge vérifié premium"
-          ]
-        },
-        {
-          name: "Élite",
-          price: { monthly: 5000, quarterly: 14850, annual: 50500 },
-          popular: false,
-          color: "purple",
-          description: "Statut premium maximum",
-          features: [
-            "Tout du plan Croissance",
-            "Publicités ciblées",
-            "Page de marque personnalisée",
-            "Visibilité premium maximale",
-            "Manager de compte dédié"
-          ]
-        }
+        { id: "basic", price: { monthly: 1000, quarterly: 2850, annual: 10000 }, color: "orange" },
+        { id: "growth", price: { monthly: 3000, quarterly: 8750, annual: 32500 }, popular: true, color: "blue" },
+        { id: "elite", price: { monthly: 5000, quarterly: 14850, annual: 50500 }, color: "purple" }
       ]
     },
     employer: {
-      title: "Employeurs / Recruteurs",
       icon: Users,
-      description: "Recrutez les meilleurs talents",
       periods: ['monthly', 'annual'],
       plans: [
-        {
-          name: "Lite",
-          price: { monthly: 3000, annual: 30000 },
-          popular: false,
-          color: "orange",
-          description: "Pour les petites équipes",
-          features: [
-            "3 offres d'emploi/mois",
-            "Accès base demandeurs d'emploi",
-            "Gestion des candidatures",
-            "Support standard"
-          ]
-        },
-        {
-          name: "Pro Recruteur",
-          price: { monthly: 5000, annual: 50000 },
-          popular: true,
-          color: "blue",
-          description: "Solution complète RH",
-          features: [
-            "Offres d'emploi illimitées",
-            "Recherche avancée CV",
-            "Page entreprise personnalisée",
-            "Entretiens en ligne",
-            "Analyse des candidatures",
-            "Support prioritaire"
-          ]
-        },
-        {
-          name: "Entreprise",
-          price: { monthly: "Sur mesure", annual: "Sur mesure" },
-          popular: false,
-          color: "purple",
-          description: "Solution personnalisée",
-          features: [
-            "Tout du plan Pro",
-            "Tableaux de bord personnalisés",
-            "Intégration système RH",
-            "API d'accès",
-            "Manager de compte dédié",
-            "Formation équipe RH"
-          ]
-        }
+        { id: "lite", price: { monthly: 3000, annual: 30000 }, color: "orange" },
+        { id: "pro", price: { monthly: 5000, annual: 50000 }, popular: true, color: "blue" },
+        { id: "enterprise", price: { monthly: "Sur mesure", annual: "Sur mesure" }, color: "purple" }
       ]
     }
   };
@@ -277,17 +133,17 @@ const PlansTarifs = () => {
     <div id="pricing-plans" className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         
-        {/* En-tête */}
+       {/* En-tête */}
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
           <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
-            Tarifs BantuLink
+            {t('pricing.title')}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Des solutions abordables et évolutives pour tous vos besoins professionnels
+            {t('pricing.subtitle')}
           </p>
         </motion.div>
 
@@ -318,7 +174,8 @@ const PlansTarifs = () => {
                   <p className={`font-semibold text-sm ${
                     userType === type.id ? 'text-blue-900' : 'text-gray-700'
                   }`}>
-                    {type.label}
+                    {/* Traduction dynamique du label de catégorie */}
+                    {t(`pricing.${type.id}.title`)}
                   </p>
                 </motion.button>
               );
@@ -340,10 +197,12 @@ const PlansTarifs = () => {
                       : 'text-gray-700 hover:text-gray-900'
                   }`}
                 >
-                  {getPeriodLabel(period)}
+                  {/* Traduction de la période (Mensuel, Annuel, etc.) */}
+                  {t(`pricing.billing.${period}`)}
+                  
                   {period === 'annual' && (
                     <span className="ml-2 text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded-full">
-                      Économisez jusqu'à 30%
+                      {t('pricing.billing.save')}
                     </span>
                   )}
                 </button>
@@ -352,158 +211,239 @@ const PlansTarifs = () => {
           </div>
         )}
 
-        {/* Plans principaux */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={userType + billingPeriod}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-          >
-            {currentData.plans.map((plan, index) => (
+      
+
+      {/* Plans principaux */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={userType + billingPeriod}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+        >
+          {currentData.plans.map((plan, index) => {
+            // 1. On construit la clé de traduction en s'assurant que plan.id existe
+            const translationPath = `pricing.${userType}.plans.${plan.id}`;
+            const planContent = t(translationPath, { returnObjects: true });
+
+            // Sécurité si la traduction échoue
+            const hasContent = planContent && typeof planContent === 'object';
+
+            return (
               <motion.div
-                key={plan.name}
+                key={plan.id || index} // Correction de l'erreur "unique key prop"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 className={`bg-white rounded-2xl shadow-xl p-8 flex flex-col relative ${
-                  plan.popular ? `border-2 ${getColorClasses(plan.color, 'border')} transform scale-105` : 'border border-gray-200'
+                  plan.popular 
+                    ? `border-2 ${getColorClasses(plan.color, 'border')} transform scale-105` 
+                    : 'border border-gray-200'
                 }`}
               >
                 {plan.popular && (
                   <div className={`absolute -top-4 left-1/2 -translate-x-1/2 ${getColorClasses(plan.color, 'badge')} text-white text-xs font-bold py-1.5 px-4 rounded-full shadow-md flex items-center gap-1`}>
                     <Star className="w-3 h-3" />
-                    Le plus populaire
+                    {t('pricing.labels.popular')}
                   </div>
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                    {hasContent ? planContent.name : `Plan ${plan.id}`}
+                  </h3>
+                  
                   <div className="mb-3">
                     <span className="text-4xl font-extrabold text-gray-900">
                       {formatPrice(plan.price[billingPeriod])}
                     </span>
                     {typeof plan.price[billingPeriod] === 'number' && plan.price[billingPeriod] > 0 && (
                       <span className="text-gray-500 text-sm ml-2">
-                        / {getPeriodLabel(billingPeriod)}
+                        / {t(`pricing.billing.${billingPeriod}`)}
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm">{plan.description}</p>
+                  
+                  <p className="text-gray-600 text-sm">
+                    {hasContent ? planContent.tagline : ""}
+                  </p>
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start">
-                      <Check className="text-green-500 w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700 text-sm">{feature}</span>
+                  {hasContent && Array.isArray(planContent.features) ? (
+                    planContent.features.map((feature, idx) => (
+                      <li key={`${plan.id}-feat-${idx}`} className="flex items-start">
+                        <Check className="text-green-500 w-5 h-5 mr-3 flex-shrink-0 mt-0.5" />
+                        <span className="text-gray-700 text-sm">{feature}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-red-400 text-xs italic">
+                      Données de fonctionnalités introuvables pour {translationPath}
                     </li>
-                  ))}
+                  )}
                 </ul>
 
                 <button className={`w-full text-white font-semibold py-3 px-6 rounded-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 ${getColorClasses(plan.color, 'button')}`}>
-                  {plan.price[billingPeriod] === 0 ? 'Commencer gratuitement' : 
-                   typeof plan.price[billingPeriod] === 'string' ? 'Nous contacter' : 'Choisir ce plan'}
+                  {plan.price[billingPeriod] === 0 
+                    ? t('pricing.labels.ctaFree') 
+                    : typeof plan.price[billingPeriod] === 'string' 
+                      ? t('pricing.labels.ctaContact') 
+                      : t('pricing.labels.ctaSelect')}
                 </button>
               </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Plans de visibilité pour vendeurs */}
+            );
+          })}
+        </motion.div>
+      </AnimatePresence>
+        
+        {/* Section Visibilité & Marketing pour les Vendeurs */}
         {userType === 'seller' && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-16"
-          >
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Plans de Visibilité & Marketing
+          <div className="mt-24 bg-gray-50/50 rounded-3xl p-8 lg:p-12 border border-gray-100">
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 text-green-700 text-sm font-bold mb-4">
+                <Zap className="w-4 h-4" />
+                {t('pricing.labels.visibilityTitle')}
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+                {/* Boostez votre boutique */}
               </h2>
-              <p className="text-gray-600">Boostez votre boutique avec nos options de sponsoring</p>
-            </div>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                {t('pricing.labels.visibilitySub')}
+              </p>
 
-            <div className="mb-6 flex justify-center">
-              <div className="inline-flex rounded-lg border border-gray-200 bg-white p-1 shadow-sm">
-                {['3days', 'weekly', 'monthly'].map((period) => (
-                  <button
-                    key={period}
-                    onClick={() => setVisibilityBillingPeriod(period)}
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                      billingPeriod === period
-                        ? 'bg-green-600 text-white shadow-sm'
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
-                  >
-                    {getPeriodLabel(period)}
-                  </button>
-                ))}
+              {/* Sélecteur de période stylisé */}
+              <div className="flex justify-center mt-8">
+                <div className="inline-flex rounded-xl border border-gray-200 bg-white p-1.5 shadow-sm">
+                  {['3days', 'weekly', 'monthly'].map((period) => (
+                    <button
+                      key={period}
+                      onClick={() => setVisibilityBillingPeriod(period)}
+                      className={`px-8 py-2.5 rounded-lg text-sm font-bold transition-all duration-200 ${
+                        visibilityBillingPeriod === period
+                          ? 'bg-green-600 text-white shadow-md'
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {t(`pricing.billing.${period}`)}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {currentData.visibility.map((plan, index) => (
-                <motion.div
-                  key={plan.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-lg p-6 border border-gray-200"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold text-gray-900">{plan.name}</h3>
-                    <TrendingUp className="w-6 h-6 text-green-600" />
-                  </div>
-                  <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
-                  <div className="mb-6">
-                    <span className="text-3xl font-bold text-gray-900">
-                      {formatPrice(plan.price[visibilityBillingPeriod])}
-                    </span>
-                  </div>
-                  <ul className="space-y-2 mb-6">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start text-sm">
-                        <Zap className="w-4 h-4 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition">
-                    Sponsoriser
-                  </button>
-                </motion.div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {pricingData.seller.visibility.map((item, index) => {
+                const visContent = t(`pricing.seller.visibility.${item.id}`, { returnObjects: true });
+                
+                // Attribution des icônes selon l'ID
+                const Icon = item.id === 'starter' ? Rocket : item.id === 'pro' ? BarChart3 : Crown;
+
+                return (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="group bg-white rounded-3xl border border-gray-200 p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col"
+                  >
+                    {/* Header de la carte avec Icône */}
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors ${
+                      item.id === 'business' ? 'bg-indigo-600 text-white' : 'bg-green-100 text-green-600'
+                    }`}>
+                      <Icon className="w-8 h-8" />
+                    </div>
+
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      {visContent?.name || item.id}
+                    </h3>
+                    <p className="text-gray-500 text-sm mb-6 leading-relaxed">
+                      {visContent?.desc || visContent?.description}
+                    </p>
+
+                    {/* Section Prix */}
+                    <div className="mb-8 flex items-baseline gap-1">
+                      <span className="text-4xl font-black text-gray-900">
+                        {formatPrice(item.price[visibilityBillingPeriod])}
+                      </span>
+                      <span className="text-gray-400 font-medium">
+                        / {t(`pricing.billing.${visibilityBillingPeriod}`).toLowerCase()}
+                      </span>
+                    </div>
+
+                    {/* Features avec puces personnalisées */}
+                    <ul className="space-y-4 mb-10 flex-grow">
+                      {Array.isArray(visContent?.features) && visContent.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-start text-sm text-gray-600 font-medium">
+                          <div className="mr-3 mt-1 bg-green-50 rounded-full p-0.5">
+                            <Check className="w-3.5 h-3.5 text-green-600" />
+                          </div>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Bouton d'action */}
+                    <button className={`w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wider transition-all shadow-lg ${
+                      item.id === 'business' 
+                        ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100' 
+                        : 'bg-green-600 text-white hover:bg-green-700 shadow-green-100'
+                    }`}>
+                      {t('pricing.labels.ctaSponsor')}
+                    </button>
+                  </motion.div>
+                );
+              })}
             </div>
-          </motion.div>
+          </div>
         )}
 
-        {/* Add-ons pour demandeurs d'emploi */}
+        {/* Section Services Supplémentaires */}
         {userType === 'jobseeker' && currentData.addons && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-16 bg-white rounded-2xl shadow-lg p-8"
-          >
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              Services Supplémentaires
+          <div className="mt-16 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">
+              {t('pricing.jobseeker.addons_title')}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {currentData.addons.map((addon, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition">
-                  <h4 className="font-semibold text-gray-900 mb-2">{addon.name}</h4>
-                  <p className="text-2xl font-bold text-blue-600 mb-4">
-                    {formatPrice(addon.price)} <span className="text-sm text-gray-500">/ {addon.period}</span>
-                  </p>
-                  <button className="w-full bg-gray-900 hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded-lg transition">
-                    Ajouter
-                  </button>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {currentData.addons.map((addon) => {
+                // Récupération de la traduction via l'ID
+                const addonContent = t(`pricing.jobseeker.addons.${addon.id}`, { returnObjects: true });
+
+                return (
+                  <div 
+                    key={addon.id}
+                    className="flex items-center justify-between bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="bg-orange-100 p-3 rounded-xl">
+                        <Plus className="w-6 h-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900">
+                          {addonContent?.name || addon.id}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Optionnel
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="text-xl font-black text-gray-900">
+                        {formatPrice(addon.price)}
+                      </div>
+                      <div className="text-xs text-gray-400">
+                        / {addonContent?.period || 'mois'}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          </motion.div>
+          </div>
         )}
 
       </div>

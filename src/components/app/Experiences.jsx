@@ -234,9 +234,9 @@ const Experiences = () => {
                   )}
                 </div>
 
-                {/* Ville et Pays */}
-                <div className="flex space-x-4 mb-4">
-                  <div className="w-1/2">
+                {/* Ville et Pays (stack on mobile) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
                     <label className="block text-gray-700 font-medium mb-2">Ville</label>
                     <input
                       type="text"
@@ -251,7 +251,7 @@ const Experiences = () => {
                       <p className="text-red-500 text-sm">{errors.ville}</p>
                     )}
                   </div>
-                  <div className="w-1/2">
+                  <div>
                     <label className="block text-gray-700 font-medium mb-2">Pays</label>
                     <input
                       type="text"
@@ -268,9 +268,9 @@ const Experiences = () => {
                   </div>
                 </div>
 
-                {/* Dates de début et de fin */}
-                <div className="flex space-x-4 mb-4">
-                  <div className="w-1/2">
+                {/* Dates de début et de fin (stack on mobile) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                  <div>
                     <label className="block text-gray-700 font-medium mb-2">
                       Date de début <span className="text-red-500">*</span>
                     </label>
@@ -286,7 +286,7 @@ const Experiences = () => {
                       <p className="text-red-500 text-sm">{errors.date_debut}</p>
                     )}
                   </div>
-                  <div className="w-1/2">
+                  <div>
                     <label className="block text-gray-700 font-medium mb-2">
                       Date de fin <span className="text-red-500">*</span>
                     </label>
@@ -321,11 +321,11 @@ const Experiences = () => {
                 </div>
 
                 {/* Boutons */}
-                <div className="flex justify-end pt-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end pt-4 gap-2">
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
+                    className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {editingExperience ? 'Mettre à jour' : 'Enregistrer'}
@@ -349,32 +349,46 @@ const Experiences = () => {
               <div key={exp.id} className="flex justify-between items-start pb-4 last:border-b-0 last:pb-0">
                 <div className="flex items-start flex-grow">
                   <div className="w-2 h-2 rounded-full mr-3 mt-2 flex-shrink-0" style={{ backgroundColor: '#10B981' }}></div>
-                  <div>
-                    <div className="grid grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-1 gap-x-4 text-sm text-gray-700">
-                      <p><span className="font-medium text-gray-600">Poste</span></p>
-                      <p className="font-semibold text-gray-800">{exp.titre_poste || 'Non spécifié'}</p>
-                      <p><span className="font-medium text-gray-600">Entreprise</span></p>
-                      <p>{exp.nom_entreprise || 'Non spécifié'}</p>
-                      <p><span className="font-medium text-gray-600">Localisation</span></p>
-                      <p>{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || 'Non spécifié'}</p>
-                      <p><span className="font-medium text-gray-600">Date</span></p>
-                      <p>{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</p>
-                      <p><span className="font-medium text-gray-600">Description, Missions</span></p>
-                      <p>{exp.description_taches || 'Non spécifié'}</p>
+                  <div className="w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-3 gap-x-4 text-sm text-gray-700">
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Poste</span>
+                        <span className="mt-1 font-semibold text-gray-800 break-words">{exp.titre_poste || 'Non spécifié'}</span>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Entreprise</span>
+                        <span className="mt-1 break-words">{exp.nom_entreprise || 'Non spécifié'}</span>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Localisation</span>
+                        <span className="mt-1 break-words">{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || 'Non spécifié'}</span>
+                      </div>
+
+                      <div className="flex flex-col">
+                        <span className="text-xs text-gray-600">Date</span>
+                        <span className="mt-1">{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</span>
+                      </div>
+
+                      <div className="flex flex-col md:col-span-2">
+                        <span className="text-xs text-gray-600">Description, Missions</span>
+                        <span className="mt-1 break-words">{exp.description_taches || 'Non spécifié'}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => openEditModal(exp)}
-                    className="flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs"
+                    className="w-full md:w-auto flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs justify-center"
                   >
                     <Edit size={14} className="mr-1" />
                     Modifier
                   </button>
                   <button
                     onClick={() => openDeleteModal(exp.id)}
-                    className="flex items-center px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs"
+                    className="w-full md:w-auto flex items-center px-2 py-1 rounded-md bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 text-xs justify-center"
                   >
                     <Trash2 size={14} />
                   </button>

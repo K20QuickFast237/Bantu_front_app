@@ -14,7 +14,8 @@
     "en": "English",
     "findJob": "Trouver un job",
     "findCompany": "Trouver une entreprise",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "portail":"Portail"
   },
   "login": {
     "title": "Se connecter",
@@ -52,6 +53,17 @@
     "passwordPlaceholder": "Entrez votre mot de passe",
     "confirmPasswordPlaceholder": "Confirmez votre mot de passe"
   },
+  "actions": {
+    "title": "Que voulez-vous faire ?",
+    "illustration_alt": "Illustration de groupe de personnes interagissant via un téléphone",
+    "apply": "Postuler",
+    "recruit": "Recruter",
+    "freelance": "Freelancer",
+    "buy": "Acheter",
+    "sell": "Vendre",
+    "alt_icon": "Icône {{name}}"
+  },
+
   "category": {
     "title": "Parcourir Par Catégorie",
     "description": "Choisissez une catégorie ci-dessous pour trouver des sujets d'aide spécifiques et des questions fréquemment posées adaptées à vos besoins.",
@@ -182,35 +194,38 @@
       "title": "Votre Boutique En Ligne",
       "description": "Ouvrez votre boutique en quelques minutes avec notre constructeur de boutique intuitif. Personnalisez tout, de la mise en page aux options de paiement.",
       "features": [
-        "Constructeur de boutique par glisser-déposer",
-        "Thèmes personnalisables",
-        "Passerelles de paiement intégrées"
+        "(MT) business.onlineStore.features.0",
+        "(MT) business.onlineStore.features.1",
+        "(MT) business.onlineStore.features.2"
       ]
     },
     "promotion": {
       "title": "Promouvez Vos Produits",
       "description": "Mettez en avant ce qui compte le plus avec de la publicité ciblée et des annonces en vedette pour atteindre plus de clients.",
       "features": [
-        "Annonces de produits en vedette",
-        "Publicité ciblée",
-        "Tableau de bord analytique"
+        "(MT) business.promotion.features.0",
+        "(MT) business.promotion.features.1",
+        "(MT) business.promotion.features.2"
       ]
     },
     "chat": {
       "title": "Discutez Avec Les Acheteurs",
       "description": "Créez de la confiance avec de vraies conversations. Répondez aux questions, négociez les prix et concluez des affaires plus rapidement.",
       "features": [
-        "Messagerie en temps réel",
-        "Partage de fichiers",
-        "Suivi des commandes"
+        "(MT) business.chat.features.0",
+        "(MT) business.chat.features.1",
+        "(MT) business.chat.features.2"
       ]
     }
   },
   "faq": {
     "form": {
-        "title": "J'ai Une Question Pour Bantulink",
-        "subtitle": "Si vous avez des questions, nous y répondrons.",
-        "subscribeSuccess": "Merci pour votre inscription à notre newsletter !"
+      "title": "J'ai Une Question Pour Bantulink",
+      "subtitle": "Si vous avez des questions, nous y répondrons.",
+      "subscribeSuccess": "Merci pour votre inscription à notre newsletter !",
+      "subscribeError": "Erreur d'inscription",
+      "subscribeErrorDesc": "Une erreur est survenue lors de l'inscription.",
+      "graffitiAlt": "Lignes graffiti décoratives"
     },
     "hero": {
       "title": "Peut-Être Que Votre Question A Reçu Une Réponse, Vérifiez-La",
@@ -256,6 +271,14 @@
   },
   "features": {
     "title": "FONCTIONNALITÉS",
+    "header": {
+      "title": "Une plateforme, des possibilités infinies",
+      "subtitle": "Découvrez les outils conçus pour votre carrière et votre business, accessibles en un clic."
+    },
+    "tabs": {
+      "hire": "BantuHire",
+      "market": "BantuMarket"
+    },
     "bantuHire": {
       "title": "BantuHire — Le Travail Vous Trouve",
       "description": "La plateforme qui connecte talents et recruteurs en un clic.",
@@ -291,7 +314,9 @@
     "community": {
       "title": "Les Services Communautaires Appellent, Pas Besoin De Les Retarder",
       "description": "Échangez, Apprenez, Grandissez Ensemble. Freelancers, Recruteurs, Vendeurs Et Acheteurs Vous Attendent.",
-      "button": "Rejoindre La Communauté"
+      "button": "Rejoindre La Communauté",
+      "imageAlt": "Illustration des services communautaires",
+      "decorAlt": "Lignes décoratives"
     }
   },
   "experiences": {
@@ -376,202 +401,363 @@
         "title": "Faisons-le!"
       }
     },
+    "description":"La super-application pour l'emploi et le commerce en Afrique.",
+    "joinus":"Accédez à un monde d'opportunités professionnelles et commerciales.",
     "copyright": "Copyright © 2025 BantuLink. Tous droits réservés."
   },
+
   "pricing": {
-  "hero": {
-    "title": "Choisissez la solution qui va accompagner votre croissance",
-    "button": "voir nos plans"
-  },
-  "plans": {
-    "title": "Plans Flexibles Pour Chaque Utilisateur",
-    "subtitle": "Que vous soyez recruteur, freelance, vendeur ou acheteur, choisissez le plan qui correspond à vos besoins.",
-    "basic": {
-      "name": "Basique",
-      "price": "Gratuit",
-      "description": "Parfait pour commencer avec les fonctionnalités de base en matière de mise en réseau.",
-      "features": [
-        "Jusqu'à 50 connexions",
-        "Fonctionnalités de profil de base",
-        "Accès communautaire",
-        "Support par e-mail"
-      ],
-      "button": "Commencer"
+    "hero":{
+      "title":"Choisissez la solution qui va accompagner votre croissance",
+      "button":"Voir nos plans"
     },
-    "pro": {
-      "name": "Pro",
-      "price": "$9.99",
-      "period": "/mois",
-      "description": "Idéal pour les professionnels et les entreprises en croissance",
+    "stats":{
+      "users":"Utilisateurs Actifs",
+      "providers":"Prestataires certifiés",
+      "companies":"Entreprise Inscrites",
+      "satisfaction":"De satisfaction client"
+    },
+    "title": "Tarifs BantuLink",
+    "subtitle": "Des solutions abordables et évolutives pour tous vos besoins professionnels",
+    "billing": {
+      "monthly": "Mensuel",
+      "quarterly": "Trimestriel",
+      "annual": "Annuel",
+      "3days": "3 Jours",
+      "weekly": "Semaine",
+      "save": "Économisez jusqu'à 30%",
+      "per": "/ {{period}}"
+    },
+    "labels": {
       "popular": "Le plus populaire",
-      "features": [
-        "Connexions illimitées",
-        "Fonctionnalités avancées du profil",
-        "Correspondance prioritaire",
-        "Tableau de bord analytique",
-        "Support prioritaire"
-      ],
-      "button": "S'abonner"
+      "free": "Gratuit",
+      "ctaFree": "Commencer gratuitement",
+      "ctaContact": "Nous contacter",
+      "ctaSelect": "Choisir ce plan",
+      "ctaAdd": "Ajouter",
+      "ctaSponsor": "Sponsoriser",
+      "visibilityTitle": "Plans de Visibilité & Marketing",
+      "visibilitySub": "Boostez votre boutique avec nos options de sponsoring",
+      "addonsTitle": "Services Supplémentaires"
     },
-    "enterprise": {
-      "name": "Entreprise",
-      "price": "Personnalisé",
-      "description": "Solutions sur mesure pour les grandes organisations et les équipes",
-      "features": [
-        "Tout dans Pro",
-        "Gestion d'équipe",
-        "Intégrations personnalisées",
-        "Support dédié",
-        "Garantie SLA"
-      ],
-      "button": "Contactez les ventes"
+    "jobseeker": {
+      "title": "Demandeurs d'Emploi",
+      "desc": "Trouvez l'emploi de vos rêves",
+      "plans": {
+        "basic": {
+          "name": "Basique",
+          "tagline": "Parfait pour commencer votre recherche",
+          "features": [
+            "Inscription et profil complet",
+            "Téléchargement de CV",
+            "Postuler à 3 emplois par mois",
+            "Accès aux offres publiques",
+            "Support communautaire"
+          ]
+        },
+        "standard": {
+          "name": "Standard",
+          "tagline": "Optimisez vos candidatures",
+          "features": [
+            "Mise en forme CV professionnel",
+            "Lettre de motivation professionnelle",
+            "Mise en avant du CV",
+            "Score Matching",
+            "Probabilité d'obtenir un entretien",
+            "Candidatures illimitées",
+            "Badge de compétence",
+            "Alertes emploi"
+          ]
+        },
+        "premium": {
+          "name": "Premium",
+          "tagline": "Accès VIP aux meilleures opportunités",
+          "features": [
+            "Tout du plan Standard",
+            "Boost CV prioritaire",
+            "IA de mise en relation",
+            "Offres cachées en avant-première",
+            "1 session coaching RH/trimestre",
+            "Certification de compétences",
+            "Rapport mensuel personnalisé",
+            "Support dédié"
+          ]
+        }
+      },
+      "addons_title": "Services Supplémentaires",
+      "addons": {
+        "cv_letter": {
+          "name": "CV + Lettre de motivation pro",
+          "period": "mois"
+        },
+        "translation": {
+          "name": "Traduction EN/FR",
+          "period": "mois"
+        }
+      }
+      
+    },
+
+    "seller": {
+      "title": "Vendeurs de Produits",
+      "desc": "Créez votre boutique en ligne",
+      "plans": {
+        "shop": {
+          "name": "Boutique en Ligne",
+          "tagline": "Votre e-commerce clé en main",
+          "features": [
+            "Catalogue produits illimité",
+            "Panier et paiement sécurisé",
+            "Gestion des commandes",
+            "Espace client",
+            "Outils marketing de base",
+            "Support client 24/7"
+          ]
+        }
+      },
+      "labels": {
+        "visibilityTitle": "Plans de Visibilité & Marketing",
+        "visibilitySub": "Boostez votre boutique avec nos options de sponsoring",
+        "ctaSponsor": "Sponsoriser"
+      },
+      "visibility_title": "Boostez votre visibilité",
+      "visibility_subtitle": "Attirez plus de clients avec nos options de mise en avant",
+      "visibility": {
+        "starter": {
+          "name": "Starter",
+          "description": "Visibilité naturelle",
+          "features": ["SEO référencement naturel"]
+        },
+        "pro": {
+          "name": "Pro",
+          "description": "Boostez vos ventes",
+          "features": ["Tableau de bord analytique", "Support marketing", "SEO + Pubs Facebook"]
+        },
+        "business": {
+          "name": "Business+",
+          "description": "Dominez votre marché",
+          "features": ["Image de marque complète", "Priorité maximale", "Google Ads inclus"]
+        }
+      }
+    },
+    "freelancer": {
+      "title": "Prestataires de Services",
+      "desc": "Développez votre activité freelance",
+      "plans": {
+        "basic": {
+          "name": "Basique",
+          "tagline": "Démarrez votre activité",
+          "features": [
+            "Listage de services",
+            "Jusqu'à 3 propositions/mois",
+            "Profil professionnel",
+            "Mention vérifiée"
+          ]
+        },
+        "growth": {
+          "name": "Croissance",
+          "tagline": "Accélérez votre croissance",
+          "features": [
+            "Propositions illimitées",
+            "Portfolio professionnel",
+            "Analyse de performance",
+            "Support prioritaire",
+            "Badge vérifié premium"
+          ]
+        },
+        "elite": {
+          "name": "Élite",
+          "tagline": "Statut premium maximum",
+          "features": [
+            "Tout du plan Croissance",
+            "Publicités ciblées",
+            "Page de marque personnalisée",
+            "Visibilité premium maximale",
+            "Manager de compte dédié"
+          ]
+        }
+      }
+    },
+    "employer": {
+      "title": "Employeurs / Recruteurs",
+      "desc": "Recrutez les meilleurs talents",
+      "plans": {
+        "lite": {
+          "name": "Lite",
+          "tagline": "Pour les petites équipes",
+          "features": [
+            "3 offres d'emploi/mois",
+            "Accès base demandeurs d'emploi",
+            "Gestion des candidatures",
+            "Support standard"
+          ]
+        },
+        "pro": {
+          "name": "Pro Recruteur",
+          "tagline": "Solution complète RH",
+          "features": [
+            "Offres d'emploi illimitées",
+            "Recherche avancée CV",
+            "Page entreprise personnalisée",
+            "Entretiens en ligne",
+            "Analyse des candidatures",
+            "Support prioritaire"
+          ]
+        },
+        "enterprise": {
+          "name": "Entreprise",
+          "tagline": "Solution personnalisée",
+          "features": [
+            "Tout du plan Pro",
+            "Tableaux de bord personnalisés",
+            "Intégration système RH",
+            "API d'accès",
+            "Manager de compte dédié",
+            "Formation équipe RH"
+          ]
+        }
+      }
     }
   },
-  "stats": {
-    "users": "Utilisateurs Actifs",
-    "providers": "Prestataires certifiés",
-    "companies": "Entreprise Inscrites",
-    "satisfaction": "De satisfaction client"
-  }
-},
-"help": {
-  "hero": {
-    "title": "Centre d'aide BantuLink",
-    "subtitle": "Trouvez des réponses à vos questions et obtenez le soutien dont vous avez besoin. Nous sommes ici pour vous aider à réussir dans votre parcours.",
-    "searchPlaceholder": "Recherchez un sujet ou un mot-clé...",
-    "searchButton": "Rechercher",
-    "supportBadge": "Support disponible 24/7",
-    "popularSearches": "Recherches populaires :",
-    "popular1": "Réinitialisation du mot de passe",
-    "popular2": "Problèmes de paiement",
-    "popular3": "Candidatures",
-    "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé."
+  
+  "help": {
+    "hero": {
+      "title": "Centre d'aide BantuLink",
+      "subtitle": "Trouvez des réponses à vos questions et obtenez le soutien dont vous avez besoin. Nous sommes ici pour vous aider à réussir dans votre parcours.",
+      "searchPlaceholder": "Recherchez un sujet ou un mot-clé...",
+      "searchButton": "Rechercher",
+      "supportBadge": "Support disponible 24/7",
+      "popularSearches": "Recherches populaires :",
+      "popular1": "Réinitialisation du mot de passe",
+      "popular2": "Problèmes de paiement",
+      "popular3": "Candidatures",
+      "noResults": "Aucun résultat trouvé. Essayez un autre mot-clé."
+    },
+    "contact": {
+      "title": "Besoin D'aide ?",
+      "subtitle": "Vous ne trouvez pas ce que vous cherchez ? Notre équipe de support dédiée est prête à vous aider avec toutes les questions ou préoccupations que vous pourriez avoir.",
+      "liveChat": "Démarrer un chat en direct",
+      "emailSupport": "Email Support",
+      "quickResponse": "Réponse rapide",
+      "quickResponseDesc": "Temps de réponse moyen inférieur à 2 heures",
+      "expertSupport": "Support expert",
+      "expertSupportDesc": "Équipe compétente prête à aider",
+      "available247": "Disponible 24/7",
+      "available247Desc": "Assistance 24 heures sur 24"
+    },
+    "testimonials": {
+      "title": "Ce Que Disent Nos Utilisateurs",
+      "subtitle": "Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre centre d'aide et notre support.",
+      "users": [
+        {
+          "initials": "SJ",
+          "name": "Sarah Johnson",
+          "role": "Freelancer",
+          "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
+        },
+        {
+          "initials": "MC",
+          "name": "Michael Chen",
+          "role": "Business Owner",
+          "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
+        },
+        {
+          "initials": "AO",
+          "name": "Amara Okafor",
+          "role": "Job Seeker",
+          "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
+        }
+      ]
+    },
+    "topics": {
+      "title": "Sujets D'aide Populaires",
+      "subtitle": "Accès rapide aux sujets d'aide et solutions les plus recherchés de notre communauté.",
+      "items": [
+        {
+          "title": "Comment réinitialiser mon mot de passe ?",
+          "category": "Compte et Connexion",
+          "views": "2.3k vues"
+        },
+        {
+          "title": "Méthodes de paiement acceptées",
+          "category": "Commandes et paiements",
+          "views": "1.8k vues"
+        },
+        {
+          "title": "Comment postuler pour des emplois",
+          "category": "Emplois et candidatures",
+          "views": "3.1k vues"
+        },
+        {
+          "title": "Signaler du contenu inapproprié",
+          "category": "Litiges et support client",
+          "views": "1.2k vues"
+        },
+        {
+          "title": "Processus de vérification de compte",
+          "category": "Compte et Connexion",
+          "views": "2.7k vues"
+        },
+        {
+          "title": "Politique et processus de remboursement",
+          "category": "Commandes et paiements",
+          "views": "1.9k vues"
+        }
+      ]
+    }
   },
-  "contact": {
-    "title": "Besoin D'aide ?",
-    "subtitle": "Vous ne trouvez pas ce que vous cherchez ? Notre équipe de support dédiée est prête à vous aider avec toutes les questions ou préoccupations que vous pourriez avoir.",
-    "liveChat": "Démarrer un chat en direct",
-    "emailSupport": "Email Support",
-    "quickResponse": "Réponse rapide",
-    "quickResponseDesc": "Temps de réponse moyen inférieur à 2 heures",
-    "expertSupport": "Support expert",
-    "expertSupportDesc": "Équipe compétente prête à aider",
-    "available247": "Disponible 24/7",
-    "available247Desc": "Assistance 24 heures sur 24"
+  "profile": {
+    "otherResources": {
+      "title": "Autres Ressources",
+      "website": "Site internet / Portofolio",
+      "linkedin": "LinkedIn",
+      "behance": "Behance",
+      "github": "GitHub",
+      "notProvided": "Non renseigné"
+    },
+    "skills": {
+      "title": "Compétences",
+      "add": "Ajouter",
+      "addSkill": "Ajouter une compétence",
+      "selectSkill": "Sélectionner une compétence",
+      "selectLevel": "Sélectionner le niveau",
+      "beginner": "Débutant",
+      "intermediate": "Intermédiaire",
+      "advanced": "Avancé",
+      "save": "Enregistrer",
+      "noSkills": "Aucune compétence enregistrée.",
+      "level": "Niveau",
+      "uses": "utilisations",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+      "deleteDescription": "Cette action est irréversible. La compétence sera définitivement supprimée.",
+      "noDescription": "Pas de description",
+      "alreadyAdded": "Cette compétence est déjà ajoutée.",
+      "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau"
+    },
+    "education": {
+      "title": "Diplomes et Formations",
+      "add": "Ajouter",
+      "addEducation": "Ajouter une formation",
+      "editEducation": "Modifier une formation",
+      "fieldOfStudy": "Domaine d'étude",
+      "institution": "Etablissement",
+      "diploma": "Diplôme",
+      "startDate": "Date de début",
+      "endDate": "Date de fin",
+      "noEducation": "Aucune formation enregistrée.",
+      "notSpecified": "Non spécifié",
+      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+      "deleteDescription": "Cette action est irréversible. La formation sera définitivement supprimée."
+    },
+    "company": {
+      "view": "Voir",
+      "offers": "offres",
+      "noOffers": "Cette entreprise n'a aucune offre d'emploi pour le moment.",
+      "noCompanies": "Aucune entreprise trouvée pour ces critères.",
+      "page": "Page",
+      "of": "sur"
+    }
   },
-  "testimonials": {
-    "title": "Ce Que Disent Nos Utilisateurs",
-    "subtitle": "Retours réels des utilisateurs de BantuLink concernant leur expérience avec notre centre d'aide et notre support.",
-    "users": [
-      {
-        "initials": "SJ",
-        "name": "Sarah Johnson",
-        "role": "Freelancer",
-        "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
-      },
-      {
-        "initials": "MC",
-        "name": "Michael Chen",
-        "role": "Business Owner",
-        "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
-      },
-      {
-        "initials": "AO",
-        "name": "Amara Okafor",
-        "role": "Job Seeker",
-        "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
-      }
-    ]
-  },
-  "topics": {
-    "title": "Sujets D'aide Populaires",
-    "subtitle": "Accès rapide aux sujets d'aide et solutions les plus recherchés de notre communauté.",
-    "items": [
-      {
-        "title": "Comment réinitialiser mon mot de passe ?",
-        "category": "Compte et Connexion",
-        "views": "2.3k vues"
-      },
-      {
-        "title": "Méthodes de paiement acceptées",
-        "category": "Commandes et paiements",
-        "views": "1.8k vues"
-      },
-      {
-        "title": "Comment postuler pour des emplois",
-        "category": "Emplois et candidatures",
-        "views": "3.1k vues"
-      },
-      {
-        "title": "Signaler du contenu inapproprié",
-        "category": "Litiges et support client",
-        "views": "1.2k vues"
-      },
-      {
-        "title": "Processus de vérification de compte",
-        "category": "Compte et Connexion",
-        "views": "2.7k vues"
-      },
-      {
-        "title": "Politique et processus de remboursement",
-        "category": "Commandes et paiements",
-        "views": "1.9k vues"
-      }
-    ]
-  }
-},
-"profile": {
-  "otherResources": {
-    "title": "Autres Ressources",
-    "website": "Site internet / Portofolio",
-    "linkedin": "LinkedIn",
-    "behance": "Behance",
-    "github": "GitHub",
-    "notProvided": "Non renseigné"
-  },
-  "skills": {
-    "title": "Compétences",
-    "add": "Ajouter",
-    "addSkill": "Ajouter une compétence",
-    "selectSkill": "Sélectionner une compétence",
-    "selectLevel": "Sélectionner le niveau",
-    "beginner": "Débutant",
-    "intermediate": "Intermédiaire",
-    "advanced": "Avancé",
-    "save": "Enregistrer",
-    "noSkills": "Aucune compétence enregistrée.",
-    "level": "Niveau",
-    "uses": "utilisations",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
-    "deleteDescription": "Cette action est irréversible. La compétence sera définitivement supprimée.",
-    "noDescription": "Pas de description",
-    "alreadyAdded": "Cette compétence est déjà ajoutée.",
-    "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau"
-  },
-  "education": {
-    "title": "Diplomes et Formations",
-    "add": "Ajouter",
-    "addEducation": "Ajouter une formation",
-    "editEducation": "Modifier une formation",
-    "fieldOfStudy": "Domaine d'étude",
-    "institution": "Etablissement",
-    "diploma": "Diplôme",
-    "startDate": "Date de début",
-    "endDate": "Date de fin",
-    "noEducation": "Aucune formation enregistrée.",
-    "notSpecified": "Non spécifié",
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
-    "deleteDescription": "Cette action est irréversible. La formation sera définitivement supprimée."
-  },
-  "company": {
-    "view": "Voir",
-    "offers": "offres",
-    "noOffers": "Cette entreprise n'a aucune offre d'emploi pour le moment.",
-    "noCompanies": "Aucune entreprise trouvée pour ces critères.",
-    "page": "Page",
-    "of": "sur"
-  }
-},
   "jobCard": {
     "publicationDate": "Date de publication :",
     "location": "Localisation :",
@@ -783,10 +969,10 @@
     "updateError": "Erreur lors de la mise à jour du profil.",
     "save": "Enregistrer"
   },
-"cancelSubscription": {
-  "question": "Puis-je annuler mon abonnement à tout moment ?",
-  "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Lorsque vous annulez, vous conservez l'accès à vos fonctionnalités payantes jusqu'à la fin de votre période de facturation en cours."
-},
+  "cancelSubscription": {
+    "question": "Puis-je annuler mon abonnement à tout moment ?",
+    "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Lorsque vous annulez, vous conservez l'accès à vos fonctionnalités payantes jusqu'à la fin de votre période de facturation en cours."
+  },
   "coreValues": {
     "title": "Nos Valeurs Fondamentales",
     "security": {
@@ -845,6 +1031,8 @@
     "recruiter": "Je suis un Recruteur",
     "seller": "Je suis un Vendeur",
     "buyer": "Je suis un Acheteur"
+    ,"hireButton": "Aller sur BantuHire",
+    "marketButton": "Aller sur BantuMarket"
   },
   "stats": {
     "users": "Utilisateurs Actifs",
@@ -873,5 +1061,81 @@
       "title": "Jetez un œil à l'intérieur de<br/>notre SuperApp",
       "description": "Problème visant à résoudre le cloisonnement entre emploi, commerce local et développement de compétences en Afrique."
     }
-  }
+  },
+  " ": "(MT) ",
+  "-": "(MT) -",
+  "/broadcasting/auth": "(MT) Broadcasting auth",
+  "/candidatures": "(MT) Candidatures",
+  "/candidatures/${application": {
+    "id}/status": "(MT) Id status"
+  },
+  "/candidatures/${id}": "(MT) Candidatures id",
+  "/candidatures/${id}/inviter": "(MT) Candidatures id inviter",
+  "/candidatures/me": "(MT) Candidatures me",
+  "/conversations": "(MT) Conversations",
+  "/conversations/${conversation": {
+    "id}": "(MT) Id"
+  },
+  "/email/verify": "(MT) Email verify",
+  "/entreprises/avec-offres-en-cours": "(MT) Entreprises avec offres en cours",
+  "/experiences": "(MT) Experiences",
+  "/experiences/${editingExperience": {
+    "id}": "(MT) Id"
+  },
+  "/favoris": "(MT) Favoris",
+  "/favoris/ajouter": "(MT) Favoris ajouter",
+  "/forgot-password": "(MT) Forgot password",
+  "/formations": "(MT) Formations",
+  "/formations/${editingFormation": {
+    "id}": "(MT) Id"
+  },
+  "/google-login": "(MT) Google login",
+  "/linkedin-login-callback?code=${code}": "(MT) Linkedin login callback code code",
+  "/login": "(MT) Login",
+  "/logout": "(MT) Logout",
+  "/matching/candidate/${user": {
+    "id}": "(MT) Id"
+  },
+  "/mesoffres": "(MT) Mesoffres",
+  "/messages/${conversation": {
+    "id}": "(MT) Id"
+  },
+  "/newsletter/subscribe": "(MT) Newsletter subscribe",
+  "/offres": "(MT) Offres",
+  "/offres-categories": "(MT) Offres categories",
+  "/offres/${decodedId}": "(MT) Offres decodedId",
+  "/offres/${id}": "(MT) Offres id",
+  "/offres/${id}/candidatures": "(MT) Offres id candidatures",
+  "/offres/${job": {
+    "id}": "(MT) Id"
+  },
+  "/offres/${selectedJob": {
+    "id}": "(MT) Id"
+  },
+  "/offres/niveaux": "(MT) Offres niveaux",
+  "/profile/particulier": "(MT) Profile particulier",
+  "/profile/professionnel": "(MT) Profile professionnel",
+  "/register": "(MT) Register",
+  "/resend-verification-email": "(MT) Resend verification email",
+  "/reset-password": "(MT) Reset password",
+  "/skills": "(MT) Skills",
+  "/types-contrat": "(MT) Types contrat",
+  "/user": "(MT) User",
+  "/user/${id}": "(MT) User id",
+  "/user/${user": {
+    "id}/skill": "(MT) Id skill",
+    "id}/skills": "(MT) Id skills"
+  },
+  "T": "(MT) T",
+  "code": "(MT) Code",
+  "competences-updated": "(MT) Competences updated",
+  "email": "(MT) Email",
+  "error": "(MT) Error",
+  "error_description": "(MT) Error description",
+  "experiences-updated": "(MT) Experiences updated",
+  "fileFormat": "(MT) FileFormat",
+  "fileSize": "(MT) FileSize",
+  "formations-updated": "(MT) Formations updated",
+  "profile-updated": "(MT) Profile updated",
+  "token": "(MT) Token"
 }

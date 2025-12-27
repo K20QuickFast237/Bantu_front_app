@@ -197,14 +197,14 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
   }, [particulier?.ressources]);
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-full max-w-4xl sm:max-w-3xl lg:max-w-5xl max-h-[92vh] overflow-y-auto p-4 sm:p-6 lg:p-8">
         <DialogHeader>
           <DialogTitle>Compléter votre profil</DialogTitle>
           <DialogDescription>
             Remplissez les informations pour compléter votre profil et augmenter votre visibilité.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={formik.handleSubmit} className="space-y-4">
+        <form onSubmit={formik.handleSubmit} className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Les champs du formulaire sont ici, je les omets pour la lisibilité mais ils sont identiques à ceux dans infopersonelles.jsx */}
           {/* ... (copier tous les champs du formulaire de infopersonelles.jsx ici) ... */}
           <div>
@@ -245,24 +245,24 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
               <p className="text-red-500 text-xs mt-1">{formik.errors.titre_professionnel}</p>
             )}
           </div>
-          <div>
+          <div className="lg:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Résumé profil</label>
-            <textarea {...formik.getFieldProps('resume_profil')} rows={3} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <textarea {...formik.getFieldProps('resume_profil')} rows={4} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
             {formik.touched.resume_profil && formik.errors.resume_profil && (
               <p className="text-red-500 text-xs mt-1">{formik.errors.resume_profil}</p>
             )}
           </div>
           {/* ... Ajouter tous les autres champs ici (adresse, ville, pays, etc.) */}
-          <div>
+          <div className="lg:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Image de profil</label>
-            <div className="flex items-center space-x-4">
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full px-3 py-2 border border-gray-300 rounded-md" />
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="w-full sm:w-auto px-3 py-2 border border-gray-300 rounded-md" />
+              {previewImage && (
+                <div className="mt-2 sm:mt-0">
+                  <img src={previewImage} alt="Aperçu" className="h-24 w-24 rounded-full object-cover border-2 border-gray-300 shadow-sm" />
+                </div>
+              )}
             </div>
-            {previewImage && (
-              <div className="mt-2">
-                <img src={previewImage} alt="Aperçu" className="h-20 w-20 rounded-full object-cover border-2 border-gray-300" />
-              </div>
-            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">CV</label>
@@ -305,7 +305,7 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
               <span className="text-sm font-medium text-gray-700">Profil visible pour les recruteurs</span>
             </label>
           </div>
-          <div>
+          <div className="lg:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-1">Autres Ressources</label>
             <div className="mb-2">
               {ressources.map((ressource, index) => (
@@ -321,29 +321,28 @@ const ProfileCompletionModal = ({ isOpen, onClose, onComplete }) => {
                 </div>
               ))}
             </div>
-            <div className="flex space-x-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-center">
               <input
                 type="text"
                 placeholder="Nom du réseau social"
                 value={nouveauNom}
                 onChange={(e) => setNouveauNom(e.target.value)}
-                className="w-1/2 px-3 py-2 border border-gray-300 rounded-md"
+                className="col-span-1 sm:col-span-1 px-3 py-2 border border-gray-300 rounded-md"
               />
               <input
                 type="text"
                 placeholder="Lien vers le profil"
                 value={nouveauLien}
                 onChange={(e) => setNouveauLien(e.target.value)}
-                className="w-1/2 px-3 py-2 border border-gray-300 rounded-md"
+                className="col-span-1 sm:col-span-1 px-3 py-2 border border-gray-300 rounded-md"
               />
-            
-            <button
-              type="button"
-              onClick={handleAjouterRessource}
-              className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700"
-            >
-              Ajouter une ressource
-            </button>
+              <button
+                type="button"
+                onClick={handleAjouterRessource}
+                className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-700"
+              >
+                Ajouter une ressource
+              </button>
             </div>
             {formik.touched.ressources && formik.errors.ressources && (
               <p className="text-red-500 text-xs mt-1">{formik.errors.ressources}</p>

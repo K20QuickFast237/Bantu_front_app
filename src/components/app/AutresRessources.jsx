@@ -92,15 +92,15 @@ const AutresRessources = () => {
 
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md max-w-[95%] mx-auto my-8 border border-gray-200">
       <motion.section
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
-        <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-400">
-          <h2 className="text-xl font-semibold text-blue-800">Autres Ressources</h2>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-gray-400 gap-3">
+          <h2 className="text-lg sm:text-xl font-semibold text-blue-800">Autres Ressources</h2>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
            <DialogTrigger asChild>
               <button
@@ -116,7 +116,7 @@ const AutresRessources = () => {
                   Modifier les ressources
                 </DialogTitle>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="p-6 space-y-6">
+              <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-6">
                 <div className="space-y-2">
                   <label htmlFor="portfolio_link" className="block text-sm font-medium text-gray-700">Site internet / Portfolio</label>
                   <input
@@ -214,18 +214,18 @@ const AutresRessources = () => {
         {ressources.length > 0 || portfolioLink ? (
           <div className="space-y-4 text-sm text-gray-700">
             {portfolioLink && (
-              <div className="flex items-center gap-4">
-                <p className="w-40 text-gray-700 font-medium capitalize">Portfolio</p>
-                <a href={portfolioLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <p className="w-full sm:w-40 text-gray-700 font-medium capitalize">Portfolio</p>
+                <a href={portfolioLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2 w-full sm:w-auto">
                   <Globe size={16} />
                   <span className="truncate">{portfolioLink}</span>
                 </a>
               </div>
             )}
             {ressources.map((ressource, index) => (
-              <div key={index} className="flex items-center gap-4">
-                <p className="w-40 text-gray-700 font-medium capitalize">{ressource.nom}</p>
-                <a href={ressource.lien} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2">
+              <div key={index} className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                <p className="w-full sm:w-40 text-gray-700 font-medium capitalize">{ressource.nom}</p>
+                <a href={ressource.lien} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-2 w-full sm:w-auto">
                   <Globe size={16} />
                   <span className="truncate">{ressource.lien}</span>
                 </a>
