@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; 
-import { Briefcase, ShoppingCart } from 'lucide-react'; // Ajout des icônes
-// Ajout : imports des nouvelles images locales pour le carrousel
+import { Briefcase, ShoppingCart } from 'lucide-react';
 import slide1 from '../../assets/slide1.jpg';
 import slide2 from '../../assets/slide2.jpg';
 import slide3 from '../../assets/slide3.jpg';
@@ -14,7 +13,6 @@ const HeroSection = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  // Images pour le carrousel (remplacées par les imports locaux)
   const carouselImages = [
     slide1,
     slide2,

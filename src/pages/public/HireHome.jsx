@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/public/Navbar";
 import { Footer } from "@/components/public/FooterHire";
+import PageWrapper from '../../components/public/PageWrapper';
 
 const HireHome = () => {
   const navigate = useNavigate();
@@ -29,12 +30,12 @@ const HireHome = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <PageWrapper>
       <Navbar />
 
-      <main className="flex-1">
+      <main className="flex-1 min-h-screen">
         {/* Hero */}
-        <section className="relative py-20 md:py-32 overflow-hidden px-20">
+        <section className="relative py-16 md:py-32 overflow-hidden">
           <div 
             className="absolute inset-0 z-0"
             style={{
@@ -52,8 +53,8 @@ const HireHome = () => {
               <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">Bienvenue sur BantuHire</h1>
               <p className="text-xl text-white/90 mb-6">Trouvez des opportunités adaptées à vos compétences. Connectez-vous pour voir les détails complets et postuler.</p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" variant="secondary" onClick={() => navigate('/all-jobs')} className="w-full sm:w-auto"><UserPlus className="mr-2 h-5 w-5" />Commencer a postuler</Button>
-                <Button size="lg" variant="outline" onClick={() => navigate('/auth?mode=register&type=candidate')} className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white"><BriefcaseBusiness className="mr-2 h-5 w-5" />Devenir recruteur</Button>
+                <Button size="lg" variant="secondary" onClick={() => navigate('/all-jobs')} className="w-full sm:w-auto"><UserPlus className="mr-2 h-5 w-5" />Commencer à postuler</Button>
+                <Button size="lg" variant="outline" onClick={() => navigate('/dashboard')} className="w-full sm:w-auto bg-white/10 hover:bg-white/20 text-white border-white"><BriefcaseBusiness className="mr-2 h-5 w-5" />Devenir recruteur</Button>
               </div>
             </div>
           </div>
@@ -61,7 +62,7 @@ const HireHome = () => {
 
         {/* Filters + Featured jobs */}
         <section className="py-12 bg-muted/10">
-          <div className="container mx-auto px-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
               {/* Filters (desktop) */}
               <div className="hidden lg:block col-span-1">
@@ -200,7 +201,7 @@ const HireHome = () => {
 
         {/* Categories */}
         <section className="py-12">
-          <div className="container mx-auto px-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-8">Catégories d'offres</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               {categories.map((category) => (
@@ -216,7 +217,7 @@ const HireHome = () => {
 
         {/* Features Section */}
         <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-3xl font-bold text-center mb-12">Pourquoi choisir BantuHire</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="p-6 text-center bg-white rounded-lg shadow-sm">
@@ -247,7 +248,7 @@ const HireHome = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="relative py-20 overflow-hidden px-20">
+        <section className="relative py-20 overflow-hidden">
           <div 
             className="absolute inset-0 z-0"
             style={{
@@ -286,7 +287,7 @@ const HireHome = () => {
       </main>
 
       <Footer />
-    </div>
+    </PageWrapper>
   );
 };
 
