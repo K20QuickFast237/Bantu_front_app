@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Eye, Pencil, Trash, Share2, Search, MapPin, ChevronLeft, Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import api from "@/services/api";
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 
 const JobPostManagement = () => {
+  const { t } = useTranslation();
   const [jobPosts, setJobPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState(null);
@@ -40,7 +42,7 @@ const JobPostManagement = () => {
         console.log(res.data.data);
         setJobPosts(res.data || []);
       } catch (err) {
-        toast.error("Erreur lors du chargement des données.");
+        toast.error(t('jobPostManagement.errorLoad'));
       } finally {
         setLoading(false);
       }
@@ -133,9 +135,9 @@ const JobPostManagement = () => {
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-[#10B981] text-2xl md:text-3xl font-bold">Mes offres d'emploi</h1>
+          <h1 className="text-[#10B981] text-2xl md:text-3xl font-bold">{t('jobPostManagement.title')}</h1>
           <p className="text-sm md:text-base font-semibold mt-1">
-            Gérez vos offres d'emploi et consultez les candidatures.
+            {t('jobPostManagement.subtitle')}
           </p>
         </motion.div>
       </div>
@@ -152,14 +154,14 @@ const JobPostManagement = () => {
             <div className="flex flex-wrap gap-4 items-end p-4 bg-white/90">
               <div className="flex items-center flex-1 min-w-[180px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
                   <Search className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
-                  <Input id="searchTerm" name="searchTerm" type="text" placeholder="Titre du poste..." value={filters.searchTerm} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
+                  <Input id="searchTerm" name="searchTerm" type="text" placeholder={t('jobPostManagement.searchPlaceholder')} value={filters.searchTerm} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
               </div>
               <div className="flex items-center flex-1 min-w-[150px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
                   <MapPin className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
                   <select id="status" name="status" value={filters.status} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none appearance-none">
-                      <option value="">Tous les statuts</option>
-                      <option value="active">Actif</option>
-                      <option value="inactive">Inactif</option>
+                      <option value="">{t('jobPostManagement.statusAll')}</option>
+                      <option value="active">{t('jobPostManagement.statusActive')}</option>
+                      <option value="inactive">{t('jobPostManagement.statusInactive')}</option>
                   </select>
               </div>
               <div className="flex items-center flex-1 min-w-[150px] border border-gray-200 bg-white px-4 py-2 rounded-lg">
@@ -171,14 +173,19 @@ const JobPostManagement = () => {
                   <Input id="endDate" name="endDate" type="date" value={filters.endDate} onChange={handleFilterChange} className="w-full outline-none text-sm md:text-base min-w-0 bg-transparent border-none focus:ring-0" />
               </div>
               <button className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold" type="button" onClick={handleResetFilters}>
-                  Tout afficher
+                  {t('jobPostManagement.resetFilters')}
               </button>
             </div>
           </motion.div>
 
           {/* Stats Section */}
           <motion.div className="grid grid-cols-2 md:grid-cols-4 bg-white border border-gray-200">
-            {[{title: jobPosts.length, subtitle: 'Offres créées'}, {title: '15', subtitle: 'Candidatures'}, {title: '02', subtitle: 'Actives'}, {title: '00', subtitle: 'Inactives'}].map((stat, i) => (
+            {[
+              {title: jobPosts.length, subtitle: t('jobPostManagement.stats.created')},
+              {title: '0', subtitle: t('jobPostManagement.stats.applications')},
+              {title: '0', subtitle: t('jobPostManagement.stats.active')},
+              {title: '00', subtitle: t('jobPostManagement.stats.inactive')}
+            ].map((stat, i) => (
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
@@ -196,7 +203,7 @@ const JobPostManagement = () => {
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-end mb-8">
             <Button onClick={() => navigate('/createJob')} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-6 rounded">
-              Créer une offre d'emploi
+              {t('jobPostManagement.createButton')}
             </Button>
           </div>
 
@@ -215,12 +222,12 @@ const JobPostManagement = () => {
         <table className="w-full">
           <thead>
             <tr className="bg-gray-100 border-b border-gray-300">
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Titre du poste</th>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Publication</th>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Deadline</th>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Statut</th>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Candidatures</th>
-              <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.title')}</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.publication')}</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.deadline')}</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.status')}</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.applications')}</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('jobPostManagement.table.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -240,7 +247,7 @@ const JobPostManagement = () => {
                 </td>
                 <td className="px-6 py-4 text-gray-700 font-medium cursor-pointer hover:text-blue-500">
                   <Link to={`/dashboard_candidature_spec/${job.id}`}>
-                    {job.candidatures_count || '0'} candidatures
+                    {job.candidatures_count || '0'} {t('jobPostManagement.table.applicationsCount')}
                   </Link>
                 </td>
                 <td className="px-6 py-4 flex items-center gap-2">
@@ -258,7 +265,7 @@ const JobPostManagement = () => {
             )) 
             ): (
                 <tr>
-                  <td colSpan="6" className="text-center text-gray-500 py-10">Aucune offre trouvée.</td>
+                  <td colSpan="6" className="text-center text-gray-500 py-10">{t('jobPostManagement.table.empty')}</td>
                 </tr>
               )}
           </tbody>
@@ -282,18 +289,18 @@ const JobPostManagement = () => {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Modifier une offre</DialogTitle>
+            <DialogTitle>{t('pages.jobPostDetail.editModalTitle')}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <label className="block mb-1 text-sm font-medium">Titre du poste</label>
+              <label className="block mb-1 text-sm font-medium">{t('pages.jobPostDetail.jobTitle')}</label>
               <Input
                 value={formData.titre_poste}
                 onChange={(e) => setFormData({ ...formData, titre_poste: e.target.value })}
               />
             </div>
             <div>
-              <label className="block mb-1 text-sm font-medium">Rémunération min</label>
+              <label className="block mb-1 text-sm font-medium">{t('pages.jobPostDetail.minSalary')}</label>
               <Input
                 type="number"
                 value={formData.remuneration_min}
@@ -305,9 +312,9 @@ const JobPostManagement = () => {
           </div>
           <DialogFooter className="mt-4 flex justify-end space-x-2">
             <Button variant="outline" onClick={() => setOpenDialog(false)}>
-              Annuler
+              {t('pages.jobPostDetail.cancel')}
             </Button>
-            <Button onClick={submitUpdate}>Enregistrer</Button>
+            <Button onClick={submitUpdate}>{t('pages.jobPostDetail.save')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -316,18 +323,17 @@ const JobPostManagement = () => {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirmer la suppression</DialogTitle>
+            <DialogTitle>{t('pages.jobPostDetail.confirmDeleteTitle')}</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. L’offre{" "}
-              <strong>{selectedJob?.titre_poste}</strong> sera définitivement supprimée.
+              <span dangerouslySetInnerHTML={{ __html: t('pages.jobPostDetail.confirmDeleteDesc', { title: selectedJob?.titre_poste }) }} />
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Annuler</Button>
+              <Button variant="outline">{t('pages.jobPostDetail.cancel')}</Button>
             </DialogClose>
             <Button variant="destructive" onClick={handleConfirmDelete}>
-              Supprimer
+              {t('pages.jobPostDetail.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -337,3 +343,21 @@ const JobPostManagement = () => {
 };
 
 export default JobPostManagement;
+//           </DialogHeader>
+//           <DialogFooter>
+//             <DialogClose asChild>
+//               >
+//     </main<Button variant="outline">{t('pages.jobPostDetail.cancel')}</Button>
+//             </DialogClose>
+  
+//           <Button variant="destructive" onClick={handleConfirmDelete}>
+//               {t('pages.jobPostDetail.delete')}
+//             </Button>
+//           </DialogFooter>
+//         </DialogContent>
+//       </Dialog>
+//     </main>
+//   );
+// };
+
+// export default JobPostManagement;

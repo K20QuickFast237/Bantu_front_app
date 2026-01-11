@@ -3,7 +3,7 @@ import { Edit, Trash2, PlusCircle, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
-import { validationExperienceSchema } from '../../schemas';
+import * as Yup from 'yup';
 import {
   Dialog,
   DialogContent,
@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 const Experiences = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
   const [experiences, setExperiences] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,6 +28,18 @@ const Experiences = () => {
   const [experienceToDelete, setExperienceToDelete] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Schéma de validation défini à l'intérieur pour utiliser les traductions
+  const validationSchema = Yup.object({
+    titre_poste: Yup.string().required(t('experiences.validation.jobTitleRequired')),
+    nom_entreprise: Yup.string().required(t('experiences.validation.companyRequired')),
+    date_debut: Yup.date().required(t('experiences.validation.startDateRequired')),
+    date_fin: Yup.date().required(t('experiences.validation.endDateRequired')),
+    description_taches: Yup.string().required(t('experiences.validation.descriptionRequired')),
+    adresse: Yup.string().required(t('experiences.validation.addressRequired')),
+    ville: Yup.string().required(t('experiences.validation.cityRequired')),
+    pays: Yup.string().required(t('experiences.validation.countryRequired')),
+  });
+
   useEffect(() => {
     const fetchExperiences = async () => {
       setIsLoading(true);
@@ -33,7 +47,7 @@ const Experiences = () => {
         const response = await api.get('/experiences');
         setExperiences(response.data);
       } catch (error) {
-        toast.error('Erreur lors du chargement des expériences');
+        toast.error(t('experiences.errorLoad'));
         setExperiences([]);
       } finally {
         setIsLoading(false);
@@ -52,7 +66,7 @@ const Experiences = () => {
             exp.id === editingExperience.id ? { ...exp, ...values } : exp
           )
         );
-        toast.success('Expérience mise à jour avec succès');
+        toast.success(t('experiences.successUpdate'));
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('experiences-updated'));
@@ -72,7 +86,7 @@ const Experiences = () => {
         };
         setExperiences(prev => [...prev, newExperience]);
         // setExperiences([...experiences, response.data]);
-        toast.success('Expérience ajoutée avec succès');
+        toast.success(t('experiences.successAdd'));
 
         // Déclencher l'événement pour mettre à jour la barre de progression
         window.dispatchEvent(new Event('experiences-updated'));
@@ -81,7 +95,7 @@ const Experiences = () => {
       setEditingExperience(null);
       setIsModalOpen(false);
     } catch (error) {
-      toast.error('Erreur lors de la sauvegarde de l’expérience');
+      toast.error(t('experiences.errorSave'));
       console.error(error);
     } finally {
       setSubmitting(false);
@@ -100,7 +114,7 @@ const Experiences = () => {
         ville: '',
         pays: '',
       },
-      validationSchema: validationExperienceSchema,
+      validationSchema,
       onSubmit,
       enableReinitialize: true,
     });
@@ -136,12 +150,12 @@ const Experiences = () => {
     try {
       await api.delete(`/experiences/${experienceToDelete}`);
       setExperiences(experiences.filter((exp) => exp.id !== experienceToDelete));
-      toast.success('Expérience supprimée avec succès');
+      toast.success(t('experiences.successDelete'));
 
       // Déclencher l'événement pour mettre à jour la barre de progression
       window.dispatchEvent(new Event('experiences-updated'));
     } catch (error) {
-      toast.error('Erreur lors de la suppression de l’expérience');
+      toast.error(t('experiences.errorDelete'));
     } finally {
       setIsDeleteModalOpen(false);
       setExperienceToDelete(null);
@@ -158,7 +172,7 @@ const Experiences = () => {
       >
         {/* Header */}
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
-          <h2 className="text-xl font-semibold text-blue-800">Expériences</h2>
+          <h2 className="text-xl font-semibold text-blue-800">{t('experiences.title')}</h2>
 
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -167,14 +181,14 @@ const Experiences = () => {
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
-                Ajouter
+                {t('experiences.add')}
               </button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
               <DialogHeader className="pb-4 border-b border-gray-200 relative">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
-                  {editingExperience ? 'Modifier une expérience' : 'Ajouter une expérience'}
+                  {editingExperience ? t('experiences.editModalTitle') : t('experiences.addModalTitle')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -182,7 +196,7 @@ const Experiences = () => {
                 {/* Titre du poste */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Titre du poste <span className="text-red-500">*</span>
+                    {t('experiences.jobTitle')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -191,7 +205,7 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Développeur Frontend"
+                    placeholder={t('experiences.jobTitlePlaceholder')}
                   />
                   {errors.titre_poste && touched.titre_poste && (
                     <p className="text-red-500 text-sm">{errors.titre_poste}</p>
@@ -201,7 +215,7 @@ const Experiences = () => {
                 {/* Nom de l'entreprise */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Nom de l'entreprise <span className="text-red-500">*</span>
+                    {t('experiences.company')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -210,7 +224,7 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Tech Solutions"
+                    placeholder={t('experiences.companyPlaceholder')}
                   />
                   {errors.nom_entreprise && touched.nom_entreprise && (
                     <p className="text-red-500 text-sm">{errors.nom_entreprise}</p>
@@ -219,7 +233,7 @@ const Experiences = () => {
 
                 {/* Adresse */}
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Adresse</label>
+                  <label className="block text-gray-700 font-medium mb-2">{t('experiences.address')}</label>
                   <input
                     type="text"
                     name="adresse"
@@ -227,7 +241,7 @@ const Experiences = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : 123 Rue de la Tech"
+                    placeholder={t('experiences.addressPlaceholder')}
                   />
                   {errors.adresse && touched.adresse && (
                     <p className="text-red-500 text-sm">{errors.adresse}</p>
@@ -237,7 +251,7 @@ const Experiences = () => {
                 {/* Ville et Pays (stack on mobile) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Ville</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('experiences.city')}</label>
                     <input
                       type="text"
                       name="ville"
@@ -245,14 +259,14 @@ const Experiences = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex : Paris"
+                      placeholder={t('experiences.cityPlaceholder')}
                     />
                     {errors.ville && touched.ville && (
                       <p className="text-red-500 text-sm">{errors.ville}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Pays</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('experiences.country')}</label>
                     <input
                       type="text"
                       name="pays"
@@ -260,7 +274,7 @@ const Experiences = () => {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="Ex : France"
+                      placeholder={t('experiences.countryPlaceholder')}
                     />
                     {errors.pays && touched.pays && (
                       <p className="text-red-500 text-sm">{errors.pays}</p>
@@ -272,7 +286,7 @@ const Experiences = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-gray-700 font-medium mb-2">
-                      Date de début <span className="text-red-500">*</span>
+                      {t('experiences.startDate')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
@@ -288,7 +302,7 @@ const Experiences = () => {
                   </div>
                   <div>
                     <label className="block text-gray-700 font-medium mb-2">
-                      Date de fin <span className="text-red-500">*</span>
+                      {t('experiences.endDate')} <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="date"
@@ -306,14 +320,14 @@ const Experiences = () => {
 
                 {/* Description des tâches */}
                 <div className="mb-4">
-                  <label className="block text-gray-700 font-medium mb-2">Description des tâches</label>
+                  <label className="block text-gray-700 font-medium mb-2">{t('experiences.description')}</label>
                   <textarea
                     name="description_taches"
                     value={values.description_taches}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Décrivez vos principales missions et responsabilités..."
+                    placeholder={t('experiences.descriptionPlaceholder')}
                   />
                   {errors.description_taches && touched.description_taches && (
                     <p className="text-red-500 text-sm">{errors.description_taches}</p>
@@ -328,7 +342,7 @@ const Experiences = () => {
                     className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {editingExperience ? 'Mettre à jour' : 'Enregistrer'}
+                    {editingExperience ? t('experiences.update') : t('experiences.save')}
                   </button>
                 </div>
               </form>
@@ -343,7 +357,7 @@ const Experiences = () => {
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
           ) : experiences.length === 0 ? (
-            <p className="text-gray-600">Aucune expérience enregistrée.</p>
+            <p className="text-gray-600">{t('experiences.noExperiences')}</p>
           ) : (
             experiences.map((exp) => (
               <div key={exp.id} className="flex justify-between items-start pb-4 last:border-b-0 last:pb-0">
@@ -352,28 +366,28 @@ const Experiences = () => {
                   <div className="w-full">
                     <div className="grid grid-cols-1 md:grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-3 gap-x-4 text-sm text-gray-700">
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Poste</span>
-                        <span className="mt-1 font-semibold text-gray-800 break-words">{exp.titre_poste || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('experiences.post')}</span>
+                        <span className="mt-1 font-semibold text-gray-800 break-words">{exp.titre_poste || t('jobCard.notSpecified')}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Entreprise</span>
-                        <span className="mt-1 break-words">{exp.nom_entreprise || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('experiences.company')}</span>
+                        <span className="mt-1 break-words">{exp.nom_entreprise || t('jobCard.notSpecified')}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Localisation</span>
-                        <span className="mt-1 break-words">{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('experiences.location')}</span>
+                        <span className="mt-1 break-words">{[exp.adresse, exp.ville, exp.pays].filter(Boolean).join(', ') || t('jobCard.notSpecified')}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Date</span>
+                        <span className="text-xs text-gray-600">{t('experiences.date')}</span>
                         <span className="mt-1">{`${exp.date_debut || 'N/A'} - ${exp.date_fin || 'N/A'}`}</span>
                       </div>
 
                       <div className="flex flex-col md:col-span-2">
-                        <span className="text-xs text-gray-600">Description, Missions</span>
-                        <span className="mt-1 break-words">{exp.description_taches || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('experiences.missions')}</span>
+                        <span className="mt-1 break-words">{exp.description_taches || t('jobCard.notSpecified')}</span>
                       </div>
                     </div>
                   </div>
@@ -384,7 +398,7 @@ const Experiences = () => {
                     className="w-full md:w-auto flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs justify-center"
                   >
                     <Edit size={14} className="mr-1" />
-                    Modifier
+                    {t('experiences.edit')}
                   </button>
                   <button
                     onClick={() => openDeleteModal(exp.id)}
@@ -403,9 +417,9 @@ const Experiences = () => {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
+            <DialogTitle>{t('experiences.confirmDelete')}</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. L'expérience sera définitivement supprimée.
+              {t('experiences.deleteDesc')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -414,7 +428,7 @@ const Experiences = () => {
                 type="button"
                 className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors"
               >
-                Annuler
+                {t('experiences.cancel')}
               </button>
             </DialogClose>
             <button
@@ -423,7 +437,7 @@ const Experiences = () => {
               className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Supprimer
+              {t('experiences.delete')}
             </button>
           </DialogFooter>
         </DialogContent>

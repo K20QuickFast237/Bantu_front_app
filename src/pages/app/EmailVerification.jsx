@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
 // Assurez-vous que le chemin est correct en fonction de votre structure de projet
@@ -9,6 +10,7 @@ const EmailVerification = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { email, token, signature} = location.state || {};
+    const { t } = useTranslation();
     const [code, setCode] = useState(['', '', '', '', '', '']); // Array pour chaque chiffre du code
     const [isLoading, setIsLoading] = useState(false);
     const inputRefs = useRef([]); // Références pour chaque input afin de gérer le focus
@@ -48,7 +50,7 @@ const EmailVerification = () => {
         setIsLoading(true);
         try {
             await api.get(`/email/verify`, { code: fullCode });
-            toast.success("Votre email a été vérifié avec succès !");
+            toast.success(t('pages.emailVerification.success'));
             setTimeout(() => {
                 navigate('/login');
             }, 2000);
@@ -63,7 +65,7 @@ const EmailVerification = () => {
         setIsLoading(true);
         try {
             await api.post('/resend-verification-email', { email: email });
-            toast.success("Un nouveau code a été envoyé à votre adresse email.");
+            toast.success(t('pages.emailVerification.resendSuccess'));
         } catch (error) {
             toast.error(error.response?.data?.message || "Erreur lors du renvoi du code.");
         } finally {
@@ -86,12 +88,11 @@ const EmailVerification = () => {
                 </div>
 
                 {/* Titre */}
-                <h1 className="text-2xl font-bold text-gray-800 mb-2">Vérifiez votre adresse e-mail</h1>
+                <h1 className="text-2xl font-bold text-gray-800 mb-2">{t('pages.emailVerification.title')}</h1>
 
                 {/* Description avec l'adresse email */}
                 <p className="text-gray-600 mb-6 leading-relaxed">
-                    Nous venons d'envoyer un code de confirmation
-                    à votre adresse email <span className="font-semibold">{email}</span>
+                    {t('pages.emailVerification.desc')} <span className="font-semibold">{email}</span>
                 </p>
 
                 {/* Champs de saisie du code */}
@@ -116,12 +117,12 @@ const EmailVerification = () => {
 
                 {/* Lien "Email incorrect ?" */}
                 <p className="text-gray-500 mb-6 text-sm">
-                    <span className="font-semibold">Email incorrect ?</span>{' '}
+                    <span className="font-semibold">{t('pages.emailVerification.incorrectEmail')}</span>{' '}
                     <button
                         onClick={handleChangeEmail}
                         className="text-green-600 hover:text-green-700 font-medium underline focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                     >
-                        Changez ici
+                        {t('pages.emailVerification.changeHere')}
                     </button>
                 </p>
 
@@ -134,7 +135,7 @@ const EmailVerification = () => {
                                focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 mb-4
                                disabled:bg-gray-400 disabled:cursor-not-allowed disabled:scale-100"
                 >
-                    {isLoading ? 'Vérification...' : "Vérifier l'email"}
+                    {isLoading ? t('pages.emailVerification.verifying') : t('pages.emailVerification.verifyButton')}
                 </button>
 
                 {/* Lien "Renvoyer le code" */}
@@ -144,7 +145,7 @@ const EmailVerification = () => {
                     className="text-gray-500 text-sm hover:text-gray-700 transition-colors duration-200
                                focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2"
                 >
-                    Renvoyer le code
+                    {t('pages.emailVerification.resend')}
                 </button>
             </div>
         </div>

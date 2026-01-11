@@ -87,7 +87,7 @@ const Header = () => {
         <div className="hidden md:flex items-center space-x-8">
           <nav className="flex items-center space-x-8">
             <NavLink to="/home" className={navLinkClass}>{t('header.home')}</NavLink>
-            {/* <NavLink to="/about" className={navLinkClass}>{t('header.about')}</NavLink> */}
+            <NavLink to="/about" className={navLinkClass}>{t('header.about')}</NavLink>
             {/* <NavLink to="/features" className={navLinkClass}>{t('header.features')}</NavLink> */}
             <NavLink to="/pricing" className={navLinkClass}>{t('header.pricing')}</NavLink>
             <NavLink to="/support" className={navLinkClass}>{t('header.support')}</NavLink>
@@ -177,49 +177,9 @@ const Header = () => {
           <NavLink to="/pricing" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.pricing')}</NavLink>
           <NavLink to="/support" className={navLinkClass} onClick={() => setMobileMenuOpen(false)}>{t('header.support')}</NavLink>
           {/* Mobile Language Selector */}
-          <div className="relative w-full max-w-xs px-4">
-            <button
-              onClick={() => setIsLangOpen(!isLangOpen)}
-              className="flex items-center justify-center space-x-2 w-full py-2 border rounded-lg hover:bg-gray-100"
-            >
-              <Globe className="w-4 h-4" />
-              {/* <span className="text-sm font-medium">{t('header.language')}</span> */}
-              <ChevronDown
-                className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
+         
 
-            <AnimatePresence>
-              {isLangOpen && (
-                <motion.ul
-                  variants={dropdownVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  className="absolute left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200"
-                >
-                  <li>
-                    <button
-                      onClick={() => { changeLanguage('fr'); setMobileMenuOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      {t('header.fr')}
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      onClick={() => { changeLanguage('en'); setMobileMenuOpen(false); }}
-                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
-                    >
-                      {t('header.en')}
-                    </button>
-                  </li>
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-
-          <div className="w-full max-w-xs px-4 mt-6 space-y-4">
+          <div className="w-full max-w-xs px-4  space-y-4">
             {/* Mobile language dropdown (keeps same behaviour as desktop) */}
             <div className="relative w-full flex items-center justify-center">
               <button

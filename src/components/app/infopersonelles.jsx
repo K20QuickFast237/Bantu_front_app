@@ -6,11 +6,13 @@ import api from '@/services/api';
 import { toast } from 'sonner';
 import { useProfileCompletion } from '@/hooks/useProfileCompletion'; // Importer le hook
 import { Switch } from '@radix-ui/react-switch';
+import { useTranslation } from 'react-i18next';
 
 const Infopersonelles = ({ onEditClick }) => {
   const { user, particulier, refreshAuth } = useAuth();
   const { profileCompletion, profileData } = useProfileCompletion(); // Utiliser le hook
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
+  const { t } = useTranslation();
 
   const handleVisibilityToggle = async (checked) => {
     setIsUpdatingVisibility(true);
@@ -22,10 +24,10 @@ const Infopersonelles = ({ onEditClick }) => {
       await refreshAuth();
       // Déclenche un événement pour que la page parente (Profil.jsx) rafraîchisse les données.
       window.dispatchEvent(new CustomEvent('profile-updated'));
-      toast.success(`Votre profil est maintenant ${newVisibility === 1 ? 'visible' : 'caché'}.`);
+      toast.success(t('personalInfo.visibilityUpdateSuccess', { status: newVisibility === 1 ? t('personalInfo.visible') : t('personalInfo.hidden') }));
     } catch (error) {
       console.error("Erreur lors de la mise à jour de la visibilité:", error.response?.data || error.message);
-      toast.error("Erreur lors de la mise à jour de la visibilité.");
+      toast.error(t('personalInfo.visibilityUpdateError'));
     } finally {
       setIsUpdatingVisibility(false);
     }
@@ -42,13 +44,13 @@ const Infopersonelles = ({ onEditClick }) => {
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 gap-3">
-            <h2 className="text-lg sm:text-xl font-semibold text-blue-800">Informations Personnelles</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-blue-800">{t('personalInfo.title')}</h2>
             <button
               onClick={onEditClick}
               className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm"
             >
               <Edit size={16} className="mr-1" />
-              Modifier
+              {t('personalInfo.edit')}
             </button>
           </div>
           
@@ -78,12 +80,12 @@ const Infopersonelles = ({ onEditClick }) => {
                 </div>
                 <div className="flex items-center">
                   <User size={16} className="mr-2 text-gray-500 min-w-[16px]" />
-                  <span>Âge : {new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear()} ans</span>
+                  <span>{t('personalInfo.age', { age: new Date().getFullYear() - new Date(particulier.date_naissance).getFullYear() })}</span>
                 </div>
                  {/* Indication de visibilité du profil */}
                 <div className="flex items-center gap-2 w-full">
                   <Eye size={16} className="text-gray-500 min-w-[16px]" />
-                  <span className="text-gray-700 text-sm min-w-0 flex-1 truncate">Profil {particulier.is_visible === false ? 'caché' : 'visible'} des recruteurs</span>
+                  <span className="text-gray-700 text-sm min-w-0 flex-1 truncate">{t('personalInfo.profileVisibility', { status: particulier.is_visible === false ? t('personalInfo.hidden') : t('personalInfo.visible') })}</span>
                   {isUpdatingVisibility ? (
                     <Loader2 className="h-4 w-4 animate-spin ml-2" />
                   ) : (
@@ -100,7 +102,7 @@ const Infopersonelles = ({ onEditClick }) => {
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                     <a href={particulier.cv_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
-                      Voir le CV
+                      {t('personalInfo.viewCV')}
                     </a>
                   </div>
                 )}
@@ -108,7 +110,7 @@ const Infopersonelles = ({ onEditClick }) => {
                   <div className="flex items-center">
                     <FileText size={16} className="mr-2 text-gray-500 min-w-[16px]" />
                     <a href={particulier.lettre_motivation_link} target="_blank" rel="noopener noreferrer" className="text-[#10B981] hover:underline truncate">
-                      Voir la lettre de motivation
+                      {t('personalInfo.viewMotivationLetter')}
                     </a>
                   </div>
                 )}
@@ -119,7 +121,7 @@ const Infopersonelles = ({ onEditClick }) => {
           {/* Barre de progression style LinkedIn */}
           <div className="mt-6 border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center mb-2">
-              <h4 className="text-sm font-semibold text-gray-700">Force de votre profil</h4>
+              <h4 className="text-sm font-semibold text-gray-700">{t('personalInfo.profileStrength')}</h4>
               <span className="text-sm font-medium text-blue-600">{profileCompletion}%</span>
             </div>
             
@@ -132,11 +134,11 @@ const Infopersonelles = ({ onEditClick }) => {
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
               {Object.entries(profileData).map(([key, value]) => {
-                const label = {
-                  infosPersonnelles: 'Infos personnelles',
-                  competences: 'Compétences',
-                  experiences: 'Expériences',
-                  formations: 'Formations'
+                const labelKey = {
+                  infosPersonnelles: 'personalInfo',
+                  competences: 'skills',
+                  experiences: 'experiences',
+                  formations: 'education'
                 }[key];
                 
                 const getStatusColor = (percent) => {
@@ -156,7 +158,7 @@ const Infopersonelles = ({ onEditClick }) => {
                 return (
                   <div key={key} className={`p-3 rounded-lg border ${getStatusColor(value)}`}>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-gray-600">{label}</span>
+                      <span className="text-xs text-gray-600">{t(`personalInfo.${labelKey}`)}</span>
                       <span className={`text-xs font-bold ${getTextColor(value)}`}>{value}%</span>
                     </div>
                     <div className="w-full bg-white rounded-full h-1.5 mt-2">
@@ -172,10 +174,10 @@ const Infopersonelles = ({ onEditClick }) => {
             
             <p className="text-xs text-gray-500 mt-3">
               {profileCompletion < 30 ? 
-                "Votre profil est incomplet. Complétez les sections manquantes pour augmenter votre visibilité." :
+                t('personalInfo.incompleteProfile') :
                 profileCompletion < 70 ? 
-                "Votre profil progresse bien. Continuez à ajouter des informations pour le rendre plus attractif." :
-                "Excellent ! Votre profil est bien rempli et attrayant pour les recruteurs."}
+                t('personalInfo.progressingProfile') :
+                t('personalInfo.excellentProfile')}
             </p>
           </div>
         </motion.section>

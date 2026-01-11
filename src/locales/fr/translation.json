@@ -17,6 +17,12 @@
     "settings": "Paramètres",
     "portail":"Portail"
   },
+  "meta": {
+    "title": "Une Seule App, Deux Mondes Recrutement & E-Commerce Réunis."
+  },
+  "loading": {
+    "label": "Chargement en cours..."
+  },
   "login": {
     "title": "Se connecter",
     "email": "Email",
@@ -58,7 +64,8 @@
     "illustration_alt": "Illustration de groupe de personnes interagissant via un téléphone",
     "apply": "Postuler",
     "recruit": "Recruter",
-    "freelance": "Freelancer",
+    "find_provider": "Trouver un prestataire",
+    "be_provider": "Faire une prestation",
     "buy": "Acheter",
     "sell": "Vendre",
     "alt_icon": "Icône {{name}}"
@@ -345,7 +352,26 @@
     "successDelete": "Expérience supprimée avec succès",
     "errorLoad": "Erreur lors du chargement des expériences",
     "errorSave": "Erreur lors de la sauvegarde de l’expérience",
-    "errorDelete": "Erreur lors de la suppression de l’expérience"
+    "errorDelete": "Erreur lors de la suppression de l’expérience",
+    "editModalTitle": "Modifier une expérience",
+    "addModalTitle": "Ajouter une expérience",
+    "jobTitlePlaceholder": "Ex : Développeur Frontend",
+    "companyPlaceholder": "Ex : Tech Solutions",
+    "addressPlaceholder": "Ex : 123 Rue de la Tech",
+    "cityPlaceholder": "Ex : Paris",
+    "countryPlaceholder": "Ex : France",
+    "descriptionPlaceholder": "Décrivez vos principales missions et responsabilités...",
+    "update": "Mettre à jour",
+    "validation": {
+      "jobTitleRequired": "Titre du poste requis",
+      "companyRequired": "Nom de l'entreprise requis",
+      "startDateRequired": "Date de début requise",
+      "endDateRequired": "Date de fin requise",
+      "addressRequired": "Adresse requise",
+      "cityRequired": "Ville requise",
+      "countryRequired": "Pays requis",
+      "descriptionRequired": "Description requise"
+    }
   },
   "footer": {
     "ecosystemTitle": "Rejoignez l'écosystème tout-en-un de BantuLink",
@@ -651,19 +677,19 @@
       "users": [
         {
           "initials": "SJ",
-          "name": "Sarah Johnson",
+          "name": "Sara NDONGO",
           "role": "Freelancer",
           "review": "Le centre d'aide a rendu très facile la compréhension de la façon de configurer mon profil et de commencer à obtenir des clients. Excellente ressource!"
         },
         {
           "initials": "MC",
-          "name": "Michael Chen",
+          "name": "Lina FOTSO",
           "role": "Business Owner",
           "review": "Réponses rapides à toutes mes questions sur les paiements et la facturation. La fonction de recherche fonctionne parfaitement."
         },
         {
           "initials": "AO",
-          "name": "Amara Okafor",
+          "name": "Nala MBALA",
           "role": "Job Seeker",
           "review": "J'ai exactement trouvé ce dont j'avais besoin pour compléter mes candidatures. Les guides étape par étape sont très utiles."
         }
@@ -709,11 +735,27 @@
   "profile": {
     "otherResources": {
       "title": "Autres Ressources",
-      "website": "Site internet / Portofolio",
+      "website": "Site internet / Portfolio",
       "linkedin": "LinkedIn",
       "behance": "Behance",
       "github": "GitHub",
-      "notProvided": "Non renseigné"
+      "notProvided": "Non renseigné",
+      "edit": "Modifier",
+      "editTitle": "Modifier les ressources",
+      "portfolioPlaceholder": "https://mon-portfolio.com",
+      "currentResources": "Ressources actuelles",
+      "noResourcesAdded": "Aucune ressource ajoutée.",
+      "addNewResource": "Ajouter une nouvelle ressource",
+      "namePlaceholder": "Nom (ex: LinkedIn)",
+      "linkPlaceholder": "Lien (URL complète)",
+      "add": "Ajouter",
+      "save": "Enregistrer",
+      "portfolio": "Portfolio",
+      "noExternalResources": "Aucune ressource externe n'a été ajoutée.",
+      "invalidUrlError": "Veuillez entrer une URL valide.",
+      "missingFieldsError": "Veuillez remplir le nom et le lien.",
+      "updateSuccess": "Ressources mises à jour avec succès !",
+      "updateError": "Erreur lors de la mise à jour des ressources."
     },
     "skills": {
       "title": "Compétences",
@@ -732,22 +774,47 @@
       "deleteDescription": "Cette action est irréversible. La compétence sera définitivement supprimée.",
       "noDescription": "Pas de description",
       "alreadyAdded": "Cette compétence est déjà ajoutée.",
-      "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau"
+      "selectSkillAndLevel": "Veuillez sélectionner une compétence et un niveau",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "noSkillsSelected": "Aucune compétence sélectionnée",
+      "addSuccess": "Compétences ajoutées avec succès",
+      "deleteSuccess": "Compétence supprimée avec succès",
+      "loadError": "Erreur lors du chargement des compétences",
+      "availableLoadError": "Erreur lors du chargement des compétences disponibles",
+      "addError": "Erreur lors de l'ajout des compétences",
+      "deleteError": "Erreur lors de la suppression de la compétence",
+      "selectAtLeastOne": "Veuillez ajouter au moins une compétence."
     },
-    "education": {
-      "title": "Diplomes et Formations",
+    "training": {
+      "title": "Diplômes et Formations",
       "add": "Ajouter",
-      "addEducation": "Ajouter une formation",
-      "editEducation": "Modifier une formation",
+      "editTitle": "Modifier une formation",
+      "addTitle": "Ajouter une formation",
       "fieldOfStudy": "Domaine d'étude",
+      "fieldOfStudyPlaceholder": "Ex : Développement web",
       "institution": "Etablissement",
-      "diploma": "Diplôme",
+      "institutionPlaceholder": "Ex : Université de Douala",
+      "degree": "Diplôme",
+      "degreePlaceholder": "Ex : Licence en informatique",
       "startDate": "Date de début",
       "endDate": "Date de fin",
-      "noEducation": "Aucune formation enregistrée.",
+      "update": "Mettre à jour",
+      "save": "Enregistrer",
+      "noTraining": "Aucune formation enregistrée.",
       "notSpecified": "Non spécifié",
-      "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
-      "deleteDescription": "Cette action est irréversible. La formation sera définitivement supprimée."
+      "date": "Date",
+      "edit": "Modifier",
+      "deleteConfirmTitle": "Êtes-vous sûr de vouloir supprimer ?",
+      "deleteConfirmDescription": "Cette action est irréversible. La formation sera définitivement supprimée.",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "loadError": "Erreur lors du chargement des formations",
+      "updateSuccess": "Formation mise à jour avec succès",
+      "addSuccess": "Formation ajoutée avec succès",
+      "saveError": "Erreur lors de la sauvegarde de la formation",
+      "deleteSuccess": "Formation supprimée avec succès",
+      "deleteError": "Erreur lors de la suppression de la formation"
     },
     "company": {
       "view": "Voir",
@@ -758,18 +825,31 @@
       "of": "sur"
     }
   },
+  "hero_company": {
+    "create_job_offers": "Créez des offres d'emploi facilement",
+    "and_quickly": "et rapidement"
+  },
   "jobCard": {
     "publicationDate": "Date de publication :",
     "location": "Localisation :",
     "notSpecified": "Non spécifié",
     "availableJobs": "Offres d'emploi disponibles",
     "noJobsFound": "Aucune offre trouvée",
-    "showMore": "Afficher plus"
+    "showMore": "Afficher plus",
+    "unknownCompany": "Entreprise inconnue"
   },
   "jobCarousel": {
     "popularSearches": "Recherches populaires",
+    "publicationDate": "Date de publication :",
+    "location": "Localisation :",
+    "notSpecified": "Non spécifié",
+    "availableJobs": "Offres d'emploi disponibles",
+    "noJobsFound": "Aucune offre trouvée",
     "hiringCompanies": "Les entreprises qui recrutent",
-    "showAllCompanies": "Afficher toutes les entreprises"
+    "showAllCompanies": "Afficher toutes les entreprises",
+    "noCompaniesHiring": "Aucune entreprise ne recrute pour le moment.",
+    "offer": "offre",
+    "offers": "offres"
   },
   "personalInfo": {
     "title": "Informations Personnelles",
@@ -786,7 +866,10 @@
     "education": "Formations",
     "incompleteProfile": "Votre profil est incomplet. Complétez les sections manquantes pour augmenter votre visibilité.",
     "progressingProfile": "Votre profil progresse bien. Continuez à ajouter des informations pour le rendre plus attractif.",
-    "excellentProfile": "Excellent ! Votre profil est bien rempli et attrayant pour les recruteurs."
+    "excellentProfile": "Excellent ! Votre profil est bien rempli et attrayant pour les recruteurs.",
+    "edit": "Modifier",
+    "visibilityUpdateSuccess": "Votre profil est maintenant {{status}}.",
+    "visibilityUpdateError": "Erreur lors de la mise à jour de la visibilité."
   },
   "jobSearch": {
     "findJobOffer": "Trouvez une offre d'emploi",
@@ -802,7 +885,18 @@
     "fullStackDeveloper": "Développeur web full stack",
     "douala": "Douala",
     "freelance": "Freelance",
-    "years": "Ans"
+    "years": "Ans",
+    "searchProfiles": "Rechercher des profils",
+    "searchAllOffers": "Rechercher parmi toutes les offres d'emploi",
+    "contractFetchError": "Erreur lors de la récupération des types de contrat.",
+    "unexpectedError": "Une erreur inattendue est survenue",
+    "educationLevels": {
+      "bac": "Bac",
+      "bac2": "Bac+2",
+      "bac3": "Bac+3",
+      "bac5": "Bac+5",
+      "doctorate": "Doctorat"
+    }
   },
   "dashboard": {
     "welcome": "Bienvenue",
@@ -820,7 +914,45 @@
     "jobTitle": "Concepteur Développeur d'Applications",
     "viewMyProfile": "Voir mon profil",
     "profileCompleted": "Profil complété à",
-    "jobSuggestions": "Suggestions de jobs en fonction de votre profil"
+    "jobSuggestions": "Suggestions de jobs en fonction de votre profil",
+    "profileHidden": "Votre profil est actuellement caché des recruteurs.",
+    "profileVisibleButton": "Profil Visible",
+    "completeProfilePrompt": "Veuillez compléter votre profil",
+    "completeProfile": "Compléter mon profil",
+    "recruiter": {
+      "welcome": "Bienvenue, {{name}}",
+      "intro": "Voici votre tableau de bord de recrutement pour aujourd'hui.",
+      "searchPlaceholder": "Rechercher des candidats, des emplois...",
+      "stats": {
+        "totalViews": "Vues Totales",
+        "totalOffers": "Totales des offres",
+        "scheduledInterviews": "Entretiens planifiés",
+        "activeCandidates": "Candidats actifs"
+      },
+      "activeOffers": "Offres d'emploi actives",
+      "createOffer": "Créer une offre",
+      "companyFallback": "Entreprise",
+      "publishedInfo": "Publié il y a {{days}} jours • {{count}} candidats",
+      "viewApplications": "Voir les candidatures",
+      "recentApplications": "Candidatures récentes",
+      "viewAllApplications": "Voir toutes les candidatures",
+      "anonymousCandidate": "Candidat Anonyme",
+      "unspecifiedPosition": "Poste non spécifié",
+      "timeAgoDays": "il y a {{count}} jour(s)",
+      "timeAgoHours": "il y a {{count}} heure(s)",
+      "view": "Voir",
+      "quickActions": {
+        "title": "Actions rapides",
+        "createOffer": "Créer une offre",
+        "createOfferDesc": "Publier un nouveau poste",
+        "editProfile": "Modifier le profil",
+        "editProfileDesc": "Mettre à jour vos infos",
+        "switchMode": "Changer de mode",
+        "switchModeDesc": "Voir en tant que candidat",
+        "viewStats": "Voir les statistiques",
+        "viewStatsDesc": "Analyses de performance"
+      }
+    }
   },
   "multiStepForm": {
     "share": "Partager",
@@ -1043,19 +1175,19 @@
   "testimonials": {
     "title": "Satisfaire Nos Clients Est<br className=\"hidden md:inline\"/>Notre Meilleure Publicité.",
     "quote1": "Bantulink vous aide à voir combien de jours supplémentaires il vous reste à travailler pour atteindre votre objectif.",
-    "name1": "Regina Miles",
+    "name1": "Sara NDONGO",
     "role1": "Designer",
     "quote2": "Une expérience incroyable ! L'équipe a dépassé toutes mes attentes. Je recommande vivement leurs services.",
-    "name2": "John Doe",
+    "name2": "Lina FOTSO",
     "role2": "Développeur",
     "quote3": "Très satisfait du résultat final. La qualité est au rendez-vous et le support client est excellent.",
-    "name3": "Jane Smith",
+    "name3": "Nala MBALA",
     "role3": "Entrepreneur",
     "quote4": "Une plateforme intuitive qui facilite les connexions professionnelles et commerciales. Un must !",
-    "name4": "Alex Dupont",
+    "name4": "Zainab TRAORÉ",
     "role4": "Freelancer",
     "quote5": "Bantulink m'a permis de développer mon réseau et de booster mes ventes en ligne rapidement.",
-    "name5": "Marie Dubois",
+    "name5": "Maya KOUASSI",
     "role5": "Vendeuse",
     "appPreview": {
       "title": "Jetez un œil à l'intérieur de<br/>notre SuperApp",
@@ -1137,5 +1269,332 @@
   "fileSize": "(MT) FileSize",
   "formations-updated": "(MT) Formations updated",
   "profile-updated": "(MT) Profile updated",
-  "token": "(MT) Token"
+  "token": "(MT) Token",
+  "analytics": {
+    "title": "Analytiques",
+    "inProgress": "Statistiques en cours de développement.",
+    "comingSoon": "Vous trouverez bientôt des graphiques et des analyses ici."
+  },
+  "pages": {
+    "allJobOffers": {
+      "searchButton": "Rechercher des offres",
+      "title": "Rechercher parmi toutes les offres d'emploi"
+    },
+    "allCompanies": {
+      "searchButton": "Rechercher des entreprises",
+      "title": "Trouvez l'entreprise de vos rêves"
+    },
+    "companyProfile": {
+      "jobsAt": "Offres d'emploi chez {{company}}"
+    },
+    "resetPassword": {
+      "title": "Réinitialisation du mot de passe",
+      "info": "Merci de saisir votre nouveau mot de passe.",
+      "label": "Nouveau mot de passe :",
+      "button": "Réinitialiser le mot de passe",
+      "success": "Mot de passe réinitialisé avec succès !",
+      "error": "Erreur lors de la réinitialisation."
+    },
+    "forgotPasswordConfirm": {
+      "title": "Vous avez oublié votre mot de passe",
+      "info": "Un email va vous être envoyé à l’adresse suivante",
+      "info2": "pour vous permettre de réinitialiser le mot de passe de votre compte.",
+      "backButton": "Retour à l’accueil"
+    },
+    "jobOffer": {
+      "apply": "Postuler",
+      "save": "Sauvegarder",
+      "saving": "Sauvegarde...",
+      "published": "Date de publication :",
+      "deadline": "Date limite de soumission :",
+      "contract": "Type de contrat",
+      "location": "Lieu",
+      "salary": "Rémunération",
+      "function": "Fonction",
+      "status": "Statut",
+      "experience": "Expérience",
+      "description": "Description du poste",
+      "responsibilities": "Responsabilités",
+      "requirements": "Exigences",
+      "documents": "Documents requis",
+      "instructions": "Instructions pour postuler",
+      "sendTo": "Envoyer à :",
+      "aboutCompany": "À propos de l'entreprise",
+      "loginToSave": "Veuillez vous connecter pour sauvegarder une offre.",
+      "saveSuccess": "Offre sauvegardée avec succès !",
+      "completeProfile": "Veuillez compléter votre profil pour postuler."
+    },
+    "jobPostDetail": {
+      "backToList": "Retour à la liste",
+      "publishedOn": "Publié le :",
+      "deadline": "Deadline :",
+      "share": "Partager",
+      "contractType": "Type de contrat",
+      "location": "Lieu",
+      "viewApplications": "Voir les candidatures",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "description": "Description de l'offre",
+      "missions": "Missions de l'employé",
+      "profile": "Profil recherché",
+      "editModalTitle": "Modifier une offre",
+      "jobTitle": "Titre du poste",
+      "minSalary": "Rémunération min",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "confirmDeleteTitle": "Confirmer la suppression",
+      "confirmDeleteDesc": "Cette action est irréversible. L’offre <strong>{{title}}</strong> sera définitivement supprimée.",
+      "updateSuccess": "Offre mise à jour avec succès !",
+      "deleteSuccess": "Offre supprimée avec succès."
+    },
+    "forgotPassword": {
+      "title": "Vous avez oublié votre mot de passe",
+      "info": "Si vous avez oublié votre mot de passe, merci de saisir l’adresse e-mail associée à votre compte. Nous vous enverrons un mail à cette adresse contenant un lien vous permettant d’en créer un nouveau.",
+      "emailLabel": "Adresse email * :",
+      "continue": "Continuer"
+    },
+    "candidatureDetail": {
+      "title": "Candidature",
+      "date": "Date de candidature :",
+      "invite": "Inviter à un entretien",
+      "preselect": "Présélectionner",
+      "reject": "Rejeter",
+      "personalInfo": "Informations personnelles",
+      "name": "Nom :",
+      "firstname": "Prénom :",
+      "address": "Adresse :",
+      "email": "Email :",
+      "phone": "Téléphone :",
+      "candidateProfile": "Profil candidat",
+      "viewProfile": "Voir le profil du candidat",
+      "previewCV": "Prévisualiser le CV",
+      "downloadCV": "Télécharger le CV",
+      "noCV": "Aucun CV ou profil BantuLink fourni.",
+      "inviteModalTitle": "Inviter à un entretien",
+      "inviteModalDesc": "Planifiez un entretien avec <strong>{{name}}</strong>.",
+      "interviewMode": "Mode de l'entretien",
+      "faceToFace": "Présentiel",
+      "video": "Visioconférence",
+      "location": "Lieu de l'entretien",
+      "locationPlaceholder": "Ex: Nos bureaux à Douala",
+      "videoLink": "Lien de la visioconférence",
+      "videoLinkPlaceholder": "https://meet.google.com/...",
+      "dateTime": "Date et heure de l'entretien",
+      "confirmInvite": "Confirmer l'invitation",
+      "sending": "Envoi...",
+      "successInvite": "Invitation à l'entretien envoyée avec succès !",
+      "successPreselect": "Candidature présélectionnée avec succès.",
+      "successReject": "Candidature rejetée avec succès."
+    },
+    "jobApplicationForm": {
+      "completeProfile": "Veuillez completer votre profil avant d'envoyer une candidature.",
+      "publishedOn": "Publié le:",
+      "deadline": "Date limite:",
+      "howToApply": "Comment souhaitez-vous postuler ?",
+      "withBantuHire": "Avec mon profil BantuHire",
+      "withMyCV": "Avec mon CV personnel",
+      "coverLetter": "Lettre de motivation (Optionnel)",
+      "coverLetterPlaceholder": "Rédigez ici un message pour accompagner votre candidature...",
+      "chars": "caractères",
+      "uploadCV": "Téléversez votre CV",
+      "cvNotRequired": "Le CV n'est pas explicitement requis pour cette offre.",
+      "otherDocs": "Autres documents requis",
+      "sendApplication": "Envoyer ma candidature",
+      "sending": "Envoi en cours...",
+      "aboutCompany": "À propos de l'entreprise",
+      "noDesc": "Aucune description fournie.",
+      "attach": "Joindre {{doc}}",
+      "clickToUpload": "Cliquez pour téléverser",
+      "dragDrop": "ou glisser-déposer",
+      "formats": "PDF, DOC, DOCX, PNG, JPG (MAX. 5Mo)",
+      "success": "Votre candidature a bien été envoyée !",
+      "missingDoc": "Veuillez joindre le document : {{doc}}",
+      "missingCV": "Veuillez joindre votre CV."
+    },
+    "linkedinCallback": {
+      "errorTitle": "Erreur de connexion",
+      "processing": "Finalisation de la connexion LinkedIn...",
+      "wait": "Veuillez patienter, nous vous redirigeons.",
+      "success": "Connexion via LinkedIn réussie !"
+    },
+    "dashboardCandidature": {
+      "title": "Candidatures pour l'offre :",
+      "from": "Du",
+      "to": "Au",
+      "filter": "Filtrer",
+      "reset": "Tout afficher",
+      "configMail": "Configurer l'envoi des mails",
+      "export": "Exporter les données",
+      "noCandidates": "Aucune candidature trouvée",
+      "candidateName": "Nom de candidat",
+      "jobOffer": "Offre d'emploi",
+      "address": "Adresse",
+      "status": "Statut",
+      "actions": "Actions",
+      "view": "Afficher"
+    },
+    "inscriptionEntreprise": {
+      "title": "Complétez Votre Profil Entreprise",
+      "desc": "Finalisez votre profil pour accéder à notre plateforme et recruter les meilleurs talents. Ajoutez les informations de votre entreprise pour commencer dès aujourd'hui.",
+      "infoTitle": "Informations de l'entreprise",
+      "professionalTitle": "Titre Professionnel",
+      "proEmail": "Email Professionnel",
+      "proPhone": "Téléphone Professionnel",
+      "companyName": "Nom de l'entreprise",
+      "website": "Site Web",
+      "address": "Adresse",
+      "city": "Ville",
+      "country": "Pays",
+      "taxId": "N° de Contribuable (NIU)",
+      "descCompany": "Description de l'entreprise",
+      "logo": "Logo de l'entreprise",
+      "coverImage": "Image de couverture (Optionnel)",
+      "uploadHelp": "PNG, JPG, GIF jusqu'à 2MB.",
+      "upload": "Télécharger un fichier",
+      "dragDrop": "ou glisser-déposer",
+      "save": "Enregistrer",
+      "success": "Profil complete avec success !"
+    },
+    "profilCandidatRecruteur": {
+      "back": "Retour",
+      "profileOf": "Profil de {{name}}",
+      "memberSince": "Membre depuis",
+      "personalInfo": "Informations Personnelles",
+      "visibility": "Visibilité :",
+      "visible": "Visible par les recruteurs",
+      "notVisible": "Non visible",
+      "summary": "Résumé Du Profil",
+      "experiences": "Expériences",
+      "skills": "Compétences",
+      "education": "Diplômes & Formations",
+      "otherResources": "Autres Ressources",
+      "downloadCV": "Télécharger le CV",
+      "notFound": "Candidat non trouvé."
+    },
+    "settings": {
+      "title": "Paramètres",
+      "inProgress": "Paramètres en cours de développement.",
+      "comingSoon": "Vous pourrez bientôt personnaliser vos préférences ici."
+    },
+    "emailVerification": {
+      "title": "Vérifiez votre adresse e-mail",
+      "desc": "Nous venons d'envoyer un code de confirmation à votre adresse email",
+      "incorrectEmail": "Email incorrect ?",
+      "changeHere": "Changez ici",
+      "verifyButton": "Vérifier l'email",
+      "verifying": "Vérification...",
+      "resend": "Renvoyer le code",
+      "success": "Votre email a été vérifié avec succès !",
+      "resendSuccess": "Un nouveau code a été envoyé à votre adresse email."
+    },
+    "favorites": {
+      "title": "Mes Offres Favorites",
+      "job": "Poste",
+      "company": "Entreprise",
+      "location": "Lieu",
+      "actions": "Actions",
+      "view": "Voir l'offre",
+      "empty": "Vous n'avez aucune offre en favoris pour le moment."
+    },
+    "myApplications": {
+      "title": "Mes Candidatures",
+      "job": "Poste",
+      "company": "Entreprise",
+      "date": "Date de candidature",
+      "status": "Statut",
+      "actions": "Actions",
+      "view": "Voir l'offre",
+      "empty": "Vous n'avez postulé à aucune offre pour le moment."
+    },
+    "messages": {
+      "title": "Messagerie",
+      "search": "Rechercher une conversation...",
+      "empty": "Aucune conversation pour l'instant.",
+      "writeMessage": "Écrivez votre message...",
+      "online": "En ligne",
+      "offline": "Hors ligne",
+      "unknownUser": "Utilisateur inconnu",
+      "noMessages": "Pas de messages",
+      "loading": "Chargement..."
+    },
+    "common": {
+      "loading": "Chargement..."
+    },
+    "errors": {
+      "no_user_id": "Utilisateur non identifié",
+      "role_check_failed": "Erreur lors de la vérification du rôle"
+    },
+    "success": {
+      "role_assigned": "Rôle attribué avec succès"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord",
+    "myJobOffers": "Mes offres d'emploi",
+    "applications": "Candidatures",
+    "messages": "Messages",
+    "statistics": "Statistiques",
+    "settings": "Paramètres",
+    "logout": "Se déconnecter",
+    "logoutConfirmationTitle": "Confirmation de déconnexion",
+    "logoutConfirmationDesc": "Êtes-vous sûr de vouloir vous déconnecter ?",
+    "logoutSuccess": "Déconnexion réussie",
+    "logoutSuccessDesc": "Vous avez été déconnecté avec succès.",
+    "logoutError": "Erreur de déconnexion"
+  },
+  
+  "jobPostManagement": {
+    "title": "Mes offres d'emploi",
+    "subtitle": "Gérez vos offres d'emploi et consultez les candidatures.",
+    "searchPlaceholder": "Titre du poste...",
+    "statusAll": "Tous les statuts",
+    "statusActive": "Actif",
+    "statusInactive": "Inactif",
+    "resetFilters": "Tout afficher",
+    "stats": {
+      "created": "Offres créées",
+      "applications": "Candidatures",
+      "active": "Actives",
+      "inactive": "Inactives"
+    },
+    "createButton": "Créer une offre d'emploi",
+    "table": {
+      "title": "Titre du poste",
+      "publication": "Publication",
+      "deadline": "Deadline",
+      "status": "Statut",
+      "applications": "Candidatures",
+      "actions": "Actions",
+      "empty": "Aucune offre trouvée.",
+      "applicationsCount": "candidatures"
+    },
+    "errorLoad": "Erreur lors du chargement des données."
+  },
+  "jobApplicationManagement": {
+    "title": "Mes Candidatures",
+    "subtitle": "Filtrez et consultez toutes les candidatures reçues pour vos offres.",
+    "filters": {
+      "from": "Du",
+      "to": "Au",
+      "offers": "Offres",
+      "allOffers": "Toutes les offres",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "reset": "Tout afficher"
+    },
+    "actions": {
+      "configMail": "Configurer l'envoi des mails",
+      "export": "Exporter les données"
+    },
+    "table": {
+      "candidateName": "Nom du candidat",
+      "jobOffer": "Offre d'emploi",
+      "address": "Adresse",
+      "status": "Statut",
+      "actions": "Actions",
+      "view": "Afficher",
+      "empty": "Aucune candidature trouvée."
+    },
+    "errorLoad": "Erreur lors du chargement des données."
+  }
 }

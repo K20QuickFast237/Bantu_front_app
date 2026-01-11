@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,6 +12,7 @@ const OffresFavorites = () => {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     useEffect(() => {
         const fetchFavoriteOffers = async () => {
@@ -40,7 +42,7 @@ const OffresFavorites = () => {
                         <div className="flex items-center gap-3 mb-6">
                             <Star className="w-8 h-8 text-yellow-500" />
                             <h1 className="text-3xl font-bold text-gray-800">
-                                Mes Offres Favorites
+                                {t('pages.favorites.title')}
                             </h1>
                         </div>
 
@@ -48,9 +50,9 @@ const OffresFavorites = () => {
                             <table className="w-full">
                                 <thead className="bg-gray-100">
                                     <tr className="border-b border-gray-300">
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Poste</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Entreprise</th>                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Lieu</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.favorites.job')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.favorites.company')}</th>                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.favorites.location')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.favorites.actions')}</th>
                                     </tr>
                                 </thead>
                                     <tbody>
@@ -63,7 +65,7 @@ const OffresFavorites = () => {
                                     ) : (
                                         applications.length === 0 ? (
                                             <tr>
-                                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500">Vous n'avez aucune offre en favoris pour le moment.</td>
+                                                <td colSpan="4" className="px-6 py-10 text-center text-gray-500">{t('pages.favorites.empty')}</td>
                                             </tr>
                                         ) : (
                                             applications.map((app, idx) => {
@@ -86,7 +88,7 @@ const OffresFavorites = () => {
                                                                 title="Voir l'offre d'emploi"
                                                             >
                                                                 <Eye className="w-4 h-4" />
-                                                                Voir l'offre
+                                                                {t('pages.favorites.view')}
                                                             </button>
                                                         </td>
                                                     </tr>

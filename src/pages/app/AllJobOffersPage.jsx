@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import JobCard from "../../components/app/JobCard";
 import JobSearchDashboard from "../../components/app/JobSearchDashboard";
 import HeaderProfil from "../../components/app/HeaderProfil";
@@ -6,6 +7,7 @@ import Footer from "../../components/public/Footer";
 
 function AllJobOffersPage() {
   // States partagés pour les filtres en temps réel
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [locationTerm, setLocationTerm] = useState('');
   const [selectedContract, setSelectedContract] = useState('');
@@ -21,8 +23,8 @@ function AllJobOffersPage() {
         setLocationTerm={setLocationTerm}
         hideContractFilter={true}
         hideEducationFilter={true}
-        searchProfileButtonText="Rechercher des offres"
-        title="Rechercher parmi toutes les offres d'emploi"
+        searchProfileButtonText={t('pages.allJobOffers.searchButton')}
+        title={t('pages.allJobOffers.title')}
       />
       <JobCard
         searchTerm={searchTerm}

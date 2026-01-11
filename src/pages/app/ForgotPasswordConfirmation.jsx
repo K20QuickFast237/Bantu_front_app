@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import Header from '../../components/public/Header';
 import Footer from '../../components/public/Footer';
@@ -8,6 +9,7 @@ import PageWrapper from '../../components/public/PageWrapper';
 const ForgotPasswordConfirmation = () => {
   const location = useLocation();
   const userEmail = location.state?.email;
+  const { t } = useTranslation();
    
   return (
     <>
@@ -24,14 +26,14 @@ const ForgotPasswordConfirmation = () => {
             <div className="w-full max-w-2xl space-y-6 text-center">
               {/* Titre */}
               <h2 className="text-[#10B981] font-semibold text-lg md:text-xl">
-                Vous avez oublié votre mot de passe
+                {t('pages.forgotPasswordConfirm.title')}
               </h2>
 
               {/* Message d'information */}
               <p className="text-gray-800 text-sm leading-relaxed">
-                Un email va vous être envoyé à l’adresse suivante 
+                {t('pages.forgotPasswordConfirm.info')} 
                 <span className="font-semibold">  {userEmail}</span> <br />
-                pour vous permettre de réinitialiser le mot de passe de votre compte.
+                {t('pages.forgotPasswordConfirm.info2')}
               </p>
 
               <hr className="border-t border-gray-300" />
@@ -42,7 +44,7 @@ const ForgotPasswordConfirmation = () => {
                   onClick={() => window.location.href = '/'}
                   className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300"
                 >
-                  Retour à l’accueil
+                  {t('pages.forgotPasswordConfirm.backButton')}
                 </button>
               </div>
             </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   LayoutDashboard, Briefcase, FileText, MessageSquare, BarChart3, Settings, LogOut, Menu, X, ChevronLeft
 } from 'lucide-react';
@@ -8,6 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import { Badge } from '@/components/ui/badge';
 import ConfirmationDialog from '../ConfirmationDialog';
+import { toast } from 'sonner';
 
 function NavItem({ icon: Icon, label, to, sidebarOpen, badge }) {
   const navigate = useNavigate();
@@ -45,18 +47,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
   const navigate = useNavigate();
   const { professionnel, logout } = useAuth();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success("Déconnexion réussie", {
-        description: "Vous avez été déconnecté avec succès.",
+      toast.success(t('sidebar.logoutSuccess'), {
+        description: t('sidebar.logoutSuccessDesc'),
         duration: 3000,
       });
       navigate("/login");
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error);
-      toast.error("Erreur de déconnexion", {
+      toast.error(t('sidebar.logoutError'), {
         description: error.response?.data?.message || "Une erreur est survenue. Veuillez réessayer.",
         duration: 5000,
       });
@@ -89,12 +92,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
 
 
   const sidebarItems = [
-    { id: 'dashboard', label: 'Tableau de bord', icon: LayoutDashboard, to: '/dashboard' },
-    { id: 'job-posts', label: 'Mes offres d\'emploi', icon: Briefcase, to: '/job-post' },
-    { id: 'applications', label: 'Candidatures', icon: FileText, to: '/job-application' }, // Le badge est codé en dur comme dans l'original
-    { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/chat' },
-    { id: 'analytics', label: 'Statistiques', icon: BarChart3, to: '/analytics' },
-    { id: 'settings', label: 'Paramètres', icon: Settings, to: '/settings' },
+    { id: 'dashboard', label: t('sidebar.dashboard'), icon: LayoutDashboard, to: '/dashboard' },
+    { id: 'job-posts', label: t('sidebar.myJobOffers'), icon: Briefcase, to: '/job-post' },
+    { id: 'applications', label: t('sidebar.applications'), icon: FileText, to: '/job-application' }, // Le badge est codé en dur comme dans l'original
+    { id: 'messages', label: t('sidebar.messages'), icon: MessageSquare, to: '/chat' },
+    { id: 'analytics', label: t('sidebar.statistics'), icon: BarChart3, to: '/analytics' },
+    { id: 'settings', label: t('sidebar.settings'), icon: Settings, to: '/settings' },
   ];
 
   return (
@@ -153,7 +156,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
         <div className="p-4 border-t border-gray-200">
           <button className="flex items-center w-full text-left text-gray-700 hover:text-red-600" onClick={openLogoutModal}>
             <LogOut size={20} className={`${!sidebarOpen && 'mx-auto'}`} />
-            {sidebarOpen && <span className="ml-3 text-sm font-medium">Se déconnecter</span>}
+            {sidebarOpen && <span className="ml-3 text-sm font-medium">{t('sidebar.logout')}</span>}
           </button>
         </div>
       </div>
@@ -161,9 +164,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen, isMobile }) => {
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
-        title="Confirmation de déconnexion"
-        description="Êtes-vous sûr de vouloir vous déconnecter ?"
-        confirmText="Se déconnecter"
+        title={t('sidebar.logoutConfirmationTitle')}
+        description={t('sidebar.logoutConfirmationDesc')}
+        confirmText={t('sidebar.logout')}
         variant="destructive"
       />
     </>

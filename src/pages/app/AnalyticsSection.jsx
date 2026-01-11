@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart3 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Composants UI réutilisables
 const Card = ({ children, className = '', ...props }) => (
@@ -27,16 +28,18 @@ const CardContent = ({ children, className = '', ...props }) => (
 );
 
 const AnalyticsSection = () => {
+  const { t } = useTranslation();
+
   return (
     <main className="flex-1 p-5 overflow-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Analytics</CardTitle>
+          <CardTitle>{t('analytics.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-gray-600">
-            <p>Statistiques en cours de développement.</p>
-            <p>Vous trouverez bientôt des graphiques et des analyses ici.</p>
+            <p>{t('analytics.inProgress')}</p>
+            <p>{t('analytics.comingSoon')}</p>
           </div>
         </CardContent>
       </Card>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, MapPin, Clock, Calendar, Briefcase } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import CompanyCard from './CompanyCard';
@@ -13,6 +14,7 @@ import BantulinkLogo from '../../assets/assets_application/BantuLinkLogo.png';
 
 const JobCarousel = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const jobCarouselRef = useRef(null);
   const companyCarouselRef = useRef(null);
   const [companies, setCompanies] = useState([]);
@@ -91,7 +93,7 @@ const JobCarousel = () => {
     <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200 h-full">
       {/* Header with logo and company */}
       <div className="mb-4">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3"  >
           <div className='flex items-center'>
             <div className="w-25 h-25 bg-gray-100 rounded-lg flex items-center justify-center self-start">
               <img src={job.employeur?.logo || BantulinkLogo} alt={`${job.employeur?.nom_entreprise} Logo`} className="w-16 h-16 sm:w-20 sm:h-20 object-contain" />
@@ -108,12 +110,12 @@ const JobCarousel = () => {
       {/* Publication date */}
       <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
         <Calendar className="w-4 h-4" />
-        <span>Publié le : {new Date(job.date_publication).toLocaleDateString('fr-FR')}</span>
+        <span>{t('jobCard.publicationDate')} : {new Date(job.date_publication).toLocaleDateString('fr-FR')}</span>
       </div>
 
       {/* Location */}
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
-        <span className="font-medium">Localisation :</span>
+        <span className="font-medium">{t('jobCard.location')}</span>
         <span>{job.ville}, {job.pays}</span>
       </div>
 
@@ -133,7 +135,7 @@ const JobCarousel = () => {
       {job.length > 5 && (
       <Link to={`/job-offers/${encodeId(job.id)}`} className="block w-full">
         <button className="w-full bg-orange-500 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors mt-auto">
-          Afficher plus
+          {t('jobCard.showMore')}
         </button>
       </Link>
       )}
@@ -157,7 +159,7 @@ const JobCarousel = () => {
     <div className="mx-auto py-8 bg-white font-sans">
       {/* Section "Recherches populaires" */}
       <div className="mb-10 px-10 sm:px-6 lg:px-8">
-        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">Categories populaires</h2>
+        <h2 className="text-xl md:text-3xl font-bold text-emerald-400 mb-4">{t('jobCarousel.popularSearches')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {popularCategories.map(category => (
             <div
@@ -171,7 +173,7 @@ const JobCarousel = () => {
                 </div>
                 <h3 className="font-bold text-gray-800 text-md">{category.nom}</h3>
               </div>
-              <p className="text-sm text-gray-500 mt-2 text-right">{category.count} offre{category.count > 1 ? 's' : ''}</p>
+              <p className="text-sm text-gray-500 mt-2 text-right">{category.count} {category.count > 1 ? t('jobCarousel.offers') : t('jobCarousel.offer')}</p>
             </div>
           ))}
         </div>
@@ -182,9 +184,9 @@ const JobCarousel = () => {
         <div className="flex justify-center p-10"><BantulinkLoader /></div>
       ) : (
         <div className="px-4 sm:px-6 lg:px-8 relative">
-          <h2 className="text-xl md:text-2xl font-bold text-emerald-400 mb-6">Les entreprises qui recrutent</h2>
+          <h2 className="text-xl md:text-2xl font-bold text-emerald-400 mb-6">{t('jobCarousel.hiringCompanies')}</h2>
           {companies.length > 0 ? (
-            <>
+            <React.Fragment>
               <div
                 ref={companyCarouselRef}
                 className="flex gap-6 overflow-x-auto scroll-snap-x scroll-mandatory scroll-smooth pb-4 no-scrollbar"
@@ -196,7 +198,7 @@ const JobCarousel = () => {
               {/* Navigation Arrows for Company Carousel */}
               <button
                 onClick={() => scrollCarousel(companyCarouselRef, 'left')}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors shadow-lg z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center text-white hover:bg-orange-600 transition-colors shadow-lg z-10"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -206,9 +208,9 @@ const JobCarousel = () => {
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
-            </>
-          ) : (
-            <p className="text-center text-gray-500 py-8">Aucune entreprise ne recrute pour le moment.</p>
+            </React.Fragment>
+           ) : (
+            <p className="text-center text-gray-500 py-8">{t('jobCarousel.noCompaniesHiring')}</p>
           )}
         </div>
       )}
@@ -218,7 +220,7 @@ const JobCarousel = () => {
         <div className="px-4 sm:px-6 lg:px-8 mt-8">
           <Link to="/all-companies">
             <button className="bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors">
-              Afficher toutes les entreprises
+              {t('jobCarousel.showAllCompanies')}
             </button>
           </Link>
         </div>

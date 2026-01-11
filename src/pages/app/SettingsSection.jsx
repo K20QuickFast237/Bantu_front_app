@@ -1,5 +1,6 @@
 import React from 'react';
 import { Settings } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 // Composants UI réutilisables
 const Card = ({ children, className = '', ...props }) => (
@@ -27,16 +28,18 @@ const CardContent = ({ children, className = '', ...props }) => (
 );
 
 const SettingsSection = () => {
+  const { t } = useTranslation();
+
   return (
     <main className="flex-1 p-5 overflow-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Settings</CardTitle>
+          <CardTitle>{t('pages.settings.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-gray-600">
-            <p>Paramètres en cours de développement.</p>
-            <p>Vous pourrez bientôt personnaliser vos préférences ici.</p>
+            <p>{t('pages.settings.inProgress')}</p>
+            <p>{t('pages.settings.comingSoon')}</p>
           </div>
         </CardContent>
       </Card>

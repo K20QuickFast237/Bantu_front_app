@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
@@ -8,6 +9,7 @@ const LinkedInCallback = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { login } = useAuth();
+    const { t } = useTranslation();
     const [error, setError] = useState(null);
     const hasProcessed = useRef(false);
 
@@ -39,7 +41,7 @@ const LinkedInCallback = () => {
             const { user: apiUser, token } = response.data;
 
             login(apiUser, token);
-            toast.success('Connexion via LinkedIn réussie !');
+            toast.success(t('pages.linkedinCallback.success'));
             navigate('/WhatDoYouWantToDo', { replace: true });
         } catch (err) {
             const errorMessage = err.response?.data?.message || "Une erreur est survenue lors de la connexion avec LinkedIn.";
@@ -57,10 +59,10 @@ const LinkedInCallback = () => {
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="text-center">
                 <h1 className="text-2xl font-semibold text-gray-800">
-                    {error ? 'Erreur de connexion' : 'Finalisation de la connexion LinkedIn...'}
+                    {error ? t('pages.linkedinCallback.errorTitle') : t('pages.linkedinCallback.processing')}
                 </h1>
                 <p className="text-gray-600 mt-2">
-                    {error ? error : 'Veuillez patienter, nous vous redirigeons.'}
+                    {error ? error : t('pages.linkedinCallback.wait')}
                 </p>
             </div>
         </div>

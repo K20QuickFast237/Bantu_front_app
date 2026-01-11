@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ export default function DashboardCandidatureSpec() {
     const { id } = useParams();
     const navigate = useNavigate();
     const [fromDate, setFromDate] = useState('');
+    const { t } = useTranslation();
     const [toDate, setToDate] = useState('');
     const [candidates, setCandidates] = useState([]);
     const [filteredCandidates, setFilteredCandidates] = useState([]);
@@ -17,7 +19,6 @@ export default function DashboardCandidatureSpec() {
             setLoading(false);
             return;
         }
-        console.log('Fetch candidatures pour offre ID:', id);
         setLoading(true);
         api.get(`/offres/${id}/candidatures`)
             .then(response => {
@@ -67,13 +68,13 @@ export default function DashboardCandidatureSpec() {
             <main className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                        Candidatures pour l'offre : {loading ? 'Chargement...' : (filteredCandidates[0]?.offre?.titre_poste || 'Inconnue')}
+                        {t('pages.dashboardCandidature.title')} {loading ? t('common.loading') : (filteredCandidates[0]?.offre?.titre_poste || 'Inconnue')}
                     </h1>
 
                     <div className="bg-orange-50 p-6 rounded-lg mb-8">
                         <div className="flex gap-4 items-end">
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Du</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t('pages.dashboardCandidature.from')}</label>
                                 <input
                                     type="date"
                                     value={fromDate}
@@ -82,7 +83,7 @@ export default function DashboardCandidatureSpec() {
                                 />
                             </div>
                             <div className="flex-1">
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Au</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">{t('pages.dashboardCandidature.to')}</label>
                                 <input
                                     type="date"
                                     value={toDate}
@@ -95,7 +96,7 @@ export default function DashboardCandidatureSpec() {
                                 onClick={handleFilter}
                                 type="button"
                             >
-                                Filtrer
+                                {t('pages.dashboardCandidature.filter')}
                                 <Search className="w-4 h-4 ml-2" />
                             </button>
                             <button
@@ -103,17 +104,17 @@ export default function DashboardCandidatureSpec() {
                                 onClick={handleReset}
                                 type="button"
                             >
-                                Tout afficher
+                                {t('pages.dashboardCandidature.reset')}
                             </button>
                         </div>
                     </div>
 
                     <div className="flex gap-4 mb-6">
                         <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded">
-                            Configurer l'envoi des mails
+                            {t('pages.dashboardCandidature.configMail')}
                         </button>
                         <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded ml-auto">
-                            Exporter les données
+                            {t('pages.dashboardCandidature.export')}
                         </button>
                     </div>
 
@@ -122,17 +123,17 @@ export default function DashboardCandidatureSpec() {
                             <thead>
                                 <tr className="bg-gray-100 border-b border-gray-300">
                                     <th className="px-6 py-3 text-left font-semibold text-gray-700 w-16"></th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Nom de candidat</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Offre d'emploi</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Adresse</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Statut</th>
-                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.dashboardCandidature.candidateName')}</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.dashboardCandidature.jobOffer')}</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.dashboardCandidature.address')}</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.dashboardCandidature.status')}</th>
+                                    <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.dashboardCandidature.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {filteredCandidates.length === 0 ? (
                                     <tr>
-                                        <td colSpan="6" className="px-6 py-4 text-center text-gray-500">Aucune candidature trouvée</td>
+                                        <td colSpan="6" className="px-6 py-4 text-center text-gray-500">{t('pages.dashboardCandidature.noCandidates')}</td>
                                     </tr>
                                 ) : (
                                     filteredCandidates.map((candidate, idx) => {
@@ -162,7 +163,7 @@ export default function DashboardCandidatureSpec() {
                                                         onClick={() => handleViewCandidate(candidate)}
                                                         className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer"
                                                     >
-                                                        Afficher
+                                                        {t('pages.dashboardCandidature.view')}
                                                     </button>
                                                 </td>
                                             </tr>

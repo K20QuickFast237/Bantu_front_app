@@ -1,6 +1,7 @@
 import HeaderProfil from '@/components/app/HeaderProfil';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
 import api from '@/services/api';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
@@ -19,6 +20,7 @@ const JobApplicationForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { particulier } = useAuth();
+  const { t } = useTranslation();
   const decodedId = decodeId(id);
   const [job, setJob] = useState(null);
   const [applicationMethod, setApplicationMethod] = useState('bantuHire');
@@ -68,7 +70,7 @@ const JobApplicationForm = () => {
 
   const handleSubmitApplication = async () => {
     if (!particulier) {
-      toast.error("Veuillez completer votre profil avant d'envoyer une candidature.");
+      toast.error(t('pages.jobApplicationForm.completeProfile'));
       return;
     }
     setLoading(true); // Déjà présent, mais on le garde pour la soumission
@@ -86,7 +88,7 @@ const JobApplicationForm = () => {
             formData.append(`doc_titre${index + 1}`, docName);
             formData.append(`doc${index + 1}`, uploadedDocs[docName]);
           } else {
-            toast.error(`Veuillez joindre le document : ${docName}`);
+            toast.error(t('pages.jobApplicationForm.missingDoc', { doc: docName }));
             throw new Error(`Document manquant: ${docName}`);
           }
         });
@@ -95,7 +97,7 @@ const JobApplicationForm = () => {
         if (uploadedDocs['CV']) {
           formData.append('cv_file', uploadedDocs['CV']);
         } else {
-          toast.error("Veuillez joindre votre CV.");
+          toast.error(t('pages.jobApplicationForm.missingCV'));
           throw new Error("CV manquant");
         }
 
@@ -107,14 +109,14 @@ const JobApplicationForm = () => {
             formData.append(`doc${docIndex}`, uploadedDocs[docName]);
             docIndex++;
           } else {
-            toast.error(`Veuillez joindre le document : ${docName}`);
+            toast.error(t('pages.jobApplicationForm.missingDoc', { doc: docName }));
             throw new Error(`Document manquant: ${docName}`); // This was already correct
           }
         });
       }
 
       await api.post('/candidatures', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      toast.success("Votre candidature a bien été envoyée !");
+      toast.success(t('pages.jobApplicationForm.success'));
       navigate('/mesCandidatures');
     } catch (error) {
       if (!error.message.startsWith("Document manquant") && !error.message.startsWith("CV manquant")) {
@@ -154,13 +156,13 @@ const JobApplicationForm = () => {
                   </div>
                 </div>
                 <div className="text-gray-500 text-xs">
-                  <span>Publié le: {job?.date_publication}</span> | <span>Date limite: {job?.date_limite_soumission}</span>
+                  <span>{t('pages.jobApplicationForm.publishedOn')} {job?.date_publication}</span> | <span>{t('pages.jobApplicationForm.deadline')} {job?.date_limite_soumission}</span>
                 </div>
               </div>
 
               {/* Carte de sélection de la méthode */}
               <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Comment souhaitez-vous postuler ?</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">{t('pages.jobApplicationForm.howToApply')}</h3>
                 <div className="space-y-4">
                   <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${applicationMethod === 'bantuHire' ? 'bg-green-50 border-green-500' : 'border-gray-300 hover:border-green-400'}`}>
                     <input
@@ -171,7 +173,7 @@ const JobApplicationForm = () => {
                       onChange={(e) => setApplicationMethod(e.target.value)}
                       className="form-radio h-5 w-5 text-green-600 border-gray-300 focus:ring-green-500"
                     />
-                    <span className="ml-3 font-medium text-gray-800">Avec mon profil BantuHire</span>
+                    <span className="ml-3 font-medium text-gray-800">{t('pages.jobApplicationForm.withBantuHire')}</span>
                   </label>
                   <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${applicationMethod === 'myCv' ? 'bg-orange-50 border-orange-500' : 'border-gray-300 hover:border-orange-400'}`}>
                     <input
@@ -182,7 +184,7 @@ const JobApplicationForm = () => {
                       onChange={(e) => setApplicationMethod(e.target.value)}
                       className="form-radio h-5 w-5 text-orange-500 border-gray-300 focus:ring-orange-500"
                     />
-                    <span className="ml-3 font-medium text-gray-800">Avec mon CV personnel</span>
+                    <span className="ml-3 font-medium text-gray-800">{t('pages.jobApplicationForm.withMyCV')}</span>
                   </label>
                 </div>
               </div>
@@ -190,26 +192,26 @@ const JobApplicationForm = () => {
               {/* Contenu dynamique selon la méthode */}
             {applicationMethod === 'bantuHire' ? (
               <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Lettre de motivation (Optionnel)</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">{t('pages.jobApplicationForm.coverLetter')}</h3>
                 <textarea
                   className="w-full h-48 p-3 text-gray-800 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 focus:outline-none resize-none transition-colors"
-                  placeholder="Rédigez ici un message pour accompagner votre candidature..."
+                  placeholder={t('pages.jobApplicationForm.coverLetterPlaceholder')}
                   value={coverLetter}
                   onChange={(e) => setCoverLetter(e.target.value)}
                   maxLength={maxCharacters}
                   rows={10}
                 />
                 <div className="text-right text-gray-500 text-xs mt-2">
-                  {coverLetter.length}/{maxCharacters} caractères
+                  {coverLetter.length}/{maxCharacters} {t('pages.jobApplicationForm.chars')}
                 </div>
               </div>
             ) : (
               <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Téléversez votre CV</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">{t('pages.jobApplicationForm.uploadCV')}</h3>
                 {Array.isArray(job.documents_requis) && job.documents_requis.some(d => d.toLowerCase() === 'cv') ? (
-                  <FileUploadItem docName="CV" uploadedFile={uploadedDocs['CV']} onFileChange={handleFileChange} />
+                  <FileUploadItem docName="CV" uploadedFile={uploadedDocs['CV']} onFileChange={handleFileChange} t={t} />
                 ) : (
-                  <p className="text-gray-500 text-sm">Le CV n'est pas explicitement requis pour cette offre.</p>
+                  <p className="text-gray-500 text-sm">{t('pages.jobApplicationForm.cvNotRequired')}</p>
                 )}
               </div>
             )}
@@ -217,10 +219,10 @@ const JobApplicationForm = () => {
             {/* Section pour les autres documents requis */}
             {otherRequiredDocs.length > 0 && (
               <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="text-lg font-bold text-gray-800 mb-4">Autres documents requis</h3>
+                <h3 className="text-lg font-bold text-gray-800 mb-4">{t('pages.jobApplicationForm.otherDocs')}</h3>
                 <div className="space-y-4">
                   {otherRequiredDocs.map((docName, idx) => (
-                    <FileUploadItem key={idx} docName={docName} uploadedFile={uploadedDocs[docName]} onFileChange={handleFileChange} />
+                    <FileUploadItem key={idx} docName={docName} uploadedFile={uploadedDocs[docName]} onFileChange={handleFileChange} t={t} />
                   ))}
                 </div>
               </div>
@@ -234,7 +236,7 @@ const JobApplicationForm = () => {
                 disabled={loading}
               >
                 {loading ? <Loader2 className="animate-spin h-5 w-5 mr-3" /> : <FileText className="h-5 w-5 mr-3" />}
-                {loading ? "Envoi en cours..." : "Envoyer ma candidature"}
+                {loading ? t('pages.jobApplicationForm.sending') : t('pages.jobApplicationForm.sendApplication')}
               </button>
             </div>
           </div>
@@ -242,13 +244,13 @@ const JobApplicationForm = () => {
           {/* Colonne de droite : Infos entreprise */}
           <div className="lg:w-1/3">
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">À propos de l'entreprise</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">{t('pages.jobApplicationForm.aboutCompany')}</h3>
               <div className="flex items-center mb-4">
                 <Building2 className="w-5 h-5 text-gray-500 mr-3" />
                 <span className="text-base font-bold text-gray-800">{job?.employeur?.nom_entreprise}</span>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                {job?.employeur?.description_entreprise || "Aucune description fournie."}
+                {job?.employeur?.description_entreprise || t('pages.jobApplicationForm.noDesc')}
               </p>
             </div>
           </div>
@@ -259,7 +261,7 @@ const JobApplicationForm = () => {
   );
 };
 
-const FileUploadItem = ({ docName, uploadedFile, onFileChange }) => {
+const FileUploadItem = ({ docName, uploadedFile, onFileChange, t }) => {
   const handleRemove = () => {
     onFileChange(docName, null);
   };
@@ -267,7 +269,7 @@ const FileUploadItem = ({ docName, uploadedFile, onFileChange }) => {
   return (
     <div className="border border-gray-200 rounded-lg p-4">
       <div className="flex justify-between items-center">
-        <p className="font-medium text-gray-800">Joindre {docName} <span className="text-red-500">*</span></p>
+        <p className="font-medium text-gray-800">{t('pages.jobApplicationForm.attach', { doc: docName })} <span className="text-red-500">*</span></p>
         {uploadedFile && (
           <button onClick={handleRemove} className="text-red-500 hover:text-red-700">
             <Trash2 size={16} />
@@ -284,8 +286,8 @@ const FileUploadItem = ({ docName, uploadedFile, onFileChange }) => {
           <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <UploadCloud className="w-8 h-8 mb-2 text-gray-400" />
-              <p className="text-sm text-gray-500"><span className="font-semibold">Cliquez pour téléverser</span> ou glissez-déposez</p>
-              <p className="text-xs text-gray-500">PDF, DOC, DOCX, PNG, JPG (MAX. 5Mo)</p>
+              <p className="text-sm text-gray-500"><span className="font-semibold">{t('pages.jobApplicationForm.clickToUpload')}</span> {t('pages.jobApplicationForm.dragDrop')}</p>
+              <p className="text-xs text-gray-500">{t('pages.jobApplicationForm.formats')}</p>
             </div>
             <input
               type="file"

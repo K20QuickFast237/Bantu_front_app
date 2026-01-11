@@ -1,24 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Search, MapPin, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
+import api from '@/services/api';
+import { toast } from 'sonner';
 
 const JobSearchDashboard = ({
   searchTerm,
-  allJobTitle=false,
+  allJobTitle = false,
   setSearchTerm,
   locationTerm,
   setLocationTerm,
   selectedContract,
   setSelectedContract,
-  selectedEducation, setSelectedEducation,
+  selectedEducation,
+  setSelectedEducation,
   hideContractFilter = true,
   hideEducationFilter = true,
-  searchProfileButtonText = "Rechercher des profils",
-  title = "Rechercher parmi toutes les offres d'emploi"
+  searchProfileButtonText,
+  title,
 }) => {
+  const { t } = useTranslation();
   const [contractOpen, setContractOpen] = useState(false);
   const [educationOpen, setEducationOpen] = useState(false);
   const [contractOptions, setContractOptions] = useState([]);
+
+  const defaultButtonText = t('jobSearch.searchProfiles');
+  const defaultTitle = t('jobSearch.searchAllOffers');
 
   useEffect(() => {
     const fetchContract = async () => {
@@ -27,16 +35,22 @@ const JobSearchDashboard = ({
         const contracts = Array.isArray(response.data) ? response.data : response.data?.data || [];
         setContractOptions(contracts);
       } catch (error) {
-        toast.error("Erreur lors de la récupération des types de contrat.", {
-          description: `${error.message}` || "Une erreur inattendue est survenue",
-          duration: 3000
+        toast.error(t('jobSearch.contractFetchError'), {
+          description: error.message || t('jobSearch.unexpectedError'),
+          duration: 3000,
         });
       }
     };
     fetchContract();
-  }, [])
+  }, [t]);
 
-  const educationOptions = ['Bac', 'Bac+2', 'Bac+3', 'Bac+5', 'Doctorat'];
+  const educationOptions = [
+    t('jobSearch.educationLevels.bac'),
+    t('jobSearch.educationLevels.bac2'),
+    t('jobSearch.educationLevels.bac3'),
+    t('jobSearch.educationLevels.bac5'),
+    t('jobSearch.educationLevels.doctorate'),
+  ];
 
   return (
     <>
@@ -50,7 +64,7 @@ const JobSearchDashboard = ({
           
           {/* Title */}
           <h2 className="text-xl md:text-3xl font-bold text-center mb-6 pt-8">
-            {allJobTitle ? "Trouvez une offre d'emploi" : title}
+            {allJobTitle ? t('jobSearch.findJobOffer') : title || defaultTitle}
           </h2>
 
           {/* First Row - Search Bar */}
@@ -59,7 +73,7 @@ const JobSearchDashboard = ({
               <Search className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="Recherchez par titre, compétences, mots clés,…"
+                placeholder={t('jobSearch.searchPlaceholder')}
                 className="w-full outline-none text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -71,7 +85,7 @@ const JobSearchDashboard = ({
               <MapPin className="text-gray-400 w-5 h-5 mr-2" />
               <motion.input
                 type="text"
-                placeholder="choisir le pays ou la ville"
+                placeholder={t('jobSearch.locationPlaceholder')}
                 className="w-full outline-none text-sm"
                 value={locationTerm}
                 onChange={(e) => setLocationTerm(e.target.value)}
@@ -80,7 +94,7 @@ const JobSearchDashboard = ({
               />
             </div>
             <button className="bg-[#F97316] text-white px-6 py-3 text-sm font-semibold min-w-[180px] hover:bg-[#E06714] transition-colors w-full sm:w-auto">
-              {searchProfileButtonText}
+              {searchProfileButtonText || defaultButtonText}
             </button>
           </div>
 
@@ -95,7 +109,7 @@ const JobSearchDashboard = ({
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedContract || 'Type de contrat'}
+                {selectedContract || t('jobSearch.contractType')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${contractOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>
@@ -134,7 +148,7 @@ const JobSearchDashboard = ({
               transition={{ type: "spring" }}
             >
               <span className="text-sm">
-                {selectedEducation || 'Niveau d\'étude'}
+                {selectedEducation || t('jobSearch.educationLevel')}
               </span>
               <ChevronDown className={`text-gray-500 w-4 h-4 transition-transform ${educationOpen ? 'rotate-180' : ''}`} />
               <AnimatePresence>

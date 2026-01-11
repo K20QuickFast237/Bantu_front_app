@@ -44,7 +44,7 @@ const HeaderProfils = ({ onOpenProfileModal }) => {
   const userProfileItems = [
     { to: '/profil', label: t('header.myAccount'), icon: User, action: (e) => handleProfileClick(e, '/profil') },
     { to: '/WhatDoYouWantToDo', label: t('header.portail') || 'Portail', icon: ChevronDown },
-    { to: '/dashboard/candidate/settings', label: t('header.settings') || 'Paramètres', icon: Settings },
+    // { to: '/dashboard/candidate/settings', label: t('header.settings') || 'Paramètres', icon: Settings },
   ];
 
   const dropdownVariants = {

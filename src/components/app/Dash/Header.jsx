@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bell, FileText, MessageSquare, User, LogOut, CheckCheck, Search, ChevronDown, Hand, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Globe, Bell, FileText, MessageSquare, User, LogOut, CheckCheck, Search, ChevronDown, Hand, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import Dropdown from "@/components/ui/dropdown";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
 import { toast } from 'sonner';
+import i18n from "@/i18n";
 import ConfirmationDialog from '../ConfirmationDialog';
 
 
@@ -16,6 +19,9 @@ const Header = ({ collapsed, setCollapsed }) => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const notifRef = useRef(null);
   const profileRef = useRef(null);
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -104,6 +110,13 @@ const Header = ({ collapsed, setCollapsed }) => {
             className="w-48 lg:w-64 pl-10 pr-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
           />
         </div>
+        <Dropdown
+          trigger={<Button variant="ghost" size="icon"><Globe className="h-5 w-5" /></Button>}
+          align="end"
+        >
+          <button type="button" className="w-full text-left px-4 py-2 text-sm hover:bg-muted/10" onClick={() => changeLanguage('fr')}>🇫🇷 Français</button>
+          <button type="button" className="w-full text-left px-4 py-2 text-sm hover:bg-muted/10" onClick={() => changeLanguage('en')}>🇬🇧 English</button>
+        </Dropdown>
         
         <div className="flex items-center space-x-2">
             <button
@@ -200,6 +213,16 @@ const Header = ({ collapsed, setCollapsed }) => {
                     <div className="py-1">
                       <button
                         onClick={() => {
+                          navigate('/WhatDoYouWantToDo');
+                          setProfileOpen(false);
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Globe className="w-4 h-4 text-gray-500" />
+                        <span>Portail</span>
+                      </button>
+                      <button
+                        onClick={() => {
                           navigate('/settings');
                           setProfileOpen(false);
                         }}
@@ -209,6 +232,7 @@ const Header = ({ collapsed, setCollapsed }) => {
                         <span>Voir mon profil</span>
                       </button>
                       <div className="border-t border-gray-100 my-1"></div>
+                      
                       <button
                         onClick={openLogoutModal}
                         className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50"

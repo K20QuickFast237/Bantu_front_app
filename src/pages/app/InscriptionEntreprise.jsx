@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import { useTranslation } from "react-i18next";
 import api from "@/services/api";
 import { toast } from 'sonner'
 import { motion } from "framer-motion";
@@ -127,6 +128,7 @@ const FileField = ({ id, label, formik, helpText, isRequired = false }) => {
 const CompletionEntreprise = () => {
   const navigate = useNavigate();
   const { refreshAuth } = useAuth();
+  const { t } = useTranslation();
 
   const formik = useFormik({
     initialValues: {
@@ -158,7 +160,7 @@ const CompletionEntreprise = () => {
         formData.append('_method', 'POST'); // ou 'PUT' si votre route est en PUT
 
         const response = await api.post('/profile/professionnel', formData);
-        toast.success("Profil complete avec success !", {
+        toast.success(t('pages.inscriptionEntreprise.success'), {
             duration: 3000,
         });
         resetForm();
@@ -189,11 +191,10 @@ const CompletionEntreprise = () => {
           className="w-full lg:w-1/2 bg-gradient-to-b from-[#0A2342] to-green-900/50 flex flex-col items-center justify-center px-6 lg:px-12 py-12 text-white relative"
         >
           <motion.h1 className="text-3xl md:text-4xl font-bold mb-6 text-center lg:text-left">
-            Complétez Votre Profil Entreprise
+            {t('pages.inscriptionEntreprise.title')}
           </motion.h1>
           <p className="text-base text-center lg:text-left mb-8 opacity-90 max-w-lg">
-            Finalisez votre profil pour accéder à notre plateforme et recruter les meilleurs talents. 
-            Ajoutez les informations de votre entreprise pour commencer dès aujourd'hui.
+            {t('pages.inscriptionEntreprise.desc')}
           </p>
           <motion.div
             className="w-full flex justify-center relative"
@@ -226,23 +227,23 @@ const CompletionEntreprise = () => {
           </motion.button>
 
           <h2 className="text-2xl font-bold text-blue-800 mb-6 text-center">
-            Informations de l'entreprise
+            {t('pages.inscriptionEntreprise.infoTitle')}
           </h2>
 
           {/* Champs scrollables */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto pb-24">
-            <InputField id="titre_professionnel" label="Titre Professionnel" formik={formik} icon={Briefcase} />
-            <InputField id="email_pro" label="Email Professionnel" formik={formik} icon={User} type="email" />
-            <InputField id="telephone_pro" label="Téléphone Professionnel" formik={formik} icon={Phone} />
-            <InputField id="nom_entreprise" label="Nom de l'entreprise" formik={formik} icon={Building} />
-            <InputField id="site_web" label="Site Web" formik={formik} icon={Globe} />
-            <InputField id="adresse" label="Adresse" formik={formik} icon={MapPin} />
-            <InputField id="ville" label="Ville" formik={formik} icon={MapPin} />
-            <InputField id="pays" label="Pays" formik={formik} icon={Globe} />
-            <InputField id="num_contribuable" label="N° de Contribuable (NIU)" formik={formik} icon={Hash} />
-            <TextAreaField id="description_entreprise" label="Description de l'entreprise" formik={formik} icon={Info} />
-            <FileField id="logo" label="Logo de l'entreprise" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
-            <FileField id="photo_couverture" label="Image de couverture (Optionnel)" formik={formik} helpText="PNG, JPG, GIF jusqu'à 2MB." />
+            <InputField id="titre_professionnel" label={t('pages.inscriptionEntreprise.professionalTitle')} formik={formik} icon={Briefcase} />
+            <InputField id="email_pro" label={t('pages.inscriptionEntreprise.proEmail')} formik={formik} icon={User} type="email" />
+            <InputField id="telephone_pro" label={t('pages.inscriptionEntreprise.proPhone')} formik={formik} icon={Phone} />
+            <InputField id="nom_entreprise" label={t('pages.inscriptionEntreprise.companyName')} formik={formik} icon={Building} />
+            <InputField id="site_web" label={t('pages.inscriptionEntreprise.website')} formik={formik} icon={Globe} />
+            <InputField id="adresse" label={t('pages.inscriptionEntreprise.address')} formik={formik} icon={MapPin} />
+            <InputField id="ville" label={t('pages.inscriptionEntreprise.city')} formik={formik} icon={MapPin} />
+            <InputField id="pays" label={t('pages.inscriptionEntreprise.country')} formik={formik} icon={Globe} />
+            <InputField id="num_contribuable" label={t('pages.inscriptionEntreprise.taxId')} formik={formik} icon={Hash} />
+            <TextAreaField id="description_entreprise" label={t('pages.inscriptionEntreprise.descCompany')} formik={formik} icon={Info} />
+            <FileField id="logo" label={t('pages.inscriptionEntreprise.logo')} formik={formik} helpText={t('pages.inscriptionEntreprise.uploadHelp')} />
+            <FileField id="photo_couverture" label={t('pages.inscriptionEntreprise.coverImage')} formik={formik} helpText={t('pages.inscriptionEntreprise.uploadHelp')} />
           </div>
 
           {/* Bouton fixe en bas */}
@@ -259,7 +260,7 @@ const CompletionEntreprise = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {formik.isSubmitting  ? <ClipLoader size={22} color="#fff" /> : "Enregistrer"}
+              {formik.isSubmitting  ? <ClipLoader size={22} color="#fff" /> : t('pages.inscriptionEntreprise.save')}
             </motion.button>
           </motion.div>
         </form>

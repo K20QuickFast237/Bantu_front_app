@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -10,6 +11,7 @@ import { validationForgotPasswordSchema } from '../../schemas';
 
 const ForgotPasswordForm = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const onSubmit = async (values, actions) => {
     try {
@@ -53,13 +55,12 @@ const ForgotPasswordForm = () => {
             <div className="w-full max-w-2xl space-y-6">
               {/* Titre */}
               <h2 className="text-center text-[#10B981] font-semibold text-lg md:text-xl">
-              Vous avez oublié votre mot de passe
+                {t('pages.forgotPassword.title')}
               </h2>
 
               {/* Texte d'information */}
               <p className="text-center text-gray-800 text-sm">
-              Si vous avez oublié votre mot de passe, merci de saisir l’adresse e-mail associée à votre compte.
-              Nous vous enverrons un mail à cette adresse contenant un lien vous permettant d’en créer un nouveau.
+                {t('pages.forgotPassword.info')}
               </p>
 
               <hr className="border-t border-gray-300" />
@@ -70,7 +71,7 @@ const ForgotPasswordForm = () => {
                 <div className="bg-gray-200 p-2 rounded-md">
                   <div className="flex items-center gap-2">
                       <label htmlFor="email" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                      Adresse email * :
+                        {t('pages.forgotPassword.emailLabel')}
                       </label>
                       <input
                       id="email"
@@ -94,7 +95,7 @@ const ForgotPasswordForm = () => {
                     disabled={isSubmitting}
                     className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300 disabled:bg-gray-400"
                     >
-                    Continuer
+                    {t('pages.forgotPassword.continue')}
                     </button>
                 </div>
               </form>

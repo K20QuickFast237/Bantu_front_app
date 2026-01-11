@@ -15,7 +15,13 @@
     "findJob": "Find a job",
     "findCompany": "Find a company",
     "settings": "Settings",
-    "portail":"Portail"
+    "portail":"Portal"
+  },
+  "loading": {
+    "label": "Loading ..."
+  },
+  "meta": {
+    "title": "One App, Two Worlds: Recruitment & E-Commerce United."
   },
   "login": {
     "title": "Sign In",
@@ -59,7 +65,8 @@
     "illustration_alt": "Illustration of a group of people interacting via phone",
     "apply": "Apply",
     "recruit": "Recruit",
-    "freelance": "Freelance",
+    "find_provider": "Find Freelance",
+    "be_provider": "Freelancer",
     "buy": "Buy",
     "sell": "Sell",
     "alt_icon": "{{name}} icon"
@@ -346,7 +353,26 @@
     "successDelete": "Experience deleted successfully",
     "errorLoad": "Error loading experiences",
     "errorSave": "Error saving the experience",
-    "errorDelete": "Error deleting the experience"
+    "errorDelete": "Error deleting the experience",
+    "editModalTitle": "Edit Experience",
+    "addModalTitle": "Add Experience",
+    "jobTitlePlaceholder": "Ex: Frontend Developer",
+    "companyPlaceholder": "Ex: Tech Solutions",
+    "addressPlaceholder": "Ex: 123 Tech Street",
+    "cityPlaceholder": "Ex: Paris",
+    "countryPlaceholder": "Ex: France",
+    "descriptionPlaceholder": "Describe your main missions and responsibilities...",
+    "update": "Update",
+    "validation": {
+      "jobTitleRequired": "Job title required",
+      "companyRequired": "Company name required",
+      "startDateRequired": "Start date required",
+      "endDateRequired": "End date required",
+      "addressRequired": "Address required",
+      "cityRequired": "City required",
+      "countryRequired": "Country required",
+      "descriptionRequired": "Description required"
+    }
   },
   "footer": {
     "ecosystemTitle": "Join the all-in-one BantuLink ecosystem",
@@ -542,19 +568,19 @@
       "users": [
         {
           "initials": "SJ",
-          "name": "Sarah Johnson",
+          "name": "Sara NDONGO",
           "role": "Freelancer",
           "review": "The help center made it very easy to understand how to set up my profile and start getting clients. Excellent resource!"
         },
         {
           "initials": "MC",
-          "name": "Michael Chen",
+          "name": "Lina FOTSO",
           "role": "Business Owner",
           "review": "Quick responses to all my questions about payments and billing. The search feature works perfectly."
         },
         {
           "initials": "AO",
-          "name": "Amara Okafor",
+          "name": "Nala MBALA",
           "role": "Job Seeker",
           "review": "I found exactly what I needed to complete my applications. The step-by-step guides are very helpful."
         }
@@ -604,7 +630,23 @@
       "linkedin": "LinkedIn",
       "behance": "Behance",
       "github": "GitHub",
-      "notProvided": "Not provided"
+      "notProvided": "Not provided",
+      "edit": "Edit",
+      "editTitle": "Edit Resources",
+      "portfolioPlaceholder": "https://my-portfolio.com",
+      "currentResources": "Current Resources",
+      "noResourcesAdded": "No resources added.",
+      "addNewResource": "Add a new resource",
+      "namePlaceholder": "Name (e.g., LinkedIn)",
+      "linkPlaceholder": "Link (full URL)",
+      "add": "Add",
+      "save": "Save",
+      "portfolio": "Portfolio",
+      "noExternalResources": "No external resources have been added.",
+      "invalidUrlError": "Please enter a valid URL.",
+      "missingFieldsError": "Please fill in the name and link.",
+      "updateSuccess": "Resources updated successfully!",
+      "updateError": "Error updating resources."
     },
     "skills": {
       "title": "Skills",
@@ -623,22 +665,47 @@
       "deleteDescription": "This action is irreversible. The skill will be permanently deleted.",
       "noDescription": "No description",
       "alreadyAdded": "This skill is already added.",
-      "selectSkillAndLevel": "Please select a skill and level"
+      "selectSkillAndLevel": "Please select a skill and level",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "noSkillsSelected": "No skill selected",
+      "addSuccess": "Skills added successfully",
+      "deleteSuccess": "Skill deleted successfully",
+      "loadError": "Error loading skills",
+      "availableLoadError": "Error loading available skills",
+      "addError": "Error adding skills",
+      "deleteError": "Error deleting skill",
+      "selectAtLeastOne": "Please add at least one skill."
     },
-    "education": {
+    "training": {
       "title": "Diplomas and Training",
       "add": "Add",
-      "addEducation": "Add education",
-      "editEducation": "Edit education",
-      "fieldOfStudy": "Field of study",
+      "editTitle": "Edit Training",
+      "addTitle": "Add Training",
+      "fieldOfStudy": "Field of Study",
+      "fieldOfStudyPlaceholder": "e.g. Web Development",
       "institution": "Institution",
-      "diploma": "Diploma",
-      "startDate": "Start date",
-      "endDate": "End date",
-      "noEducation": "No education recorded.",
+      "institutionPlaceholder": "e.g. University of Douala",
+      "degree": "Degree",
+      "degreePlaceholder": "e.g. Bachelor's in Computer Science",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "update": "Update",
+      "save": "Save",
+      "noTraining": "No training recorded.",
       "notSpecified": "Not specified",
-      "deleteConfirm": "Are you sure you want to delete?",
-      "deleteDescription": "This action is irreversible. The education will be permanently deleted."
+      "date": "Date",
+      "edit": "Edit",
+      "deleteConfirmTitle": "Are you sure you want to delete?",
+      "deleteConfirmDescription": "This action is irreversible. The training will be permanently deleted.",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "loadError": "Error loading training",
+      "updateSuccess": "Training updated successfully",
+      "addSuccess": "Training added successfully",
+      "saveError": "Error saving training",
+      "deleteSuccess": "Training deleted successfully",
+      "deleteError": "Error deleting training"
     },
     "company": {
       "view": "View",
@@ -663,12 +730,21 @@
     "notSpecified": "Not specified",
     "availableJobs": "Available job offers",
     "noJobsFound": "No jobs found",
-    "showMore": "Show more"
+    "showMore": "Show more",
+    "unknownCompany": "Unknown company"
   },
   "jobCarousel": {
     "popularSearches": "Popular searches",
+    "publicationDate": "Publication date:",
+    "location": "Location:",
+    "notSpecified": "Not specified",
+    "availableJobs": "Available job offers",
+    "noJobsFound": "No jobs found",
     "hiringCompanies": "Companies that are hiring",
-    "showAllCompanies": "Show all companies"
+    "showAllCompanies": "Show all companies",
+    "noCompaniesHiring": "No companies are hiring at the moment.",
+    "offer": "offer",
+    "offers": "offers"
   },
   "personalInfo": {
     "title": "Personal Information",
@@ -769,7 +845,18 @@
     "fullStackDeveloper": "Full stack web developer",
     "douala": "Douala",
     "freelance": "Freelance",
-    "years": "Years"
+    "years": "Years",
+    "searchProfiles": "Search profiles",
+    "searchAllOffers": "Search all job offers",
+    "contractFetchError": "Error while fetching contract types.",
+    "unexpectedError": "An unexpected error occurred",
+    "educationLevels": {
+      "bac": "High School Diploma",
+      "bac2": "2-Year Degree",
+      "bac3": "Bachelor's Degree",
+      "bac5": "Master's Degree",
+      "doctorate": "Doctorate"
+    }
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -787,7 +874,45 @@
     "jobTitle": "Application Design Developer",
     "viewMyProfile": "View my profile",
     "profileCompleted": "Profile completed at",
-    "jobSuggestions": "Job suggestions based on your profile"
+    "jobSuggestions": "Job suggestions based on your profile",
+    "profileHidden": "Your profile is currently hidden from recruiters.",
+    "profileVisibleButton": "Profile Visible",
+    "completeProfilePrompt": "Please complete your profile",
+    "completeProfile": "Complete my profile",
+    "recruiter": {
+      "welcome": "Welcome, {{name}}",
+      "intro": "Here is your recruitment dashboard for today.",
+      "searchPlaceholder": "Search candidates, jobs...",
+      "stats": {
+        "totalViews": "Total Views",
+        "totalOffers": "Total Offers",
+        "scheduledInterviews": "Scheduled Interviews",
+        "activeCandidates": "Active Candidates"
+      },
+      "activeOffers": "Active Job Offers",
+      "createOffer": "Create an offer",
+      "companyFallback": "Company",
+      "publishedInfo": "Published {{days}} days ago • {{count}} candidates",
+      "viewApplications": "View applications",
+      "recentApplications": "Recent Applications",
+      "viewAllApplications": "View all applications",
+      "anonymousCandidate": "Anonymous Candidate",
+      "unspecifiedPosition": "Unspecified Position",
+      "timeAgoDays": "{{count}} day(s) ago",
+      "timeAgoHours": "{{count}} hour(s) ago",
+      "view": "View",
+      "quickActions": {
+        "title": "Quick Actions",
+        "createOffer": "Create an offer",
+        "createOfferDesc": "Post a new job",
+        "editProfile": "Edit profile",
+        "editProfileDesc": "Update your info",
+        "switchMode": "Switch mode",
+        "switchModeDesc": "View as candidate",
+        "viewStats": "View statistics",
+        "viewStatsDesc": "Performance analysis"
+      }
+    }
   },
   "multiStepForm": {
     "share": "Share",
@@ -939,19 +1064,19 @@
   "testimonials": {
     "title": "Satisfying Our Clients Is<br className=\"hidden md:inline\"/>Our Best Advertising.",
     "quote1": "Bantulink helps you see how many extra days you have left to work to reach your goal.",
-    "name1": "Regina Miles",
+    "name1": "Sara NDONGO",
     "role1": "Designer",
     "quote2": "An incredible experience! The team exceeded all my expectations. I highly recommend their services.",
-    "name2": "John Doe",
+    "name2": "Lina FOTSO",
     "role2": "Developer",
     "quote3": "Very satisfied with the final result. Quality is on point and customer support is excellent.",
-    "name3": "Jane Smith",
+    "name3": "Nala MBALA",
     "role3": "Entrepreneur",
     "quote4": "An intuitive platform that facilitates professional and commercial connections. A must!",
-    "name4": "Alex Dupont",
+    "name4": "Zainab TRAORÉ",
     "role4": "Freelancer",
     "quote5": "Bantulink allowed me to develop my network and boost my online sales quickly.",
-    "name5": "Marie Dubois",
+    "name5": "Maya KOUASSI",
     "role5": "Seller",
     "appPreview": {
       "title": "Take a look inside<br/>our SuperApp",
@@ -1033,5 +1158,332 @@
   "fileSize": "(MT) FileSize",
   "formations-updated": "(MT) Formations updated",
   "profile-updated": "(MT) Profile updated",
-  "token": "(MT) Token"
+  "token": "(MT) Token",
+  "analytics": {
+    "title": "Analytics",
+    "inProgress": "Statistics under development.",
+    "comingSoon": "You will soon find charts and analysis here."
+  },
+  "pages": {
+    "allJobOffers": {
+      "searchButton": "Search for jobs",
+      "title": "Search among all job offers"
+    },
+    "allCompanies": {
+      "searchButton": "Search for companies",
+      "title": "Find your dream company"
+    },
+    "companyProfile": {
+      "jobsAt": "Job offers at {{company}}"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "info": "Please enter your new password.",
+      "label": "New password:",
+      "button": "Reset password",
+      "success": "Password reset successfully!",
+      "error": "Error resetting password."
+    },
+    "forgotPasswordConfirm": {
+      "title": "You forgot your password",
+      "info": "An email will be sent to the following address",
+      "info2": "to allow you to reset your account password.",
+      "backButton": "Back to home"
+    },
+    "jobOffer": {
+      "apply": "Apply",
+      "save": "Save",
+      "saving": "Saving...",
+      "published": "Publication date:",
+      "deadline": "Submission deadline:",
+      "contract": "Contract type",
+      "location": "Location",
+      "salary": "Salary",
+      "function": "Function",
+      "status": "Status",
+      "experience": "Experience",
+      "description": "Job Description",
+      "responsibilities": "Responsibilities",
+      "requirements": "Requirements",
+      "documents": "Required documents",
+      "instructions": "Application instructions",
+      "sendTo": "Send to:",
+      "aboutCompany": "About the company",
+      "loginToSave": "Please login to save an offer.",
+      "saveSuccess": "Offer saved successfully!",
+      "completeProfile": "Please complete your profile to apply."
+    },
+    "jobPostDetail": {
+      "backToList": "Back to list",
+      "publishedOn": "Published on:",
+      "deadline": "Deadline:",
+      "share": "Share",
+      "contractType": "Contract type",
+      "location": "Location",
+      "viewApplications": "View applications",
+      "edit": "Edit",
+      "delete": "Delete",
+      "description": "Offer description",
+      "missions": "Employee missions",
+      "profile": "Required profile",
+      "editModalTitle": "Edit offer",
+      "jobTitle": "Job title",
+      "minSalary": "Min salary",
+      "cancel": "Cancel",
+      "save": "Save",
+      "confirmDeleteTitle": "Confirm deletion",
+      "confirmDeleteDesc": "This action is irreversible. The offer <strong>{{title}}</strong> will be permanently deleted.",
+      "updateSuccess": "Offer updated successfully!",
+      "deleteSuccess": "Offer deleted successfully."
+    },
+    "forgotPassword": {
+      "title": "You forgot your password",
+      "info": "If you forgot your password, please enter the email address associated with your account. We will send an email to this address containing a link to create a new one.",
+      "emailLabel": "Email address *:",
+      "continue": "Continue"
+    },
+    "candidatureDetail": {
+      "title": "Application",
+      "date": "Application date:",
+      "invite": "Invite to interview",
+      "preselect": "Preselect",
+      "reject": "Reject",
+      "personalInfo": "Personal Information",
+      "name": "Name:",
+      "firstname": "First name:",
+      "address": "Address:",
+      "email": "Email:",
+      "phone": "Phone:",
+      "candidateProfile": "Candidate Profile",
+      "viewProfile": "View candidate profile",
+      "previewCV": "Preview CV",
+      "downloadCV": "Download CV",
+      "noCV": "No CV or BantuLink profile provided.",
+      "inviteModalTitle": "Invite to interview",
+      "inviteModalDesc": "Schedule an interview with <strong>{{name}}</strong>.",
+      "interviewMode": "Interview mode",
+      "faceToFace": "Face-to-face",
+      "video": "Video conference",
+      "location": "Interview location",
+      "locationPlaceholder": "Ex: Our offices in Douala",
+      "videoLink": "Video conference link",
+      "videoLinkPlaceholder": "https://meet.google.com/...",
+      "dateTime": "Date and time of interview",
+      "confirmInvite": "Confirm invitation",
+      "sending": "Sending...",
+      "successInvite": "Interview invitation sent successfully!",
+      "successPreselect": "Application preselected successfully.",
+      "successReject": "Application rejected successfully."
+    },
+    "jobApplicationForm": {
+      "completeProfile": "Please complete your profile before sending an application.",
+      "publishedOn": "Published on:",
+      "deadline": "Deadline:",
+      "howToApply": "How do you want to apply?",
+      "withBantuHire": "With my BantuHire profile",
+      "withMyCV": "With my personal CV",
+      "coverLetter": "Cover letter (Optional)",
+      "coverLetterPlaceholder": "Write a message here to accompany your application...",
+      "chars": "characters",
+      "uploadCV": "Upload your CV",
+      "cvNotRequired": "CV is not explicitly required for this offer.",
+      "otherDocs": "Other required documents",
+      "sendApplication": "Send my application",
+      "sending": "Sending...",
+      "aboutCompany": "About the company",
+      "noDesc": "No description provided.",
+      "attach": "Attach {{doc}}",
+      "clickToUpload": "Click to upload",
+      "dragDrop": "or drag and drop",
+      "formats": "PDF, DOC, DOCX, PNG, JPG (MAX. 5Mo)",
+      "success": "Your application has been sent successfully!",
+      "missingDoc": "Please attach the document: {{doc}}",
+      "missingCV": "Please attach your CV."
+    },
+    "linkedinCallback": {
+      "errorTitle": "Connection Error",
+      "processing": "Finalizing LinkedIn connection...",
+      "wait": "Please wait, we are redirecting you.",
+      "success": "LinkedIn connection successful!"
+    },
+    "dashboardCandidature": {
+      "title": "Applications for offer:",
+      "from": "From",
+      "to": "To",
+      "filter": "Filter",
+      "reset": "Show all",
+      "configMail": "Configure email sending",
+      "export": "Export data",
+      "noCandidates": "No applications found",
+      "candidateName": "Candidate Name",
+      "jobOffer": "Job Offer",
+      "address": "Address",
+      "status": "Status",
+      "actions": "Actions",
+      "view": "View"
+    },
+    "inscriptionEntreprise": {
+      "title": "Complete Your Company Profile",
+      "desc": "Finalize your profile to access our platform and recruit the best talents. Add your company information to start today.",
+      "infoTitle": "Company Information",
+      "professionalTitle": "Professional Title",
+      "proEmail": "Professional Email",
+      "proPhone": "Professional Phone",
+      "companyName": "Company Name",
+      "website": "Website",
+      "address": "Address",
+      "city": "City",
+      "country": "Country",
+      "taxId": "Taxpayer No. (NIU)",
+      "descCompany": "Company Description",
+      "logo": "Company Logo",
+      "coverImage": "Cover Image (Optional)",
+      "uploadHelp": "PNG, JPG, GIF up to 2MB.",
+      "upload": "Upload a file",
+      "dragDrop": "or drag and drop",
+      "save": "Save",
+      "success": "Profile completed successfully!"
+    },
+    "profilCandidatRecruteur": {
+      "back": "Back",
+      "profileOf": "Profile of {{name}}",
+      "memberSince": "Member since",
+      "personalInfo": "Personal Information",
+      "visibility": "Visibility:",
+      "visible": "Visible to recruiters",
+      "notVisible": "Not visible",
+      "summary": "Profile Summary",
+      "experiences": "Experiences",
+      "skills": "Skills",
+      "education": "Diplomas & Education",
+      "otherResources": "Other Resources",
+      "downloadCV": "Download CV",
+      "notFound": "Candidate not found."
+    },
+    "settings": {
+      "title": "Settings",
+      "inProgress": "Settings under development.",
+      "comingSoon": "You will soon be able to customize your preferences here."
+    },
+    "emailVerification": {
+      "title": "Verify your email address",
+      "desc": "We just sent a confirmation code to your email address",
+      "incorrectEmail": "Incorrect email?",
+      "changeHere": "Change here",
+      "verifyButton": "Verify email",
+      "verifying": "Verifying...",
+      "resend": "Resend code",
+      "success": "Your email has been verified successfully!",
+      "resendSuccess": "A new code has been sent to your email address."
+    },
+    "favorites": {
+      "title": "My Favorite Offers",
+      "job": "Position",
+      "company": "Company",
+      "location": "Location",
+      "actions": "Actions",
+      "view": "View offer",
+      "empty": "You have no favorite offers at the moment."
+    },
+    "myApplications": {
+      "title": "My Applications",
+      "job": "Position",
+      "company": "Company",
+      "date": "Application Date",
+      "status": "Status",
+      "actions": "Actions",
+      "view": "View offer",
+      "empty": "You have not applied to any offers yet."
+    },
+    "messages": {
+      "title": "Messaging",
+      "search": "Search for a conversation...",
+      "empty": "No conversations yet.",
+      "writeMessage": "Write your message...",
+      "online": "Online",
+      "offline": "Offline",
+      "unknownUser": "Unknown User",
+      "noMessages": "No messages",
+      "loading": "Loading..."
+    },
+    "common": {
+      "loading": "Loading..."
+    },
+    "errors": {
+      "no_user_id": "User not identified",
+      "role_check_failed": "Role verification failed"
+    },
+    "success": {
+      "role_assigned": "Role assigned successfully"
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "myJobOffers": "My Job Offers",
+    "applications": "Applications",
+    "messages": "Messages",
+    "statistics": "Statistics",
+    "settings": "Settings",
+    "logout": "Logout",
+    "logoutConfirmationTitle": "Logout Confirmation",
+    "logoutConfirmationDesc": "Are you sure you want to log out?",
+    "logoutSuccess": "Logout successful",
+    "logoutSuccessDesc": "You have been logged out successfully.",
+    "logoutError": "Logout error"
+  },
+  
+  "jobPostManagement": {
+    "title": "My Job Offers",
+    "subtitle": "Manage your job offers and view applications.",
+    "searchPlaceholder": "Job title...",
+    "statusAll": "All statuses",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "resetFilters": "Show all",
+    "stats": {
+      "created": "Offers created",
+      "applications": "Applications",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "createButton": "Create a job offer",
+    "table": {
+      "title": "Job Title",
+      "publication": "Publication",
+      "deadline": "Deadline",
+      "status": "Status",
+      "applications": "Applications",
+      "actions": "Actions",
+      "empty": "No offers found.",
+      "applicationsCount": "applications"
+    },
+    "errorLoad": "Error loading data."
+  },
+  "jobApplicationManagement": {
+    "title": "My Applications",
+    "subtitle": "Filter and view all applications received for your offers.",
+    "filters": {
+      "from": "From",
+      "to": "To",
+      "offers": "Offers",
+      "allOffers": "All offers",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "reset": "Show all"
+    },
+    "actions": {
+      "configMail": "Configure email sending",
+      "export": "Export data"
+    },
+    "table": {
+      "candidateName": "Candidate Name",
+      "jobOffer": "Job Offer",
+      "address": "Address",
+      "status": "Status",
+      "actions": "Actions",
+      "view": "View",
+      "empty": "No applications found."
+    },
+    "errorLoad": "Error loading data."
+  }
 }

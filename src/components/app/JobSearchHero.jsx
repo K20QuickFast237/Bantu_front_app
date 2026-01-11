@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useProfileCompletion } from '@/hooks/useProfileCompletion'; // Importer le hook
 import api from '@/services/api';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 // Composant Button simplifié pour cet exemple
 const Button = ({ variant, size, className, children, ...props }) => {
   let baseClasses = "rounded-md transition-colors font-medium";
@@ -47,6 +48,7 @@ const App = ({ onOpenProfileModal }) => {
   const { user, particulier } = useAuth();
   const { profileCompletion } = useProfileCompletion(); // Utiliser le hook
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
+  const { t } = useTranslation();
 
   const handleVisibilityToggle = async (checked) => {
     setIsUpdatingVisibility(true);
@@ -70,8 +72,8 @@ const App = ({ onOpenProfileModal }) => {
     <div className="w-full mx-auto py-6 px-4 sm:px-6 lg:px-10 space-y-6 sm:space-y-8 bg-background font-sans text-gray-800">
       {/* Welcome Header - Nom dynamique avec fix ultime */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold space-x-1 text-[#10B981] mb-2">Bienvenue {user?.nom} {user?.prenom}</h1>
-        <p className="text-xs sm:text-sm font-semibold">Vos statistiques</p>
+        <h1 className="text-xl sm:text-2xl font-bold space-x-1 text-[#10B981] mb-2">{t('dashboard.welcome')} {user?.nom} {user?.prenom}</h1>
+        <p className="text-xs sm:text-sm font-semibold">{t('dashboard.yourStatistics')}</p>
       </div>
 
       {/* Statistics Cards */}
@@ -85,8 +87,8 @@ const App = ({ onOpenProfileModal }) => {
                   </div>
                   <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
               </div>
-              <div className="text-lg text-gray-800 mt-4 mb-2">Candidatures en cours</div>
-              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+              <div className="text-lg text-gray-800 mt-4 mb-2">{t('dashboard.applicationsInProgress')}</div>
+              <button className="text-lg text-[#10B981] underline">{t('dashboard.seeMore')} →</button>
             </CardContent>
           </Card>
         </Link>
@@ -99,8 +101,8 @@ const App = ({ onOpenProfileModal }) => {
             </div>
             <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
             </div>
-            <div className="text-lg text-gray-800 mt-4 mb-2">Opportunités reçues</div>
-            <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+            <div className="text-lg text-gray-800 mt-4 mb-2">{t('dashboard.opportunitiesReceived')}</div>
+            <button className="text-lg text-[#10B981] underline">{t('dashboard.seeMore')} →</button>
           </CardContent>
         </Card>
 
@@ -113,8 +115,8 @@ const App = ({ onOpenProfileModal }) => {
               </div>
               <div className="text-2xl font-bold text-gray-900 ml-3">00</div>
               </div>
-              <div className="text-lg text-gray-800 mt-4 mb-2">Offres sauvegardées</div>
-              <button className="text-lg text-[#10B981] underline">Voir plus →</button>
+              <div className="text-lg text-gray-800 mt-4 mb-2">{t('dashboard.savedApplications')}</div>
+              <button className="text-lg text-[#10B981] underline">{t('dashboard.seeMore')} →</button>
             </CardContent>
           </Card>
         </Link>
@@ -167,12 +169,12 @@ const App = ({ onOpenProfileModal }) => {
       {particulier && Object.keys(particulier).length > 0 && (
         <div className="space-y-4 p-4 sm:p-6 rounded-2xl border-2 border-solid ">
           <h2 className={`text-base sm:text-lg font-semibold ${particulier?.is_visible ? 'text-green-600' : 'text-red-500'}`}>
-            {particulier?.is_visible ? "Votre profil est visible par les recruteurs." : "Votre profil est actuellement caché des recruteurs."}
+            {particulier?.is_visible ? t('dashboard.profileVisible') : t('dashboard.profileHidden')}
           </h2>
           
           <div className="space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-              <span className="font-bold text-gray-900 text-sm sm:text-base">Rendre mon profil visible des recruteurs</span>
+              <span className="font-bold text-gray-900 text-sm sm:text-base">{t('dashboard.makeProfileVisible')}</span>
               {particulier?.is_visible ? (
                 // Si le profil est visible, afficher un seul bouton pour le cacher
                 <Button
@@ -183,7 +185,7 @@ const App = ({ onOpenProfileModal }) => {
                   disabled={isUpdatingVisibility}
                 >
                   {isUpdatingVisibility ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle className="h-4 w-4" />}
-                  Profil Visible
+                  {t('dashboard.profileVisibleButton')}
                 </Button>
               ) : (
                 // Si le profil est caché, afficher les deux options
@@ -195,7 +197,7 @@ const App = ({ onOpenProfileModal }) => {
                     onClick={() => handleVisibilityToggle(true)}
                     disabled={isUpdatingVisibility}
                   >
-                    {isUpdatingVisibility ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Oui'}
+                    {isUpdatingVisibility ? <Loader2 className="h-4 w-4 animate-spin" /> : t('dashboard.yes')}
                   </Button>
                   <Button
                     variant="outline"
@@ -204,7 +206,7 @@ const App = ({ onOpenProfileModal }) => {
                     onClick={() => handleVisibilityToggle(false)}
                     disabled={isUpdatingVisibility}
                   >
-                    Non
+                    {t('dashboard.no')}
                   </Button>
                 </div>
               )}
@@ -238,13 +240,13 @@ const App = ({ onOpenProfileModal }) => {
               </h3>
 
               <p className="text-xs sm:text-sm text-gray-900 mb-3">
-                {particulier?.titre_professionnel || 'Veuillez compléter votre profil'}
+                {particulier?.titre_professionnel || t('dashboard.completeProfilePrompt')}
               </p>
 
               {particulier && Object.keys(particulier).length > 0 ? (
                 <Link to="/profil">
                   <Button className="bg-[#10B981] text-white px-6 py-2 text-sm">
-                    Voir mon profil
+                    {t('dashboard.viewMyProfile')}
                   </Button>
                 </Link>
               ) : (
@@ -252,14 +254,14 @@ const App = ({ onOpenProfileModal }) => {
                   onClick={onOpenProfileModal}
                   className="bg-[#10B981] text-white px-6 py-2 text-sm"
                 >
-                  Compléter mon profil
+                  {t('dashboard.completeProfile')}
                 </Button>
               )}
 
               {/* Progression */}
               <div className="mt-3">
                 <span className="text-sm sm:text-base font-semibold text-gray-900">
-                  Profil complété à{" "}
+                  {t('dashboard.profileCompleted')}{" "}
                 </span>
                 <span className="text-2xl sm:text-3xl font-bold text-orange-500">
                   {profileCompletion}%
@@ -273,10 +275,11 @@ const App = ({ onOpenProfileModal }) => {
 
       {/* Job Suggestions */}
       <div>
-        <h2 className="text-lg sm:text-xl font-bold text-[#10B981]">Suggestions de jobs en fonction de votre profil</h2>
+        <h2 className="text-lg sm:text-xl font-bold text-[#10B981]">{t('dashboard.jobSuggestions')}</h2>
       </div>
     </div>
   );
 };
 
 export default App;
+

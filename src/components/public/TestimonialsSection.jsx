@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Star, ArrowLeft, ArrowRight } from 'lucide-react'; // Icônes mises à jour
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next'; // Ajout
-import ReginaMilesImage from '../../assets/temoigne.png'; // Gardé pour l'exemple
+// import ReginaMilesImage from '../../assets/temoigne.png'; // Gardé pour l'exemple
 import Tem1 from '../../assets/tem1.png';
 import Tem2 from '../../assets/tem2.png';
 import Tem3 from '../../assets/tem3.png';
@@ -21,7 +21,7 @@ const TestimonialsSection = () => {
       name: t('testimonials.name1'),
       role: t('testimonials.role1'),
       rating: 4,
-      image: ReginaMilesImage,
+      image: Tem3,
     },
     {
       id: 2,
@@ -133,7 +133,7 @@ const TestimonialsSection = () => {
                     <div>
                       <div className="flex items-center mb-4">
                         <div className="w-14 h-14 rounded-full overflow-hidden mr-4 border-2 border-blue-200 flex-shrink-0">
-                          <img src={ReginaMilesImage} alt={testimonial.name} className="w-full h-full object-cover" />
+                          <img src={testimonial.image} alt={testimonial.name} className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <p className="font-bold text-gray-800 text-lg">{testimonial.name}</p>

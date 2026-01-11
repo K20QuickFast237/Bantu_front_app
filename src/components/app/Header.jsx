@@ -26,7 +26,7 @@ const Header = () => {
 
   const userProfileItems = [
     { to: '/profil', label: t('header.myAccount'), icon: User, action: (e) => handleProfileClick(e, '/profil') }, // Traduit dynamiquement
-    { to: '/dashboard/candidate/settings', label: t('header.settings') || 'Paramètres', icon: Settings }, // Fallback si pas traduit
+    // { to: '/dashboard/candidate/settings', label: t('header.settings') || 'Paramètres', icon: Settings }, // Fallback si pas traduit
   ];
 
   const dropdownVariants = {

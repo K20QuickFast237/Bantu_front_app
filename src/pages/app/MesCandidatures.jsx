@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '@/services/api';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ const MesCandidatures = () => {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const statusOptions = {
         'candidature': { label: 'Envoyée', color: 'bg-gray-400' },
@@ -46,18 +48,18 @@ const MesCandidatures = () => {
                 <main className="max-w-7xl mx-auto">
                     <div className="mb-8">
                         <h1 className="text-3xl font-bold text-gray-800 mb-6">
-                            Mes Candidatures
+                            {t('pages.myApplications.title')}
                         </h1>
 
                         <div className="overflow-x-auto border border-gray-300 rounded-lg shadow-sm">
                             <table className="w-full">
                                 <thead className="bg-gray-100">
                                     <tr className="border-b border-gray-300">
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Poste</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Entreprise</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Date de candidature</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Statut</th>
-                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.myApplications.job')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.myApplications.company')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.myApplications.date')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.myApplications.status')}</th>
+                                        <th className="px-6 py-3 text-left font-semibold text-gray-700">{t('pages.myApplications.actions')}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -70,7 +72,7 @@ const MesCandidatures = () => {
                                     ) : (
                                         applications.length === 0 ? (
                                             <tr>
-                                                <td colSpan="5" className="px-6 py-10 text-center text-gray-500">Vous n'avez postulé à aucune offre pour le moment.</td>
+                                                <td colSpan="5" className="px-6 py-10 text-center text-gray-500">{t('pages.myApplications.empty')}</td>
                                             </tr>
                                         ) : (
                                             applications.map((app, idx) => {
@@ -99,7 +101,7 @@ const MesCandidatures = () => {
                                                                 title="Voir l'offre d'emploi"
                                                             >
                                                                 <Eye className="w-4 h-4" />
-                                                                Voir l'offre
+                                                                {t('pages.myApplications.view')}
                                                             </button>
                                                         </td>
                                                     </tr>

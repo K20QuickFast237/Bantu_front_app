@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import { motion } from 'framer-motion';
 import Header from '../../components/app/Header';
@@ -12,6 +13,7 @@ import { toast } from 'sonner';
 
 const ResetPasswordForm = () => {
   const [searchParams] = useSearchParams();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     token: '',
@@ -30,13 +32,13 @@ const ResetPasswordForm = () => {
   const onSubmit = async (values) => {
     try {
       await resetPassword(values);
-      toast.success("Mot de passe reinitialise avec success !", {
+      toast.success(t('pages.resetPassword.success'), {
         duration: 3000,
       });
       navigate('/login');
     } catch (err) {
       toast.success("Connexion réussie !", {
-        description: `${err.response?.data?.message} || 'Erreur lors de la réinitialisation.'`,
+        description: `${err.response?.data?.message} || ${t('pages.resetPassword.error')}`,
         duration: 3000,
       });
     }
@@ -64,12 +66,12 @@ const ResetPasswordForm = () => {
             <div className="w-full max-w-2xl space-y-6">
               {/* Titre */}
               <h2 className="text-center text-[#10B981] font-semibold text-lg md:text-xl">
-                Réinitialisation du mot de passe
+                {t('pages.resetPassword.title')}
               </h2>
 
               {/* Texte d'information */}
               <p className="text-center text-gray-800 text-sm">
-                Merci de saisir votre nouveau mot de passe.
+                {t('pages.resetPassword.info')}
               </p>
 
               <hr className="border-t border-gray-300" />
@@ -81,7 +83,7 @@ const ResetPasswordForm = () => {
                 <div className="bg-gray-200 p-2 space-y-2 rounded-md">
                   <div className='flex flex-col gap-2'>
                     <label htmlFor="password" className="text-sm text-gray-800 whitespace-nowrap pl-2">
-                      Nouveau mot de passe :
+                      {t('pages.resetPassword.label')}
                     </label>
                     <input
                       id="password"
@@ -105,7 +107,7 @@ const ResetPasswordForm = () => {
                     type="submit"
                     className="bg-[#F26C21] hover:bg-orange-600 text-white font-semibold py-2.5 px-8 rounded-md transition-colors duration-300"
                   >
-                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : "Réinitialiser le mot de passe"}
+                    {isSubmitting ? <ClipLoader size={22} color="#fff" /> : t('pages.resetPassword.button')}
                   </button>
                 </div>
               </form>

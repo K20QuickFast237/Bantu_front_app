@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 // Importation de motion et ArrowLeft nécessaire pour la flèche animée
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Loader2 } from "lucide-react"; 
 import { decodeId } from '@/obfuscate';
 import { encodeId } from '@/obfuscate';
@@ -32,6 +33,7 @@ const JobOfferPage = () => {
   const { particulier, user } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -51,7 +53,7 @@ const JobOfferPage = () => {
   const handleApplyClick = () => {
     // Vérifie si l'objet 'particulier' existe et n'est pas vide.
     if (!particulier || Object.keys(particulier).length === 0) {
-      toast.info("Veuillez compléter votre profil pour postuler.");
+      toast.info(t('pages.jobOffer.completeProfile'));
       setProfileModalOpen(true);
     } else {
       navigate(`/jobApplicationform/${encodeId(job.id)}`);
@@ -64,7 +66,7 @@ const JobOfferPage = () => {
 
   const handleSaveOffer = async () => {
     if (!user) {
-      toast.info("Veuillez vous connecter pour sauvegarder une offre.");
+      toast.info(t('pages.jobOffer.loginToSave'));
       navigate('/login');
       return;
     }
@@ -79,7 +81,7 @@ const JobOfferPage = () => {
       await api.post('/favoris/ajouter', {
         offre_emploi_id: job.id
       });
-      toast.success("Offre sauvegardée avec succès !");
+      toast.success(t('pages.jobOffer.saveSuccess'));
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Erreur lors de la sauvegarde de l'offre.";
       // Gère le cas où l'offre est déjà en favoris (conflit)
@@ -127,11 +129,11 @@ const JobOfferPage = () => {
           <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg lg:hidden z-50">
             <div className="flex justify-center gap-4">
               <button onClick={handleApplyClick} className="flex items-center cursor-pointer justify-center px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                Postuler
+                {t('pages.jobOffer.apply')}
               </button>
               <button onClick={handleSaveOffer} disabled={isSaving} className="flex items-center justify-center px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200">
                 {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-                {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+                {isSaving ? t('pages.jobOffer.saving') : t('pages.jobOffer.save')}
               </button>
             </div>
           </div>
@@ -152,7 +154,7 @@ const JobOfferPage = () => {
                     <h1 className="text-2xl font-bold text-gray-900">{job.employeur?.nom_entreprise}</h1>
                   </div>
                   <button className="flex items-center text-green-600 font-semibold hover:text-green-700 transition-colors">
-                    Partager
+                    {t('pages.jobPostDetail.share')}
                   </button>
                 </div>
 
@@ -160,34 +162,34 @@ const JobOfferPage = () => {
 
                 {/* Dates */}
                 <div className="text-gray-600 text-sm mb-6">
-                  <p>Date de publication : {job.date_publication}</p>
-                  <p>Date limite de soumission : {job.date_limite_soumission}</p>
+                  <p>{t('pages.jobOffer.published')} {job.date_publication}</p>
+                  <p>{t('pages.jobOffer.deadline')} {job.date_limite_soumission}</p>
                 </div>
 
                 {/* Job Details */}
                 <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-gray-700 mb-8">
                   <div>
-                    <p className="font-semibold text-gray-800">Type de contrat</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.contract')}</p>
                     <p>{job.type_contrat?.toUpperCase()}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800">Lieu</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.location')}</p>
                     <p>{job.ville}, {job.pays}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800">Rémunération</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.salary')}</p>
                     <p>{job.remuneration_min} - {job.remuneration_max} XAF</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800">Fonction</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.function')}</p>
                     <p>{job.fonction}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800">Statut</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.status')}</p>
                     <p>{job.statut}</p>
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800">Experience</p>
+                    <p className="font-semibold text-gray-800">{t('pages.jobOffer.experience')}</p>
                     <p>{job.experience_requise}</p>
                   </div>
                 </div>
@@ -195,24 +197,24 @@ const JobOfferPage = () => {
                 {/* Boutons desktop */}
                 <div className="hidden lg:flex gap-4 mb-10">
                   <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                    Postuler
+                    {t('pages.jobOffer.apply')}
                   </button>
                   <button onClick={handleSaveOffer} disabled={isSaving} className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200 flex items-center">
                     {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-                    {isSaving ? 'Sauvegarde...' : 'Sauvegardar'}
+                    {isSaving ? t('pages.jobOffer.saving') : t('pages.jobOffer.save')}
                   </button>
                 </div>
 
                 {/* Description */}
                 <div className="mb-8">
-                  <h3 className="text-orange-500 text-xl font-bold mb-4">Description du poste</h3>
+                  <h3 className="text-orange-500 text-xl font-bold mb-4">{t('pages.jobOffer.description')}</h3>
                   <p className="text-gray-700 leading-relaxed">{job.description_poste}</p>
                 </div>
 
                 {/* Responsabilités */}
                 {job.responsabilites && (
                   <div className="mb-8">
-                    <h3 className="text-orange-500 text-xl font-bold mb-4">Responsabilités</h3>
+                    <h3 className="text-orange-500 text-xl font-bold mb-4">{t('pages.jobOffer.responsibilities')}</h3>
                     <p className="text-gray-700 leading-relaxed">{job.responsabilites}</p>
                   </div>
                 )}
@@ -220,7 +222,7 @@ const JobOfferPage = () => {
                 {/* Exigences */}
                 {job.exigences && (
                   <div className="mb-8">
-                    <h3 className="text-orange-500 text-xl font-bold mb-4">Exigences</h3>
+                    <h3 className="text-orange-500 text-xl font-bold mb-4">{t('pages.jobOffer.requirements')}</h3>
                     <p className="text-gray-700 leading-relaxed">{job.exigences}</p>
                   </div>
                 )}
@@ -228,7 +230,7 @@ const JobOfferPage = () => {
                 {/* Documents requis */}
                 {job.documents_requis && (
                   <div className="mb-8">
-                    <h3 className="text-orange-500 text-xl font-bold mb-4">Documents requis</h3>
+                    <h3 className="text-orange-500 text-xl font-bold mb-4">{t('pages.jobOffer.documents')}</h3>
                     <ul className="list-disc list-inside text-gray-700 space-y-2">
                       {JSON.parse(job.documents_requis).map((doc, i) => (
                         <li key={i}>{doc}</li>
@@ -240,9 +242,9 @@ const JobOfferPage = () => {
                 {/* Instructions candidature */}
                 {job.instructions_candidature && (
                   <div className="mb-8">
-                    <h3 className="text-orange-500 text-xl font-bold mb-4">Instructions pour postuler</h3>
+                    <h3 className="text-orange-500 text-xl font-bold mb-4">{t('pages.jobOffer.instructions')}</h3>
                     <p className="text-gray-700 leading-relaxed">{job.instructions_candidature}</p>
-                    <p className="text-gray-700 leading-relaxed">Envoyer à : <a href={`mailto:${job.email_candidature}`} className="text-green-600 underline">{job.email_candidature}</a></p>
+                    <p className="text-gray-700 leading-relaxed">{t('pages.jobOffer.sendTo')} <a href={`mailto:${job.email_candidature}`} className="text-green-600 underline">{job.email_candidature}</a></p>
                   </div>
                 )}
               </div>
@@ -250,7 +252,7 @@ const JobOfferPage = () => {
               {/* Right Column */}
               <div className="lg:w-1/3">
                 <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm sticky top-8">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">À propos de l'entreprise</h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">{t('pages.jobOffer.aboutCompany')}</h3>
 
                   <div className="flex items-center mb-4">
                     <Building2 className="w-5 h-5 text-gray-500 mr-2" />
@@ -290,11 +292,11 @@ const JobOfferPage = () => {
             {/* Bottom buttons */}
             <div className="flex justify-center gap-4 mt-8 py-4 border-t border-gray-200">
               <button onClick={handleApplyClick} className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors">
-                Postuler
+                {t('pages.jobOffer.apply')}
               </button>
               <button onClick={handleSaveOffer} disabled={isSaving} className="px-6 py-3 bg-white text-gray-700 font-semibold rounded-lg border border-gray-300 shadow-md hover:bg-gray-50 transition-colors disabled:bg-gray-200 flex items-center">
                 {isSaving && <Loader2 className="animate-spin h-4 w-4 mr-2" />}
-                {isSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+                {isSaving ? t('pages.jobOffer.saving') : t('pages.jobOffer.save')}
               </button>
             </div>
           </div>

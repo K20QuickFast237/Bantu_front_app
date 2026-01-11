@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
 import BantulinkLoader from '@/components/ui/BantulinkLoader';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ import { toast } from 'sonner';
 const JobPostDetail = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation();
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -55,7 +57,7 @@ const JobPostDetail = () => {
             const res = await api.put(`/offres/${job.id}`, updateFormData);
             setJob(prev => ({ ...prev, ...updateFormData }));
             setOpenUpdateDialog(false);
-            toast.success("Offre mise à jour avec succès !");
+            toast.success(t('pages.jobPostDetail.updateSuccess'));
         } catch (err) {
             toast.error("Erreur lors de la mise à jour.");
         }
@@ -64,7 +66,7 @@ const JobPostDetail = () => {
     const handleConfirmDelete = async () => {
         try {
             await api.delete(`/offres/${job.id}`);
-            toast.success("Offre supprimée avec succès.");
+            toast.success(t('pages.jobPostDetail.deleteSuccess'));
             setIsDeleteModalOpen(false);
             navigate('/job-post');
         } catch (err) {
@@ -79,7 +81,7 @@ const JobPostDetail = () => {
       <div className="min-h-screen bg-gray-50 p-6">
         <Button onClick={() => navigate('/job-post')} variant="ghost" className="mb-6">
           <ChevronLeft size={20} className="mr-2" />
-          Retour à la liste
+          {t('pages.jobPostDetail.backToList')}
         </Button>
 
         <div className="max-w-6xl mx-auto">
@@ -88,22 +90,22 @@ const JobPostDetail = () => {
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.titre_poste || "Titre non disponible"}</h1>
                         <p className="text-gray-600 text-sm">
-                            Publié le : {job.date_publication ? new Date(job.date_publication).toLocaleDateString('fr-FR') : 'N/A'} | 
-                            Deadline : {job.date_limite_soumission ? new Date(job.date_limite_soumission).toLocaleDateString('fr-FR') : 'N/A'}
+                            {t('pages.jobPostDetail.publishedOn')} {job.date_publication ? new Date(job.date_publication).toLocaleDateString('fr-FR') : 'N/A'} | 
+                            {t('pages.jobPostDetail.deadline')} {job.date_limite_soumission ? new Date(job.date_limite_soumission).toLocaleDateString('fr-FR') : 'N/A'}
                         </p>
                     </div>
                     <button className="flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold cursor-pointer">
                         <Share2 size={18} />
-                        <span>Partager</span>
+                        <span>{t('pages.jobPostDetail.share')}</span>
                     </button>
                 </div>
                 <div className="grid grid-cols-2 gap-6 mb-6">
                     <div>
-                        <p className="text-gray-600 text-xs font-semibold mb-1">Type de contrat</p>
+                        <p className="text-gray-600 text-xs font-semibold mb-1">{t('pages.jobPostDetail.contractType')}</p>
                         <p className="text-gray-900 font-semibold">{job.type_contrat || 'N/A'}</p>
                     </div>
                     <div>
-                        <p className="text-gray-600 text-xs font-semibold mb-1">Lieu</p>
+                        <p className="text-gray-600 text-xs font-semibold mb-1">{t('pages.jobPostDetail.location')}</p>
                         <p className="text-gray-900 font-semibold">{`${job.ville || ''}, ${job.pays || ''}`}</p>
                     </div>
                 </div>
@@ -111,29 +113,29 @@ const JobPostDetail = () => {
                     <Link to={`/dashboard_candidature_spec/${job.id}`}>
                         <Button className="bg-green-600 hover:bg-green-700">
                             <Eye size={16} className="mr-2" />
-                            Voir les candidatures ({job.candidatures_count || 0})
+                            {t('pages.jobPostDetail.viewApplications')} ({job.candidatures_count || 0})
                         </Button>
                     </Link>
                     <Button variant="outline" className="text-orange-500 border-orange-500 hover:bg-orange-50 hover:text-orange-600" onClick={handleUpdate}>
                         <Pencil size={16} className="mr-2" />
-                        Modifier
+                        {t('pages.jobPostDetail.edit')}
                     </Button>
                     <Button variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
                         <Trash size={16} className="mr-2" />
-                        Supprimer
+                        {t('pages.jobPostDetail.delete')}
                     </Button>
                 </div>
             </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <h2 className="text-2xl font-bold text-orange-500 mb-4">Description de l'offre</h2>
+                <h2 className="text-2xl font-bold text-orange-500 mb-4">{t('pages.jobPostDetail.description')}</h2>
                 <div className="text-gray-700 leading-relaxed prose" dangerouslySetInnerHTML={{ __html: job.description_poste || "Aucune description." }} />
             </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <h2 className="text-2xl font-bold text-orange-500 mb-4">Missions de l'employé</h2>
+                <h2 className="text-2xl font-bold text-orange-500 mb-4">{t('pages.jobPostDetail.missions')}</h2>
                 <div className="text-gray-700 leading-relaxed prose" dangerouslySetInnerHTML={{ __html: job.responsabilites || "Aucune mission spécifiée." }} />
             </div>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-                <h2 className="text-2xl font-bold text-orange-500 mb-4">Profil recherché</h2>
+                <h2 className="text-2xl font-bold text-orange-500 mb-4">{t('pages.jobPostDetail.profile')}</h2>
                 <div className="text-gray-700 leading-relaxed prose" dangerouslySetInnerHTML={{ __html: job.exigences || "Aucun profil spécifié." }} />
             </div>
         </div>
@@ -141,20 +143,20 @@ const JobPostDetail = () => {
         {/* Modal de mise à jour */}
         <Dialog open={openUpdateDialog} onOpenChange={setOpenUpdateDialog}>
             <DialogContent>
-                <DialogHeader><DialogTitle>Modifier une offre</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{t('pages.jobPostDetail.editModalTitle')}</DialogTitle></DialogHeader>
                 <div className="space-y-4 mt-2">
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Titre du poste</label>
+                        <label className="block mb-1 text-sm font-medium">{t('pages.jobPostDetail.jobTitle')}</label>
                         <Input value={updateFormData.titre_poste} onChange={(e) => setUpdateFormData({ ...updateFormData, titre_poste: e.target.value })} />
                     </div>
                     <div>
-                        <label className="block mb-1 text-sm font-medium">Rémunération min</label>
+                        <label className="block mb-1 text-sm font-medium">{t('pages.jobPostDetail.minSalary')}</label>
                         <Input type="number" value={updateFormData.remuneration_min} onChange={(e) => setUpdateFormData({ ...updateFormData, remuneration_min: e.target.value })} />
                     </div>
                 </div>
                 <DialogFooter className="mt-4 flex justify-end space-x-2">
-                    <Button variant="outline" onClick={() => setOpenUpdateDialog(false)}>Annuler</Button>
-                    <Button onClick={submitUpdate}>Enregistrer</Button>
+                    <Button variant="outline" onClick={() => setOpenUpdateDialog(false)}>{t('pages.jobPostDetail.cancel')}</Button>
+                    <Button onClick={submitUpdate}>{t('pages.jobPostDetail.save')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -163,14 +165,14 @@ const JobPostDetail = () => {
         <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                    <DialogTitle>{t('pages.jobPostDetail.confirmDeleteTitle')}</DialogTitle>
                     <DialogDescription>
-                        Cette action est irréversible. L’offre <strong>{job?.titre_poste}</strong> sera définitivement supprimée.
+                        <span dangerouslySetInnerHTML={{ __html: t('pages.jobPostDetail.confirmDeleteDesc', { title: job?.titre_poste }) }} />
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <DialogClose asChild><Button variant="outline">Annuler</Button></DialogClose>
-                    <Button variant="destructive" onClick={handleConfirmDelete}>Supprimer</Button>
+                    <DialogClose asChild><Button variant="outline">{t('pages.jobPostDetail.cancel')}</Button></DialogClose>
+                    <Button variant="destructive" onClick={handleConfirmDelete}>{t('pages.jobPostDetail.delete')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

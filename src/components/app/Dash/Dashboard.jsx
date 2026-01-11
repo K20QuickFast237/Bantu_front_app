@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import api from '@/services/api';
 import { useAuth } from '@/hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 // Composants UI réutilisables
 const Button = ({ children, variant = 'default', size = 'default', className = '', onClick, ...props }) => {
@@ -79,11 +80,12 @@ const AvatarFallback = ({ children, className = '', ...props }) => (
 
 const Dashboard = ({ setActiveSection }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [stats, setStats] = useState([
-    { title: '0', subtitle: 'Vues Totales', color: 'bg-blue-50 border-blue-200', icon: Eye, iconColor: 'text-blue-600' },
-    { title: '0', subtitle: 'Totales des offres', color: 'bg-green-50 border-green-200', icon: FileText, iconColor: 'text-green-600' },
-    { title: '0', subtitle: 'Entretiens planifiés', color: 'bg-yellow-50 border-yellow-200', icon: Calendar, iconColor: 'text-yellow-600' },
-    { title: '0', subtitle: 'Candidats actifs', color: 'bg-pink-50 border-pink-200', icon: Users, iconColor: 'text-pink-600' },
+    { title: '0', subtitle: 'dashboard.recruiter.stats.totalViews', color: 'bg-blue-50 border-blue-200', icon: Eye, iconColor: 'text-blue-600' },
+    { title: '0', subtitle: 'dashboard.recruiter.stats.totalOffers', color: 'bg-green-50 border-green-200', icon: FileText, iconColor: 'text-green-600' },
+    { title: '0', subtitle: 'dashboard.recruiter.stats.scheduledInterviews', color: 'bg-yellow-50 border-yellow-200', icon: Calendar, iconColor: 'text-yellow-600' },
+    { title: '0', subtitle: 'dashboard.recruiter.stats.activeCandidates', color: 'bg-pink-50 border-pink-200', icon: Users, iconColor: 'text-pink-600' },
   ]);
   const [jobPosts, setJobPosts] = useState([]);
   const [recentApplications, setRecentApplications] = useState([]);
@@ -107,10 +109,10 @@ const Dashboard = ({ setActiveSection }) => {
         setRecentApplications(applicationsResponse.data || []);
 
         setStats(prevStats => [
-          { ...prevStats[0], title: '234' }, // TODO: Remplacer par des données dynamiques quand l'API sera prête
+          { ...prevStats[0], title: '0' }, // TODO: Remplacer par des données dynamiques quand l'API sera prête
           { ...prevStats[1], title: offersResponse.data.total?.toString() || '0' }, // TODO: Remplacer par des données dynamiques
-          { ...prevStats[2], title: '5' }, // TODO: Remplacer par des données dynamiques
-          { ...prevStats[3], title: '12' }, // TODO: Remplacer par des données dynamiques
+          { ...prevStats[2], title: '0' }, // TODO: Remplacer par des données dynamiques
+          { ...prevStats[3], title: '0' }, // TODO: Remplacer par des données dynamiques
         ]);
 
       } catch (error) {
@@ -127,8 +129,8 @@ const Dashboard = ({ setActiveSection }) => {
 
   const quickActions = [
     {
-      title: 'Créer une offre',
-      subtitle: 'Publier un nouveau poste',
+      title: t('dashboard.recruiter.quickActions.createOffer'),
+      subtitle: t('dashboard.recruiter.quickActions.createOfferDesc'),
       onClick: handleCreateJobClick,
       icon: Plus,
       bgColor: 'bg-white',
@@ -136,8 +138,8 @@ const Dashboard = ({ setActiveSection }) => {
       iconColor: 'text-gray-800'
     },
     {
-      title: 'Modifier le profil',
-      subtitle: 'Mettre à jour vos infos',
+      title: t('dashboard.recruiter.quickActions.editProfile'),
+      subtitle: t('dashboard.recruiter.quickActions.editProfileDesc'),
       icon: User,
       onClick: () => navigate('/settings'),
       bgColor: 'bg-white',
@@ -145,8 +147,8 @@ const Dashboard = ({ setActiveSection }) => {
       iconColor: 'text-gray-800'
     },
     {
-      title: 'Changer de mode',
-      subtitle: 'Voir en tant que candidat',
+      title: t('dashboard.recruiter.quickActions.switchMode'),
+      subtitle: t('dashboard.recruiter.quickActions.switchModeDesc'),
       icon: ArrowLeftRight,
       onClick: () => navigate('/profil'),
       bgColor: 'bg-white',
@@ -154,8 +156,8 @@ const Dashboard = ({ setActiveSection }) => {
       iconColor: 'text-green-600'
     },
     {
-      title: 'Voir les statistiques',
-      subtitle: 'Analyses de performance',
+      title: t('dashboard.recruiter.quickActions.viewStats'),
+      subtitle: t('dashboard.recruiter.quickActions.viewStatsDesc'),
       icon: BarChart3,
       onClick: () => navigate('/analytics'),
       bgColor: 'bg-white',
@@ -168,14 +170,14 @@ const Dashboard = ({ setActiveSection }) => {
       <main className="flex-1 p-5 overflow-auto">
         <div className="flex justify-between items-center mb-5">
           <div>
-            <h1 className="text-xl font-bold text-gray-900 mb-1">Bienvenue, {user.nom}</h1>
-            <p className="text-sm text-gray-600">Voici votre tableau de bord de recrutement pour aujourd'hui.</p>
+            <h1 className="text-xl font-bold text-gray-900 mb-1">{t('dashboard.recruiter.welcome', { name: user.nom })}</h1>
+            <p className="text-sm text-gray-600">{t('dashboard.recruiter.intro')}</p>
           </div>
           <div className="relative w-full max-w-xs">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Rechercher des candidats, des emplois..."
+              placeholder={t('dashboard.recruiter.searchPlaceholder')}
               className="w-full pl-9 pr-4 py-1.5 border border-gray-300 rounded-lg bg-white text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#009739] focus:border-transparent transition-all"
             />
           </div>
@@ -201,7 +203,7 @@ const Dashboard = ({ setActiveSection }) => {
                   </div>
                   <div className="space-y-1">
                     <h3 className="text-2xl font-bold text-gray-900">{stat.title}</h3>
-                    <p className="text-sm text-gray-700 font-medium">{stat.subtitle}</p>
+                    <p className="text-sm text-gray-700 font-medium">{t(stat.subtitle)}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -213,9 +215,9 @@ const Dashboard = ({ setActiveSection }) => {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-base font-semibold">Offres d'emploi actives</CardTitle>
+                <CardTitle className="text-base font-semibold">{t('dashboard.recruiter.activeOffers')}</CardTitle>
                 <Button onClick={handleCreateJobClick} className="transform hover:scale-105 transition-all">
-                  Créer une offre
+                  {t('dashboard.recruiter.createOffer')}
                 </Button>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -234,13 +236,13 @@ const Dashboard = ({ setActiveSection }) => {
                         <div className={`w-2.5 h-2.5 rounded-full ${job.statut === 'active' ? 'bg-green-500' : 'bg-red-500'}`}></div>
                         <div>
                           <h4 className="font-medium text-sm text-gray-900">{job.titre_poste}</h4>
-                          <p className="text-xs text-gray-600">{job.nom_entreprise || 'Entreprise'}</p>
-                          <p className="text-xs text-gray-500">Publié il y a {diffDays} jours • {job.candidatures_count || 0} candidats</p>
+                          <p className="text-xs text-gray-600">{job.nom_entreprise || t('dashboard.recruiter.companyFallback')}</p>
+                          <p className="text-xs text-gray-500">{t('dashboard.recruiter.publishedInfo', { days: diffDays, count: job.candidatures_count || 0 })}</p>
                         </div>
                       </div>
                       <Button onClick={() => navigate(`/dashboard_candidature_spec/${job.id}`)} variant="outline" size="sm" className="hover:scale-105 transition-transform">
                         <Eye className="w-3.5 h-3.5 mr-1.5" />
-                        Voir les candidatures
+                        {t('dashboard.recruiter.viewApplications')}
                       </Button>
                     </div>
                   )
@@ -252,9 +254,9 @@ const Dashboard = ({ setActiveSection }) => {
           <div>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-base font-semibold">Candidatures récentes</CardTitle>
+                <CardTitle className="text-base font-semibold">{t('dashboard.recruiter.recentApplications')}</CardTitle>
                 <Button variant="outline" size="sm" className="text-[#009739] border-[#009739] hover:bg-green-50 hover:scale-105 transition-transform">
-                  Voir toutes les candidatures
+                  {t('dashboard.recruiter.viewAllApplications')}
                 </Button>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -265,7 +267,7 @@ const Dashboard = ({ setActiveSection }) => {
                   const diffTime = Math.abs(today - applicationDate);
                   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                   const diffHours = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
-                  const timeAgo = diffDays > 0 ? `il y a ${diffDays} jour(s)` : `il y a ${diffHours} heure(s)`;
+                  const timeAgo = diffDays > 0 ? t('dashboard.recruiter.timeAgoDays', { count: diffDays }) : t('dashboard.recruiter.timeAgoHours', { count: diffHours });
                   const avatarColors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-orange-500', 'bg-purple-500'];
                   const randomColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
 
@@ -280,12 +282,12 @@ const Dashboard = ({ setActiveSection }) => {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-gray-900 truncate">{application.particulier?.user?.nom || 'Candidat Anonyme'}</p>
-                        <p className="text-xs text-gray-600">{application.offre?.titre_poste || 'Poste non spécifié'}</p>
+                        <p className="font-medium text-sm text-gray-900 truncate">{application.particulier?.user?.nom || t('dashboard.recruiter.anonymousCandidate')}</p>
+                        <p className="text-xs text-gray-600">{application.offre?.titre_poste || t('dashboard.recruiter.unspecifiedPosition')}</p>
                         <p className="text-xs text-gray-500">{timeAgo}</p>
                       </div>
                       <Button size="sm" variant="outline" className="text-xs hover:scale-105 transition-transform" onClick={() => navigate(`/profil_candidat_by_recruteur/${application.particulier.user_id}`)}>
-                        Voir
+                        {t('dashboard.recruiter.view')}
                       </Button>
                     </div>
                   )
@@ -297,7 +299,7 @@ const Dashboard = ({ setActiveSection }) => {
 
         <div className="mt-7">
           <h2 className="text-base font-semibold text-gray-900 mb-3">
-            Actions rapides
+            {t('dashboard.recruiter.quickActions.title')}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {quickActions.map((action, index) => {

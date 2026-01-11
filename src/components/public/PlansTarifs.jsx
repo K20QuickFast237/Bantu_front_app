@@ -71,7 +71,7 @@ const PlansTarifs = () => {
       icon: Users,
       periods: ['monthly', 'annual'],
       plans: [
-        { id: "lite", price: { monthly: 3000, annual: 30000 }, color: "orange" },
+        // { id: "lite", price: { monthly: 3000, annual: 30000 }, color: "orange" },
         { id: "pro", price: { monthly: 5000, annual: 50000 }, popular: true, color: "blue" },
         { id: "enterprise", price: { monthly: "Sur mesure", annual: "Sur mesure" }, color: "purple" }
       ]

@@ -15,9 +15,11 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import DynamicFontAwesomeIcon from './DynamicFontAwesomeIcon';
+import { useTranslation } from 'react-i18next';
 
 const Competences = () => {
   const { user, token } = useAuth();
+  const { t } = useTranslation();
   const [competences, setCompetences] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -35,6 +37,7 @@ const Competences = () => {
         setAvailableCompetences(response.data);
       } catch (error) {
         toast.error('Erreur lors du chargement des compétences disponibles');
+        toast.error(t('profile.skills.availableLoadError'));
       }
     };
 
@@ -45,6 +48,7 @@ const Competences = () => {
         setCompetences(Array.isArray(response.data) ? response.data : []);
       } catch {
         toast.error('Erreur lors du chargement des compétences');
+        toast.error(t('profile.skills.loadError'));
         setCompetences([]);
       } finally {
         setIsSubmitting(false);
@@ -58,6 +62,7 @@ const Competences = () => {
   const handleAddSkill = () => {
     if (!selectedCompetence || !selectedLevel) {
       toast.error('Veuillez sélectionner une compétence et un niveau');
+      toast.error(t('profile.skills.selectSkillAndLevel'));
       return;
     }
 
@@ -70,6 +75,7 @@ const Competences = () => {
 
     if (alreadyAdded) {
       toast.error('Cette compétence est déjà ajoutée.');
+      toast.error(t('profile.skills.alreadyAdded'));
       return;
     }
 
@@ -90,6 +96,7 @@ const Competences = () => {
   e.preventDefault();
   if (newSkills.length === 0) {
     toast.error('Veuillez ajouter au moins une compétence.');
+    toast.error(t('profile.skills.selectAtLeastOne'));
     return;
   }
 
@@ -111,11 +118,13 @@ const Competences = () => {
     setNewSkills([]);
     setIsModalOpen(false);
     toast.success('Compétences ajoutées avec succès');
+    toast.success(t('profile.skills.addSuccess'));
 
     // Déclencher l'événement pour mettre à jour la barre de progression
     window.dispatchEvent(new Event('competences-updated'));
   } catch {
     toast.error("Erreur lors de l'ajout des compétences");
+    toast.error(t('profile.skills.addError'));
   } finally {
     setIsSubmitting(false);
   }
@@ -129,11 +138,13 @@ const Competences = () => {
       setIsDeleteModalOpen(false);
       setCompetenceToDelete(null);
       toast.success('Compétence supprimée avec succès');
+      toast.success(t('profile.skills.deleteSuccess'));
 
       // Déclencher l'événement pour mettre à jour la barre de progression
       window.dispatchEvent(new Event('competences-updated'));
     } catch {
       toast.error('Erreur lors de la suppression de la compétence');
+      toast.error(t('profile.skills.deleteError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +164,7 @@ const Competences = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
-          <h2 className="text-xl font-semibold text-blue-800">Compétences</h2>
+          <h2 className="text-xl font-semibold text-blue-800">{t('profile.skills.title')}</h2>
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <button
@@ -165,13 +176,13 @@ const Competences = () => {
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
-                Ajouter
+                {t('profile.skills.add')}
               </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
               <DialogHeader className="pb-4 border-b border-gray-200 relative">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
-                  Ajouter une compétence
+                  {t('profile.skills.addSkill')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -183,7 +194,7 @@ const Competences = () => {
                     value={selectedCompetence}
                     onChange={(e) => setSelectedCompetence(e.target.value)}
                   >
-                    <option value="">Sélectionner une compétence</option>
+                    <option value="">{t('profile.skills.selectSkill')}</option>
                     {availableCompetences.map((c) => (
                       <option key={c.id} value={c.id}>{c.nom}</option>
                     ))}
@@ -194,10 +205,10 @@ const Competences = () => {
                     value={selectedLevel}
                     onChange={(e) => setSelectedLevel(e.target.value)}
                   >
-                    <option value="">Sélectionner le niveau</option>
-                    <option value="Débutant">Débutant</option>
-                    <option value="Intermédiaire">Intermédiaire</option>
-                    <option value="Avancé">Avancé</option>
+                    <option value="">{t('profile.skills.selectLevel')}</option>
+                    <option value="Débutant">{t('profile.skills.beginner')}</option>
+                    <option value="Intermédiaire">{t('profile.skills.intermediate')}</option>
+                    <option value="Avancé">{t('profile.skills.advanced')}</option>
                   </select>
 
                   <button
@@ -205,7 +216,7 @@ const Competences = () => {
                     onClick={handleAddSkill}
                     className="w-full sm:w-auto px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                   >
-                    Ajouter
+                    {t('profile.skills.add')}
                   </button>
                 </div>
 
@@ -224,7 +235,7 @@ const Competences = () => {
                           />
                         </span>
                       ))
-                    : <p className="text-gray-400 text-sm">Aucune compétence sélectionnée</p>
+                    : <p className="text-gray-400 text-sm">{t('profile.skills.noSkillsSelected')}</p>
                   }
                 </div>
 
@@ -236,7 +247,7 @@ const Competences = () => {
                     className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Enregistrer
+                    {t('profile.skills.save')}
                   </button>
                 </div>
               </form>
@@ -247,7 +258,7 @@ const Competences = () => {
         {/* Liste compétences */}
         <div className="space-y-4">
           {competences.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Aucune compétence enregistrée.</p>
+            <p className="text-gray-500 text-center py-8">{t('profile.skills.noSkills')}</p>
           ) : (
             competences.map((c) => (
               <div
@@ -261,14 +272,14 @@ const Competences = () => {
                   />
                   <div className="flex-grow">
                     <h3 className="font-semibold text-gray-800 text-base md:text-lg">{c.nom}</h3>
-                    <p className="text-sm text-gray-500">{c.description || 'Pas de description'}</p>
-                    <p className="text-xs text-gray-400">{c.niveau ? `Niveau: ${c.niveau}` : ''}</p>
+                    <p className="text-sm text-gray-500">{c.description || t('profile.skills.noDescription')}</p>
+                    <p className="text-xs text-gray-400">{c.niveau ? `${t('profile.skills.level')}: ${c.niveau}` : ''}</p>
                   </div>
                 </div>
                 <div className="flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-6 mt-2 md:mt-0 ml-0 md:ml-4 flex-shrink-0 w-full md:w-auto">
                   <div className="text-center bg-blue-50 px-3 py-2 rounded-lg w-full md:w-auto">
                     <p className="font-bold text-lg text-blue-600">{c.nbr_usage}</p>
-                    <p className="text-xs text-gray-500">utilisations</p>
+                    <p className="text-xs text-gray-500">{t('profile.skills.uses')}</p>
                   </div>
                   <div className="w-full md:w-auto flex md:inline-flex">
                     <button
@@ -289,14 +300,14 @@ const Competences = () => {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
+            <DialogTitle>{t('profile.skills.deleteConfirm')}</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. La compétence sera définitivement supprimée.
+              {t('profile.skills.deleteDescription')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors">Annuler</button>
+              <button type="button" className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors">{t('profile.skills.cancel')}</button>
             </DialogClose>
             <button
               onClick={handleConfirmDelete}
@@ -304,7 +315,7 @@ const Competences = () => {
               className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Supprimer
+              {t('profile.skills.delete')}
             </button>
           </DialogFooter>
         </DialogContent>

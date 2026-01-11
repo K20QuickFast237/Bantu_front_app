@@ -16,8 +16,10 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from 'sonner';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 
 const DiplomesFormations = () => {
+  const { t } = useTranslation();
   const { token, refreshAuth } = useAuth();
   const [formations, setFormations] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,7 +36,7 @@ const DiplomesFormations = () => {
         const response = await api.get('/formations');
         setFormations(response.data);
       } catch (error) {
-        toast.error('Erreur lors du chargement des formations');
+        toast.error(t('profile.training.loadError'));
         setFormations([]);
       } finally {
         setIsLoading(false);
@@ -55,7 +57,7 @@ const DiplomesFormations = () => {
             formation.id === editingFormation.id ? { ...formation, ...values } : formation
           )
         );
-        toast.success('Formation mise à jour avec succès');
+        toast.success(t('profile.training.updateSuccess'));
         await refreshAuth();
 
         // Déclencher l'événement pour mettre à jour la barre de progression
@@ -72,7 +74,7 @@ const DiplomesFormations = () => {
           date_fin: values.date_fin,
         }
         setFormations(prev => [...prev, newFormation]);
-        toast.success('Formation ajoutée avec succès');
+        toast.success(t('profile.training.addSuccess'));
         await refreshAuth();
 
         // Déclencher l'événement pour mettre à jour la barre de progression
@@ -82,7 +84,7 @@ const DiplomesFormations = () => {
       resetForm(); // Nettoyer le formulaire après ajout ou update
       setEditingFormation(null);
     } catch (error) {
-      toast.error('Erreur lors de la sauvegarde de la formation');
+      toast.error(t('profile.training.saveError'));
       console.error('Erreur:', error);
     } finally {
       setSubmitting(false);
@@ -129,13 +131,13 @@ const DiplomesFormations = () => {
     try {
       await api.delete(`/formations/${formationToDelete}`);
       setFormations(formations.filter((formation) => formation.id !== formationToDelete));
-      toast.success('Formation supprimée avec succès');
+      toast.success(t('profile.training.deleteSuccess'));
       await refreshAuth();
 
       // Déclencher l'événement pour mettre à jour la barre de progression
       window.dispatchEvent(new Event('formations-updated'));
     } catch (error) {
-      toast.error('Erreur lors de la suppression de la formation');
+      toast.error(t('profile.training.deleteError'));
     } finally {
       setIsDeleteModalOpen(false);
       setFormationToDelete(null);
@@ -156,7 +158,7 @@ const DiplomesFormations = () => {
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <div className="flex justify-between items-center mb-6 border-b border-gray-400 pb-4">
-          <h2 className="text-xl font-semibold text-blue-800">Diplomes et Formations</h2>
+          <h2 className="text-xl font-semibold text-blue-800">{t('profile.training.title')}</h2>
 
           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
@@ -165,14 +167,14 @@ const DiplomesFormations = () => {
                 className="flex items-center border-2 p-2 border-gray-300 shadow-md rounded-lg text-blue-600 hover:text-white hover:bg-blue-600 font-medium text-sm transition-colors"
               >
                 <PlusCircle size={16} className="mr-1" />
-                Ajouter
+                {t('profile.training.add')}
               </button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto bg-white rounded-lg shadow-md p-0">
               <DialogHeader className="pb-4 border-b border-gray-200 relative">
                 <DialogTitle className="text-xl font-semibold text-gray-800 pt-6 px-6">
-                  {editingFormation ? 'Modifier une formation' : 'Ajouter une formation'}
+                  {editingFormation ? t('profile.training.editTitle') : t('profile.training.addTitle')}
                 </DialogTitle>
               </DialogHeader>
 
@@ -180,7 +182,7 @@ const DiplomesFormations = () => {
                 {/* Domaine d'étude */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Domaine d'étude <span className="text-red-500">*</span>
+                    {t('profile.training.fieldOfStudy')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -189,7 +191,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Développement web"
+                    placeholder={t('profile.training.fieldOfStudyPlaceholder')}
                   />
                   {errors.domaine_etude && touched.domaine_etude && (
                     <p className="text-red-500 text-sm">{errors.domaine_etude}</p>
@@ -199,7 +201,7 @@ const DiplomesFormations = () => {
                 {/* Etablissement */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Etablissement <span className="text-red-500">*</span>
+                    {t('profile.training.institution')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -208,7 +210,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Université de Douala"
+                    placeholder={t('profile.training.institutionPlaceholder')}
                   />
                   {errors.etablissement && touched.etablissement && (
                     <p className="text-red-500 text-sm">{errors.etablissement}</p>
@@ -218,7 +220,7 @@ const DiplomesFormations = () => {
                 {/* Diplôme */}
                 <div className="mb-4">
                   <label className="block text-gray-700 font-medium mb-2">
-                    Diplôme <span className="text-red-500">*</span>
+                    {t('profile.training.degree')} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -227,7 +229,7 @@ const DiplomesFormations = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Ex : Licence en informatique"
+                    placeholder={t('profile.training.degreePlaceholder')}
                   />
                   {errors.diplome && touched.diplome && (
                     <p className="text-red-500 text-sm">{errors.diplome}</p>
@@ -237,7 +239,7 @@ const DiplomesFormations = () => {
                 {/* Dates (stack on mobile) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Date de début</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('profile.training.startDate')}</label>
                     <input
                       type="date"
                       name="date_debut"
@@ -248,7 +250,7 @@ const DiplomesFormations = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-700 font-medium mb-2">Date de fin</label>
+                    <label className="block text-gray-700 font-medium mb-2">{t('profile.training.endDate')}</label>
                     <input
                       type="date"
                       name="date_fin"
@@ -268,7 +270,7 @@ const DiplomesFormations = () => {
                     className="w-full sm:w-auto px-6 py-3 text-white bg-green-500 rounded-3xl hover:bg-green-600 flex items-center justify-center transition-colors disabled:bg-green-300"
                   >
                     {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {editingFormation ? 'Mettre à jour' : 'Enregistrer'}
+                    {editingFormation ? t('profile.training.update') : t('profile.training.save')}
                   </button>
                 </div>
               </form>
@@ -281,7 +283,7 @@ const DiplomesFormations = () => {
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
           ) : formations.length === 0 ? (
-            <p className="text-gray-600">Aucune formation enregistrée.</p>
+            <p className="text-gray-600">{t('profile.training.noTraining')}</p>
           ) : (
             formations.map((formation) => (
               <div
@@ -299,23 +301,23 @@ const DiplomesFormations = () => {
                   <div>
                     <div className="grid grid-cols-1 md:grid-cols-2 border-l border-[#10B981] -ml-4 pl-4 gap-y-3 gap-x-4 text-sm text-gray-700">
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Domaine d'étude</span>
-                        <span className="mt-1 font-semibold text-gray-800">{formation.domaine_etude || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('profile.training.fieldOfStudy')}</span>
+                        <span className="mt-1 font-semibold text-gray-800">{formation.domaine_etude || t('profile.training.notSpecified')}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Etablissement</span>
-                        <span className="mt-1">{formation.etablissement || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('profile.training.institution')}</span>
+                        <span className="mt-1">{formation.etablissement || t('profile.training.notSpecified')}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Date</span>
+                        <span className="text-xs text-gray-600">{t('profile.training.date')}</span>
                         <span className="mt-1">{`${formation.date_debut || 'N/A'} - ${formation.date_fin || 'N/A'}`}</span>
                       </div>
 
                       <div className="flex flex-col">
-                        <span className="text-xs text-gray-600">Diplôme</span>
-                        <span className="mt-1">{formation.diplome || 'Non spécifié'}</span>
+                        <span className="text-xs text-gray-600">{t('profile.training.degree')}</span>
+                        <span className="mt-1">{formation.diplome || t('profile.training.notSpecified')}</span>
                       </div>
                     </div>
                   </div>
@@ -328,7 +330,7 @@ const DiplomesFormations = () => {
                     className="flex items-center px-2 py-1 rounded-md text-gray-600 border border-gray-300 hover:bg-gray-100 hover:text-gray-700 transition-colors duration-200 text-xs"
                   >
                     <Edit size={14} className="mr-1" />
-                    Modifier
+                    {t('profile.training.edit')}
                   </button>
                   <button
                     onClick={() => openDeleteModal(formation.id)}
@@ -348,9 +350,9 @@ const DiplomesFormations = () => {
       <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Êtes-vous sûr de vouloir supprimer ?</DialogTitle>
+            <DialogTitle>{t('profile.training.deleteConfirmTitle')}</DialogTitle>
             <DialogDescription>
-              Cette action est irréversible. La formation sera définitivement supprimée.
+              {t('profile.training.deleteConfirmDescription')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -359,7 +361,7 @@ const DiplomesFormations = () => {
                 type="button"
                 className="px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100 text-sm transition-colors"
               >
-                Annuler
+                {t('profile.training.cancel')}
               </button>
             </DialogClose>
             <button
@@ -368,7 +370,7 @@ const DiplomesFormations = () => {
               className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 text-sm flex items-center justify-center transition-colors disabled:bg-red-300"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Supprimer
+              {t('profile.training.delete')}
             </button>
           </DialogFooter>
         </DialogContent>

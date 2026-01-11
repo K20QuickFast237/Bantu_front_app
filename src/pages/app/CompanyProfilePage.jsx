@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '@/services/api';
 import HeaderProfil from '@/components/app/HeaderProfil';
 import Footer from '@/components/public/Footer';
@@ -15,6 +16,7 @@ function CompanyProfilePage() {
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchCompanyData = async () => {
@@ -51,7 +53,7 @@ function CompanyProfilePage() {
           {/* On passe les données de l'entreprise au Hero */}
           <HeroCompany companyData={company} />
           <div className="py-8">
-            <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Offres d'emploi chez {company?.nom_entreprise}</h2>
+            <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">{t('pages.companyProfile.jobsAt', { company: company?.nom_entreprise })}</h2>
             <CompanyJobCard jobs={company?.offres} />
           </div>
         </>

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import echo from '@/services/echo';
+import { useTranslation } from 'react-i18next';
 import { Search, Send, Paperclip, ArrowLeft, Plus, MoreVertical, PanelLeft, Trash2, Loader2, File, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '@/services/api';
@@ -34,9 +35,10 @@ const SearchInput = ({ placeholder, value, onChange }) => (
 );
 
 const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
+  const { t } = useTranslation();
   // Trouver l'autre participant dans la conversation
   const otherParticipant = conv.participants?.find(p => p.id !== currentUser?.id);
-  const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+  const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : t('pages.messages.unknownUser');
   const lastMessage = conv.messages?.[conv.messages.length - 1];
   console.log(conv);
 
@@ -52,7 +54,7 @@ const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
           <p className="text-xs text-gray-400 flex-shrink-0 ml-2">{lastMessage ? new Date(lastMessage.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) : ''}</p>
         </div>
         <div className="flex justify-between items-start mt-1">
-          <p className="text-xs text-gray-500 truncate pr-4">{lastMessage?.content || 'Pas de messages'}</p>
+          <p className="text-xs text-gray-500 truncate pr-4">{lastMessage?.content || t('pages.messages.noMessages')}</p>
           {conv.unread_count > 0 && (
             <span className="bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full flex-shrink-0">
               {conv.unread_count}
@@ -66,6 +68,7 @@ const ConversationItem = ({ conv, onSelect, isSelected, currentUser }) => {
 
 const ConversationList = ({ conversations, onSelect, selectedId, loading, currentUser }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { t } = useTranslation();
   const filteredConversations = conversations.filter(c => {
     if (!currentUser) return false;
     const otherParticipant = c.participants?.find(p => p.id !== currentUser.id);
@@ -80,7 +83,7 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
     return (
       <div className="w-full h-full flex flex-col bg-white border-r border-gray-200 items-center justify-center" style={{ flexShrink: 0 }}>
         <Loader2 className="w-8 h-8 animate-spin text-[#009739]" />
-        <p className="mt-2 text-gray-600">Chargement...</p>
+        <p className="mt-2 text-gray-600">{t('pages.messages.loading')}</p>
       </div>
     );
   }
@@ -89,19 +92,19 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
       <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
         <div className="p-4 border-b border-gray-200">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('pages.messages.title')}</h2>
             <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#009739]">
               <Plus className="w-5 h-5" />
             </button>
           </div>
           <SearchInput
-            placeholder="Rechercher une conversation..."
+            placeholder={t('pages.messages.search')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <p className="w-full h-full flex flex-col bg-white items-center justify-center">
-          Aucune conversation pour l'instant.
+          {t('pages.messages.empty')}
         </p>
       </div>
     );
@@ -111,13 +114,13 @@ const ConversationList = ({ conversations, onSelect, selectedId, loading, curren
     <div className="w-full h-full flex flex-col bg-white border-r border-gray-200" style={{ flexShrink: 0 }}>
       <div className="p-4 border-b border-gray-200">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-900">Messagerie</h2>
+          <h2 className="text-xl font-bold text-gray-900">{t('pages.messages.title')}</h2>
           <button className="p-2 rounded-full hover:bg-gray-100 text-gray-500 hover:text-[#009739]">
             <Plus className="w-5 h-5" />
           </button>
         </div>
         <SearchInput
-          placeholder="Rechercher une conversation..."
+          placeholder={t('pages.messages.search')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -143,6 +146,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const { t } = useTranslation();
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
   const textareaRef = useRef(null); // Added textareaRef for auto-resizing
@@ -288,7 +292,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
         <div className="ml-4">
           <p className="font-bold text-gray-900">{conversation.participant?.name}</p>
           <p className={`text-xs ${conversation.participant?.online ? 'text-green-600' : 'text-gray-500'}`}>
-            {conversation.participant?.online ? 'En ligne' : 'Hors ligne'}
+            {conversation.participant?.online ? t('pages.messages.online') : t('pages.messages.offline')}
           </p>
         </div>
         <div className="ml-auto">
@@ -377,7 +381,7 @@ const ChatView = ({ conversation, onBack, onToggleList, isListVisible, onMessage
                 handleSend();
               }
             }}
-            placeholder="Écrivez votre message..."
+            placeholder={t('pages.messages.writeMessage')}
             rows="1"
             ref={textareaRef} // Assign ref here
             className="flex-grow px-4 py-2.5 border border-gray-200 rounded-full bg-gray-100 resize-none focus:outline-none focus:ring-2 focus:ring-[#009739] transition-all"
@@ -401,6 +405,7 @@ const MessagesSection = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isListVisible, setIsListVisible] = useState(true);
+  const { t } = useTranslation();
   const { state: locationState } = useLocation();
   const { user } = useAuth(); // Get user here for conversation processing
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768); // eslint-disable-line no-unused-vars
@@ -413,13 +418,13 @@ const MessagesSection = () => {
 
       const processedConversations = rawConversations.map(conv => {
         const otherParticipant = user ? conv.participants.find(p => p.id !== user.id) : null;
-        const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : 'Utilisateur inconnu';
+        const participantName = otherParticipant ? [otherParticipant.prenom, otherParticipant.nom].filter(Boolean).join(' ') : t('pages.messages.unknownUser');
         const colors = ['bg-blue-500', 'bg-green-500', 'bg-red-500', 'bg-orange-500', 'bg-purple-500', 'bg-pink-500', 'bg-indigo-500'];
         const color = colors[((otherParticipant?.id || 0) % colors.length)];
 
         return {
           ...conv,
-          participant: otherParticipant ? { id: otherParticipant.id, name: participantName, online: otherParticipant.is_active } : { name: 'Utilisateur inconnu' },
+          participant: otherParticipant ? { id: otherParticipant.id, name: participantName, online: otherParticipant.is_active } : { name: t('pages.messages.unknownUser') },
           color: color
         };
       });
